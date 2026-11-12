@@ -23,6 +23,11 @@ const MONTAR = {
   win: () => import('../labs/windows-ui.js').then(m => m.montarWindows),
   linux: () => import('../labs/linux-ui.js').then(m => m.montarLinux),
   git: () => import('../labs/git-ui.js').then(m => m.montarGit),
+  ad: () => import('../ti/ad-ui.js').then(m => m.montarAd),
+  atencion: () => import('../ti/atencion-ui.js').then(m => m.montarAtencion),
+  pc: () => import('../ti/hardware-ui.js').then(m => m.montarPc),
+  hw: () => import('../ti/hardware-ui.js').then(m => m.montarAverias),
+  orden: () => import('../ti/hardware-ui.js').then(m => m.montarOrden),
   phishing: () => import('../ti/phishing-ui.js').then(m => m.montarPhishing),
   entrevista: () => import('../ti/entrevista-ui.js').then(m => m.montarEntrevista),
 };

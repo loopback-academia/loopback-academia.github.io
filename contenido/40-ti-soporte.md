@@ -385,6 +385,101 @@ Cinco casos reales, de menos a más. Lee el caso, diagnostica con comandos antes
 = Test-NetConnection servidor -Port 443 devuelve TcpTestSucceeded True o False.
 :::
 
+=== s1-ad | Active Directory: usuarios, grupos y permisos | 20 | 2
+En casi todas las empresas con Windows, las cuentas de los empleados viven en **Active Directory (AD)**: un directorio central con usuarios, equipos y grupos. Gran parte del trabajo de una mesa de ayuda es gestionarlo.
+
+## Conceptos
+
+- **Dominio**: el conjunto que administra AD, por ejemplo `laceiba.local`. Los equipos «se unen al dominio».
+- **Controlador de dominio**: el servidor que guarda el directorio y comprueba las contraseñas.
+- **Unidad organizativa (OU)**: carpeta para ordenar usuarios y equipos (Ventas, Contabilidad, Bajas…). A cada OU se le aplican directivas distintas.
+- **Grupo**: conjunto de usuarios al que se dan permisos (carpetas, VPN, impresoras). **Los permisos se dan a grupos, no a personas**: así, cuando alguien cambia de puesto, basta con cambiar sus grupos.
+- **Directiva de grupo (GPO)**: configuración que se aplica sola a los usuarios y equipos de una OU (unidades de red, fondo, seguridad).
+
+## Las tareas de cada día
+
+| Petición | Qué se hace |
+|---|---|
+| «Mi cuenta está bloqueada» | Desbloquear. Si recuerda la contraseña, **no** se cambia |
+| «Olvidé mi contraseña» | **Verificar la identidad**, poner una temporal y marcar «debe cambiarla al iniciar sesión» |
+| Alta de un empleado | Crear el usuario en su OU, con sus grupos y una contraseña temporal |
+| Cambio de puesto | Mover de OU, añadir los grupos nuevos y **quitar los viejos** |
+| Baja | **Deshabilitar** (no borrar), mover a Bajas y quitar accesos como la VPN |
+
+::: cuidado
+**Verifica siempre la identidad** antes de restablecer una contraseña: devuelve la llamada a la extensión registrada o sigue el procedimiento de la empresa. Hacerse pasar por un empleado para pedir una contraseña nueva es uno de los ataques más comunes.
+:::
+
+## Mínimo privilegio
+
+Cada persona debe tener **solo los permisos que necesita** para su trabajo. Por eso nunca se mete a un usuario en «Admins. del dominio» para que «instale sus programas»: si su cuenta cae en un phishing, el atacante tendría el control de toda la empresa. La respuesta correcta es instalarle el programa tú (o por el procedimiento de software).
+
+[[ad:mesa]]
+
+::: quiz
+? Un usuario dice que su cuenta está bloqueada y recuerda su contraseña. ¿Qué haces?
++ Desbloquear la cuenta sin cambiar la contraseña
+- Restablecer la contraseña a una nueva
+- Borrar la cuenta y crearla de nuevo
+= El bloqueo es por intentos fallidos; si sabe su contraseña, solo hay que desbloquear.
+
+? ¿Qué se hace con la cuenta de un empleado que deja la empresa?
++ Deshabilitarla, moverla a la OU de bajas y quitarle accesos
+- Borrarla en el momento
+- Dejarla igual por si vuelve
+= Deshabilitar corta el acceso sin perder su buzón ni sus archivos.
+
+? ¿Por qué se dan los permisos a grupos y no a cada usuario?
++ Porque así basta con cambiar los grupos cuando alguien cambia de puesto
+- Porque AD no permite dar permisos a usuarios
+- Porque los grupos son más rápidos de escribir
+= Gestionar permisos por grupos es más ordenado y evita olvidos.
+
+? Antes de restablecer la contraseña de alguien que llama por teléfono, ¿qué es imprescindible?
++ Verificar su identidad según el procedimiento
+- Preguntarle su contraseña antigua
+- Nada, si dice su nombre completo
+= Sin verificación, cualquiera podría robar una cuenta llamando a soporte.
+:::
+
+::: banco
+? ¿Qué es una unidad organizativa (OU)?
++ Una carpeta del directorio para ordenar usuarios y equipos y aplicarles directivas
+- Un tipo de contraseña
+- Un servidor de correo
+= Las OU organizan el directorio y reciben directivas de grupo.
+
+? Un empleado pasa de Ventas a Contabilidad. ¿Qué te falta si solo lo añades al grupo de Contabilidad?
++ Quitarlo de los grupos de Ventas
+- Cambiarle el nombre
+- Reinstalar su PC
+= Si no se quitan los grupos viejos, acumula permisos que ya no necesita.
+
+? Una usuaria pide ser administradora del dominio para instalar programas. ¿Qué haces?
++ Rechazarlo y ofrecer instalarle el programa por el procedimiento
+- Añadirla a Admins. del dominio
+- Darle tu contraseña de administrador
+= El principio de mínimo privilegio impide dar control total del dominio a un usuario.
+
+? ¿Qué opción se marca al poner una contraseña temporal?
++ El usuario debe cambiar la contraseña al iniciar sesión
+- La contraseña nunca expira
+- El usuario no puede cambiar la contraseña
+= Así solo el usuario conoce su contraseña definitiva.
+
+? ¿Qué es una directiva de grupo (GPO)?
++ Una configuración que AD aplica automáticamente a usuarios y equipos
+- Un grupo de seguridad con muchos usuarios
+- Un tipo de controlador de dominio
+= Las GPO aplican unidades de red, fondos, seguridad y más sin tocar cada PC.
+
+? ¿Qué servidor comprueba las contraseñas en un dominio de Windows?
++ El controlador de dominio
+- El servidor DHCP
+- El servidor de impresión
+= El controlador de dominio guarda el directorio y valida los inicios de sesión.
+:::
+
 === s1-programas | Instalar programas y controladores | 14 | 1
 Instalar un programa en una empresa no es igual que en casa: hay **licencias**, **permisos** y un **catálogo aprobado**.
 
@@ -849,6 +944,18 @@ Corto y con datos: **qué** (impacto), **desde cuándo**, **causa** (o «en inve
 :::
 
 [[caso:login]]
+
+## Practica conversaciones difíciles
+
+En cada momento eliges qué responder. Fíjate en la cara del usuario: tu respuesta cambia su ánimo.
+
+[[atencion:enfadado]]
+
+[[atencion:no-tecnica]]
+
+[[atencion:fuera]]
+
+[[atencion:telefono]]
 
 ::: quiz
 ? ¿Qué quiere saber primero un usuario cuando algo falla?

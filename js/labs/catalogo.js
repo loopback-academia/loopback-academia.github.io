@@ -7,6 +7,8 @@ import { CASOS, TURNO } from '../casos/casos.js';
 import { WIN_LABS } from './windows-labs.js';
 import { LINUX_LABS } from './linux-labs.js';
 import { GIT_LABS } from './git-labs.js';
+import { CONVERSACIONES } from '../ti/atencion.js';
+import { ENCARGOS } from '../ti/hardware.js';
 import { RUTAS_ENTREVISTA } from '../ti/entrevista.js';
 
 const SQL_INFO = {
@@ -29,6 +31,11 @@ export const CATALOGO = [
   { clave: 'turno:' + TURNO.id, area: 'ti', grupo: 'proyectos', nivel: TURNO.nivel, progreso: TURNO.progreso, titulo: TURNO.titulo.replace(/^Proyecto: (.)/, (_, c) => c.toUpperCase()), texto: TURNO.resumen, tareas: TURNO.casos.length, unidad: 'tickets' },
   ...Object.entries(GIT_LABS).map(([id, l]) => ({ clave: 'git:' + id, area: 'prog', grupo: 'git', nivel: l.nivel, progreso: 'git-' + id, titulo: 'Git: ' + l.titulo.charAt(0).toLowerCase() + l.titulo.slice(1), texto: l.intro.split('. ')[0] + '.', tareas: l.tareas.length })),
   ...Object.entries(LINUX_LABS).map(([id, l]) => ({ clave: 'linux:' + id, area: 'prog', grupo: 'linux', nivel: l.nivel, progreso: 'linux-' + id, titulo: l.titulo, texto: l.intro.split('. ')[0] + '.', tareas: l.tareas.length })),
+  { clave: 'ad:mesa', area: 'ti', grupo: 'consola', nivel: 'intermedio', progreso: 'ad-mesa', titulo: 'Active Directory: la cola de tickets', texto: 'Desbloquear cuentas, restablecer contraseñas, altas, bajas, cambios de departamento y grupos. Siete tickets reales.', tareas: 7, unidad: 'tickets' },
+  ...Object.entries(CONVERSACIONES).map(([id, c]) => ({ clave: 'atencion:' + id, area: 'ti', grupo: 'atencion', nivel: c.nivel, progreso: 'atencion-' + id, titulo: c.titulo, texto: `${c.canal} con ${c.usuario}. Elige cómo responder en cada momento.`, tareas: c.pasos.length, unidad: 'respuestas' })),
+  ...Object.entries(ENCARGOS).map(([id, e]) => ({ clave: 'pc:' + id, area: 'ti', grupo: 'hardware', nivel: id === 'oficina' ? 'principiante' : 'intermedio', progreso: 'pc-' + id, titulo: 'Armar un PC: ' + e.titulo.toLowerCase(), texto: 'Elige piezas compatibles que cumplan el encargo y el presupuesto.' })),
+  { clave: 'hw:averias', area: 'ti', grupo: 'hardware', nivel: 'intermedio', progreso: 'hw-averias', titulo: 'Diagnosticar averías de hardware', texto: 'Cinco equipos con síntomas reales: decide qué haces primero.', tareas: 5, unidad: 'casos' },
+  { clave: 'orden:instalar-windows', area: 'ti', grupo: 'hardware', nivel: 'principiante', progreso: 'orden-instalar-windows', titulo: 'Preparar un PC nuevo para un empleado', texto: 'Ordena los pasos: de la memoria USB de instalación a entregar el equipo.' },
   ...Object.entries(WIN_LABS).map(([id, l]) => ({ clave: 'win:' + id, area: 'ti', grupo: 'consola', nivel: l.nivel, progreso: 'win-' + id, titulo: l.titulo, texto: l.intro.split('. ')[0] + '.', tareas: l.tareas.length })),
   { clave: 'phishing:bandeja', area: 'ti', grupo: 'empleo', nivel: 'principiante', progreso: 'phishing-bandeja', titulo: 'Detector de phishing', texto: 'Revisa una bandeja de 14 correos: decide cuáles son trampas y señala lo que las delata.', tareas: 14, unidad: 'correos' },
   ...Object.entries(RUTAS_ENTREVISTA).map(([id, t]) => ({ clave: 'entrevista:' + id, area: 'ti', grupo: 'empleo', nivel: 'intermedio', progreso: 'entrevista-' + id, titulo: 'Entrevista: ' + t.split(' (')[0].toLowerCase().replace(/^./, c => c.toUpperCase()), texto: 'Seis preguntas de entrevista real con puntos clave y respuesta modelo.', tareas: 6, unidad: 'preguntas' })),

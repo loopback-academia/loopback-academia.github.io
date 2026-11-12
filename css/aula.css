@@ -871,6 +871,51 @@ a.node-in { transition: background-color 150ms ease; }
 .mail-senales legend { font-weight: 700; padding: 0 4px; }
 .entrevista-pregunta { font-size: 1.15rem; font-weight: 700; margin: 12px 0; }
 
+/* ---------------------------------------------------------------- Active Directory */
+.ad-tickets { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.ad-ticket { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px 12px; background: var(--surface); }
+.ad-ticket.cerrado { opacity: .65; }
+.ad-ticket-cab { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.ad-ticket p { margin: 4px 0; }
+.ad-consola { display: grid; grid-template-columns: 200px 1fr 1fr; gap: 12px; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px; background: var(--surface-2); }
+.ad-arbol { display: grid; gap: 4px; margin-top: 8px; }
+.ad-ou { text-align: left; background: none; border: 0; padding: 6px 8px; border-radius: 6px; font: inherit; color: var(--ink); cursor: pointer; }
+.ad-ou[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+.ad-buscar { width: 100%; }
+.ad-lista-cab { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+.ad-tabla tr { cursor: pointer; }
+.ad-tabla tr.sel td { background: var(--accent-soft); }
+.ad-props h4 { margin: 0; }
+.ad-set { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 8px 10px; margin: 8px 0; display: grid; gap: 6px; }
+.ad-set legend { font-weight: 700; font-size: .9rem; }
+.ad-nuevo { display: grid; gap: 4px; }
+@media (max-width: 900px) { .ad-consola { grid-template-columns: 1fr; } }
+
+/* ---------------------------------------------------------------- atención al usuario */
+.chat { display: grid; gap: 8px; max-height: 420px; overflow-y: auto; padding: 10px; background: var(--surface-2); border-radius: var(--radius-sm); border: 1px solid var(--line); }
+.chat-msg { max-width: 85%; padding: 8px 12px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.chat-msg p { margin: 2px 0 0; }
+.chat-msg.tu { justify-self: end; background: var(--accent-soft); border-color: transparent; }
+.chat-quien { font-size: .75rem; font-weight: 700; color: var(--muted); }
+.chat-nota { margin: 0 0 4px; justify-self: end; max-width: 85%; }
+.chat-nota.ok { color: var(--ok); } .chat-nota.bad { color: var(--warn); }
+.chat-opciones { display: grid; gap: 6px; margin-top: 10px; }
+.chat-opcion { text-align: left; white-space: normal; height: auto; line-height: 1.4; padding: 10px 12px; }
+.chat-cara { font-size: 1.8rem; }
+
+/* ---------------------------------------------------------------- hardware */
+.pc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+.pc-cat { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 8px 10px; display: grid; gap: 4px; }
+.pc-cat legend { font-weight: 700; }
+.pc-resumen { margin: 10px 0; }
+.hw-caso { margin-bottom: 10px; }
+.hw-ops { display: grid; gap: 6px; }
+.hw-op { text-align: left; white-space: normal; height: auto; line-height: 1.4; }
+.hw-op.ok { border-color: var(--ok); } .hw-op.bad { border-color: var(--warn); }
+.orden-lista { display: grid; gap: 6px; padding-left: 22px; }
+.orden-lista li { display: flex; justify-content: space-between; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 6px 8px; background: var(--surface); }
+.orden-botones { display: flex; gap: 2px; flex: none; }
+
 /* ---------------------------------------------------------------- CV */
 .cv-layout { display: grid; grid-template-columns: minmax(280px, 380px) 1fr; gap: 20px; align-items: start; }
 .cv-form textarea, .cv-form input[type=text], .cv-form input[type=email], .cv-form input[type=tel] { width: 100%; }
