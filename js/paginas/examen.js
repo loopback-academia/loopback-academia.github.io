@@ -22,10 +22,9 @@ const params = new URLSearchParams(location.search);
 // Intentos anteriores de cada examen (ids de sus preguntas), para no repetirlas en el siguiente.
 const intentos = clave => local.get('aula:intentos:' + clave, []);
 const anotarIntento = (clave, ids) => local.set('aula:intentos:' + clave, [...intentos(clave), ids].slice(-2));
-// Tiempo por pregunta: poco margen para buscar fuera (opción múltiple 75 s; escribir la respuesta razonada 150 s).
-const SEG_PREGUNTA = q => (q.generada ? 150 : 75);
 const MAX_SALIDAS = 3;
-const minutos = n => Math.ceil((n * 75 + 2 * 75) / 60);
+// Tiempo total del examen (no hay límite por pregunta): unos 1,25 minutos por pregunta, mínimo 10.
+const minutos = n => Math.max(10, Math.ceil(n * 1.25));
 // Mezcla preguntas del banco con preguntas de razonamiento generadas para este intento.
 const conGeneradas = (area, delBanco, cuantas) => barajar([...delBanco.map(prepararPregunta), ...generarPreguntas(area, cuantas)]);
 const cabecera = (ceja, titulo, texto) => el('div', { class: 'page-head' }, el('span', { class: 'eyebrow' }, ceja), el('h1', {}, titulo), texto ? el('p', {}, texto) : null);
@@ -63,7 +62,6 @@ function inicio({ titulo, ceja, descripcion, clave, tamanos, generar, alAprobar,
   let n = tamanos[0];
   const lista = () => [el('li', {}, `${n} preguntas y ${minutos(n)} minutos. No se puede volver atrás.`), el('li', {}, `Apruebas con ${minimoPara(n)} correctas o más (80 %).`),
     el('li', {}, 'Cada intento tiene preguntas distintas a las del anterior, y algunas se generan en el momento: tendrás que razonarlas y escribir la respuesta.'),
-    el('li', {}, 'Cada pregunta tiene su propio tiempo (75 s, o 150 s si hay que escribir). Si se acaba, cuenta como no respondida.'),
     el('li', {}, `Modo examen: no se puede copiar, imprimir ni salir de la pantalla. Si sales ${MAX_SALIDAS} veces, el examen se entrega solo.`),
     el('li', {}, 'Si no apruebas, no se muestran las respuestas: verás qué lecciones repasar.')];
   const reglas = el('ul', { class: 'exam-rules' }, lista());
@@ -82,7 +80,8 @@ function jugar({ titulo, clave, preguntas, alAprobar, area }) {
   anotarIntento(clave, preguntas.filter(q => !q.generada).map(q => q.id)); // se anota al empezar: recargar no repite el examen
   const inicioT = Date.now();
   const respuestas = [];
-  let i = 0, terminado = false, finPregunta = 0, porSalidas = false;
+  let i = 0, terminado = false, porSalidas = false;
+  const finExamen = inicioT + minutos(preguntas.length) * 60000;
   const intentoId = Math.random().toString(36).slice(2, 8).toUpperCase();
   const marca = `${usuario?.nombre || usuario?.email || 'Invitado'} · ${new Date().toLocaleString('es')} · intento ${intentoId} · Loopback`;
   const timer = el('span', { class: 'timer', 'aria-label': 'Tiempo restante' });
@@ -96,18 +95,17 @@ function jugar({ titulo, clave, preguntas, alAprobar, area }) {
   const modo = activarModoExamen({ contenedor: caja, marca, maxSalidas: MAX_SALIDAS, toast,
     alSalir: n => { aviso.hidden = false; aviso.textContent = n < MAX_SALIDAS ? `⚠ Saliste de la pantalla del examen (${n} de ${MAX_SALIDAS}). Si llegas a ${MAX_SALIDAS}, el examen se entrega con lo que lleves.` : 'Has salido de la pantalla demasiadas veces: el examen se ha entregado.'; },
     alAgotar: () => { porSalidas = true; terminar(); } });
-  const reloj = setInterval(tic, 250);
+  const reloj = setInterval(tic, 1000);
   function tic() {
-    const quedan = Math.max(0, Math.ceil((finPregunta - Date.now()) / 1000));
+    const quedan = Math.max(0, Math.ceil((finExamen - Date.now()) / 1000));
     timer.textContent = `${Math.floor(quedan / 60)}:${String(quedan % 60).padStart(2, '0')}`;
-    timer.classList.toggle('low', quedan <= 15);
-    if (!quedan && !terminado) { respuestas[i] = false; i++; if (i < preguntas.length) pregunta(); else terminar(); }
+    timer.classList.toggle('low', quedan < 120);
+    if (!quedan) terminar(); // se acabó el tiempo total: lo no respondido cuenta como incorrecto
   }
+  tic();
 
   function pregunta() {
     const q = preguntas[i];
-    finPregunta = Date.now() + SEG_PREGUNTA(q) * 1000;
-    tic();
     contador.textContent = `Pregunta ${i + 1} de ${preguntas.length}`;
     setMeter(meter, i / preguntas.length);
     const siguiente = el('button', { type: 'submit', class: 'btn btn-primary', disabled: true }, i === preguntas.length - 1 ? 'Terminar' : 'Siguiente');
