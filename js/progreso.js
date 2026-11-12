@@ -109,7 +109,8 @@ function guardar(id, item) {
 }
 
 export const completarLeccion = id => guardar('leccion:' + id, { tipo: 'leccion', hecho: true });
-export const guardarQuiz = (id, puntos, total) => guardar('quiz:' + id, { tipo: 'quiz', puntos, total, hecho: puntos / total >= 0.7 });
+// Cuestionarios y exámenes se aprueban con un 80 % (ver js/escalera.js).
+export const guardarQuiz = (id, puntos, total) => guardar('quiz:' + id, { tipo: 'quiz', puntos, total, hecho: total > 0 && puntos / total >= 0.8 });
 export const guardarLab = (id, puntos = 1, total = 1) => guardar('lab:' + id, { tipo: 'lab', puntos, total, hecho: puntos >= total });
 
 async function subirExamen(e) {

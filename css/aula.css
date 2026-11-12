@@ -747,6 +747,64 @@ details[open] > :not(summary) { transition: opacity 180ms ease; }
 .lesson-hint { background: var(--accent-soft); border-radius: var(--radius-sm); padding: 10px 14px; font-size: .93rem; margin: 0 0 18px; }
 .next-step { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 14px; margin-top: 10px; border-radius: var(--radius-sm); background: var(--ok-soft); }
 
+/* ---------------------------------------------------------------- escalera de aprendizaje */
+.ladder-help { margin: 0 0 12px; }
+.ladder { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; position: relative; }
+.ladder-step { position: relative; padding-left: 0; margin-left: calc(min(var(--i, 0), 6) * 10px); }
+.ladder-step + .ladder-step::before { content: ''; display: block; width: 3px; height: 18px; margin-left: 30px; background: var(--line-2); border-radius: 2px; }
+.step-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.step-card > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 44px 1fr auto; gap: 14px; align-items: center; padding: 14px 18px; }
+.step-card > summary::-webkit-details-marker { display: none; }
+.step-num { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-weight: 900; background: var(--surface-2); color: var(--ink-2); }
+.step-card.actual .step-num { background: var(--accent); color: #fff; }
+.step-card.completo .step-num { background: var(--ok-soft); color: var(--ok); }
+.step-card.cerrado { opacity: .78; }
+.step-card.cerrado .step-num { font-size: 1.1rem; }
+.step-card.actual { border-color: var(--accent); }
+.step-lock { margin: 0 18px 10px; }
+.ladder-path { list-style: none; margin: 6px 0 4px; padding: 6px 18px 4px 34px; display: grid; gap: 8px; }
+.node { transform: translateX(var(--x, 0)); }
+.node-in { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: center; text-decoration: none; color: var(--ink); padding: 4px; border-radius: 12px; max-width: 520px; }
+a.node-in { transition: background-color 150ms ease; }
+@media (hover: hover) and (pointer: fine) { a.node-in:hover { background: var(--surface-2); } }
+.node-dot { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; background: var(--surface-2); color: var(--muted); border: 2px solid var(--line-2); flex: none; }
+.node.hecha .node-dot { background: var(--ok); border-color: var(--ok); color: #fff; }
+.node.actual .node-dot { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 0 5px var(--accent-soft); }
+.node.bloqueada .node-txt { color: var(--muted); }
+.node-txt { display: grid; gap: 1px; min-width: 0; }
+.node-txt strong { font-size: .95rem; overflow-wrap: anywhere; }
+.node.actual .node-txt strong { color: var(--accent); }
+.step-labs { padding: 4px 18px 6px 34px; }
+.chip.locked { color: var(--muted); border-style: dashed; cursor: not-allowed; }
+.step-exam, .step-final { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; margin: 8px 18px 16px; padding: 12px; border-radius: var(--radius-sm); background: var(--surface-2); border: 1px dashed var(--line-2); }
+.step-exam p, .step-final p { margin: 2px 0 0; }
+.step-exam.disponible, .step-final.disponible { border: 1px solid var(--accent); background: var(--accent-soft); }
+.step-exam.aprobado, .step-final.aprobado { border: 1px solid var(--ok); background: var(--ok-soft); }
+.step-final { margin: 0; background: var(--surface); }
+.step-exam .node-dot, .step-final .node-dot { font-size: 1.15rem; }
+.lesson-link.locked { color: var(--muted); cursor: not-allowed; }
+.lab-card.locked { opacity: .72; border-style: dashed; cursor: not-allowed; }
+.lab-card.locked h3 { color: var(--ink-2); }
+.locked-screen { text-align: center; max-width: 620px; margin: 30px auto; display: grid; justify-items: center; gap: 6px; }
+.locked-ico { font-size: 3rem; }
+.locked-screen .hero-cta { justify-content: center; }
+.exam-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.exam-row { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: var(--radius-sm); background: var(--surface-2); }
+.exam-row.bloqueado { opacity: .7; }
+.exam-ico { font-weight: 800; text-align: center; }
+.exam-rules { margin: 4px 0 18px; padding-left: 1.2em; display: grid; gap: 4px; }
+.exam-result.ok h1 { color: var(--ok); }
+.exam-result.bad h1 { color: var(--warn); }
+@media (max-width: 640px) {
+  .ladder-step { margin-left: 0; }
+  .node { transform: translateX(calc(var(--x, 0) / 3)); }
+  .ladder-path, .step-labs { padding-left: 14px; padding-right: 10px; }
+  .step-exam, .step-final { grid-template-columns: 40px minmax(0, 1fr); margin-left: 10px; margin-right: 10px; }
+  .step-exam .btn, .step-final .btn { grid-column: 1 / -1; }
+  .step-card > summary { grid-template-columns: 44px 1fr; }
+  .step-card > summary .module-progress { grid-column: 1 / -1; width: 100%; }
+}
+
 /* ---------------------------------------------------------------- adaptación */
 @media (max-width: 980px) {
   .hero-grid, .dashboard, .lesson-layout, .cli-layout { grid-template-columns: 1fr; }

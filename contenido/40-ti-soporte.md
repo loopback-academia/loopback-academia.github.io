@@ -413,6 +413,32 @@ El rollo térmico está puesto al revés: la cara sensible al calor queda hacia 
 = Reiniciarlo suele desatascar trabajos bloqueados.
 :::
 
+::: banco
+? Un trabajo atascado bloquea la cola de una impresora de red. ¿Qué haces primero?
++ Cancelar ese trabajo y, si sigue bloqueada, reiniciar el servicio de cola de impresión
+- Reinstalar Windows en el servidor
+- Cambiar el cabezal de la impresora
+= El documento dañado suele bloquear al resto; reiniciar el spooler libera la cola.
+
+? Las etiquetas salen corridas o con partes en blanco. ¿Qué revisas antes que nada?
++ La calibración y el tipo de etiqueta configurado
+- La dirección IP del servidor DNS
+- La licencia del sistema operativo
+= Las impresoras térmicas deben calibrarse al cambiar de rollo o de tipo de etiqueta.
+
+? ¿Por qué una impresora de red debe tener una reserva DHCP o IP fija documentada?
++ Porque los equipos la buscan por su dirección y no debe cambiar
+- Porque así imprime más rápido
+- Porque el DHCP no puede dar direcciones a impresoras
+= Si cambia de IP, la cola sigue enviando a la antigua y deja de imprimir.
+
+? Una impresora imprime caracteres extraños en todas las hojas. ¿Causa más probable?
++ Un controlador que no corresponde al modelo
+- Falta de papel
+- Un cable de red desconectado
+= Con otro controlador la impresora recibe un lenguaje que no entiende.
+:::
+
 === s1-remoto | Acceso remoto seguro | 12 | 1
 Muchas incidencias se resuelven **sin ir al sitio**: conectándote al equipo del usuario. Ahorra viajes a las tiendas y almacenes, pero exige cuidado.
 
@@ -650,7 +676,7 @@ Es el momento de demostrar lo aprendido. Cada caso es un ticket de *Comercial La
 | **Documentación** | Una nota de ticket con síntoma, causa, solución y verificación, útil para quien la lea mañana |
 | **Comunicación** | El mensaje adecuado para cada persona: claro, sin jerga, sin culpas y con próximos pasos |
 
-Para aprobar un caso necesitas **70 puntos** de media, al menos **50 en cada parte** y **ninguna acción de riesgo**. Puedes repetirlos tantas veces como quieras: cada intento te muestra qué faltó y una nota de referencia.
+Para aprobar un caso necesitas **80 puntos** de media, al menos **50 en cada parte** y **ninguna acción de riesgo**. Puedes repetirlos tantas veces como quieras: cada intento te muestra qué faltó y una nota de referencia.
 
 ::: practica
 Consejo: antes de pulsar cualquier acción, pregúntate qué hipótesis compruebas con ella. Las acciones inútiles restan poco; las de riesgo te suspenden el caso, como en la vida real.
@@ -688,6 +714,32 @@ Consejo: antes de pulsar cualquier acción, pregúntate qué hipótesis comprueb
 - Para copiarla en el examen
 - Para nada
 = Escribir buenas notas es una habilidad que se entrena comparando.
+:::
+
+::: banco
+? En un caso de soporte, ¿qué parte evalúa si el mensaje al usuario es claro, sin jerga y con próximos pasos?
++ Comunicación
+- Diagnóstico
+- Documentación
+= La comunicación se valora aparte: resolver bien y explicarlo mal también es un problema.
+
+? ¿Qué distingue una acción «de riesgo» de una acción «inútil» en un diagnóstico?
++ La de riesgo puede causar un daño o una brecha de seguridad; la inútil solo hace perder tiempo
+- No hay diferencia
+- La inútil es siempre peor
+= Resetear un router o cambiar una contraseña sin verificar identidad puede empeorar mucho la situación.
+
+? Una nota de ticket útil debe incluir…
++ Síntoma, causa, solución aplicada y verificación
+- Solo «resuelto»
+- La opinión sobre el usuario
+= Así quien lea el ticket mañana entiende qué pasó y cómo se resolvió.
+
+? Antes de aplicar una solución, ¿qué conviene tener?
++ Evidencia de la causa obtenida con comprobaciones
+- Una corazonada
+- La aprobación de todos los usuarios
+= Primero se diagnostica con pruebas; después se actúa.
 :::
 
 === s1-problemas | De incidencias a problemas: causa raíz y base de conocimiento | 16 | 3
@@ -751,6 +803,44 @@ Mientras no hay solución definitiva, documenta la **solución temporal** en la 
 = Permite que el primer nivel lo resuelva rápido mientras llega la solución definitiva.
 :::
 
+::: banco
+? ¿Qué es la causa raíz de un problema?
++ El origen que, si se corrige, evita que las incidencias se repitan
+- El primer síntoma que reporta el usuario
+- El técnico que tocó el equipo por última vez
+= Corregir solo el síntoma hace que la incidencia vuelva.
+
+? Hay 14 tickets iguales en un mes. ¿Qué conviene abrir?
++ Un registro de problema para investigar la causa común
+- Catorce tickets nuevos
+- Nada, es normal
+= Las incidencias repetidas indican un problema que hay que gestionar.
+
+? ¿Para qué sirve la técnica de los cinco porqués?
++ Para llegar desde el síntoma hasta una causa que se pueda corregir
+- Para culpar a alguien
+- Para cerrar tickets más rápido
+= Cada «¿por qué?» baja un nivel hasta la causa raíz.
+
+? ¿Qué es una solución temporal (workaround)?
++ Una forma de restablecer el servicio mientras llega la solución definitiva
+- La solución definitiva
+- Un error del usuario
+= Se documenta como error conocido para que el primer nivel la aplique rápido.
+
+? Un buen artículo de base de conocimiento empieza con un título…
++ Que describa el síntoma como lo diría el usuario
+- Con el código interno del servidor
+- Muy técnico y abreviado
+= Así se encuentra al buscar con las palabras del usuario.
+
+? Para aplicar la corrección definitiva de un problema se usa…
++ Un cambio controlado (gestión de cambios)
+- Un cambio rápido sin avisar a nadie
+- Un reinicio general de todos los equipos
+= Los cambios planificados reducen el riesgo de provocar nuevas incidencias.
+:::
+
 === s1-laboratorio | Tu laboratorio de soporte en casa | 15 | 2
 Los casos del navegador entrenan el **criterio**. Para entrenar las **manos** con las herramientas reales, monta un laboratorio gratuito.
 
@@ -802,6 +892,26 @@ Las versiones de evaluación son legales y gratuitas para aprender, pero **caduc
 = Las herramientas se aprenden en el laboratorio; el criterio, resolviendo casos.
 :::
 
+::: banco
+? ¿Qué ventaja tiene practicar en máquinas virtuales con instantáneas?
++ Poder romper cosas y volver al estado anterior en segundos
+- Que no hace falta aprender comandos
+- Que las licencias no caducan nunca
+= Las instantáneas permiten practicar sin miedo.
+
+? ¿Qué tipo de datos deben usarse en tu laboratorio de práctica?
++ Datos ficticios, nunca datos reales de una empresa
+- Copias de la base de datos de clientes de tu trabajo
+- Contraseñas reales para que sea más realista
+= Los datos reales en un laboratorio personal son un riesgo de seguridad y de privacidad.
+
+? Para practicar Active Directory en casa necesitas, como mínimo…
++ Una máquina virtual con Windows Server y otra cliente en la misma red virtual
+- Una cuenta de correo personal
+- Un router físico profesional
+= El servidor será el controlador de dominio y el cliente se unirá a él.
+:::
+
 === s1-proyecto | Proyecto: un turno en la mesa de ayuda | 60 | 2
 Proyecto final de las rutas **Técnico de soporte** y **Agente de mesa de ayuda**. Atiendes la cola de la mesa de ayuda de *Comercial La Ceiba* (empresa ficticia) durante un turno:
 
@@ -831,4 +941,24 @@ Para completarlo necesitas **aprobar los cinco tickets** y **acertar al menos cu
 - La hora de llegada
 - Quién llamó más veces
 = Se atiende primero lo que más daño causa, aunque haya llegado después.
+:::
+
+::: banco
+? ¿Qué decide el orden en que atiendes los tickets de un turno?
++ La prioridad, calculada con impacto y urgencia
+- El orden alfabético del usuario
+- Quién insiste más
+= Primero lo que más daño causa, aunque haya llegado después.
+
+? ¿Cómo describes con honestidad un proyecto simulado en tu currículum?
++ Como proyecto académico, explicando qué hiciste y qué habilidades demuestra
+- Como experiencia laboral en una empresa real
+- Sin explicar qué es
+= La honestidad da confianza; un proyecto bien explicado demuestra criterio.
+
+? En el método STAR para contar un caso en una entrevista, ¿qué significa la R?
++ Resultado
+- Riesgo
+- Revisión
+= Situación, Tarea, Acción y Resultado.
 :::

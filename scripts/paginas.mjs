@@ -35,7 +35,7 @@ const DESCRIPCION = {
   'curso.html': 'Tus lecciones por niveles y tu progreso',
   'practica.html': 'Laboratorios y ejercicios que se corrigen solos',
   'comandos.html': 'Guía de comandos Cisco explicados',
-  'examen.html': 'Simulacro de examen con nota',
+  'examen.html': 'Examen de cada escalón y examen final de cada área',
   'repaso.html': 'Las preguntas que fallaste, para dominarlas',
   'rutas.html': 'Rutas para conseguir empleo en TI',
   'tutor.html': ia ? 'Pregunta tus dudas al tutor con IA' : 'Busca cualquier tema del curso',

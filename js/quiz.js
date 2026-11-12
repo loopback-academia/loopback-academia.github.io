@@ -1,5 +1,8 @@
-// Cuestionario de una lección (o de cualquier lista de preguntas). Corrige, explica cada respuesta y devuelve la nota.
+// Cuestionario de una lección (o de cualquier lista de preguntas). Se aprueba con un 80 %.
+// Si se aprueba, corrige y explica cada pregunta. Si no, solo dice cuántas acertaste: no revela cuáles eran correctas
+// (si no, repetirlo sería copiar las respuestas). Cada intento cambia el orden de preguntas y opciones.
 import { el } from './core.js';
+import { aprueba, minimoPara } from './escalera.js';
 
 export function barajar(arr, rnd = Math.random) {
   const a = [...arr];
@@ -37,25 +40,32 @@ export function montarQuiz(contenedor, preguntas, { titulo = 'Comprueba lo que h
     if (sinResponder) { form.querySelector('.quiz-result').textContent = sinResponder === 1 ? 'Te falta 1 pregunta por responder.' : `Te faltan ${sinResponder} preguntas por responder.`; return; }
     let aciertos = 0;
     const detalle = [];
-    preguntasDom.forEach((div, n) => {
+    const resultados = preguntasDom.map((div, n) => {
       const q = ps[n];
       const elegidas = new Set([...div.querySelectorAll('input:checked')].map(i => Number(i.value)));
       const ok = q.opciones.every((o, k) => o.correcta === elegidas.has(k));
       if (ok) aciertos++;
       if (q.id) detalle.push({ id: q.id, ok });
+      return { div, q, elegidas, ok };
+    });
+    const total = ps.length;
+    const aprobado = aprueba(aciertos, total);
+    for (const { div, q, elegidas, ok } of resultados) {
       div.querySelectorAll('.option').forEach((lab, k) => {
         lab.querySelector('input').disabled = true;
+        if (!aprobado) return;
         if (q.opciones[k].correcta) lab.classList.add('correct');
         else if (elegidas.has(k)) lab.classList.add('wrong');
       });
+      if (!aprobado) continue;
       const ex = div.querySelector('.explain');
       ex.hidden = false;
       ex.prepend(el('strong', {}, ok ? '✓ Correcto. ' : '✗ Incorrecto. '));
-    });
-    const total = ps.length;
-    const aprobado = aciertos / total >= 0.7;
-    form.querySelector('.quiz-result').textContent = `Has acertado ${aciertos} de ${total}. ${aprobado ? '¡Aprobado!' : 'Repasa la lección y vuelve a intentarlo (necesitas un 70 %).'}`;
-    form.querySelector('button[type=submit]').textContent = 'Repetir con otro orden';
+    }
+    form.querySelector('.quiz-result').textContent = aprobado
+      ? `Has acertado ${aciertos} de ${total}. ¡Aprobado!`
+      : `Has acertado ${aciertos} de ${total}; necesitas ${minimoPara(total)} (80 %). No te mostramos las respuestas para que no las memorices: vuelve a leer la lección e inténtalo otra vez (las preguntas cambiarán de orden).`;
+    form.querySelector('button[type=submit]').textContent = aprobado ? 'Repetir con otro orden' : 'Intentar de nuevo';
     form.dataset.corregido = '1';
     alTerminar?.(aciertos, total, detalle);
   });

@@ -18,7 +18,7 @@ Formato de cada módulo:
     Texto en Markdown (párrafos, listas, **negrita**, *cursiva*, `código`, [enlaces](https://...), tablas,
     bloques ``` con lenguaje), avisos (::: nota / ::: examen / ::: cuidado ... :::), elementos interactivos
     ([[anim:arp]], [[lab:subnetting]], [[cli:vlan]], [[sql:select]]) y un cuestionario:
-    ::: quiz
+    ::: quiz            (::: banco con el mismo formato: preguntas solo para exámenes y repaso)
     ? Enunciado
     - opción incorrecta
     + opción correcta
@@ -161,6 +161,9 @@ def parse_blocks(lines: list[str], where: str) -> tuple[list, list]:
                 raise ContentError(f"{where}: bloque ::: {kind} sin cerrar")
             if kind == "quiz":
                 quiz.extend(parse_quiz(inner, where))
+            elif kind == "banco":
+                # Preguntas que no se muestran en la lección: solo salen en los exámenes de escalón y en el repaso.
+                quiz.extend({**q, "banco": True} for q in parse_quiz(inner, where))
             elif kind in CALLOUTS:
                 sub, subquiz = parse_blocks(inner, where)
                 if subquiz:
@@ -258,7 +261,9 @@ def parse_module(path: Path) -> dict:
         blocks, quiz = parse_blocks(buf, where)
         if not blocks:
             raise ContentError(f"{where}: lección vacía")
-        cur["blocks"], cur["quiz"] = blocks, quiz
+        cur["blocks"] = blocks
+        cur["quiz"] = [q for q in quiz if not q.get("banco")]
+        cur["banco"] = [{k: v for k, v in q.items() if k != "banco"} for q in quiz if q.get("banco")]
         cur["texto"] = block_text(blocks)
         lessons.append(cur)
 
@@ -298,16 +303,27 @@ def build() -> dict[str, str]:
 
     curso = {"modulos": []}
     buscar, examen = [], []
+    vistos = {}
     for m in modules:
         if m["area"] not in AREAS:
             raise ContentError(f"Módulo {m['id']}: área desconocida {m['area']!r} (usa {', '.join(AREAS)})")
         mod = {k: m[k] for k in ("id", "titulo", "descripcion", "dominio", "peso", "area")}
         mod["lecciones"] = []
         for l in m["lecciones"]:
-            mod["lecciones"].append({k: l[k] for k in ("id", "titulo", "minutos", "nivel", "blocks", "quiz")})
             buscar.append({"id": l["id"], "modulo": m["id"], "titulo": l["titulo"], "texto": l["texto"]})
-            for n, q in enumerate(l["quiz"]):
-                examen.append({"id": f"{l['id']}#{n}", "modulo": m["id"], "area": m["area"], "dominio": m["dominio"], **q})
+            propias = 0
+            for n, q in enumerate(l["quiz"] + l["banco"]):
+                entrada = {"id": f"{l['id']}#{n}", "modulo": m["id"], "area": m["area"], "dominio": m["dominio"], **q}
+                # Una pregunta con el mismo enunciado que otra anterior se marca como duplicada: sirve para el repaso,
+                # pero no cuenta en los exámenes (si no, «otro» intento podría repetir la misma pregunta).
+                clave = re.sub(r"\s+", " ", q["q"].strip().lower())
+                if clave in vistos:
+                    entrada["dup"] = vistos[clave]
+                else:
+                    vistos[clave] = entrada["id"]
+                    propias += 1
+                examen.append(entrada)
+            mod["lecciones"].append({**{k: l[k] for k in ("id", "titulo", "minutos", "nivel", "blocks", "quiz")}, "preguntas": propias})
         curso["modulos"].append(mod)
     dump = lambda o: json.dumps(o, ensure_ascii=False, separators=(",", ":")) + "\n"
     return {"curso.json": dump(curso), "buscar.json": dump(buscar), "examen.json": dump(examen)}

@@ -27,7 +27,7 @@ function fichaTicket(c) {
 
 function selectorPrioridad(valor, alCambiar, bloqueado) {
   const salida = el('p', { class: 'prio-out', 'aria-live': 'polite' });
-  const pintar = () => { const p = prioridad(valor.impacto, valor.urgencia); salida.replaceChildren(p ? el('span', { class: 'badge prio prio-' + p.toLowerCase() }, p) : el('span', { class: 'muted small' }, 'Elige impacto y urgencia'), p ? el('span', { class: 'small muted' }, ' · ' + SLA[p]) : null); };
+  const pintar = () => { const p = prioridad(valor.impacto, valor.urgencia); salida.replaceChildren(...[p ? el('span', { class: 'badge prio prio-' + p.toLowerCase() }, p) : el('span', { class: 'muted small' }, 'Elige impacto y urgencia'), p ? el('span', { class: 'small muted' }, ' · ' + SLA[p]) : null].filter(Boolean)); };
   const sufijo = Math.random().toString(36).slice(2, 8);
   const grupo = (nombre, titulo, opciones) => el('fieldset', { class: 'prio-group' }, el('legend', {}, titulo),
     Object.entries(opciones).map(([k, txt]) => {
@@ -55,7 +55,7 @@ export async function montarCaso(holder, id, opts = {}) {
 
   function pintar() {
     pintarPasos();
-    cuerpo.replaceChildren(...[pasoTicket, pasoDiagnostico, pasoSolucion, pasoDocumentacion, pasoComunicacion, pasoResultado][paso]());
+    cuerpo.replaceChildren(...[pasoTicket, pasoDiagnostico, pasoSolucion, pasoDocumentacion, pasoComunicacion, pasoResultado][paso]().filter(Boolean));
   }
 
   function pasoTicket() {
@@ -147,7 +147,7 @@ export async function montarCaso(holder, id, opts = {}) {
     const otra = boton('Intentar de nuevo', () => { Object.assign(r, { impacto: opts.prioridad?.impacto || '', urgencia: opts.prioridad?.urgencia || '', acciones: [], causa: -1, solucion: [], notas: {}, mensajes: c.comunicacion.map(() => -1) }); ir(0); }, 'btn btn-ghost');
     return [el('div', { class: 'rubric' },
       el('div', { class: 'rubric-total' }, contar(el('span', { class: 'rubric-score' }, '0'), ev.total), el('span', { class: 'small muted' }, '/100'),
-        el('span', { class: 'badge ' + (ev.aprobado ? 'badge-ok' : 'badge-warn') }, ev.aprobado ? '✓ Caso resuelto' : ev.riesgos ? 'Acción de riesgo: repítelo' : 'A mejorar (mínimo 70 y 50 en cada parte)')),
+        el('span', { class: 'badge ' + (ev.aprobado ? 'badge-ok' : 'badge-warn') }, ev.aprobado ? '✓ Caso resuelto' : ev.riesgos ? 'Acción de riesgo: repítelo' : 'A mejorar (mínimo 80 y 50 en cada parte)')),
       el('div', { class: 'rubric-rows' }, filas)),
       el('p', { class: 'alert alert-info' }, el('span', {}, el('strong', {}, 'Lo que te llevas: '), c.aprendizaje)),
       ...bloques, modelo,
@@ -192,14 +192,14 @@ export async function montarTurno(holder, id = 'soporte') {
   function pintarClasificacion() {
     const empezar = el('button', { type: 'button', class: 'btn btn-primary', disabled: !clasificado() }, 'Confirmar la clasificación');
     empezar.addEventListener('click', () => { estado.clasificado = true; guardar(); pintar(); });
-    raiz.replaceChildren(el('h4', {}, 'Paso 1 · Clasifica los tickets de tu turno'),
+    raiz.replaceChildren(...[el('h4', {}, 'Paso 1 · Clasifica los tickets de tu turno'),
       el('p', { class: 'small muted' }, 'Son las 15:15 y estos tickets están abiertos en la cola. Antes de tocar nada, asigna a cada uno su impacto y urgencia: decidirá el orden en que los atiendes.'),
       ...TURNO.casos.map(cid => {
         const v = estado.clasificacion[cid] || (estado.clasificacion[cid] = { impacto: '', urgencia: '' });
         return el('details', { class: 'module project-phase', open: true }, el('summary', {}, el('span', { class: 'module-num' }, ICONO[CASOS[cid].lugar] || '🎫'), el('div', {}, el('div', { class: 'module-title' }, CASOS[cid].ticket.numero + ' · ' + CASOS[cid].ticket.sede), el('div', { class: 'module-meta' }, CASOS[cid].ticket.de + ' · ' + CASOS[cid].ticket.hora))),
           el('div', { class: 'phase-body' }, el('blockquote', { class: 'ticket-text' }, CASOS[cid].ticket.texto), selectorPrioridad(v, () => { guardar(); empezar.disabled = !clasificado(); })));
       }),
-      el('div', { class: 'case-nav' }, empezar));
+      el('div', { class: 'case-nav' }, empezar)].filter(Boolean));
   }
 
   function pintarTablero(pendiente) {
@@ -231,12 +231,12 @@ export async function montarTurno(holder, id = 'soporte') {
     });
     const reiniciar = el('button', { type: 'button', class: 'btn btn-quiet' }, 'Empezar el turno de cero');
     reiniciar.addEventListener('click', () => { if (confirm('¿Borrar la clasificación y los tickets resueltos de este turno?')) { estado.clasificacion = {}; estado.resultados = {}; estado.clasificado = false; delete estado.abierto; guardar(); pintar(); } });
-    raiz.replaceChildren(
+    raiz.replaceChildren(...[
       el('h4', {}, fin ? 'Turno terminado' : 'Paso 2 · Atiende la cola en orden de prioridad'),
       el('p', { class: 'small' }, `Clasificación: ${ok}/${TURNO.casos.length} prioridades correctas. Tickets resueltos: ${aprobados.length}/${TURNO.casos.length}.`, fin && !(aprobados.length === TURNO.casos.length && ok >= 4) ? ' Para completar el proyecto necesitas aprobar los 5 tickets y acertar al menos 4 prioridades.' : ''),
       el('div', { class: 'table-wrap' }, el('table', { class: 'queue' }, el('thead', {}, el('tr', {}, ['#', 'Ticket', 'Prioridad', 'Resultado', ''].map(h => el('th', {}, h)))), el('tbody', {}, filas))),
       el('div', { class: 'case-nav' }, descargar, reiniciar),
-      fin ? el('p', { class: 'alert alert-info' }, el('span', {}, 'El informe recoge tus notas, decisiones y mensajes. Preséntalo como lo que es: un proyecto académico simulado. En la lección «Tu portafolio y tu currículum» tienes cómo describirlo.')) : null);
+      fin ? el('p', { class: 'alert alert-info' }, el('span', {}, 'El informe recoge tus notas, decisiones y mensajes. Preséntalo como lo que es: un proyecto académico simulado. En la lección «Tu portafolio y tu currículum» tienes cómo describirlo.')) : null].filter(Boolean));
   }
 
   function pintarCaso(cid) {

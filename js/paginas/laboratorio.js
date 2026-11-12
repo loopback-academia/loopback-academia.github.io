@@ -1,8 +1,13 @@
 // Un laboratorio a pantalla completa: ?l=lab:subnetting | cli:vlan | sql:join …
 import { iniciarPagina, el, $ } from '../core.js';
 import { CATALOGO } from '../labs/catalogo.js';
+import { cargarCurso } from '../curso.js';
+import { cargar } from '../progreso.js';
+import { labAccesible, leccionDeLab } from '../escalera.js';
+import { estadoArea } from '../escalera-alumno.js';
 
 iniciarPagina();
+const [curso] = await Promise.all([cargarCurso().catch(() => null), cargar()]);
 const clave = new URLSearchParams(location.search).get('l') || 'lab:subnetting';
 const info = CATALOGO.find(l => l.clave === clave);
 const box = $('#lab');
@@ -17,6 +22,12 @@ const MONTAR = {
 };
 if (!info) {
   box.replaceChildren(el('h1', {}, 'Laboratorio no encontrado'), el('a', { class: 'btn btn-primary', href: 'practica.html' }, 'Ver los laboratorios'));
+} else if (curso && !labAccesible(info, curso, estadoArea(curso, info.area))) {
+  const lec = leccionDeLab(info, curso);
+  document.title = `${info.titulo} · Loopback`;
+  box.replaceChildren(el('div', { class: 'locked-screen' }, el('div', { class: 'locked-ico', 'aria-hidden': 'true' }, '🔒'), el('h1', {}, info.titulo),
+    el('p', {}, lec ? `Esta práctica se abre cuando llegas a la lección «${lec.titulo}» en la escalera. Así practicas justo después de aprenderlo.` : 'Esta práctica se abre cuando llegas a su nivel en la escalera.'),
+    el('div', { class: 'hero-cta' }, el('a', { class: 'btn btn-primary', href: 'curso.html?area=' + info.area }, 'Ver la escalera'), el('a', { class: 'btn btn-ghost', href: 'practica.html#area-' + info.area }, 'Prácticas abiertas'))));
 } else {
   document.title = `${info.titulo} · Loopback`;
   const [tipo, id] = clave.split(':');

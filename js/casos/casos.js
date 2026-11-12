@@ -383,7 +383,7 @@ export function evaluarCaso(caso, r) {
 
   const dims = { diagnostico: Math.max(0, Math.min(100, diag)), solucion: Math.max(0, Math.min(100, sol)), documentacion: doc, comunicacion: com };
   const total = Math.round((dims.diagnostico + dims.solucion + dims.documentacion + dims.comunicacion) / 4);
-  const aprobado = total >= 70 && Object.values(dims).every(v => v >= 50) && !riesgos.length;
+  const aprobado = total >= 80 && Object.values(dims).every(v => v >= 50) && !riesgos.length;
   return { dims, total, aprobado, prioridad: prio, riesgos: riesgos.length, comentarios };
 }
 

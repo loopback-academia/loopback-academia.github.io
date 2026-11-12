@@ -4,6 +4,8 @@ import { cargarCurso } from '../curso.js';
 import { CATALOGO } from '../labs/catalogo.js';
 import { cargar, alCambiar, leccionHecha, labHecho } from '../progreso.js';
 import { RUTAS, MODULOS_TI, progresoRuta } from '../rutas.js';
+import { labAccesible } from '../escalera.js';
+import { estadoArea } from '../escalera-alumno.js';
 
 iniciarPagina();
 const [curso] = await Promise.all([cargarCurso(), cargar()]);
@@ -35,7 +37,7 @@ function tarjeta(ruta) {
         modulo ? el('a', { href: 'leccion.html?id=' + modulo.lecciones[0].id }, titulo(id)) : el('span', {}, titulo(id)),
         el('span', { class: 'small muted' }, modulo ? `${e.hechas}/${e.total}` : 'en preparación'));
     })),
-    pr.practicas.length ? el('div', {}, el('div', { class: 'small muted' }, 'Prácticas que cuentan'), el('ul', { class: 'chips' }, pr.practicas.map(p => el('li', {}, el('a', { class: 'chip' + (labHecho(p.progreso) ? ' done' : ''), href: 'laboratorio.html?l=' + p.clave }, p.titulo))))) : null,
+    pr.practicas.length ? el('div', {}, el('div', { class: 'small muted' }, 'Prácticas que cuentan'), el('ul', { class: 'chips' }, pr.practicas.map(p => el('li', {}, labAccesible(p, curso, estadoArea(curso, p.area)) ? el('a', { class: 'chip' + (labHecho(p.progreso) ? ' done' : ''), href: 'laboratorio.html?l=' + p.clave }, p.titulo) : el('span', { class: 'chip locked', title: 'Se abre con su lección en la escalera' }, '🔒 ' + p.titulo))))) : null,
     el('div', { class: 'small' }, el('strong', {}, 'Proyecto final: '), ruta.proyecto
       ? [el('a', { href: 'laboratorio.html?l=' + ruta.proyecto.clave }, ruta.proyecto.titulo), pr.proyHecho ? ' ✓' : '', el('br'), el('span', { class: 'muted' }, ruta.proyecto.texto)]
       : el('span', { class: 'muted' }, 'en preparación (llegará con los módulos de la ruta).')),
