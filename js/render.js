@@ -98,6 +98,9 @@ const LOADERS = {
   turno: () => import('./casos/caso-ui.js').then(m => m.montarTurno),
   video: () => import('./video/reproductor.js').then(m => m.montarVideo),
   sqli: () => import('./labs/inyeccion.js').then(m => m.montarInyeccion),
+  win: () => import('./labs/windows-ui.js').then(m => m.montarWindows),
+  phishing: () => import('./ti/phishing-ui.js').then(m => m.montarPhishing),
+  entrevista: () => import('./ti/entrevista-ui.js').then(m => m.montarEntrevista),
 };
 
 async function montarEmbed(holder, kind, id, ctx) {

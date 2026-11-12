@@ -753,6 +753,10 @@ No son obligatorias para programar (el portafolio pesa más), pero ayudan: **Cis
 - **Explica tu razonamiento en voz alta:** importa tanto cómo piensas como el resultado.
 - **Habla de tus proyectos:** qué decisiones tomaste, qué problema tuviste y cómo lo resolviste.
 
+## Ensaya la entrevista
+
+[[entrevista:prog]]
+
 ::: quiz
 ? Vienes de redes y quieres un perfil muy demandado que combine lo que sabes con la programación. ¿Cuál encaja?
 + NetDevOps / automatización de redes

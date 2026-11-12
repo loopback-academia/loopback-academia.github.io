@@ -277,6 +277,114 @@ El equipo usa un DNS público (8.8.8.8) que no conoce los nombres internos de la
 = nslookup consulta al servidor DNS y muestra la IP que corresponde al nombre.
 :::
 
+=== s1-consola | La consola de Windows para soporte | 20 | 1
+Las herramientas gráficas están bien, pero un técnico de soporte resuelve más rápido con la **consola** (`cmd` o PowerShell): da la información exacta, se puede copiar en el ticket y funciona también por acceso remoto.
+
+## Los comandos imprescindibles
+
+| Comando | Para qué |
+|---|---|
+| `ipconfig` / `ipconfig /all` | IP, máscara, puerta de enlace, DNS, MAC y servidor DHCP |
+| `ipconfig /release` y `/renew` | Soltar la dirección y pedir otra al servidor DHCP |
+| `ipconfig /flushdns` | Vaciar la caché de nombres (también guarda los fallos) |
+| `ping` | ¿Hay respuesta? Prueba por capas: puerta de enlace, IP externa, nombre |
+| `tracert` | Por qué routers pasa el tráfico y dónde se corta |
+| `nslookup` | Pregunta directamente al servidor DNS |
+| `netsh interface ip set dns "Ethernet" dhcp` | Devolver el DNS a automático |
+| `tasklist` / `taskkill /im programa.exe /f` | Ver procesos y terminar uno que no responde |
+| `sc query spooler`, `net stop` / `net start` | Estado de un servicio, detenerlo e iniciarlo |
+| `sfc /scannow` | Reparar archivos del sistema dañados (como administrador) |
+| `gpupdate /force` / `gpresult /r` | Aplicar las directivas de grupo y ver cuáles están aplicadas |
+| `whoami /groups` | A qué grupos pertenece la sesión |
+| `net use Z: \\servidor\recurso` | Conectar una unidad de red |
+| `Test-NetConnection servidor -Port 443` | (PowerShell) ¿Responde ese puerto? |
+
+## Cómo leer ipconfig
+
+- **169.254.x.x** (APIPA): el equipo **no recibió respuesta del DHCP**. Revisa cable o wifi y después `ipconfig /renew`.
+- **Sin puerta de enlace**: puede hablar con su red local, pero no salir de ella.
+- **DNS raro** (una IP que no es la de la empresa): alguien lo cambió a mano. Las páginas no cargan aunque haya conexión.
+
+::: practica
+Cinco casos reales, de menos a más. Lee el caso, diagnostica con comandos antes de cambiar nada, arréglalo y verifica. Escribe `help` para ver los comandos del simulador.
+:::
+
+[[win:apipa]]
+
+[[win:dns]]
+
+[[win:impresora]]
+
+[[win:lento]]
+
+[[win:unidad-red]]
+
+::: quiz
+? Un PC tiene la dirección 169.254.23.7. ¿Qué significa?
+- Que tiene una IP pública
++ Que no recibió respuesta del servidor DHCP
+- Que el DNS está mal configurado
+- Que la tarjeta de red está averiada
+= Windows se asigna una dirección APIPA (169.254.x.x) cuando ningún servidor DHCP le responde.
+
+? ping 8.8.8.8 funciona, pero ping www.google.com dice «no pudo encontrar el host». ¿Dónde está el problema?
+- En el cable de red
+- En la puerta de enlace
++ En la resolución de nombres (DNS)
+- En el servidor DHCP
+= Si una IP de internet responde y un nombre no, la red funciona y falla el DNS.
+
+? La cola de impresión está bloqueada por un trabajo dañado. ¿En qué orden actúas?
++ Detener el servicio Spooler, borrar los trabajos de la carpeta PRINTERS y volver a iniciar el servicio
+- Reiniciar la impresora tres veces
+- Borrar los trabajos con el servicio en marcha
+= Con el servicio en marcha los archivos están bloqueados; primero se detiene.
+
+? A un usuario lo añadieron ayer a un grupo, pero sigue sin acceso a la carpeta. ¿Qué haces primero?
++ gpupdate /force o cerrar sesión y volver a entrar, para que su sesión reciba el grupo nuevo
+- Reinstalar Windows
+- Darle permisos de administrador
+= Los cambios de grupo no llegan a una sesión ya abierta hasta que se actualiza.
+:::
+
+::: banco
+? ¿Qué comando muestra el servidor DHCP y los servidores DNS de un PC?
++ ipconfig /all
+- ipconfig
+- ping
+= ipconfig sin opciones no muestra DHCP ni DNS; /all sí.
+
+? ¿Qué hace taskkill /im programa.exe /f?
++ Termina por la fuerza el proceso con ese nombre
+- Reinicia el equipo
+- Desinstala el programa
+= /im indica el nombre de la imagen y /f fuerza el cierre aunque no responda.
+
+? ¿Para qué sirve sfc /scannow?
++ Comprueba y repara los archivos protegidos del sistema
+- Busca virus
+- Desfragmenta el disco
+= El comprobador de archivos de sistema restaura los que estén dañados.
+
+? «Error de sistema 5: Acceso denegado» al conectar una unidad de red indica que…
++ La ruta existe, pero el usuario no tiene permiso
+- El servidor está apagado
+- El nombre del recurso está mal escrito
+= El error 53 indica que no encuentra la ruta; el 5, falta de permisos.
+
+? Has corregido el DNS de un PC y las páginas siguen sin cargar. ¿Qué te falta?
++ Vaciar la caché DNS con ipconfig /flushdns
+- Renovar la licencia de Windows
+- Cambiar la puerta de enlace
+= Windows guarda en caché también las respuestas fallidas durante un tiempo.
+
+? ¿Qué cmdlet de PowerShell comprueba si un puerto concreto de un servidor responde?
++ Test-NetConnection
+- Get-Process
+- Get-ChildItem
+= Test-NetConnection servidor -Port 443 devuelve TcpTestSucceeded True o False.
+:::
+
 === s1-programas | Instalar programas y controladores | 14 | 1
 Instalar un programa en una empresa no es igual que en casa: hay **licencias**, **permisos** y un **catálogo aprobado**.
 
@@ -499,6 +607,102 @@ Verificar la identidad con el procedimiento: devolver la llamada al número regi
 - Siempre que se pueda
 - Nunca: todo se resuelve en remoto
 = Sin red no hay acceso remoto, y el hardware hay que tocarlo.
+:::
+
+=== s1-phishing | Phishing e ingeniería social: cómo reconocerlo | 14 | 1
+La mayoría de los ataques a empresas no empiezan con un virus sofisticado: empiezan con **un correo que alguien abre**. En soporte vas a recibir muchas preguntas del tipo «¿esto es real?», y tienes que saber responder.
+
+## Las señales que delatan un phishing
+
+1. **El remitente**: el nombre puede decir «Soporte TI», pero mira la **dirección real**. `laceiba-soporte.example` o `1aceiba.example` (con un uno) no son `laceiba.example`.
+2. **Los enlaces**: el texto puede decir una dirección y llevar a otra. Pasa el ratón por encima (o mantén pulsado en el móvil) **sin hacer clic** y lee el destino real.
+3. **La prisa o la amenaza**: «en 24 horas», «su cuenta será cerrada», «es confidencial, no lo comentes».
+4. **Lo que pide**: contraseñas, códigos de verificación, PIN o datos de tarjeta. **TI y los bancos nunca los piden por correo.**
+5. **Adjuntos inesperados**: `.zip`, `.exe`, documentos que piden «habilitar macros».
+6. **Lo demasiado bueno**: premios, bonos o sorteos en los que no participaste.
+7. **Saltarse el procedimiento**: pagos urgentes, cambios de cuenta bancaria de un proveedor, compra de tarjetas regalo. Es el **fraude del director** (o del CEO).
+
+## Tipos de ataque
+
+| Nombre | Canal |
+|---|---|
+| Phishing | Correo masivo |
+| Spear phishing | Correo dirigido a una persona concreta, con datos reales |
+| Smishing | SMS o WhatsApp |
+| Vishing | Llamada telefónica («le llamo de soporte de Microsoft…») |
+| Whaling / fraude del CEO | Dirigido a directivos o suplantándolos |
+
+## Qué hacer (y qué decir a los usuarios)
+
+- **No hacer clic, no responder, no abrir adjuntos.**
+- **Reportarlo** con el botón «Reportar phishing» del correo o reenviándolo a TI como adjunto.
+- Ante un pedido raro de un jefe o proveedor, **confirmar por otro canal**: llamar al número de la agenda interna, no al que viene en el correo.
+- Si ya hizo clic o escribió la contraseña: **avisar a TI de inmediato**, cambiar la contraseña y revisar el MFA. Cuanto antes se avisa, menos daño hay. Nunca se riñe a quien avisa: si no, la próxima vez no lo hará.
+
+[[phishing:bandeja]]
+
+::: quiz
+? Un correo de «Soporte TI» llega desde soporte@laceiba-soporte.example y el dominio de tu empresa es laceiba.example. ¿Qué indica?
++ Que el remitente imita a la empresa con un dominio parecido
+- Que es un subdominio oficial de la empresa
+- Nada: el nombre que se muestra es lo importante
+= El nombre visible se puede poner a gusto; lo que cuenta es el dominio de la dirección.
+
+? Tu jefe te pide por correo que compres tarjetas regalo «urgente y en secreto». ¿Qué haces?
+- Las compras rápido para no hacerle esperar
++ Lo confirmas llamándole a su número de la agenda interna antes de hacer nada
+- Respondes al correo pidiendo más detalles
+= Es el fraude del director: prisa, secreto y un pago fuera del procedimiento. Se confirma por otro canal.
+
+? ¿Cómo compruebas a dónde lleva un enlace sin abrirlo?
++ Pasando el ratón por encima (o manteniéndolo pulsado en el móvil) y leyendo el destino
+- Haciendo clic rápido y cerrando la página
+- Copiándolo en el buscador
+= El destino real aparece en la barra de estado o en la vista previa del enlace.
+
+? Un usuario te dice que hizo clic en un enlace y escribió su contraseña. ¿Qué es lo primero?
++ Cambiar su contraseña de inmediato, revisar el MFA y avisar a seguridad
+- Esperar a ver si pasa algo
+- Reñirle para que no lo vuelva a hacer
+= Cuanto antes se cambia la contraseña, menos tiempo tiene el atacante para usarla.
+:::
+
+::: banco
+? ¿Qué es el smishing?
++ Phishing por SMS o mensajería
+- Phishing por llamada telefónica
+- Un ataque a la red wifi
+= Smishing viene de SMS + phishing.
+
+? ¿Qué tipo de adjunto debería hacerte desconfiar más en un correo inesperado?
++ Un .zip o .exe, o un documento que pide habilitar macros
+- Un PDF de una cotización que tú pediste
+- Una imagen en el cuerpo del correo
+= Los ejecutables, comprimidos y macros pueden instalar malware.
+
+? Un proveedor envía un correo diciendo que cambió su cuenta bancaria para los pagos. ¿Qué haces?
++ Confirmarlo llamando al contacto habitual del proveedor antes de cambiar nada
+- Actualizar la cuenta ese mismo día
+- Responder al correo para confirmar
+= El cambio de cuenta bancaria es un fraude muy común; se verifica por otro canal.
+
+? ¿Por qué no se debe reñir a un usuario que avisa de que cayó en un phishing?
++ Porque si lo castigan, la próxima vez lo ocultará y el daño será mayor
+- Porque no fue culpa suya en ningún caso
+- Porque TI no tiene autoridad
+= Avisar pronto es lo más valioso; hay que fomentarlo.
+
+? ¿Qué es el spear phishing?
++ Un phishing dirigido a una persona concreta, con datos reales sobre ella
+- Un phishing enviado a millones de direcciones
+- Un virus que se propaga por USB
+= Al usar datos reales resulta mucho más creíble.
+
+? ¿Qué medida reduce más el daño si roban una contraseña por phishing?
++ La autenticación multifactor (MFA)
+- Cambiar el fondo de pantalla
+- Usar el mismo usuario en todos los servicios
+= Con MFA, la contraseña sola no basta para entrar.
 :::
 
 === s1-tickets | Tickets, prioridades, SLA y escalamiento | 18 | 1
@@ -910,6 +1114,105 @@ Las versiones de evaluación son legales y gratuitas para aprender, pero **caduc
 - Una cuenta de correo personal
 - Un router físico profesional
 = El servidor será el controlador de dominio y el cliente se unirá a él.
+:::
+
+=== s1-empleo | Tu CV técnico y la entrevista | 18 | 2
+Ya sabes resolver casos reales. Ahora tienes que **demostrarlo** en dos momentos: el CV (para que te llamen) y la entrevista (para que te contraten).
+
+## El CV técnico
+
+- **Una página**, limpia y sin fotos de fondo ni gráficos de «nivel de habilidad» con barras: no dicen nada.
+- **Arriba**: nombre, puesto al que aspiras, ciudad, teléfono, correo y LinkedIn o GitHub.
+- **Perfil**: 3 o 4 líneas sobre lo que sabes hacer y lo que buscas.
+- **Habilidades técnicas concretas**: «ipconfig, DHCP, DNS, colas de impresión, Active Directory básico», no «manejo de computadoras».
+- **Experiencia**: aunque no sea de TI, cuenta. Atención al cliente, ventas o caja demuestran trato con personas, paciencia y responsabilidad. Escribe **logros**, no solo tareas: «Atendía unos 60 clientes al día» dice más que «atención al cliente».
+- **Prácticas y proyectos**: los laboratorios y casos que completaste, y tu portafolio.
+- **Formación**: títulos y cursos. Di la verdad: un certificado de finalización de Loopback no es una certificación oficial.
+- Guárdalo en **PDF** y ponle un nombre claro: `CV_Nombre_Apellido_SoporteTI.pdf`.
+
+::: nota
+Abre [tu CV técnico](./cv.html): se llena solo con lo que has completado en Loopback y tú añades tus datos y tu experiencia. Se imprime o se guarda como PDF desde el navegador.
+:::
+
+## La entrevista
+
+Suele tener tres tipos de preguntas:
+
+1. **Técnicas**: «un usuario no tiene internet, ¿qué haces?». Responde con **método**: acotar, probar por capas y documentar.
+2. **De comportamiento**: «cuéntame una vez que…». Usa el **método STAR**: **S**ituación, **T**area, **A**cción (lo que hiciste tú) y **R**esultado.
+3. **Situacionales**: «¿qué harías si…?». Prioriza, comunica y no prometas lo que no puedes cumplir.
+
+Consejos que marcan la diferencia:
+
+- Si no sabes algo, **dilo** y explica cómo lo averiguarías. Inventar se nota.
+- Prepara **3 o 4 historias** reales que sirvan para varias preguntas.
+- Investiga la empresa y lleva **dos preguntas** para el entrevistador («¿cómo es un día normal en la mesa de ayuda?», «¿qué herramienta de tickets usan?»).
+- Practica **en voz alta**, con tiempo.
+
+[[entrevista:soporte]]
+
+::: quiz
+? ¿Qué es mejor poner en la sección de habilidades de un CV técnico?
++ Herramientas y tareas concretas: «ipconfig, DHCP, DNS, Active Directory básico»
+- «Manejo de computadoras» y «trabajo en equipo»
+- Barras de nivel del 1 al 10 para cada habilidad
+= Lo concreto se puede comprobar en la entrevista; lo genérico no dice nada.
+
+? ¿Qué significa STAR en las preguntas de comportamiento?
++ Situación, Tarea, Acción y Resultado
+- Servicio, Ticket, Atención y Respuesta
+- Sinceridad, Tiempo, Actitud y Responsabilidad
+= Estructura la historia para que sea concreta y muestre lo que hiciste tú.
+
+? En la entrevista te preguntan algo técnico que no sabes. ¿Qué haces?
++ Lo reconoces y explicas cómo lo averiguarías
+- Inventas una respuesta segura
+- Cambias de tema
+= La honestidad y el método valen más que una respuesta inventada.
+
+? ¿Cómo debe presentarse un certificado de Loopback en el CV?
++ Como certificado de finalización de una formación en línea no oficial
+- Como certificación oficial de Cisco
+- Como título universitario
+= Exagerar la formación se descubre enseguida y resta credibilidad.
+:::
+
+::: banco
+? ¿Cuántas páginas debería tener el CV de alguien que busca su primer empleo en TI?
++ Una
+- Tres o más
+- No importa
+= Una página clara se lee entera; tres no.
+
+? Trabajaste de cajero y buscas un puesto de soporte. ¿Lo incluyes en el CV?
++ Sí, destacando el trato con clientes, la responsabilidad y los logros
+- No, porque no es de tecnología
+- Solo si te lo preguntan
+= Soporte es atención al usuario: esa experiencia cuenta.
+
+? ¿Qué preguntas conviene llevar preparadas para el entrevistador?
++ Preguntas sobre el trabajo real: herramientas, turnos, cómo es un día normal
+- Cuántos días de vacaciones hay, como primera pregunta
+- Ninguna, para no molestar
+= Preguntar sobre el trabajo demuestra interés y te ayuda a decidir.
+
+? ¿En qué formato envías el CV?
++ En PDF, con un nombre de archivo claro
+- En Word editable, con el nombre «CV final final 2»
+- Como foto del papel impreso
+= El PDF se ve igual en cualquier equipo.
+
+? En una pregunta de comportamiento, ¿qué parte de la respuesta STAR debe ocupar más tiempo?
++ La acción: lo que hiciste tú
+- La situación, con todos los detalles
+- Lo que hicieron tus compañeros
+= Al entrevistador le interesa cómo actúas tú.
+
+? ¿Qué demuestra mejor tus conocimientos técnicos en una entrevista para soporte?
++ Explicar con método cómo diagnosticarías un caso concreto
+- Recitar definiciones de memoria
+- Decir que aprendes rápido
+= El método de diagnóstico es lo que se usa cada día.
 :::
 
 === s1-proyecto | Proyecto: un turno en la mesa de ayuda | 60 | 2

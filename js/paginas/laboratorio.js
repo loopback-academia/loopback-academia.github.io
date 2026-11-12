@@ -20,6 +20,9 @@ const MONTAR = {
   caso: () => import('../casos/caso-ui.js').then(m => m.montarCaso),
   turno: () => import('../casos/caso-ui.js').then(m => m.montarTurno),
   sqli: () => import('../labs/inyeccion.js').then(m => m.montarInyeccion),
+  win: () => import('../labs/windows-ui.js').then(m => m.montarWindows),
+  phishing: () => import('../ti/phishing-ui.js').then(m => m.montarPhishing),
+  entrevista: () => import('../ti/entrevista-ui.js').then(m => m.montarEntrevista),
 };
 if (!info) {
   box.replaceChildren(el('h1', {}, 'Laboratorio no encontrado'), el('a', { class: 'btn btn-primary', href: 'practica.html' }, 'Ver los laboratorios'));

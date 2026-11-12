@@ -179,6 +179,10 @@ Traducir direcciones privadas a públicas para salir a internet; PAT permite que
 Pide al tutor una **entrevista simulada**: "Hazme una entrevista técnica para técnico de redes junior, una pregunta cada vez, y corrígeme cada respuesta".
 :::
 
+## Ensaya
+
+[[entrevista:redes]]
+
 ::: quiz
 ? En una entrevista te preguntan algo que no sabes. ¿Qué es lo más adecuado?
 + Reconocerlo y explicar cómo lo averiguarías

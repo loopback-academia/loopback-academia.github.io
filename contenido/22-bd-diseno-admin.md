@@ -765,6 +765,10 @@ Comprueba siempre los nombres y requisitos actuales en la web oficial: las certi
 - Qué significa ACID y qué es un interbloqueo.
 - Escribir en la pizarra: "el segundo salario más alto", "el primer pedido de cada cliente", "clientes sin pedidos".
 
+## Ensaya la entrevista
+
+[[entrevista:datos]]
+
 ::: quiz
 ? ¿Qué perfil se dedica a copias, rendimiento y seguridad de los gestores de bases de datos?
 + Administrador de bases de datos (DBA)

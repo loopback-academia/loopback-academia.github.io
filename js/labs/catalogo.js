@@ -4,6 +4,8 @@ import { EJERCICIOS } from './sql-ejercicios.js';
 import { EJERCICIOS as CODIGO } from '../codigo/ejercicios.js';
 import { PROYECTOS } from '../proyectos/proyectos.js';
 import { CASOS, TURNO } from '../casos/casos.js';
+import { WIN_LABS } from './windows-labs.js';
+import { RUTAS_ENTREVISTA } from '../ti/entrevista.js';
 
 const SQL_INFO = {
   select: ['Consultas SELECT y filtros', 'principiante'],
@@ -23,6 +25,9 @@ export const AREAS = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programació
 
 export const CATALOGO = [
   { clave: 'turno:' + TURNO.id, area: 'ti', grupo: 'proyectos', nivel: TURNO.nivel, progreso: TURNO.progreso, titulo: TURNO.titulo.replace(/^Proyecto: (.)/, (_, c) => c.toUpperCase()), texto: TURNO.resumen, tareas: TURNO.casos.length, unidad: 'tickets' },
+  ...Object.entries(WIN_LABS).map(([id, l]) => ({ clave: 'win:' + id, area: 'ti', grupo: 'consola', nivel: l.nivel, progreso: 'win-' + id, titulo: l.titulo, texto: l.intro.split('. ')[0] + '.', tareas: l.tareas.length })),
+  { clave: 'phishing:bandeja', area: 'ti', grupo: 'empleo', nivel: 'principiante', progreso: 'phishing-bandeja', titulo: 'Detector de phishing', texto: 'Revisa una bandeja de 14 correos: decide cuáles son trampas y señala lo que las delata.', tareas: 14, unidad: 'correos' },
+  ...Object.entries(RUTAS_ENTREVISTA).map(([id, t]) => ({ clave: 'entrevista:' + id, area: 'ti', grupo: 'empleo', nivel: 'intermedio', progreso: 'entrevista-' + id, titulo: 'Entrevista: ' + t.split(' (')[0].toLowerCase().replace(/^./, c => c.toUpperCase()), texto: 'Seis preguntas de entrevista real con puntos clave y respuesta modelo.', tareas: 6, unidad: 'preguntas' })),
   ...Object.values(CASOS).map(c => ({ clave: 'caso:' + c.id, area: 'ti', grupo: 'casos', nivel: c.nivel, progreso: 'caso-' + c.id, titulo: c.titulo, texto: c.resumen, lugar: c.lugar })),
   ...Object.values(PROYECTOS).map(p => ({ clave: 'proyecto:' + p.id, area: p.area, grupo: 'proyectos', nivel: p.nivel, progreso: p.progreso, titulo: p.titulo.replace(/^Proyecto: (.)/, (_, c) => c.toUpperCase()), texto: p.resumen, tareas: p.fases.reduce((n, f) => n + f.requisitos.length, 0) })),
   { clave: 'lab:subnetting', area: 'redes', grupo: 'numeros', nivel: 'principiante', progreso: 'subnetting', titulo: 'Entrenador de subnetting', texto: 'Red, broadcast, hosts y máscara de direcciones al azar. Completa 10 aciertos seguidos.' },
