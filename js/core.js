@@ -65,8 +65,29 @@ function initLuces() {
   });
 }
 
+// Menú de la cuenta (círculo con las iniciales): Mi progreso, Mi cuenta y Cerrar sesión.
+function initMenuCuenta() {
+  const btn = $('#menuCuenta'), pop = $('#menuCuentaPop');
+  if (!btn || !pop) return;
+  const abrir = si => { pop.hidden = !si; btn.setAttribute('aria-expanded', String(si)); if (si) pop.querySelector('[role="menuitem"]')?.focus(); };
+  btn.addEventListener('click', e => { e.stopPropagation(); abrir(pop.hidden); });
+  document.addEventListener('click', e => { if (!pop.hidden && !e.target.closest('.cuenta-menu')) abrir(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !pop.hidden) { abrir(false); btn.focus(); } });
+  $('#cerrarSesion')?.addEventListener('click', async () => {
+    const b = $('#cerrarSesion');
+    b.disabled = true;
+    try {
+      const { salir } = await import('./auth.js');
+      await salir();
+      sessionStorage.setItem('aula:aviso', 'Has cerrado sesión. Tu progreso sigue guardado en tu cuenta.');
+      location.href = 'index.html';
+    } catch (err) { b.disabled = false; toast('No se pudo cerrar la sesión. Inténtalo de nuevo.'); }
+  });
+}
+
 function initTheme() {
   initLuces();
+  initMenuCuenta();
   const btn = $('#themeToggle');
   if (!btn) return;
   btn.addEventListener('click', () => {
@@ -96,6 +117,7 @@ export async function iniciarPagina() {
   initTheme();
   const u = await usuarioActual();
   pintarSesion(u);
+  try { const aviso = sessionStorage.getItem('aula:aviso'); if (aviso) { sessionStorage.removeItem('aula:aviso'); toast(aviso); } } catch { /* nada */ }
   alCambiarSesion(pintarSesion);
   return u;
 }

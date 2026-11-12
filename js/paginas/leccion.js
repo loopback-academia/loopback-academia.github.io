@@ -56,6 +56,7 @@ if (!r) {
       el('div', { class: 'crumbs' }, `Módulo ${numeroModulo(leccion.modulo)} · ${leccion.modulo.titulo}`),
       el('h1', {}, leccion.titulo),
       el('div', { class: 'meta' }, el('span', { class: 'badge level-' + ['principiante', 'intermedio', 'avanzado'][leccion.nivel - 1] }, 'Nivel ' + leccion.nivel + ' · ' + ['Principiante', 'Intermedio', 'Avanzado'][leccion.nivel - 1]), el('span', { class: 'badge' }, leccion.minutos + ' min'), leccion.modulo.peso ? el('span', { class: 'badge badge-accent' }, 'CCNA ' + leccion.modulo.dominio.split(' ')[0]) : null, hecha() ? el('span', { class: 'badge badge-ok' }, 'Completada') : null)),
+    hecha() ? null : el('p', { class: 'lesson-hint' }, el('span', { 'aria-hidden': 'true' }, '💡 '), 'Lee la lección con calma y responde el ', el('strong', {}, 'cuestionario del final'), ': si aciertas el 70 %, la lección se marca como completada sola y pasas a la siguiente.'),
     prose, quizBox,
     el('nav', { class: 'lesson-actions', 'aria-label': 'Lecciones' },
       anterior ? el('a', { class: 'btn btn-quiet', href: 'leccion.html?id=' + anterior.id }, '‹ ' + anterior.titulo) : el('span'),
@@ -71,6 +72,8 @@ if (!r) {
         if (falladas) quizBox.querySelector('.quiz-result')?.append(' ', el('a', { href: 'repaso.html?leccion=' + leccion.id }, `${falladas === 1 ? 'La que has fallado se ha añadido' : `Las ${falladas} que has fallado se han añadido`} a tu repaso →`));
         await guardarQuiz(leccion.id, aciertos, total);
         if (aciertos / total >= 0.7 && !hecha()) { await completarLeccion(leccion.id); pintarBoton(); toast('¡Aprobado! Lección completada.'); }
+        if (aciertos / total >= 0.7) quizBox.querySelector('.quiz-result')?.after(el('div', { class: 'next-step' }, el('span', {}, el('strong', {}, '¡Bien hecho! '), 'Siguiente paso:'),
+          siguiente ? el('a', { class: 'btn btn-primary', href: 'leccion.html?id=' + siguiente.id }, siguiente.titulo + ' →') : el('a', { class: 'btn btn-primary', href: 'examen.html' }, 'Hacer un simulacro →')));
       },
     });
   }

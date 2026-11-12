@@ -19,6 +19,7 @@ const CSP = `default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src
 
 const LOGO = '<svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M22.5 10.5A8.5 8.5 0 1 1 9.5 10.5" fill="none" stroke="var(--accent-ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M12.6 6.9 12.1 12.9 6.9 8.6Z" fill="var(--accent-ink)" stroke="var(--accent-ink)" stroke-width="1" stroke-linejoin="round"/><circle cx="16" cy="16" r="3.4" fill="var(--accent-ink)"/></svg>';
 const ICON = {
+  salir: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg>',
   luces: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg>',
   curso: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2.5Z"/><path d="M8 7h7M8 11h5"/></svg>',
   practica: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="m7 9 3 2-3 2M12 14h5"/></svg>',
@@ -29,17 +30,35 @@ const ICON = {
   tema: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>',
 };
 const NAV = [['curso.html', 'Curso', 'curso'], ['practica.html', 'Práctica', 'practica'], ['comandos.html', 'Comandos', 'comandos'], ['examen.html', 'Examen', 'examen'], ['repaso.html', 'Repaso', 'repaso'], ['rutas.html', 'Rutas', 'rutas'], ia ? ['tutor.html', 'Tutor IA', 'tutor'] : ['tutor.html', 'Buscar', 'buscar']];
+// Qué hay en cada sección (se muestra al pasar el ratón): así nadie tiene que adivinar.
+const DESCRIPCION = {
+  'curso.html': 'Tus lecciones por niveles y tu progreso',
+  'practica.html': 'Laboratorios y ejercicios que se corrigen solos',
+  'comandos.html': 'Guía de comandos Cisco explicados',
+  'examen.html': 'Simulacro de examen con nota',
+  'repaso.html': 'Las preguntas que fallaste, para dominarlas',
+  'rutas.html': 'Rutas para conseguir empleo en TI',
+  'tutor.html': ia ? 'Pregunta tus dudas al tutor con IA' : 'Busca cualquier tema del curso',
+};
 
 function header(active) {
-  const links = NAV.map(([href, label]) => `<a href="${href}"${active === href ? ' aria-current="page"' : ''}>${label}</a>`).join('');
+  const links = NAV.map(([href, label]) => `<a href="${href}" title="${DESCRIPCION[href]}"${active === href ? ' aria-current="page"' : ''}>${label}</a>`).join('');
   return `<header class="site-header"><div class="container">
   <a class="brand" href="./">${LOGO}<span>Loopback</span></a>
   <nav class="nav" aria-label="Principal">${links}</nav>
   <div class="header-actions">
     <button type="button" class="btn btn-quiet theme-toggle luces-toggle" id="lucesToggle" aria-pressed="true" aria-label="Luces LED de la interfaz" title="Encender o apagar las luces LED">${ICON.luces}</button>
-    <button type="button" class="btn btn-quiet theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">${ICON.tema}</button>
-    <a class="btn btn-ghost btn-sm" href="cuenta.html" data-auth="out">Entrar</a>
-    <a class="avatar" href="cuenta.html" data-auth="in" hidden aria-label="Mi cuenta"><span data-user="initials">?</span></a>
+    <button type="button" class="btn btn-quiet theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro" title="Tema claro u oscuro">${ICON.tema}</button>
+    <a class="btn btn-ghost btn-sm" href="cuenta.html" data-auth="out" title="Entra o crea tu cuenta gratis para guardar tu progreso">Entrar</a>
+    <div class="cuenta-menu" data-auth="in" hidden>
+      <button type="button" class="avatar" id="menuCuenta" aria-haspopup="menu" aria-expanded="false" aria-controls="menuCuentaPop" title="Tu cuenta"><span data-user="initials">?</span><span class="sr-only">Abrir el menú de tu cuenta</span></button>
+      <div class="menu-pop" id="menuCuentaPop" role="menu" hidden>
+        <p class="menu-user"><strong data-user="name"></strong><span>Tu progreso se guarda en tu cuenta</span></p>
+        <a role="menuitem" href="curso.html">${ICON.curso}<span>Mi progreso</span></a>
+        <a role="menuitem" href="cuenta.html">${ICON.cuenta}<span>Mi cuenta y seguridad</span></a>
+        <button type="button" role="menuitem" class="menu-salir" id="cerrarSesion">${ICON.salir}<span>Cerrar sesión</span></button>
+      </div>
+    </div>
   </div>
 </div></header>`;
 }

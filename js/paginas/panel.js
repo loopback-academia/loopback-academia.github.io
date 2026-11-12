@@ -6,7 +6,7 @@ import { CONFIG } from '../config.js';
 import { cargarCurso, numeroModulo } from '../curso.js';
 import { CATALOGO } from '../labs/catalogo.js';
 import { practicasPendientes, temasAReforzar, resumenRepaso } from '../recomendaciones.js';
-import { cargar, alCambiar, leccionHecha, notaQuiz, labHecho, examenes, racha } from '../progreso.js';
+import { cargar, alCambiar, leccionHecha, notaQuiz, labHecho, examenes, racha, exportar } from '../progreso.js';
 
 const usuario = await iniciarPagina();
 const curso = await cargarCurso().catch(() => null);
@@ -89,6 +89,7 @@ function pintar() {
        el('a', { class: 'btn btn-primary btn-lg', href: 'examen.html?area=' + area }, 'Simulacro')]));
 
   pintarContinua();
+  pintarGuia();
 
   if (vista === 'niveles') {
     $('#modulos').replaceChildren(...NIVEL_INFO.map(nv => {
@@ -104,13 +105,17 @@ function pintar() {
   }
 }
 
-$('#areas').addEventListener('click', e => {
-  const b = e.target.closest('button');
-  if (!b || b.dataset.area === area) return;
-  area = b.dataset.area;
+function elegirArea(id) {
+  local.set('aula:guia:area', id);
+  if (id === area) { pintar(); return; }
+  area = id;
   local.set('aula:panel:area', area);
   abiertos.clear();
   pintar();
+}
+$('#areas').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (b) elegirArea(b.dataset.area);
 });
 // "Continúa por aquí": repaso de hoy, prácticas pendientes de lo estudiado y temas a reforzar (del área elegida).
 function pintarContinua() {
@@ -157,3 +162,48 @@ if (usuario) {
 await cargar();
 pintar();
 alCambiar(pintar);
+
+// Guía de primeros pasos: una lista que se marca sola con lo que el alumno va haciendo. Sin tutoriales: cada paso
+// lleva directamente a donde se hace. Desaparece al completarla o si el alumno la oculta.
+function pintarGuia() {
+  const OBJETIVOS = [
+    ['redes', '🌐', 'Redes', 'Cómo funciona Internet, routers, switches, VLAN y el CCNA'],
+    ['ti', '🏢', 'Conseguir empleo en TI', 'Soporte técnico, mesa de ayuda y casos reales de empresa'],
+    ['prog', '💻', 'Programación', 'Python y JavaScript desde cero, ejecutando código aquí mismo'],
+    ['bd', '🗄️', 'Bases de datos', 'SQL de verdad en tu navegador, de cero a profesional'],
+  ];
+  const caja = $('#primerosPasos');
+  if (!caja || !curso) return;
+  if (local.get('aula:guia:oculta', false)) { caja.hidden = true; return; }
+  const items = Object.keys(exportar().items || {});
+  const hay = pref => items.some(k => k.startsWith(pref));
+  const eligio = !!local.get('aula:guia:area', '') || hay('leccion:');
+  const primera = ruta()[0];
+  const pasos = [
+    { ok: eligio, titulo: 'Elige qué quieres aprender', texto: 'Puedes cambiar de área cuando quieras con las pestañas de arriba.' },
+    { ok: hay('leccion:'), titulo: 'Haz tu primera lección', texto: 'Lecciones cortas, con ejemplos, animaciones y videos.', accion: primera && ['Empezar la primera lección', 'leccion.html?id=' + primera.id] },
+    { ok: hay('quiz:'), titulo: 'Responde un cuestionario', texto: 'Está al final de cada lección. Con el 70 % la lección se completa sola.' },
+    { ok: CATALOGO.some(l => labHecho(l.progreso)), titulo: 'Practica en un laboratorio', texto: 'Ejercicios que se corrigen solos: consola, SQL, código o casos de soporte.', accion: ['Ver las prácticas', 'practica.html#area-' + area] },
+  ];
+  if (cuentasActivas()) pasos.push({ ok: !!usuario, titulo: 'Guarda tu progreso con una cuenta', texto: 'Es gratis y te permite seguir desde el celular o la computadora.', accion: ['Crear mi cuenta', 'cuenta.html'] });
+  const hechos = pasos.filter(p => p.ok).length;
+  if (hechos === pasos.length) { caja.hidden = true; return; }
+  const actual = pasos.findIndex(p => !p.ok);
+  const ocultar = el('button', { type: 'button', class: 'btn btn-quiet btn-sm' }, 'Ocultar guía');
+  ocultar.addEventListener('click', () => { local.set('aula:guia:oculta', true); caja.hidden = true; });
+  const meter = el('div', { class: 'meter' }, el('span'));
+  setMeter(meter, hechos / pasos.length);
+  caja.hidden = false;
+  caja.replaceChildren(
+    el('div', { class: 'guide-head' }, el('div', {}, el('span', { class: 'eyebrow' }, hechos ? `Primeros pasos · ${hechos} de ${pasos.length}` : 'Bienvenido a Loopback'), el('h2', {}, hechos ? 'Sigue así, vas muy bien' : 'Empieza en 1 minuto')), ocultar),
+    meter,
+    el('ol', { class: 'guide-steps' }, pasos.map((p, i) => el('li', { class: p.ok ? 'done' : i === actual ? 'now' : '' },
+      el('span', { class: 'guide-num', 'aria-hidden': 'true' }, p.ok ? '✓' : String(i + 1)),
+      el('div', {}, el('strong', {}, p.titulo), el('span', { class: 'small muted' }, p.ok ? ' · hecho' : ''), i === actual ? el('p', { class: 'small muted' }, p.texto) : null,
+        i === actual && i === 0 ? el('div', { class: 'goal-grid' }, OBJETIVOS.map(([id, ico, nombre, desc]) => {
+          const b = el('button', { type: 'button', class: 'goal' + (id === area ? ' sel' : '') }, el('span', { class: 'goal-ico', 'aria-hidden': 'true' }, ico), el('strong', {}, nombre), el('span', { class: 'small muted' }, desc));
+          b.addEventListener('click', () => { local.set('aula:guia:area', id); elegirArea(id); });
+          return b;
+        })) : null,
+        i === actual && p.accion ? el('a', { class: 'btn btn-primary btn-sm', href: p.accion[1] }, p.accion[0] + ' →') : null)))));
+}
