@@ -17,6 +17,14 @@ concurrency:
 jobs:
   comprobar:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -31,6 +39,12 @@ jobs:
         run: npm run check
       - name: Pruebas (laboratorios, contenido, seguridad, RLS de la base de datos)
         run: npm test
+      - name: Migraciones de Supabase y pruebas de seguridad del panel del profesor
+        run: scripts/probar-sql.sh
+        env:
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: postgres
 
   publicar:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'

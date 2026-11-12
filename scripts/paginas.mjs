@@ -57,6 +57,7 @@ function header(active) {
         <a role="menuitem" href="curso.html">${ICON.curso}<span>Mi progreso</span></a>
         <a role="menuitem" href="certificado.html">${ICON.certificado}<span>Mis certificados</span></a>
         <a role="menuitem" href="cv.html">${ICON.cv}<span>Mi CV técnico</span></a>
+        <a role="menuitem" href="profesor.html">${ICON.curso}<span>Clases (profesor y alumno)</span></a>
         <a role="menuitem" href="cuenta.html">${ICON.cuenta}<span>Mi cuenta y seguridad</span></a>
         <button type="button" role="menuitem" class="menu-salir" id="cerrarSesion">${ICON.salir}<span>Cerrar sesión</span></button>
       </div>
@@ -69,7 +70,7 @@ function mobileNav(active) {
 }
 const footer = `<footer class="site-footer"><div class="container">
   <span>Loopback · Redes, bases de datos, programación, ciberseguridad, empleo en TI e inglés técnico desde cero. El temario de redes sigue el Cisco CCNA 200-301; no es un curso oficial de Cisco.</span>
-  <span><a href="glosario.html">Glosario</a> · <a href="cv.html">Mi CV</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a></span>
+  <span><a href="glosario.html">Glosario</a> · <a href="cv.html">Mi CV</a> · <a href="profesor.html">Clases</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a></span>
 </div></footer>`;
 
 function page(meta, body) {

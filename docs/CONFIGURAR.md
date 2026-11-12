@@ -8,6 +8,9 @@ Se hace una sola vez. Necesitas una cuenta gratuita de [Supabase](https://supaba
 
 1. En supabase.com → **New project**. Elige una región cercana a tus alumnos y una contraseña fuerte para la base de datos.
 2. **SQL Editor → New query**: pega todo `supabase/migrations/20261111000000_aula.sql` y pulsa **Run**. Se puede repetir sin problemas.
+3. Para el **panel del profesor** (clases con código): en otra consulta, pega `supabase/migrations/20261112000000_profesor.sql` y pulsa **Run**. También se puede repetir. Hasta que lo hagas, la página Clases avisa de que no está activado y el resto de la web funciona igual.
+
+Las migraciones se prueban solas en la integración continua contra un PostgreSQL que imita Supabase (`scripts/probar-sql.sh` y `supabase/pruebas/`): permisos de cada usuario, verificación en dos pasos y que nadie lee el progreso de quien no se ha unido a su clase.
 
 ## 2. Configurar la autenticación
 

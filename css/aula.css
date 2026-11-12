@@ -1102,6 +1102,33 @@ a.node-in { transition: background-color 150ms ease; }
 .sec-ir-paso { padding: 14px; }
 @media (max-width: 560px) { .sec-ops.dos { grid-template-columns: minmax(0, 1fr); } }
 
+/* ---------------------------------------------------------------- panel del profesor */
+.prof-seccion { margin: 0 0 2.4rem; }
+.prof-form { display: grid; gap: 8px; max-width: 760px; margin: 0 0 1.2rem; }
+.prof-fila { display: flex; gap: 8px; flex-wrap: wrap; }
+.prof-fila input { flex: 1 1 260px; }
+.prof-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.prof-acepto { display: flex; gap: 8px; align-items: flex-start; line-height: 1.45; }
+.prof-acepto input { margin-top: 3px; flex: none; }
+.prof-form > button[type=submit] { justify-self: start; }
+.prof-clase-cab { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.prof-clase-cab h3 { margin: 0; overflow-wrap: anywhere; }
+.prof-codigo { font-family: var(--mono); font-size: 1.5rem; font-weight: 700; letter-spacing: .08em; margin: 0 0 10px; }
+.prof-mias { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.prof-mia { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.prof-medias { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 0 0 1rem; }
+.prof-media { display: grid; gap: 2px; padding: 12px; }
+.prof-media strong { font-size: 1.4rem; }
+.prof-herr { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 0 0 10px; }
+.prof-herr select { width: auto; padding: 7px 10px; }
+.prof-tabla { width: 100%; margin: 0; font-size: .9rem; }
+.prof-tabla th:first-child { text-align: left; }
+.prof-tabla th, .prof-tabla td { vertical-align: middle; }
+.prof-sub { display: block; font-weight: 400; }
+.prof-barra { display: grid; grid-template-columns: minmax(60px, 1fr) auto; gap: 8px; align-items: center; min-width: 120px; }
+.prof-vacio { padding: 16px; margin: 0; }
+@media (max-width: 640px) { .prof-grid2 { grid-template-columns: minmax(0, 1fr); } }
+
 /* ---------------------------------------------------------------- ejecución paso a paso */
 .paso { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px; margin: 10px 0; background: var(--surface); outline: none; }
 .paso:focus-visible { box-shadow: 0 0 0 3px var(--accent-soft); border-color: var(--accent); }
