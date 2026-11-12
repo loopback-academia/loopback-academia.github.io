@@ -65,6 +65,7 @@ KNOWN = {
     "logs": {"ssh", "web"},
     "fw": {"oficina", "dmz"},
     "ir": {"ransomware", "cuenta"},
+    "paso": {"variables", "bucle", "funciones", "listas", "pila", "busqueda"},
     "er": {"tienda", "escuela"},
     "fn": {"formas"},
     "conc": {"sucia", "bloqueo", "perdida", "deadlock"},

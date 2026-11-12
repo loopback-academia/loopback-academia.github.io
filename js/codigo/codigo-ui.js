@@ -57,6 +57,8 @@ export async function montarCodigo(holder, id) {
   const btnSol = el('button', { type: 'button', class: 'btn btn-quiet btn-sm' }, 'Ver solución');
   const btnReset = el('button', { type: 'button', class: 'btn btn-quiet btn-sm' }, 'Restaurar');
   const pista = el('p', { class: 'hint', hidden: true });
+  const btnPaso = set.lang === 'python' ? el('button', { type: 'button', class: 'btn btn-ghost', title: 'Ejecuta tu código línea a línea y mira las variables' }, '👣 Paso a paso') : null;
+  const zonaPaso = el('div', { class: 'code-paso' });
 
   const escribir = (texto, clase) => { salida.append(el('span', { class: clase || null }, texto)); salida.scrollTop = salida.scrollHeight; };
   function pintar() {
@@ -69,6 +71,7 @@ export async function montarCodigo(holder, id) {
     pista.hidden = true; pista.textContent = ej.pista ? 'Pista: ' + ej.pista : '';
     marcador.textContent = set.libre ? NOMBRE[set.lang] : `${[...hechos].filter(i => i < lista.length).length}/${lista.length} resueltos`;
     btnPrev.disabled = n === 0; btnNext.disabled = n === lista.length - 1;
+    zonaPaso.replaceChildren();
     for (const b of [btnPrev, btnNext, btnCheck, btnPista, btnSol]) b.hidden = !!set.libre;
   }
   ed.addEventListener('input', () => local.set(borradorClave(n), ed.value));
@@ -106,6 +109,21 @@ export async function montarCodigo(holder, id) {
     } finally { ejecutando = false; btnRun.disabled = btnCheck.disabled = false; }
   }
   btnRun.addEventListener('click', () => correr(false));
+  btnPaso?.addEventListener('click', async () => {
+    if (ejecutando) return;
+    ejecutando = true; btnPaso.disabled = btnRun.disabled = btnCheck.disabled = true;
+    estado.textContent = 'Preparando el paso a paso…';
+    try {
+      const { trazar, visor } = await import('./paso-ui.js');
+      const t = await trazar(ed.value, s => { if (s === 'loading') estado.textContent = 'Descargando Python en tu navegador (solo la primera vez)…'; });
+      const v = visor(ed.value, t);
+      zonaPaso.replaceChildren(el('div', { class: 'code-paso-cab' }, el('h5', { class: 'small muted' }, 'PASO A PASO'), el('button', { type: 'button', class: 'btn btn-quiet btn-sm', onclick: () => zonaPaso.replaceChildren() }, 'Cerrar')), v.nodo);
+      estado.textContent = `${v.total} pasos. Recórrelos con los botones o con las flechas.`;
+      v.nodo.focus({ preventScroll: true });
+      zonaPaso.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    } catch (e) { estado.textContent = e.message; }
+    finally { ejecutando = false; btnPaso.disabled = btnRun.disabled = btnCheck.disabled = false; }
+  });
   btnCheck.addEventListener('click', () => correr(true));
   ed.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); correr(!set.libre); } });
   btnPrev.addEventListener('click', () => { n--; pintar(); });
@@ -120,9 +138,9 @@ export async function montarCodigo(holder, id) {
     titulo, enunciado,
     el('div', { class: 'code-layout' },
       el('div', {}, ed, el('p', { class: 'hint' }, 'Ctrl + Intro para ' + (set.libre ? 'ejecutar' : 'comprobar') + '. Tab sangra el código. Tu borrador se guarda en este navegador.'),
-        el('div', { class: 'hero-cta' }, btnRun, btnCheck, estado)),
+        el('div', { class: 'hero-cta' }, btnRun, btnCheck, btnPaso, estado)),
       el('div', {}, el('h5', { class: 'small muted' }, 'SALIDA'), salida, set.libre ? null : el('h5', { class: 'small muted' }, 'PRUEBAS'), pruebas)),
-    pista,
+    zonaPaso, pista,
     el('div', { class: 'hero-cta' }, btnPrev, btnNext, btnPista, btnSol, btnReset)));
   pintar();
 }

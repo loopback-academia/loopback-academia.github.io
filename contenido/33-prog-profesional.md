@@ -161,6 +161,10 @@ Cambiar una línea convierte minutos en milisegundos.
 - **Algoritmos voraces:** elegir lo mejor en cada paso (como Dijkstra para el camino más corto).
 - **Recorridos de grafos:** en anchura (BFS) y en profundidad (DFS).
 
+Comprueba cuántos pasos necesita la búsqueda binaria: es O(log n).
+
+[[paso:busqueda]]
+
 ::: quiz
 ? ¿Qué complejidad tiene buscar una clave en un diccionario?
 + O(1)

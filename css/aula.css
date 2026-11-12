@@ -1102,6 +1102,37 @@ a.node-in { transition: background-color 150ms ease; }
 .sec-ir-paso { padding: 14px; }
 @media (max-width: 560px) { .sec-ops.dos { grid-template-columns: minmax(0, 1fr); } }
 
+/* ---------------------------------------------------------------- ejecución paso a paso */
+.paso { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px; margin: 10px 0; background: var(--surface); outline: none; }
+.paso:focus-visible { box-shadow: 0 0 0 3px var(--accent-soft); border-color: var(--accent); }
+.paso-controles { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.paso-controles .badge { margin-left: auto; }
+.paso input[type=range] { width: 100%; margin: 8px 0 4px; }
+.paso-texto { min-height: 1.5em; margin: 4px 0 8px; font-weight: 600; }
+.paso-texto.err { color: var(--danger); }
+.paso-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 14px; }
+.paso-layout h5 { margin: 4px 0; }
+.paso-codigo { position: relative; margin: 0; padding: 8px 0 8px 2.6em; background: var(--code-bg); color: var(--code-ink); border-radius: var(--radius-sm); font-family: var(--mono); font-size: .86rem; max-height: 360px; overflow: auto; }
+.paso-codigo li { padding: 1px 10px 1px 4px; white-space: pre; border-left: 3px solid transparent; }
+.paso-codigo li::marker { color: #8a94a6; font-size: .78rem; }
+.paso-codigo li code { background: none; color: inherit; padding: 0; font-size: inherit; }
+.paso-codigo li.previa { background: rgba(255, 255, 255, .06); border-left-color: #8a94a6; }
+.paso-codigo li.actual { background: rgba(250, 204, 21, .18); border-left-color: #facc15; }
+.paso-codigo li.actual::marker { color: #facc15; font-weight: 700; }
+.paso-pila { display: grid; gap: 8px; }
+.paso-marco { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 6px 8px; opacity: .75; }
+.paso-marco.activo { opacity: 1; border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+.paso-marco-tit { margin: 0 0 4px; font-family: var(--mono); font-weight: 700; }
+.paso-vars { margin: 0; font-size: .85rem; }
+.paso-vars th, .paso-vars td { padding: 3px 6px; vertical-align: top; }
+.paso-vars th { font-family: var(--mono); width: 1%; white-space: nowrap; }
+.paso-vars td code { overflow-wrap: anywhere; }
+.paso-vars tr.cambio td { background: var(--warn-soft); }
+.paso-obj { margin-left: 6px; font-size: .7rem; }
+.paso .paso-salida { min-height: 2.6em; height: auto; max-height: 160px; overflow: auto; font-size: .82rem; margin: 0; }
+.code-paso-cab { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+@media (max-width: 760px) { .paso-layout { grid-template-columns: minmax(0, 1fr); } }
+
 /* ---------------------------------------------------------------- simulador de topologías */
 .topo-barra { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 10px 0 4px; }
 .topo-grupo { display: flex; flex-wrap: wrap; gap: 6px; }

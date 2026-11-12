@@ -57,6 +57,17 @@ export const SEC_INFO = [
   ['ir:cuenta', 'incidentes', 'avanzado', 'Incidente: una cuenta de correo comprometida', 'Echa al atacante, encuentra sus reglas ocultas y protege a los clientes.', 5, 'decisiones'],
 ];
 
+// Programas de la ejecución paso a paso: [id, título, nivel]. Las preguntas son siempre 2 (tests/paso.test.mjs lo comprueba
+// contra js/codigo/pasos.js).
+export const PASO_INFO = [
+  ['variables', 'Variables que cambian', 'principiante'],
+  ['bucle', 'Un bucle que acumula', 'principiante'],
+  ['funciones', 'Llamar a una función', 'principiante'],
+  ['listas', 'Dos nombres, una misma lista', 'principiante'],
+  ['pila', 'La pila de llamadas con recursión', 'principiante'],
+  ['busqueda', 'Búsqueda binaria', 'avanzado'],
+];
+
 export const NIVELES = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
 export const AREAS = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico', sec: 'Ciberseguridad' };
 
@@ -78,6 +89,7 @@ export const CATALOGO = [
   ...Object.values(CASOS).map(c => ({ clave: 'caso:' + c.id, area: 'ti', grupo: 'casos', nivel: c.nivel, progreso: 'caso-' + c.id, titulo: c.titulo, texto: c.resumen, lugar: c.lugar })),
   ...Object.values(PROYECTOS).map(p => ({ clave: 'proyecto:' + p.id, area: p.area, grupo: 'proyectos', nivel: p.nivel, progreso: p.progreso, titulo: p.titulo.replace(/^Proyecto: (.)/, (_, c) => c.toUpperCase()), texto: p.resumen, tareas: p.fases.reduce((n, f) => n + f.requisitos.length, 0) })),
   ...SEC_INFO.map(([clave, grupo, nivel, titulo, texto, tareas, unidad]) => ({ clave, area: 'sec', grupo, nivel, progreso: clave.replace(':', '-'), titulo, texto, tareas, unidad })),
+  ...PASO_INFO.map(([id, titulo, nivel]) => ({ clave: 'paso:' + id, area: 'prog', grupo: 'paso', nivel, progreso: 'paso-' + id, titulo: 'Paso a paso: ' + titulo.charAt(0).toLowerCase() + titulo.slice(1), texto: 'Ejecuta el programa línea a línea, mira las variables y responde.', tareas: 2, unidad: 'preguntas' })),
   ...TOPO_INFO.map(([id, titulo, nivel, tareas, texto]) => ({ clave: 'topo:' + id, area: 'redes', grupo: 'topologias', nivel, progreso: 'topo-' + id, titulo, texto, tareas, unidad: tareas === 1 ? 'tarea' : 'tareas' })),
   ...Object.entries(CAPTURAS).map(([id, c]) => ({ clave: 'cap:' + id, area: 'redes', grupo: 'capturas', nivel: 'intermedio', progreso: 'cap-' + id, titulo: 'Captura: ' + c.titulo.charAt(0).toLowerCase() + c.titulo.slice(1), texto: c.intro.split('. ')[0] + '.', tareas: c.preguntas.length, unidad: 'preguntas' })),
   { clave: 'lab:subnetting', area: 'redes', grupo: 'numeros', nivel: 'principiante', progreso: 'subnetting', titulo: 'Entrenador de subnetting', texto: 'Red, broadcast, hosts y máscara de direcciones al azar. Completa 10 aciertos seguidos.' },

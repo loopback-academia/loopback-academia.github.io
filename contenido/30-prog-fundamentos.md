@@ -138,6 +138,10 @@ Usa nombres que expliquen qué guardan: `ip_gestion` mejor que `x`. En Python se
 
 [[code:python-basico]]
 
+Mira cómo cambian las variables línea a línea. Antes de avanzar, intenta adivinar el siguiente valor.
+
+[[paso:variables]]
+
 ::: quiz
 ? ¿Qué devuelve 7 // 2 en Python?
 + 3
@@ -343,6 +347,10 @@ caidas = [i for i in interfaces if i["estado"] == "down"]
 
 [[code:python-bucles]]
 
+Sigue cada vuelta del bucle y observa cómo crece el acumulador.
+
+[[paso:bucle]]
+
 ::: quiz
 ? ¿Qué valores recorre range(1, 4) en Python?
 + 1, 2 y 3
@@ -415,6 +423,10 @@ Una función **pura** siempre devuelve lo mismo para los mismos argumentos y no 
 Antes de escribir una función, mira si el lenguaje ya la trae: `len()`, `max()`, `sorted()`, `sum()` en Python; `Math.max()`, `arr.sort()`, `str.includes()` en JavaScript. Y las **bibliotecas** (módulos) añaden miles más: `import ipaddress`, `import json`, `import datetime`.
 
 [[code:js-basico]]
+
+Observa cómo cada llamada crea su propio marco con sus variables y cómo desaparece al devolver el resultado.
+
+[[paso:funciones]]
 
 ::: quiz
 ? ¿Qué diferencia hay entre return y print?
@@ -518,6 +530,10 @@ const total = velocidades.reduce((a, v) => a + v, 0);    // 11100
 
 [[code:js-arrays]]
 
+Una de las sorpresas más comunes: dos variables que apuntan a la misma lista.
+
+[[paso:listas]]
+
 ::: quiz
 ? En Python, ¿qué devuelve vlans[-1]?
 + El último elemento
@@ -542,6 +558,82 @@ const total = velocidades.reduce((a, v) => a + v, 0);    // 11100
 - Ordena el array
 - Suma los elementos
 = map transforma, filter selecciona y reduce combina.
+:::
+
+=== p1-traza | Seguir un programa paso a paso | 14 | 1
+Leer código **como lo ejecuta el ordenador**, una línea cada vez, es la habilidad que más ayuda a programar y a encontrar errores. Los profesionales lo hacen con el **depurador**; aquí lo practicas con la ejecución paso a paso.
+
+## Qué mirar en cada paso
+
+- **La línea actual**: la que se va a ejecutar ahora. Las anteriores ya han hecho su efecto.
+- **Las variables**: qué valor tiene cada una *en este momento*. Una variable no se recalcula sola si cambia otra de la que salió.
+- **La pila de llamadas**: cada vez que se llama a una función se apila un **marco** con sus propias variables (parámetros y locales). Al hacer `return`, ese marco desaparece y el programa sigue donde estaba.
+- **La salida**: lo que ha impreso hasta ahora.
+
+## Recursión
+
+Una función **recursiva** se llama a sí misma con un problema más pequeño, hasta llegar a un **caso base** que no necesita llamarse otra vez. Sin caso base, la pila crece hasta que Python la corta con `RecursionError`.
+
+## Referencias, no copias
+
+En Python, `b = a` no copia una lista: hace que `b` apunte **al mismo objeto**. Si cambias la lista por un nombre, el cambio se ve por el otro. Para copiar: `list(a)`, `a.copy()` o `a[:]`.
+
+## Cómo se hace en el trabajo
+
+Los editores (VS Code, PyCharm) tienen un **depurador**: pones un **punto de ruptura** (*breakpoint*) en una línea, el programa se detiene ahí y avanzas paso a paso viendo las variables. Es mucho más eficaz que llenar el código de `print`.
+
+[[paso:pila]]
+
+::: quiz
+? En un paso a paso, la flecha está en la línea 4. ¿Se ha ejecutado ya esa línea?
++ No, es la siguiente que se va a ejecutar
+- Sí, acaba de ejecutarse
+- Depende del lenguaje
+= Las variables muestran el estado justo antes de esa línea.
+
+? ¿Qué se apila cada vez que se llama a una función?
++ Un marco con sus propias variables
+- Una copia de todo el programa
+- Nada
+= Al hacer return, el marco se quita de la pila.
+
+? `a = [1, 2]`, `b = a`, `b.append(3)`. ¿Qué vale a?
++ [1, 2, 3]
+- [1, 2]
+- Da error
+= a y b son el mismo objeto.
+:::
+
+::: banco
+? ¿Qué es un punto de ruptura (breakpoint)?
++ Una marca en una línea donde el depurador detiene el programa para inspeccionarlo
+- Un error que rompe el programa
+- El final de un bucle
+= Desde ahí se avanza paso a paso.
+
+? ¿Qué pasa si una función recursiva no tiene caso base?
++ Se llama sin fin hasta que Python la detiene con RecursionError
+- Devuelve 0
+- Se ejecuta una sola vez
+= Cada llamada añade un marco a la pila.
+
+? ¿Cómo copias una lista para que los cambios no afecten a la original?
++ copia = lista.copy() (o list(lista), o lista[:])
+- copia = lista
+- copia == lista
+= La asignación solo crea otro nombre para el mismo objeto.
+
+? Una variable local de una función, ¿existe después de que la función termine?
++ No, desaparece con su marco
+- Sí, siempre
+- Solo si se llama igual que una global
+= Por eso se devuelve el resultado con return.
+
+? `x = 3`, `y = x * 2`, `x = 10`. ¿Cuánto vale y?
++ 6
+- 20
+- 10
+= y se calculó cuando x valía 3; no se recalcula sola.
 :::
 
 === p1-pensar | Pensar como programador: pseudocódigo y depuración | 14 | 1

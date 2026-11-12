@@ -111,6 +111,7 @@ const LOADERS = {
   logs: () => import('./sec/seguridad-ui.js').then(m => m.montarLogs),
   fw: () => import('./sec/seguridad-ui.js').then(m => m.montarFirewall),
   ir: () => import('./sec/seguridad-ui.js').then(m => m.montarIncidente),
+  paso: () => import('./codigo/paso-ui.js').then(m => m.montarPaso),
   er: () => import('./labs/er-ui.js').then(m => m.montarEr),
   fn: () => import('./labs/er-ui.js').then(m => m.montarFormas),
   conc: () => import('./labs/concurrencia-ui.js').then(m => m.montarConc),
