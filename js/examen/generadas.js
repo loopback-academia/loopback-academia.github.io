@@ -6,6 +6,8 @@
 // Formato: { id: 'gen:<tipo>', generada: true, q, contexto?: {tabla|codigo}, respuesta, explain, modulo }
 // y comprobar(pregunta, texto) → true/false.
 
+import * as Topo from '../labs/topologia.js';
+
 const entero = (rnd, a, b) => a + Math.floor(rnd() * (b - a + 1));
 const elegir = (rnd, xs) => xs[Math.floor(rnd() * xs.length)];
 const ipTexto = n => [24, 16, 8, 0].map(s => (n >>> s) & 255).join('.');
@@ -13,6 +15,41 @@ const mascara = p => (p === 0 ? 0 : (0xffffffff << (32 - p)) >>> 0);
 
 const GEN = {
   // ------------------------------------------------------------- redes
+  // Con el motor del simulador de topologías: la respuesta sale de la red simulada, no de una tabla escrita a mano.
+  'topo-gateway': rnd => {
+    const a = entero(rnd, 1, 120), b = a + entero(rnd, 1, 100), x = entero(rnd, 2, 15);
+    const t = Topo.nuevaTopologia();
+    const r = Topo.agregarEquipo(t, 'router', { nombre: 'R1' });
+    const netA = `192.168.${a}`, netB = `10.${x}.${b}`;
+    Object.assign(r.ifs['Gi0/0'], { ip: `${netA}.1`, mask: '255.255.255.0', on: true });
+    Object.assign(r.ifs['Gi0/1'], { ip: `${netB}.254`, mask: '255.255.255.0', on: true });
+    const lado = rnd() < 0.5 ? 'Gi0/0' : 'Gi0/1';
+    const host = `${lado === 'Gi0/0' ? netA : netB}.${entero(rnd, 20, 200)}`;
+    const gw = r.ifs[lado].ip;
+    return { area: 'redes', modulo: 'm1', q: `R1 tiene Gi0/0 = ${netA}.1/24 (LAN de Ventas) y Gi0/1 = ${netB}.254/24 (LAN del almacén). ¿Qué puerta de enlace debe tener un PC con la IP ${host}/24?`, respuesta: gw,
+      explain: `${host}/24 pertenece a la red ${Topo.redDe(host, '255.255.255.0')}/24, la misma que la interfaz ${lado} de R1 (${gw}). La puerta de enlace es siempre la IP del router en la red del propio PC.` };
+  },
+  'topo-ruta': rnd => {
+    const a = entero(rnd, 1, 99), b = entero(rnd, 100, 220), k = entero(rnd, 0, 63) * 4;
+    const t = Topo.nuevaTopologia();
+    const r1 = Topo.agregarEquipo(t, 'router', { nombre: 'R1' }), r2 = Topo.agregarEquipo(t, 'router', { nombre: 'R2' });
+    const p1 = Topo.agregarEquipo(t, 'pc', { nombre: 'PC1' }), p2 = Topo.agregarEquipo(t, 'pc', { nombre: 'PC2' });
+    const m = '255.255.255.0', enl = `10.0.0.${k}`, ip1 = `10.0.0.${k + 1}`, ip2 = `10.0.0.${k + 2}`;
+    Object.assign(p1.ifs.Fa0, { ip: `192.168.${a}.10`, mask: m }); p1.gw = `192.168.${a}.1`;
+    Object.assign(p2.ifs.Fa0, { ip: `192.168.${b}.10`, mask: m }); p2.gw = `192.168.${b}.1`;
+    Object.assign(r1.ifs['Gi0/0'], { ip: `192.168.${a}.1`, mask: m, on: true }); Object.assign(r1.ifs['Gi0/1'], { ip: ip1, mask: '255.255.255.252', on: true });
+    Object.assign(r2.ifs['Gi0/0'], { ip: `192.168.${b}.1`, mask: m, on: true }); Object.assign(r2.ifs['Gi0/1'], { ip: ip2, mask: '255.255.255.252', on: true });
+    Topo.conectar(t, 'PC1', 'R1', 'Fa0', 'Gi0/0'); Topo.conectar(t, 'R1', 'R2', 'Gi0/1', 'Gi0/1'); Topo.conectar(t, 'R2', 'PC2', 'Gi0/0', 'Fa0');
+    const falta = rnd() < 0.5 ? 'R1' : 'R2';
+    if (falta !== 'R1') r1.rutas.push({ red: `192.168.${b}.0`, mask: m, via: ip2 });
+    if (falta !== 'R2') r2.rutas.push({ red: `192.168.${a}.0`, mask: m, via: ip1 });
+    const res = Topo.pingEquipo(t, 'PC1', 'PC2');
+    const red = falta === 'R1' ? `192.168.${b}.0` : `192.168.${a}.0`;
+    const cfg = [r1, r2].map(r => `${r.nombre}: Gi0/0 ${r.ifs['Gi0/0'].ip}/24 · Gi0/1 ${r.ifs['Gi0/1'].ip}/30\n  rutas estáticas: ${r.rutas.length ? r.rutas.map(x => `${x.red}/24 por ${x.via}`).join(', ') : 'ninguna'}`).join('\n');
+    return { area: 'redes', modulo: 'm3', q: `PC1 (192.168.${a}.10, LAN de R1) hace ping a PC2 (192.168.${b}.10, LAN de R2) y falla. ¿Cuál es la red de destino de la ruta estática que falta? (escribe la dirección de red, por ejemplo 172.16.5.0)`,
+      contexto: { codigo: `${cfg}\n\nping 192.168.${b}.10 → ${res.motivo}` }, respuesta: red,
+      explain: `${res.motivo} Falta en ${falta} la ruta hacia ${red}/24 por ${falta === 'R1' ? ip2 : ip1}: cada router solo conoce sus redes conectadas y lo que le enseñen las rutas.` };
+  },
   'red-de-ip': rnd => {
     const p = entero(rnd, 20, 29);
     const base = elegir(rnd, [[10, entero(rnd, 0, 255)], [172, entero(rnd, 16, 31)], [192, 168]]);
@@ -105,7 +142,7 @@ const GEN = {
 };
 
 export const TIPOS_POR_AREA = {
-  redes: ['red-de-ip', 'broadcast', 'hosts-utiles'],
+  redes: ['red-de-ip', 'broadcast', 'hosts-utiles', 'topo-gateway', 'topo-ruta'],
   bd: ['sql-contar', 'sql-suma'],
   prog: ['py-bucle', 'py-condicion', 'py-lista'],
   ti: ['prioridad'],

@@ -45,6 +45,7 @@ KNOWN = {
     "cli": {"basico", "vlan", "trunk", "estatica", "ospf", "acl", "ssh", "portsecurity", "router", "intervlan", "dhcp", "nat",
             "ipv6", "capa2", "averia-puerto", "averia-trunk", "averia-gestion", "averia-ruta", "averia-ospf", "averia-ssh", "averia-acl", "averia-duplex"},
     "proyecto": {"oficina"},
+    "topo": {"lan", "gateway", "vlan", "troncal", "intervlan", "estaticas", "dhcp", "averias", "libre"},
     "caso": {"login", "impresora-etiquetas", "sucursal", "nuevo-empleado", "lento"},
     "turno": {"soporte"},
     "video": {"viaje-mensaje", "vlan-switch", "router-decide", "dhcp-nat", "phishing", "automatizar", "tablas-claves", "join", "transaccion", "bucle", "lenguajes", "git-flujo", "busqueda", "ticket-vida"},

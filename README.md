@@ -14,6 +14,7 @@ Plataforma de aprendizaje con **cinco áreas**, de principiante a nivel de emple
 | **Certificado de Loopback** | Al aprobar el examen final de un área: con tu nombre, la firma de Gabriel PD y un código. Se descarga como imagen o se guarda como PDF |
 | **Laboratorio de código** | Python (Pyodide) y JavaScript ejecutados en el navegador, en un entorno aislado, con ejercicios corregidos automáticamente |
 | **12 animaciones y 14 vídeos narrados** | Encapsulación, switch, ARP, TCP, DHCP, DNS, VLAN, STP, enrutamiento, NAT, ACL, OSPF y más, paso a paso |
+| **Simulador de topologías** | Lienzo donde se colocan PC, switches, routers y servidores, se conectan con cables y se configuran (IP, VLAN, troncales, subinterfaces, rutas estáticas y DHCP). El ping se anima salto a salto y, si falla, dice exactamente dónde y por qué. 8 retos corregidos solos y un modo libre |
 | **Simulador de Cisco IOS** | Laboratorios guiados y de averías que se corrigen sobre el estado del equipo; Tab autocompleta y hay pistas |
 | **Guía de comandos** | Comandos de IOS por tema y nivel: qué hacen, en qué modo, un ejemplo y el laboratorio donde practicarlos |
 | **Entrenadores** | Subnetting, binario y VLSM con ejercicios infinitos y explicación |

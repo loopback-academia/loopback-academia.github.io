@@ -142,6 +142,10 @@ Típico en la interfaz que da al proveedor de internet.
 
 [[cli:dhcp]]
 
+Activa un servidor DHCP y haz que los PC obtengan su dirección, su máscara y su puerta de enlace solos.
+
+[[topo:dhcp]]
+
 ::: quiz
 ? ¿Cuál es el orden de los mensajes DHCP?
 - Request, Offer, Discover, Ack

@@ -194,6 +194,10 @@ Recuerda que el tráfico es de **ida y vuelta**: si R1 tiene ruta a la LAN de R2
 
 [[cli:estatica]]
 
+Cada router solo conoce sus redes conectadas. Añade las rutas de ida y de vuelta y observa qué pasa si falta una.
+
+[[topo:estaticas]]
+
 ::: quiz
 ? ¿Qué comando crea una ruta por defecto hacia 203.0.113.1?
 - ip route 255.255.255.255 0.0.0.0 203.0.113.1
@@ -646,6 +650,10 @@ Arregla las tres averías. Usa primero los comandos de diagnóstico: las tareas 
 [[cli:averia-ruta]]
 
 [[cli:averia-ospf]]
+
+Último reto: una red con cuatro errores escondidos. Usa ping, lee dónde se para cada paquete y arréglala capa a capa.
+
+[[topo:averias]]
 
 ::: quiz
 ? Configuras una ruta por defecto pero no aparece en show ip route. ¿Causa más probable?

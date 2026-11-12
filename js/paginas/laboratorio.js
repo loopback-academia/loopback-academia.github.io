@@ -24,6 +24,7 @@ const MONTAR = {
   linux: () => import('../labs/linux-ui.js').then(m => m.montarLinux),
   git: () => import('../labs/git-ui.js').then(m => m.montarGit),
   cap: () => import('../labs/capturas-ui.js').then(m => m.montarCaptura),
+  topo: () => import('../labs/topologia-ui.js').then(m => m.montarTopologia),
   vocab: () => import('../en/ingles-ui.js').then(m => m.montarVocab),
   lectura: () => import('../en/ingles-ui.js').then(m => m.montarLectura),
   frases: () => import('../en/ingles-ui.js').then(m => m.montarFrases),

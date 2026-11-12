@@ -279,6 +279,10 @@ SW1(config-if)# switchport voice vlan 50
 Dos PC en VLAN distintas **no pueden comunicarse** aunque estén en el mismo switch, a menos que haya un router o un switch de capa 3 que enrute entre las VLAN.
 :::
 
+Pruébalo tú: separa dos departamentos que comparten switch y demuestra con ping que ya no se ven.
+
+[[topo:vlan]]
+
 ::: quiz
 ? Cada VLAN es...
 - Un dominio de colisión
@@ -358,6 +362,10 @@ Dos puertos en **dynamic auto** no forman trunk. Lo recomendable es configurar l
 El **VLAN Trunking Protocol** propaga la lista de VLAN entre switches (modos servidor, cliente y transparente). Es arriesgado: un switch con un número de revisión mayor puede borrar las VLAN de toda la red. Muchas redes usan **modo transparente** o VTPv3.
 
 [[cli:trunk]]
+
+En el simulador, el enlace entre los dos switches es de acceso y solo lleva la VLAN 1. Conviértelo en troncal.
+
+[[topo:troncal]]
 
 ::: quiz
 ? ¿Cuántos bits tiene el campo VLAN ID de la etiqueta 802.1Q?
@@ -439,6 +447,10 @@ Si un switch de capa 3 no enruta entre VLAN, revisa que tenga `ip routing`. Sin 
 :::
 
 [[cli:intervlan]]
+
+Construye un router-on-a-stick: una subinterfaz por VLAN sobre un único cable troncal.
+
+[[topo:intervlan]]
 
 ::: quiz
 ? En router-on-a-stick, ¿qué comando asocia una subinterfaz a la VLAN 30?

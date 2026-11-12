@@ -510,6 +510,10 @@ Otras especiales: **APIPA** `169.254.0.0/16` (el equipo se la pone solo cuando n
 Si ves que un PC tiene una dirección `169.254.x.x`, la respuesta casi siempre es: **no ha podido contactar con el servidor DHCP**.
 :::
 
+Monta tu primera red en el simulador de topologías: conecta los PC al switch, dales una IP de la misma red y comprueba con ping que se ven.
+
+[[topo:lan]]
+
 ::: quiz
 ? ¿Cuál de estas direcciones es privada?
 - 172.32.1.1
@@ -1027,6 +1031,10 @@ Internet  192.168.1.10          3   0050.7966.6800  ARPA   GigabitEthernet0/0
 ```
 
 En IPv6 no existe ARP: lo sustituye **NDP** (Neighbor Discovery), con los mensajes **Neighbor Solicitation** y **Neighbor Advertisement** enviados por multicast.
+
+Ahora con dos redes: el PC pregunta por ARP la MAC de su **puerta de enlace**, no la del destino. Configura el router y las puertas de enlace y mira el ping salto a salto.
+
+[[topo:gateway]]
 
 ::: quiz
 ? ¿Cómo se envía un ARP Request?

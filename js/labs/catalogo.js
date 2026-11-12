@@ -29,6 +29,20 @@ const SQL_INFO = {
   analisis: ['Análisis de ventas: KPI e informes', 'avanzado'],
 };
 
+// Retos del simulador de topologías: [id, título, nivel, tareas, texto]. Se copian aquí para no cargar el motor en cada
+// página; tests/topologia.test.mjs comprueba que coinciden con js/labs/topologia-retos.js.
+export const TOPO_INFO = [
+  ['lan', 'Tu primera LAN', 'principiante', 3, 'Conecta tres PC a un switch, dales IP y comprueba que se ven con ping.'],
+  ['gateway', 'Dos redes unidas por un router', 'principiante', 4, 'Configura el router y las puertas de enlace para pasar de una LAN a otra.'],
+  ['vlan', 'Separar departamentos con VLAN', 'intermedio', 4, 'Aísla Ventas y Soporte en el mismo switch y demuéstralo con ping.'],
+  ['troncal', 'Dos switches unidos por un troncal', 'intermedio', 3, 'Haz que las VLAN crucen de un switch a otro con un enlace 802.1Q.'],
+  ['intervlan', 'Router-on-a-stick: enrutar entre VLAN', 'intermedio', 4, 'Subinterfaces en el router para que Ventas y Soporte se comuniquen.'],
+  ['estaticas', 'Rutas estáticas entre dos sedes', 'intermedio', 3, 'Añade las rutas de ida y de vuelta entre dos routers.'],
+  ['dhcp', 'Un servidor DHCP para la oficina', 'intermedio', 3, 'Activa el DHCP en el servidor y haz que los PC obtengan su IP.'],
+  ['averias', 'La red que no funciona', 'avanzado', 3, 'Cuatro errores escondidos: encuéntralos con ping y arréglalos.'],
+  ['libre', 'Modo libre: diseña tu red', 'principiante', 1, 'Lienzo en blanco con PC, servidores, switches y routers.'],
+];
+
 export const NIVELES = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
 export const AREAS = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico' };
 
@@ -49,6 +63,7 @@ export const CATALOGO = [
   ...Object.entries(RUTAS_ENTREVISTA).map(([id, t]) => ({ clave: 'entrevista:' + id, area: 'ti', grupo: 'empleo', nivel: 'intermedio', progreso: 'entrevista-' + id, titulo: 'Entrevista: ' + t.split(' (')[0].toLowerCase().replace(/^./, c => c.toUpperCase()), texto: 'Seis preguntas de entrevista real con puntos clave y respuesta modelo.', tareas: 6, unidad: 'preguntas' })),
   ...Object.values(CASOS).map(c => ({ clave: 'caso:' + c.id, area: 'ti', grupo: 'casos', nivel: c.nivel, progreso: 'caso-' + c.id, titulo: c.titulo, texto: c.resumen, lugar: c.lugar })),
   ...Object.values(PROYECTOS).map(p => ({ clave: 'proyecto:' + p.id, area: p.area, grupo: 'proyectos', nivel: p.nivel, progreso: p.progreso, titulo: p.titulo.replace(/^Proyecto: (.)/, (_, c) => c.toUpperCase()), texto: p.resumen, tareas: p.fases.reduce((n, f) => n + f.requisitos.length, 0) })),
+  ...TOPO_INFO.map(([id, titulo, nivel, tareas, texto]) => ({ clave: 'topo:' + id, area: 'redes', grupo: 'topologias', nivel, progreso: 'topo-' + id, titulo, texto, tareas, unidad: tareas === 1 ? 'tarea' : 'tareas' })),
   ...Object.entries(CAPTURAS).map(([id, c]) => ({ clave: 'cap:' + id, area: 'redes', grupo: 'capturas', nivel: 'intermedio', progreso: 'cap-' + id, titulo: 'Captura: ' + c.titulo.charAt(0).toLowerCase() + c.titulo.slice(1), texto: c.intro.split('. ')[0] + '.', tareas: c.preguntas.length, unidad: 'preguntas' })),
   { clave: 'lab:subnetting', area: 'redes', grupo: 'numeros', nivel: 'principiante', progreso: 'subnetting', titulo: 'Entrenador de subnetting', texto: 'Red, broadcast, hosts y máscara de direcciones al azar. Completa 10 aciertos seguidos.' },
   { clave: 'lab:binario', area: 'redes', grupo: 'numeros', nivel: 'principiante', progreso: 'binario', titulo: 'Binario y decimal', texto: 'Convierte octetos de binario a decimal y al revés hasta hacerlo de cabeza.' },

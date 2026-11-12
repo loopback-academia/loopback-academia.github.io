@@ -23,6 +23,7 @@ test('cada área tiene preguntas de razonamiento y todas traen respuesta y expli
 
 test('las respuestas calculadas son correctas', () => {
   for (let k = 1; k < 200; k++) for (const p of generarPreguntas('redes', 3, semilla(k))) {
+    if (p.tipo.startsWith('topo-')) continue; // se comprueban con el simulador en topologia.test.mjs
     const [ip, pref] = (p.q.match(/(\d+\.\d+\.\d+\.\d+)\/(\d+)/) || []).slice(1);
     const bits = Number(pref ?? p.q.match(/\/(\d+)/)[1]);
     if (p.tipo === 'hosts-utiles') assert.equal(Number(p.respuesta), 2 ** (32 - bits) - 2);

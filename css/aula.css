@@ -1044,6 +1044,92 @@ a.node-in { transition: background-color 150ms ease; }
   .hero { padding-top: 36px; }
   input[type=text], input[type=email], input[type=password], input[type=search], input[type=number], select, textarea { font-size: 16px; }
 }
+/* ---------------------------------------------------------------- simulador de topologías */
+.topo-barra { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 10px 0 4px; }
+.topo-grupo { display: flex; flex-wrap: wrap; gap: 6px; }
+.topo-barra button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.topo-ayuda { margin: 4px 0 10px; min-height: 1.4em; }
+.topo-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 18px; align-items: start; }
+.topo-lienzo { margin: 0; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-2); overflow: hidden; }
+.topo-svg { display: block; width: 100%; height: auto; -webkit-user-select: none; user-select: none; }
+.topo-fondo { fill: transparent; }
+.topo-linea { stroke: var(--ink-2); stroke-width: 2.5; }
+.topo-linea-toque { stroke: transparent; stroke-width: 16; cursor: pointer; }
+.topo-cable.caido .topo-linea { stroke: var(--danger); stroke-dasharray: 6 5; }
+.topo-punto { fill: var(--danger); }
+.topo-punto.on { fill: var(--ok); }
+.topo-puerto { font: 600 10px var(--mono); fill: var(--muted); text-anchor: middle; paint-order: stroke; stroke: var(--surface-2); stroke-width: 3px; }
+.topo-eq { cursor: grab; touch-action: none; outline: none; }
+.topo-eq:active { cursor: grabbing; }
+.topo-halo { fill: transparent; stroke: transparent; stroke-width: 2; }
+.topo-eq:focus-visible .topo-halo { stroke: var(--accent); stroke-dasharray: 4 3; }
+.topo-eq.sel .topo-halo { fill: var(--accent-soft); stroke: var(--accent); }
+.topo-eq.origen .topo-halo { fill: var(--warn-soft); stroke: var(--warn); }
+.topo-cuerpo { fill: var(--surface); stroke: var(--ink-2); stroke-width: 2; }
+.topo-switch .topo-cuerpo, .topo-router .topo-cuerpo { fill: var(--accent); stroke: var(--accent); }
+.topo-router .topo-cuerpo { fill: var(--violet); stroke: var(--violet); }
+.topo-servidor .topo-cuerpo { fill: var(--ink-2); stroke: var(--ink-2); }
+.topo-pantalla { fill: var(--accent-soft); }
+.topo-trazo { stroke: var(--ink-2); stroke-width: 2; fill: none; stroke-linecap: round; }
+.topo-trazo-claro { stroke: #fff; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.topo-led { fill: var(--ok); }
+.topo-nombre { font: 700 13px var(--sans); fill: var(--ink); text-anchor: middle; }
+.topo-ip { font: 500 11px var(--mono); fill: var(--ink-2); text-anchor: middle; }
+.topo-nota { font: 600 10.5px var(--sans); fill: var(--accent); text-anchor: middle; text-transform: uppercase; letter-spacing: .04em; }
+.topo-paquete { stroke: #fff; stroke-width: 2; }
+.topo-paquete.ida { fill: var(--accent); }
+.topo-paquete.vuelta { fill: var(--ok); }
+.topo-fallo circle { fill: var(--danger); }
+.topo-fallo path { stroke: #fff; stroke-width: 2.5; stroke-linecap: round; fill: none; }
+.topo-avisos .alert { margin: 10px 0 0; }
+.topo-ping { margin-top: 6px; }
+.topo-ping-fila { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.topo-ping-fila label { display: flex; align-items: center; gap: 6px; }
+.topo-ping-fila select { width: auto; min-width: 0; max-width: 100%; padding: 7px 10px; font-size: .9rem; }
+.topo-ping-salida .alert { margin: 12px 0 6px; }
+.topo-pasos { margin: 4px 0 8px; padding-left: 1.3em; }
+.topo-der { border-left: 1px solid var(--line); padding-left: 18px; min-width: 0; }
+.topo-der > h4:first-child { margin-top: 0; }
+.topo-panel { display: grid; gap: 10px; }
+.topo-panel-cab { display: flex; align-items: center; gap: 10px; }
+.topo-panel-cab h4 { margin: 0; }
+.topo-panel-cab .topo-campo { flex: 1; }
+.topo-campo { display: grid; gap: 3px; min-width: 0; }
+.topo-campo input { padding: 7px 10px; font-size: .92rem; font-family: var(--mono); }
+.topo-campo input[aria-invalid="true"] { border-color: var(--danger); }
+.topo-error { color: var(--danger); }
+.topo-error:empty { display: none; }
+.topo-fs { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px 12px 12px; margin: 0; display: grid; gap: 8px; min-width: 0; }
+.topo-fs legend { padding: 0 4px; font-weight: 600; }
+.topo-radio { display: inline-flex; align-items: center; gap: 4px; margin-right: 12px; font-size: .92rem; }
+.topo-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.topo-grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.topo-sub { display: grid; grid-template-columns: auto 70px minmax(0, 1fr) minmax(0, 1fr) auto; gap: 6px; align-items: end; padding: 8px; border-radius: var(--radius-sm); background: var(--surface-2); }
+.topo-sub-nombre { font-family: var(--mono); font-weight: 600; align-self: center; }
+.topo-num { width: 100%; }
+.topo-tabla { font-size: .85rem; margin: 0; }
+.topo-tabla th, .topo-tabla td { padding: 6px 8px; vertical-align: middle; }
+.topo-tabla select, .topo-tabla input[type=number] { padding: 5px 6px; font-size: .85rem; width: auto; max-width: 90px; }
+.topo-libres summary { cursor: pointer; margin: 4px 0; }
+.topo-dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 0; }
+.topo-dl dt { color: var(--muted); }
+.topo-dl dd { margin: 0; font-family: var(--mono); }
+.topo-lista-rutas { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; font-size: .85rem; }
+.topo-rutas { font-size: .82rem; white-space: pre-wrap; margin: 0; }
+@media (max-width: 980px) {
+  .topo-layout { grid-template-columns: minmax(0, 1fr); }
+  .topo-der { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 12px; }
+}
+.topo-desliza { display: none; margin: 4px 0 0; }
+@media (max-width: 560px) {
+  .topo-lienzo { overflow-x: auto; overscroll-behavior-x: contain; }
+  .topo-svg { width: 680px; max-width: none; }
+  .topo-desliza { display: block; }
+  .topo-grid2, .topo-grid3 { grid-template-columns: minmax(0, 1fr); }
+  .topo-sub { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .topo-sub-nombre { grid-column: 1 / -1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 1ms !important; animation-duration: 1ms !important; animation-iteration-count: 1 !important; }
   .btn:active, .bit:active { transform: none; }
