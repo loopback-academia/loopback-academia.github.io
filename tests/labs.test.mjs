@@ -8,7 +8,7 @@ import * as ip from '../js/labs/ipv4.js';
 const aleatorio = semilla => { let s = semilla >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 2 ** 32; }; };
 import { nuevoEquipo, ejecutar, runningConfig } from '../js/labs/ios.js';
 import { LABS } from '../js/labs/ios-labs.js';
-import { ESQUEMA, DATOS, ESQUEMA_DETECTIVE, DATOS_DETECTIVE } from '../js/labs/sql-datos.js';
+import { ESQUEMA, DATOS, ESQUEMA_DETECTIVE, DATOS_DETECTIVE, ESQUEMA_VENTAS, DATOS_VENTAS } from '../js/labs/sql-datos.js';
 import { EJERCICIOS, CONJUNTOS } from '../js/labs/sql-ejercicios.js';
 import { repartir } from '../js/quiz.js';
 
@@ -79,7 +79,8 @@ test('SQL: todas las soluciones se ejecutan sobre los datos de ejemplo', async (
   for (const [grupo, lista] of Object.entries(EJERCICIOS)) {
     for (const ej of lista) {
       const db = new SQL.Database();
-      if (CONJUNTOS[grupo]?.base === 'detective') { db.run(ESQUEMA_DETECTIVE); db.run(DATOS_DETECTIVE); } else { db.run(ESQUEMA); db.run(DATOS); }
+      const base = CONJUNTOS[grupo]?.base;
+      if (base === 'detective') { db.run(ESQUEMA_DETECTIVE); db.run(DATOS_DETECTIVE); } else if (base === 'ventas') { db.run(ESQUEMA_VENTAS); db.run(DATOS_VENTAS); } else { db.run(ESQUEMA); db.run(DATOS); }
       const r = db.exec(ej.solucion);
       if (ej.verificar) assert.ok(db.exec(ej.verificar).length, `${grupo}: verificar sin filas`);
       else assert.ok(r.length && r[r.length - 1].values.length, `${grupo}: «${ej.enunciado}» no devuelve filas`);

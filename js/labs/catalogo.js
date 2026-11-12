@@ -8,6 +8,8 @@ import { WIN_LABS } from './windows-labs.js';
 import { LINUX_LABS } from './linux-labs.js';
 import { GIT_LABS } from './git-labs.js';
 import { CAPTURAS } from './capturas.js';
+import { RETOS_ER } from './er.js';
+import { RETOS_CONC } from './concurrencia.js';
 import { CONVERSACIONES } from '../ti/atencion.js';
 import { ENCARGOS } from '../ti/hardware.js';
 import { RUTAS_ENTREVISTA } from '../ti/entrevista.js';
@@ -23,6 +25,7 @@ const SQL_INFO = {
   ventanas: ['Funciones de ventana (OVER)', 'avanzado'],
   inventario: ['Reto: informes del inventario de red', 'avanzado'],
   detective: ['Caso detective: el apagón de la sucursal', 'intermedio'],
+  analisis: ['Análisis de ventas: KPI e informes', 'avanzado'],
 };
 
 export const NIVELES = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
@@ -48,7 +51,10 @@ export const CATALOGO = [
   { clave: 'lab:ipv6', area: 'redes', grupo: 'numeros', nivel: 'intermedio', progreso: 'ipv6', titulo: 'Entrenador IPv6', texto: 'Abreviar y expandir direcciones, EUI-64, tipos de dirección y prefijos. Dos aciertos de cada tipo.' },
   { clave: 'lab:vlsm', area: 'redes', grupo: 'numeros', nivel: 'intermedio', progreso: 'vlsm', titulo: 'Diseño VLSM', texto: 'Reparte un bloque de direcciones entre varias redes de distinto tamaño.' },
   ...Object.entries(LABS).map(([id, l]) => ({ clave: 'cli:' + id, area: 'redes', grupo: l.tipo === 'averia' ? 'averias' : 'cli', nivel: l.nivel, progreso: 'cli-' + id, titulo: l.titulo.replace(/^Avería:\s*/, ''), texto: l.intro.split('. ')[0] + '.', tareas: l.tareas.length })),
+  ...Object.entries(RETOS_ER).map(([id, r]) => ({ clave: 'er:' + id, area: 'bd', grupo: 'diseno', nivel: 'intermedio', progreso: 'er-' + id, titulo: 'Diseña: ' + r.titulo.charAt(0).toLowerCase() + r.titulo.slice(1), texto: 'Crea las tablas, claves y relaciones; se dibuja el diagrama y se genera el SQL.' })),
+  { clave: 'fn:formas', area: 'bd', grupo: 'diseno', nivel: 'intermedio', progreso: 'fn-formas', titulo: '¿Qué forma normal rompe?', texto: 'Seis tablas reales: decide si rompen la 1FN, la 2FN o la 3FN, o si están bien.', tareas: 6, unidad: 'tablas' },
+  ...Object.entries(RETOS_CONC).map(([id, r]) => ({ clave: 'conc:' + id, area: 'bd', grupo: 'transacciones', nivel: r.nivel, progreso: 'conc-' + id, titulo: 'Dos sesiones: ' + r.titulo.toLowerCase(), texto: r.intro.split('. ')[0] + '.', tareas: r.tareas.length })),
   { clave: 'sqli:login', area: 'bd', grupo: 'seguridad', nivel: 'avanzado', progreso: 'sqli-login', titulo: 'Inyección SQL: atacar y defender', texto: 'Entra como administrador sin contraseña, saca datos por un buscador y arregla la aplicación con consultas parametrizadas.', tareas: 3, unidad: 'retos' },
-  ...Object.entries(EJERCICIOS).map(([id, l]) => ({ clave: 'sql:' + id, area: 'bd', grupo: 'sql', nivel: SQL_INFO[id]?.[1] || 'intermedio', progreso: 'sql-' + id, titulo: SQL_INFO[id]?.[0] || id, texto: id === 'detective' ? 'Investiga un incidente real con consultas: registros de cambios, VPN, SSH y tarjetas de acceso. Sigue las pistas.' : `${l.length} ejercicios sobre la base de datos del inventario de red de una empresa (SQLite en tu navegador).`, tareas: l.length })),
+  ...Object.entries(EJERCICIOS).map(([id, l]) => ({ clave: 'sql:' + id, area: 'bd', grupo: 'sql', nivel: SQL_INFO[id]?.[1] || 'intermedio', progreso: 'sql-' + id, titulo: SQL_INFO[id]?.[0] || id, texto: id === 'detective' ? 'Investiga un incidente real con consultas: registros de cambios, VPN, SSH y tarjetas de acceso. Sigue las pistas.' : id === 'analisis' ? 'Ingresos por mes, rankings, ticket medio, crecimiento y limpieza de datos sucios, con gráficos.' : `${l.length} ejercicios sobre la base de datos del inventario de red de una empresa (SQLite en tu navegador).`, tareas: l.length })),
   ...Object.entries(CODIGO).map(([id, c]) => ({ clave: 'code:' + id, area: 'prog', grupo: c.libre ? 'libre' : c.lang, nivel: c.nivel, progreso: 'code-' + id, titulo: c.titulo, texto: c.libre ? `Escribe y ejecuta cualquier programa en ${c.lang === 'python' ? 'Python' : 'JavaScript'}, sin corrección.` : `${c.ejercicios.length} ejercicios en ${c.lang === 'python' ? 'Python' : 'JavaScript'} que se corrigen solos.`, tareas: c.libre ? null : c.ejercicios.length, libre: !!c.libre })),
 ];

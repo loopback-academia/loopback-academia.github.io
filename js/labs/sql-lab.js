@@ -1,12 +1,13 @@
 // Laboratorio SQL en el navegador con SQLite (sql.js, WebAssembly). Nada sale del equipo del alumno.
 import { el, toast } from '../core.js';
 import { guardarLab, labHecho, cargar } from '../progreso.js';
-import { ESQUEMA, DATOS, ESQUEMA_DETECTIVE, DATOS_DETECTIVE } from './sql-datos.js';
+import { ESQUEMA, DATOS, ESQUEMA_DETECTIVE, DATOS_DETECTIVE, ESQUEMA_VENTAS, DATOS_VENTAS } from './sql-datos.js';
 import { EJERCICIOS, CONJUNTOS } from './sql-ejercicios.js';
 
 export const BASES = {
   inventario: { titulo: 'Laboratorio SQL: inventario de red', esquema: ESQUEMA, datos: DATOS },
   detective: { titulo: 'Caso detective: registros de la empresa', esquema: ESQUEMA_DETECTIVE, datos: DATOS_DETECTIVE },
+  ventas: { titulo: 'Análisis de ventas', esquema: ESQUEMA_VENTAS, datos: DATOS_VENTAS },
 };
 export const baseDe = id => CONJUNTOS[id]?.base || 'inventario';
 
@@ -62,6 +63,26 @@ export async function corregir(ej, sqlAlumno, base = 'inventario') {
   } finally { dbA.close(); dbB.close(); }
 }
 
+// Gráfico sencillo (barras o líneas) a partir de un resultado de dos columnas: etiqueta y valor.
+export function grafico(r, tipo) {
+  if (!r || r.columns.length < 2) return null;
+  const datos = r.values.map(f => [String(f[0]), Number(f[1])]).filter(([, v]) => Number.isFinite(v));
+  if (!datos.length) return null;
+  const W = 560, H = 240, M = { i: 70, d: 16, s: 16, a: 46 };
+  const max = Math.max(...datos.map(d => d[1]), 0) || 1;
+  const x = i => M.i + (i + 0.5) * ((W - M.i - M.d) / datos.length);
+  const y = v => H - M.a - (v / max) * (H - M.a - M.s);
+  const fmt = v => Math.round(v).toLocaleString('es-DO');
+  const ejes = [0, 0.5, 1].map(k => el('g', {}, el('line', { x1: M.i, x2: W - M.d, y1: y(max * k), y2: y(max * k), class: 'graf-rejilla' }), el('text', { x: M.i - 6, y: y(max * k) + 4, class: 'graf-eje', 'text-anchor': 'end' }, fmt(max * k))));
+  const ancho = Math.min(46, ((W - M.i - M.d) / datos.length) * 0.6);
+  const marcas = tipo === 'lineas'
+    ? [el('polyline', { points: datos.map((d, i) => `${x(i)},${y(d[1])}`).join(' '), class: 'graf-linea' }), ...datos.map((d, i) => el('circle', { cx: x(i), cy: y(d[1]), r: 4, class: 'graf-punto' }, el('title', {}, `${d[0]}: ${fmt(d[1])}`)))]
+    : datos.map((d, i) => el('rect', { x: x(i) - ancho / 2, y: y(d[1]), width: ancho, height: H - M.a - y(d[1]), rx: 3, class: 'graf-barra' }, el('title', {}, `${d[0]}: ${fmt(d[1])}`)));
+  const etiquetas = datos.map((d, i) => el('text', { x: x(i), y: H - M.a + 16, class: 'graf-eje', 'text-anchor': 'middle' }, d[0].length > 12 ? d[0].slice(0, 11) + '…' : d[0]));
+  return el('figure', { class: 'graf' }, el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `Gráfico de ${tipo === 'lineas' ? 'líneas' : 'barras'}: ${r.columns[1]} por ${r.columns[0]}` }, ...ejes, ...marcas, ...etiquetas),
+    el('figcaption', { class: 'small muted' }, `${r.columns[1]} por ${r.columns[0]}`));
+}
+
 function tablaResultado(r) {
   if (!r) return el('p', { class: 'muted small' }, 'La sentencia se ejecutó y no devuelve filas.');
   return el('div', { class: 'result-wrap' }, el('table', { class: 'result-table' },
@@ -113,6 +134,7 @@ export async function montarSql(holder, id) {
     if (r.ok) {
       hechos.add(n);
       feedback.className = 'feedback ok'; feedback.textContent = '¡Correcto!' + (lista[n].descubre ? ' Pista descubierta: ' + lista[n].descubre : '') + (n < lista.length - 1 ? ' Pasa al siguiente ejercicio.' : '');
+      if (lista[n].grafico) { const g = grafico(r.resultado, lista[n].grafico); if (g) salida.append(g); }
       if (conjunto && hechos.size === lista.length) historia.replaceChildren(el('div', { class: 'alert alert-ok' }, el('p', {}, el('strong', {}, '🔎 ' + conjunto.final))));
       marcador.textContent = `${hechos.size}/${lista.length} resueltos`;
       if (hechos.size === lista.length && !labHecho('sql-' + id)) { guardarLab('sql-' + id); toast('Laboratorio SQL completado.'); }

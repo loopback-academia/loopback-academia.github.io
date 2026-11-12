@@ -8,8 +8,8 @@ export const MODULOS_TI = [
   { n: 1, id: 's1', titulo: 'Soporte técnico y mesa de ayuda', icono: '🎧',
     navegador: 'Casos de tickets con diagnóstico, solución, documentación y comunicación; priorización; turno completo de mesa de ayuda.',
     externo: 'Diagnóstico real de Windows (Administrador de tareas, Visor de eventos, impresoras): una máquina virtual con Windows de evaluación.' },
-  { n: 2, id: 's2', titulo: 'Windows y administración corporativa', icono: '🪟',
-    navegador: 'Casos de cuentas, grupos y permisos; ejercicios de ingreso y salida de empleados.',
+  { n: 2, id: 's2', titulo: 'Equipos, Windows y administración corporativa', icono: '🪟',
+    navegador: 'Consola de Windows con casos reales, Active Directory con una cola de tickets (cuentas, grupos, altas y bajas), armar equipos compatibles, averías de hardware y preparación de equipos nuevos.',
     externo: 'Windows Server de evaluación con Active Directory, GPO y carpetas compartidas en VirtualBox (2 VM: servidor y cliente).' },
   { n: 3, id: 's3', titulo: 'Microsoft 365', icono: '☁️',
     navegador: 'Casos de cuentas, licencias, MFA, Outlook, Teams, OneDrive y SharePoint.',
@@ -72,8 +72,8 @@ export const RUTAS = [
   { id: 'datos', titulo: 'Analista junior de datos', icono: '📊', independiente: true,
     puesto: 'Convierte los datos de ventas, inventario y soporte en reportes que ayudan a decidir: consultas SQL, hojas de cálculo y tableros.',
     requisitos: ['SQL: filtros, uniones, agregados y funciones de ventana', 'Excel: tablas dinámicas, fórmulas de búsqueda y gráficos', 'Introducción a Power BI: modelo, medidas y tableros', 'Limpieza de datos con Python', 'Comunicar hallazgos con claridad'],
-    modulos: ['b1', 'b2', 's8', 'p1', 's9', 's11', 's12'],
-    practicas: ['sql:select', 'sql:join', 'sql:agregacion', 'sql:ventanas', 'code:python-colecciones'],
+    modulos: ['b1', 'b2', 'b4', 's8', 'p1', 's9', 's11', 's12'],
+    practicas: ['sql:select', 'sql:join', 'sql:agregacion', 'sql:ventanas', 'sql:analisis', 'code:python-colecciones'],
     proyecto: null },
 ];
 

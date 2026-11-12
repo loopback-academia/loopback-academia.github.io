@@ -52,6 +52,14 @@ SEDE (1) ──< tiene >── (N) EQUIPO (1) ──< sufre >── (N) INCIDENC
 
 dbdiagram.io, draw.io, MySQL Workbench o DBeaver generan diagramas E-R; en la notación "pata de gallo" (*crow's foot*) el lado "muchos" se dibuja con tres rayitas.
 
+## Diseña tú
+
+Crea las tablas y relaciones de cada encargo. El diagrama se dibuja solo y el diseño se comprueba al pulsar el botón.
+
+[[er:tienda]]
+
+[[er:escuela]]
+
 ::: quiz
 ? En un modelo E-R, ¿qué suele convertirse en una tabla?
 + Cada entidad
@@ -117,6 +125,10 @@ CREATE INDEX idx_interfaces_dispositivo ON interfaces (dispositivo_id);
 ```
 
 Indexa las columnas que usas a menudo en `WHERE` y en los `JOIN` (sobre todo las claves foráneas). Las claves primarias y las columnas `UNIQUE` ya tienen índice.
+
+## Practica la normalización
+
+[[fn:formas]]
 
 ::: quiz
 ? Una columna guarda "10,20,30" con varias VLAN. ¿Qué forma normal incumple?
@@ -275,6 +287,18 @@ Para evitarlos:
 ## Bloqueo optimista
 
 En lugar de bloquear, se añade una columna `version`. Al actualizar: `UPDATE ... SET ..., version = version + 1 WHERE id = 7 AND version = 3`. Si nadie la cambió, actualiza una fila; si otro se adelantó, actualiza cero y la aplicación avisa al usuario. Es muy usado en aplicaciones web.
+
+## Míralo pasar: dos sesiones a la vez
+
+Cada panel es una conexión distinta a la misma base de datos. Ejecuta las sentencias en el orden que quieras y observa qué ve cada una.
+
+[[conc:sucia]]
+
+[[conc:bloqueo]]
+
+[[conc:perdida]]
+
+[[conc:deadlock]]
 
 ::: quiz
 ? Dos transacciones esperan cada una un recurso bloqueado por la otra. ¿Cómo se llama?

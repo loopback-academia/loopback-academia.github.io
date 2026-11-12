@@ -1,11 +1,214 @@
 ---
 area: ti
 id: s2
-titulo: Hardware y sistemas operativos
+titulo: Equipos, Windows y administración corporativa
 dominio: Soporte técnico
 peso: 0
-descripcion: Las piezas de una computadora y cómo elegirlas compatibles, armar y actualizar equipos con seguridad, instalar y preparar Windows para un empleado y diagnosticar averías de hardware.
+descripcion: Las piezas de una computadora y cómo elegirlas compatibles, armar y diagnosticar equipos, instalar y preparar Windows, la consola de Windows para soporte y la administración de usuarios, grupos y permisos con Active Directory.
 ---
+
+=== s2-consola | La consola de Windows para soporte | 20 | 1
+Las herramientas gráficas están bien, pero un técnico de soporte resuelve más rápido con la **consola** (`cmd` o PowerShell): da la información exacta, se puede copiar en el ticket y funciona también por acceso remoto.
+
+## Los comandos imprescindibles
+
+| Comando | Para qué |
+|---|---|
+| `ipconfig` / `ipconfig /all` | IP, máscara, puerta de enlace, DNS, MAC y servidor DHCP |
+| `ipconfig /release` y `/renew` | Soltar la dirección y pedir otra al servidor DHCP |
+| `ipconfig /flushdns` | Vaciar la caché de nombres (también guarda los fallos) |
+| `ping` | ¿Hay respuesta? Prueba por capas: puerta de enlace, IP externa, nombre |
+| `tracert` | Por qué routers pasa el tráfico y dónde se corta |
+| `nslookup` | Pregunta directamente al servidor DNS |
+| `netsh interface ip set dns "Ethernet" dhcp` | Devolver el DNS a automático |
+| `tasklist` / `taskkill /im programa.exe /f` | Ver procesos y terminar uno que no responde |
+| `sc query spooler`, `net stop` / `net start` | Estado de un servicio, detenerlo e iniciarlo |
+| `sfc /scannow` | Reparar archivos del sistema dañados (como administrador) |
+| `gpupdate /force` / `gpresult /r` | Aplicar las directivas de grupo y ver cuáles están aplicadas |
+| `whoami /groups` | A qué grupos pertenece la sesión |
+| `net use Z: \\servidor\recurso` | Conectar una unidad de red |
+| `Test-NetConnection servidor -Port 443` | (PowerShell) ¿Responde ese puerto? |
+
+## Cómo leer ipconfig
+
+- **169.254.x.x** (APIPA): el equipo **no recibió respuesta del DHCP**. Revisa cable o wifi y después `ipconfig /renew`.
+- **Sin puerta de enlace**: puede hablar con su red local, pero no salir de ella.
+- **DNS raro** (una IP que no es la de la empresa): alguien lo cambió a mano. Las páginas no cargan aunque haya conexión.
+
+::: practica
+Cinco casos reales, de menos a más. Lee el caso, diagnostica con comandos antes de cambiar nada, arréglalo y verifica. Escribe `help` para ver los comandos del simulador.
+:::
+
+[[win:apipa]]
+
+[[win:dns]]
+
+[[win:impresora]]
+
+[[win:lento]]
+
+[[win:unidad-red]]
+
+::: quiz
+? Un PC tiene la dirección 169.254.23.7. ¿Qué significa?
+- Que tiene una IP pública
++ Que no recibió respuesta del servidor DHCP
+- Que el DNS está mal configurado
+- Que la tarjeta de red está averiada
+= Windows se asigna una dirección APIPA (169.254.x.x) cuando ningún servidor DHCP le responde.
+
+? ping 8.8.8.8 funciona, pero ping www.google.com dice «no pudo encontrar el host». ¿Dónde está el problema?
+- En el cable de red
+- En la puerta de enlace
++ En la resolución de nombres (DNS)
+- En el servidor DHCP
+= Si una IP de internet responde y un nombre no, la red funciona y falla el DNS.
+
+? La cola de impresión está bloqueada por un trabajo dañado. ¿En qué orden actúas?
++ Detener el servicio Spooler, borrar los trabajos de la carpeta PRINTERS y volver a iniciar el servicio
+- Reiniciar la impresora tres veces
+- Borrar los trabajos con el servicio en marcha
+= Con el servicio en marcha los archivos están bloqueados; primero se detiene.
+
+? A un usuario lo añadieron ayer a un grupo, pero sigue sin acceso a la carpeta. ¿Qué haces primero?
++ gpupdate /force o cerrar sesión y volver a entrar, para que su sesión reciba el grupo nuevo
+- Reinstalar Windows
+- Darle permisos de administrador
+= Los cambios de grupo no llegan a una sesión ya abierta hasta que se actualiza.
+:::
+
+::: banco
+? ¿Qué comando muestra el servidor DHCP y los servidores DNS de un PC?
++ ipconfig /all
+- ipconfig
+- ping
+= ipconfig sin opciones no muestra DHCP ni DNS; /all sí.
+
+? ¿Qué hace taskkill /im programa.exe /f?
++ Termina por la fuerza el proceso con ese nombre
+- Reinicia el equipo
+- Desinstala el programa
+= /im indica el nombre de la imagen y /f fuerza el cierre aunque no responda.
+
+? ¿Para qué sirve sfc /scannow?
++ Comprueba y repara los archivos protegidos del sistema
+- Busca virus
+- Desfragmenta el disco
+= El comprobador de archivos de sistema restaura los que estén dañados.
+
+? «Error de sistema 5: Acceso denegado» al conectar una unidad de red indica que…
++ La ruta existe, pero el usuario no tiene permiso
+- El servidor está apagado
+- El nombre del recurso está mal escrito
+= El error 53 indica que no encuentra la ruta; el 5, falta de permisos.
+
+? Has corregido el DNS de un PC y las páginas siguen sin cargar. ¿Qué te falta?
++ Vaciar la caché DNS con ipconfig /flushdns
+- Renovar la licencia de Windows
+- Cambiar la puerta de enlace
+= Windows guarda en caché también las respuestas fallidas durante un tiempo.
+
+? ¿Qué cmdlet de PowerShell comprueba si un puerto concreto de un servidor responde?
++ Test-NetConnection
+- Get-Process
+- Get-ChildItem
+= Test-NetConnection servidor -Port 443 devuelve TcpTestSucceeded True o False.
+:::
+
+=== s2-ad | Active Directory: usuarios, grupos y permisos | 20 | 2
+En casi todas las empresas con Windows, las cuentas de los empleados viven en **Active Directory (AD)**: un directorio central con usuarios, equipos y grupos. Gran parte del trabajo de una mesa de ayuda es gestionarlo.
+
+## Conceptos
+
+- **Dominio**: el conjunto que administra AD, por ejemplo `laceiba.local`. Los equipos «se unen al dominio».
+- **Controlador de dominio**: el servidor que guarda el directorio y comprueba las contraseñas.
+- **Unidad organizativa (OU)**: carpeta para ordenar usuarios y equipos (Ventas, Contabilidad, Bajas…). A cada OU se le aplican directivas distintas.
+- **Grupo**: conjunto de usuarios al que se dan permisos (carpetas, VPN, impresoras). **Los permisos se dan a grupos, no a personas**: así, cuando alguien cambia de puesto, basta con cambiar sus grupos.
+- **Directiva de grupo (GPO)**: configuración que se aplica sola a los usuarios y equipos de una OU (unidades de red, fondo, seguridad).
+
+## Las tareas de cada día
+
+| Petición | Qué se hace |
+|---|---|
+| «Mi cuenta está bloqueada» | Desbloquear. Si recuerda la contraseña, **no** se cambia |
+| «Olvidé mi contraseña» | **Verificar la identidad**, poner una temporal y marcar «debe cambiarla al iniciar sesión» |
+| Alta de un empleado | Crear el usuario en su OU, con sus grupos y una contraseña temporal |
+| Cambio de puesto | Mover de OU, añadir los grupos nuevos y **quitar los viejos** |
+| Baja | **Deshabilitar** (no borrar), mover a Bajas y quitar accesos como la VPN |
+
+::: cuidado
+**Verifica siempre la identidad** antes de restablecer una contraseña: devuelve la llamada a la extensión registrada o sigue el procedimiento de la empresa. Hacerse pasar por un empleado para pedir una contraseña nueva es uno de los ataques más comunes.
+:::
+
+## Mínimo privilegio
+
+Cada persona debe tener **solo los permisos que necesita** para su trabajo. Por eso nunca se mete a un usuario en «Admins. del dominio» para que «instale sus programas»: si su cuenta cae en un phishing, el atacante tendría el control de toda la empresa. La respuesta correcta es instalarle el programa tú (o por el procedimiento de software).
+
+[[ad:mesa]]
+
+::: quiz
+? Un usuario dice que su cuenta está bloqueada y recuerda su contraseña. ¿Qué haces?
++ Desbloquear la cuenta sin cambiar la contraseña
+- Restablecer la contraseña a una nueva
+- Borrar la cuenta y crearla de nuevo
+= El bloqueo es por intentos fallidos; si sabe su contraseña, solo hay que desbloquear.
+
+? ¿Qué se hace con la cuenta de un empleado que deja la empresa?
++ Deshabilitarla, moverla a la OU de bajas y quitarle accesos
+- Borrarla en el momento
+- Dejarla igual por si vuelve
+= Deshabilitar corta el acceso sin perder su buzón ni sus archivos.
+
+? ¿Por qué se dan los permisos a grupos y no a cada usuario?
++ Porque así basta con cambiar los grupos cuando alguien cambia de puesto
+- Porque AD no permite dar permisos a usuarios
+- Porque los grupos son más rápidos de escribir
+= Gestionar permisos por grupos es más ordenado y evita olvidos.
+
+? Antes de restablecer la contraseña de alguien que llama por teléfono, ¿qué es imprescindible?
++ Verificar su identidad según el procedimiento
+- Preguntarle su contraseña antigua
+- Nada, si dice su nombre completo
+= Sin verificación, cualquiera podría robar una cuenta llamando a soporte.
+:::
+
+::: banco
+? ¿Qué es una unidad organizativa (OU)?
++ Una carpeta del directorio para ordenar usuarios y equipos y aplicarles directivas
+- Un tipo de contraseña
+- Un servidor de correo
+= Las OU organizan el directorio y reciben directivas de grupo.
+
+? Un empleado pasa de Ventas a Contabilidad. ¿Qué te falta si solo lo añades al grupo de Contabilidad?
++ Quitarlo de los grupos de Ventas
+- Cambiarle el nombre
+- Reinstalar su PC
+= Si no se quitan los grupos viejos, acumula permisos que ya no necesita.
+
+? Una usuaria pide ser administradora del dominio para instalar programas. ¿Qué haces?
++ Rechazarlo y ofrecer instalarle el programa por el procedimiento
+- Añadirla a Admins. del dominio
+- Darle tu contraseña de administrador
+= El principio de mínimo privilegio impide dar control total del dominio a un usuario.
+
+? ¿Qué opción se marca al poner una contraseña temporal?
++ El usuario debe cambiar la contraseña al iniciar sesión
+- La contraseña nunca expira
+- El usuario no puede cambiar la contraseña
+= Así solo el usuario conoce su contraseña definitiva.
+
+? ¿Qué es una directiva de grupo (GPO)?
++ Una configuración que AD aplica automáticamente a usuarios y equipos
+- Un grupo de seguridad con muchos usuarios
+- Un tipo de controlador de dominio
+= Las GPO aplican unidades de red, fondos, seguridad y más sin tocar cada PC.
+
+? ¿Qué servidor comprueba las contraseñas en un dominio de Windows?
++ El controlador de dominio
+- El servidor DHCP
+- El servidor de impresión
+= El controlador de dominio guarda el directorio y valida los inicios de sesión.
+:::
 
 === s2-componentes | Las piezas de una computadora | 16 | 1
 Para elegir, actualizar o reparar un equipo hay que saber qué hace cada pieza y cómo encajan entre sí.

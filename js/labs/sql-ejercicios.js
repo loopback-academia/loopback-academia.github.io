@@ -67,10 +67,26 @@ export const EJERCICIOS = {
     { enunciado: '¿Estaba Paula en la oficina? Muestra su nombre, la puerta y la fecha_hora de sus fichajes con tarjeta, por orden de hora. Une tarjetas con empleados.', solucion: "SELECT e.nombre, t.puerta, t.fecha_hora FROM tarjetas t JOIN empleados e ON e.id = t.empleado_id WHERE e.usuario = 'pgomez' ORDER BY t.fecha_hora;", ordenado: true, descubre: 'Paula salió el viernes a las 18:31 y no volvió a entrar hasta el sábado a las 9:10. A las 2:09 no estaba en la oficina.' },
     { enunciado: 'Última prueba: lista equipo, fecha_hora y comando de todo lo que se hizo desde sesiones SSH con ip_origen 10.99.0.23, por orden de hora (une cambios con sesiones_ssh).', solucion: "SELECT c.equipo, c.fecha_hora, c.comando FROM cambios c JOIN sesiones_ssh s ON s.id = c.sesion_id WHERE s.ip_origen = '10.99.0.23' ORDER BY c.fecha_hora;", ordenado: true, descubre: 'Además de borrar la VLAN, desactivó el envío de registros al servidor (no logging host) para tapar sus pasos.' },
   ],
+  analisis: [
+    { enunciado: 'Ingresos por mes: el mes (AAAA-MM, columna mes) y los ingresos (cantidad × precio_unitario, columna ingresos), por orden de mes.', solucion: "SELECT strftime('%Y-%m', fecha) AS mes, SUM(cantidad * precio_unitario) AS ingresos FROM ventas GROUP BY mes ORDER BY mes;", ordenado: true, grafico: 'lineas', pista: "strftime('%Y-%m', fecha) saca el año y el mes; SUM(cantidad * precio_unitario) suma los ingresos." },
+    { enunciado: 'Los 5 productos que más ingresos generan: nombre y total, de mayor a menor.', solucion: 'SELECT p.nombre, SUM(v.cantidad * v.precio_unitario) AS total FROM ventas v JOIN productos p ON p.id = v.producto_id GROUP BY p.nombre ORDER BY total DESC LIMIT 5;', ordenado: true, grafico: 'barras' },
+    { enunciado: 'Ticket medio: el ingreso medio por venta (una sola cifra, redondeada a 2 decimales).', solucion: 'SELECT ROUND(AVG(cantidad * precio_unitario), 2) FROM ventas;', pista: 'AVG calcula la media; ROUND(valor, 2) redondea.' },
+    { enunciado: 'Ingresos por canal de venta. Las ventas sin canal deben aparecer como «sin dato». Columnas canal y total, de mayor a menor.', solucion: "SELECT COALESCE(canal, 'sin dato') AS canal, SUM(cantidad * precio_unitario) AS total FROM ventas GROUP BY 1 ORDER BY total DESC;", ordenado: true, grafico: 'barras', pista: 'COALESCE(canal, \'sin dato\') sustituye los NULL.' },
+    { enunciado: 'Limpieza: cuántos clientes hay por ciudad, unificando mayúsculas y espacios (ciudad en minúsculas y sin espacios a los lados). Los clientes sin ciudad no cuentan.', solucion: 'SELECT LOWER(TRIM(ciudad)) AS ciudad, COUNT(*) FROM clientes WHERE ciudad IS NOT NULL GROUP BY 1;', pista: 'LOWER(TRIM(ciudad)) convierte «santo domingo » y «Santo Domingo» en el mismo valor.' },
+    { enunciado: 'Calidad de datos: encuentra las ventas duplicadas (misma fecha, cliente, producto y cantidad). Muestra fecha, cliente_id, producto_id y cuántas veces aparece.', solucion: 'SELECT fecha, cliente_id, producto_id, COUNT(*) FROM ventas GROUP BY fecha, cliente_id, producto_id, cantidad HAVING COUNT(*) > 1;', pista: 'Agrupa por todas las columnas que deberían ser únicas y filtra con HAVING COUNT(*) > 1.' },
+    { enunciado: 'Crecimiento mes a mes: mes, ingresos y la diferencia con el mes anterior (columna diferencia, con LAG), por orden de mes.', solucion: "SELECT mes, ingresos, ingresos - LAG(ingresos) OVER (ORDER BY mes) AS diferencia FROM (SELECT strftime('%Y-%m', fecha) AS mes, SUM(cantidad * precio_unitario) AS ingresos FROM ventas GROUP BY mes) ORDER BY mes;", ordenado: true, pista: 'Primero calcula los ingresos por mes en una subconsulta; después LAG(ingresos) OVER (ORDER BY mes) trae el valor del mes anterior.' },
+    { enunciado: 'Clientes recurrentes: nombre de los clientes que compraron en 3 meses distintos o más, y en cuántos meses.', solucion: "SELECT c.nombre, COUNT(DISTINCT strftime('%Y-%m', v.fecha)) AS meses FROM ventas v JOIN clientes c ON c.id = v.cliente_id GROUP BY c.nombre HAVING meses >= 3;", pista: "COUNT(DISTINCT strftime('%Y-%m', fecha)) cuenta los meses distintos." },
+  ],
 };
 
 // Conjuntos que usan otra base de datos o cuentan una historia.
 export const CONJUNTOS = {
+  analisis: {
+    base: 'ventas',
+    titulo: 'Análisis de ventas: KPI e informes',
+    intro: 'Eres analista junior de la tienda en línea. Gerencia quiere un informe de ventas de junio a noviembre de 2026. Ojo: los datos tienen problemas de calidad, como en la vida real. Las consultas con gráfico lo dibujan al acertar.',
+    final: 'Informe listo. Ya sabes calcular ingresos por período, rankings, medias, crecimiento y detectar datos sucios: es el trabajo diario de un analista. El siguiente paso es llevar estas consultas a un panel (Power BI, Looker Studio o Metabase) que se actualice solo.',
+  },
   detective: {
     base: 'detective',
     titulo: 'Caso: el apagón de la sucursal',

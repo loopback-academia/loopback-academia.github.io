@@ -164,3 +164,38 @@ INSERT INTO tarjetas (empleado_id,puerta,fecha_hora) VALUES
  (6,'Entrada principal','2026-11-07 09:01:50'),(6,'Salida principal','2026-11-07 18:05:33'),
  (3,'Entrada principal','2026-11-07 08:30:00'),(3,'Salida principal','2026-11-07 17:30:22'),
  (2,'Entrada principal','2026-11-08 07:50:41'),(1,'Entrada principal','2026-11-08 09:10:07');`;
+
+// ---------------------------------------------------------------- ventas (análisis de datos)
+// Ventas de la tienda en línea de junio a noviembre de 2026. Se generan siempre iguales (semilla fija) e incluyen
+// problemas reales de calidad: ciudades escritas de varias formas, un canal sin dato y una venta duplicada.
+export const ESQUEMA_VENTAS = `
+CREATE TABLE clientes (id INTEGER PRIMARY KEY, nombre TEXT NOT NULL, ciudad TEXT, alta TEXT);
+CREATE TABLE productos (id INTEGER PRIMARY KEY, nombre TEXT NOT NULL, categoria TEXT NOT NULL, precio REAL NOT NULL);
+CREATE TABLE ventas (id INTEGER PRIMARY KEY, fecha TEXT NOT NULL, cliente_id INTEGER REFERENCES clientes(id), producto_id INTEGER REFERENCES productos(id), cantidad INTEGER NOT NULL, precio_unitario REAL NOT NULL, canal TEXT);`;
+
+function generarVentas() {
+  let x = 20261112;
+  const rnd = () => ((x = (Math.imul(x, 1103515245) + 12345) >>> 0) % 10000) / 10000;
+  const ciudades = ['Santo Domingo', 'santo domingo ', 'Santiago', 'SANTIAGO', 'La Romana', 'Puerto Plata', 'Santo Domingo', 'Santiago'];
+  const nombres = ['Ana Pérez', 'Luis Gómez', 'Marta Díaz', 'Pedro Rosario', 'Carmen Núñez', 'José Abreu', 'Yaneisy Cruz', 'Kevin Batista', 'Rosa Medina', 'Julio Santana', 'Paola Reyes', 'Miguel Tavárez'];
+  const productos = [['Cable de red Cat6 (3 m)', 'Cables', 350], ['Switch de 8 puertos', 'Redes', 2900], ['Router Wi-Fi 6', 'Redes', 5400], ['Adaptador USB-C a RJ45', 'Accesorios', 1100], ['Disco SSD 1 TB', 'Almacenamiento', 4700], ['Teclado inalámbrico', 'Accesorios', 1450], ['Monitor 24 pulgadas', 'Pantallas', 9800], ['Punto de acceso Wi-Fi', 'Redes', 6900]];
+  const L = [];
+  L.push('INSERT INTO clientes VALUES ' + nombres.map((n, i) => `(${i + 1},'${n}',${i === 10 ? 'NULL' : `'${ciudades[i % ciudades.length]}'`},'2025-${String((i % 12) + 1).padStart(2, '0')}-15')`).join(',') + ';');
+  L.push('INSERT INTO productos VALUES ' + productos.map((p, i) => `(${i + 1},'${p[0]}','${p[1]}',${p[2]})`).join(',') + ';');
+  const filas = [];
+  const meses = ['06', '07', '08', '09', '10', '11'];
+  meses.forEach((m, k) => {
+    const n = 8 + k * 2;
+    for (let j = 0; j < n; j++) {
+      const p = 1 + Math.floor(rnd() * productos.length), c = 1 + Math.floor(rnd() * nombres.length);
+      const dia = String(1 + Math.floor(rnd() * 28)).padStart(2, '0');
+      const cant = 1 + Math.floor(rnd() * 4);
+      const canal = rnd() < 0.6 ? 'web' : rnd() < 0.7 ? 'tienda' : 'telefono';
+      filas.push([`2026-${m}-${dia}`, c, p, cant, productos[p - 1][2], filas.length === 17 ? null : canal]);
+    }
+  });
+  filas.push([...filas[23]]);
+  L.push('INSERT INTO ventas (fecha,cliente_id,producto_id,cantidad,precio_unitario,canal) VALUES ' + filas.map(f => `('${f[0]}',${f[1]},${f[2]},${f[3]},${f[4]},${f[5] === null ? 'NULL' : `'${f[5]}'`})`).join(',') + ';');
+  return L.join('\n');
+}
+export const DATOS_VENTAS = generarVentas();
