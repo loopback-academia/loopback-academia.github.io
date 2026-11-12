@@ -3,6 +3,7 @@
 // (si no, repetirlo sería copiar las respuestas). Cada intento cambia el orden de preguntas y opciones.
 import { el } from './core.js';
 import { aprueba, minimoPara } from './escalera.js';
+import { protegerCopia, textoInvisible } from './examen/integridad.js';
 
 export function barajar(arr, rnd = Math.random) {
   const a = [...arr];
@@ -26,7 +27,7 @@ export function montarQuiz(contenedor, preguntas, { titulo = 'Comprueba lo que h
     form.replaceChildren(
       el('div', { class: 'quiz-head' }, el('h2', { id: 'quizTitle' }, titulo), el('span', { class: 'badge badge-accent' }, ps.length + ' preguntas')),
       ...ps.map((q, n) => el('div', { class: 'question' }, el('fieldset', {},
-        el('legend', {}, `${n + 1}. ${q.q}${q.multiple ? ' (elige todas las correctas)' : ''}`),
+        el('legend', {}, `${n + 1}. ${q.q}`, textoInvisible(el), q.multiple ? ' (elige todas las correctas)' : ''),
         q.opciones.map((o, k) => el('label', { class: 'option' }, el('input', { type: q.multiple ? 'checkbox' : 'radio', name: 'q' + n, value: String(k) }), el('span', {}, o.texto))),
         el('div', { class: 'explain', hidden: true }, q.explain)))),
       el('div', { class: 'quiz-head' }, resultado, corregir));
@@ -71,6 +72,7 @@ export function montarQuiz(contenedor, preguntas, { titulo = 'Comprueba lo que h
   });
 
   pintar();
+  protegerCopia(form); // copiar una pregunta del cuestionario solo copia el aviso para asistentes de IA
   contenedor.append(form);
   return form;
 }

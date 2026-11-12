@@ -2,14 +2,16 @@
 // Reglas: mínimo 80 %; cada intento elige preguntas que no salieron en los intentos anteriores y baraja las opciones;
 // sin volver atrás y con cronómetro; si no se aprueba, NO se muestran las respuestas correctas (solo qué lecciones
 // repasar), para que repetir el examen no sea copiar las respuestas.
-import { iniciarPagina, el, $, setMeter, pct, plural, local } from '../core.js';
+import { iniciarPagina, el, $, setMeter, pct, plural, local, toast } from '../core.js';
 import { cargarCurso } from '../curso.js';
 import { barajar, prepararPregunta, repartir } from '../quiz.js';
 import { cargar, guardarExamen, guardarQuiz, registrarRespuestas, notaQuiz } from '../progreso.js';
 import { aprueba, minimoPara, elegirPreguntas, bancoDe } from '../escalera.js';
+import { generarPreguntas, comprobar } from '../examen/generadas.js';
+import { activarModoExamen, pedirPantallaCompleta, textoInvisible } from '../examen/integridad.js';
 import { escaleraDe, estadoArea, urlExamen, urlFinal, pasoSiguiente } from '../escalera-alumno.js';
 
-iniciarPagina();
+const usuario = await iniciarPagina();
 const raiz = $('#examen');
 const [banco, curso] = await Promise.all([fetch('data/examen.json').then(r => r.json()), cargarCurso(), cargar()]);
 const leccionDe = id => curso.lecciones.find(l => l.id === id.split('#')[0]);
@@ -20,7 +22,12 @@ const params = new URLSearchParams(location.search);
 // Intentos anteriores de cada examen (ids de sus preguntas), para no repetirlas en el siguiente.
 const intentos = clave => local.get('aula:intentos:' + clave, []);
 const anotarIntento = (clave, ids) => local.set('aula:intentos:' + clave, [...intentos(clave), ids].slice(-2));
-const minutos = n => Math.max(10, Math.ceil(n * 1.25));
+// Tiempo por pregunta: poco margen para buscar fuera (opción múltiple 75 s; escribir la respuesta razonada 150 s).
+const SEG_PREGUNTA = q => (q.generada ? 150 : 75);
+const MAX_SALIDAS = 3;
+const minutos = n => Math.ceil((n * 75 + 2 * 75) / 60);
+// Mezcla preguntas del banco con preguntas de razonamiento generadas para este intento.
+const conGeneradas = (area, delBanco, cuantas) => barajar([...delBanco.map(prepararPregunta), ...generarPreguntas(area, cuantas)]);
 const cabecera = (ceja, titulo, texto) => el('div', { class: 'page-head' }, el('span', { class: 'eyebrow' }, ceja), el('h1', {}, titulo), texto ? el('p', {}, texto) : null);
 
 // ---------------------------------------------------------------- centro de exámenes
@@ -55,13 +62,16 @@ function inicio({ titulo, ceja, descripcion, clave, tamanos, generar, alAprobar,
   const q = notaQuiz(clave);
   let n = tamanos[0];
   const lista = () => [el('li', {}, `${n} preguntas y ${minutos(n)} minutos. No se puede volver atrás.`), el('li', {}, `Apruebas con ${minimoPara(n)} correctas o más (80 %).`),
-    el('li', {}, 'Cada intento tiene preguntas distintas a las del anterior.'), el('li', {}, 'Si no apruebas, no se muestran las respuestas: verás qué lecciones repasar.')];
+    el('li', {}, 'Cada intento tiene preguntas distintas a las del anterior, y algunas se generan en el momento: tendrás que razonarlas y escribir la respuesta.'),
+    el('li', {}, 'Cada pregunta tiene su propio tiempo (75 s, o 150 s si hay que escribir). Si se acaba, cuenta como no respondida.'),
+    el('li', {}, `Modo examen: no se puede copiar, imprimir ni salir de la pantalla. Si sales ${MAX_SALIDAS} veces, el examen se entrega solo.`),
+    el('li', {}, 'Si no apruebas, no se muestran las respuestas: verás qué lecciones repasar.')];
   const reglas = el('ul', { class: 'exam-rules' }, lista());
   const selector = tamanos.length > 1 ? el('div', { class: 'field' }, el('label', { for: 'nPreg' }, 'Número de preguntas'),
     el('select', { id: 'nPreg' }, tamanos.map(t => el('option', { value: String(t) }, `${t} preguntas · ${minutos(t)} minutos`)))) : null;
   selector?.querySelector('select').addEventListener('change', e => { n = Number(e.target.value); reglas.replaceChildren(...lista()); });
   const btn = el('button', { type: 'button', class: 'btn btn-primary btn-lg' }, q ? 'Hacer el examen otra vez' : 'Empezar el examen');
-  btn.addEventListener('click', () => jugar({ titulo, clave, preguntas: generar(n), alAprobar, area }));
+  btn.addEventListener('click', () => { pedirPantallaCompleta(); jugar({ titulo, clave, preguntas: generar(n), alAprobar, area }); });
   raiz.replaceChildren(cabecera(ceja, titulo, descripcion),
     el('div', { class: 'card' }, q ? el('p', { class: 'alert ' + (q.hecho ? 'alert-ok' : 'alert-info') + ' mb' }, el('span', {}, q.hecho ? `✓ Ya lo aprobaste (mejor nota ${pct(q.puntos, q.total)} %). Puedes repetirlo para mejorar: tendrá otras preguntas.` : `Tu mejor nota hasta ahora: ${pct(q.puntos, q.total)} %. Necesitas un 80 %.`)) : null,
       selector, reglas, btn));
@@ -69,41 +79,63 @@ function inicio({ titulo, ceja, descripcion, clave, tamanos, generar, alAprobar,
 
 // ---------------------------------------------------------------- el examen
 function jugar({ titulo, clave, preguntas, alAprobar, area }) {
-  anotarIntento(clave, preguntas.map(q => q.id)); // se anota al empezar: recargar la página no repite el examen
-  const limite = minutos(preguntas.length) * 60;
+  anotarIntento(clave, preguntas.filter(q => !q.generada).map(q => q.id)); // se anota al empezar: recargar no repite el examen
   const inicioT = Date.now();
   const respuestas = [];
-  let i = 0, terminado = false;
+  let i = 0, terminado = false, finPregunta = 0, porSalidas = false;
+  const intentoId = Math.random().toString(36).slice(2, 8).toUpperCase();
+  const marca = `${usuario?.nombre || usuario?.email || 'Invitado'} · ${new Date().toLocaleString('es')} · intento ${intentoId} · Loopback`;
   const timer = el('span', { class: 'timer', 'aria-label': 'Tiempo restante' });
   const meter = el('div', { class: 'meter' }, el('span'));
   const contador = el('span', { class: 'small muted' });
   const caja = el('div', { class: 'card' });
   const salirAviso = e => { e.preventDefault(); e.returnValue = ''; };
   addEventListener('beforeunload', salirAviso);
-  raiz.replaceChildren(el('p', { class: 'small muted' }, titulo), el('div', { class: 'exam-bar' }, contador, meter, timer), caja);
-  const reloj = setInterval(tic, 1000);
+  const aviso = el('p', { class: 'exam-aviso', role: 'alert', hidden: true });
+  raiz.replaceChildren(el('p', { class: 'small muted' }, titulo), el('div', { class: 'exam-bar' }, contador, meter, timer), aviso, caja);
+  const modo = activarModoExamen({ contenedor: caja, marca, maxSalidas: MAX_SALIDAS, toast,
+    alSalir: n => { aviso.hidden = false; aviso.textContent = n < MAX_SALIDAS ? `⚠ Saliste de la pantalla del examen (${n} de ${MAX_SALIDAS}). Si llegas a ${MAX_SALIDAS}, el examen se entrega con lo que lleves.` : 'Has salido de la pantalla demasiadas veces: el examen se ha entregado.'; },
+    alAgotar: () => { porSalidas = true; terminar(); } });
+  const reloj = setInterval(tic, 250);
   function tic() {
-    const quedan = Math.max(0, limite - Math.floor((Date.now() - inicioT) / 1000));
+    const quedan = Math.max(0, Math.ceil((finPregunta - Date.now()) / 1000));
     timer.textContent = `${Math.floor(quedan / 60)}:${String(quedan % 60).padStart(2, '0')}`;
-    timer.classList.toggle('low', quedan < 120);
-    if (!quedan) terminar();
+    timer.classList.toggle('low', quedan <= 15);
+    if (!quedan && !terminado) { respuestas[i] = false; i++; if (i < preguntas.length) pregunta(); else terminar(); }
   }
-  tic();
 
   function pregunta() {
     const q = preguntas[i];
+    finPregunta = Date.now() + SEG_PREGUNTA(q) * 1000;
+    tic();
     contador.textContent = `Pregunta ${i + 1} de ${preguntas.length}`;
     setMeter(meter, i / preguntas.length);
     const siguiente = el('button', { type: 'submit', class: 'btn btn-primary', disabled: true }, i === preguntas.length - 1 ? 'Terminar' : 'Siguiente');
-    const form = el('form', { class: 'question exam-q' }, el('fieldset', {},
-      el('legend', {}, q.q + (q.multiple ? ` (elige ${q.correct.length})` : '')),
-      q.opciones.map((o, k) => el('label', { class: 'option' }, el('input', { type: q.multiple ? 'checkbox' : 'radio', name: 'r', value: String(k) }), el('span', {}, o.texto)))),
-      el('div', { class: 'quiz-head' }, el('span', { class: 'small muted' }, leccionDe(q.id)?.modulo.titulo || ''), siguiente));
-    form.addEventListener('change', () => { siguiente.disabled = !form.querySelector('input:checked'); });
+    // El enunciado se parte en dos con el texto invisible en medio: lo que se consiga seleccionar lleva la instrucción.
+    const mitad = Math.max(1, q.q.indexOf(' ', Math.floor(q.q.length / 2)));
+    const enunciado = el('legend', {}, q.q.slice(0, mitad), textoInvisible(el), q.q.slice(mitad) + (q.multiple ? ` (elige ${q.correct.length})` : ''));
+    let cuerpo;
+    if (q.generada) {
+      const entrada = el('input', { type: 'text', name: 'r', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', 'aria-label': 'Tu respuesta', placeholder: 'Escribe tu respuesta', enterkeyhint: 'done' });
+      entrada.addEventListener('input', () => { siguiente.disabled = !entrada.value.trim(); });
+      entrada.addEventListener('paste', e => { e.preventDefault(); toast('Pegar no está permitido: escribe tu respuesta.'); });
+      const ctx = q.contexto;
+      cuerpo = [ctx?.tabla ? el('div', { class: 'table-wrap' }, el('table', {}, el('caption', { class: 'small muted' }, ctx.tabla.titulo), el('thead', {}, el('tr', {}, ctx.tabla.columnas.map(c => el('th', {}, c)))), el('tbody', {}, ctx.tabla.filas.map(f => el('tr', {}, f.map(v => el('td', {}, String(v)))))))) : null,
+        ctx?.codigo ? el('pre', { class: 'code exam-code' }, el('code', {}, ctx.codigo)) : null,
+        el('label', { class: 'field exam-escribir' }, el('span', { class: 'small muted' }, '✍ Pregunta de razonamiento: escribe la respuesta'), entrada)];
+    } else {
+      cuerpo = q.opciones.map((o, k) => el('label', { class: 'option' }, el('input', { type: q.multiple ? 'checkbox' : 'radio', name: 'r', value: String(k) }), el('span', {}, o.texto)));
+    }
+    const form = el('form', { class: 'question exam-q', autocomplete: 'off' }, el('fieldset', {}, enunciado, cuerpo),
+      el('div', { class: 'quiz-head' }, el('span', { class: 'small muted' }, q.generada ? 'Generada para este intento' : leccionDe(q.id)?.modulo.titulo || ''), siguiente));
+    if (!q.generada) form.addEventListener('change', () => { siguiente.disabled = !form.querySelector('input:checked'); });
     form.addEventListener('submit', e => {
       e.preventDefault();
-      const elegidas = new Set([...form.querySelectorAll('input:checked')].map(x => Number(x.value)));
-      respuestas[i] = q.opciones.every((o, k) => o.correcta === elegidas.has(k));
+      if (q.generada) respuestas[i] = comprobar(q, form.querySelector('input').value);
+      else {
+        const elegidas = new Set([...form.querySelectorAll('input:checked')].map(x => Number(x.value)));
+        respuestas[i] = q.opciones.every((o, k) => o.correcta === elegidas.has(k));
+      }
       i++;
       if (i < preguntas.length) pregunta(); else terminar();
     });
@@ -115,7 +147,9 @@ function jugar({ titulo, clave, preguntas, alAprobar, area }) {
     if (terminado) return;
     terminado = true;
     clearInterval(reloj);
+    modo.desactivar();
     removeEventListener('beforeunload', salirAviso);
+    for (let k = 0; k < preguntas.length; k++) if (respuestas[k] === undefined) respuestas[k] = false; // sin responder = incorrecta
     const segundos = Math.round((Date.now() - inicioT) / 1000);
     const total = preguntas.length;
     const puntos = respuestas.filter(Boolean).length;
@@ -135,7 +169,8 @@ function jugar({ titulo, clave, preguntas, alAprobar, area }) {
     raiz.replaceChildren(...[
       el('div', { class: 'page-head exam-result ' + (ok ? 'ok' : 'bad') }, el('span', { class: 'eyebrow' }, titulo), el('h1', {}, `${nota} %`),
         el('p', {}, `${puntos} de ${total} correctas (mínimo ${minimoPara(total)}) en ${plural(Math.max(1, Math.round(segundos / 60)), 'minuto', 'minutos')}. `,
-          el('strong', {}, ok ? '¡Aprobado!' : 'No aprobado todavía.'))),
+          el('strong', {}, ok ? '¡Aprobado!' : 'No aprobado todavía.')),
+        porSalidas ? el('p', { class: 'alert alert-warn' }, el('span', {}, `El examen se entregó solo porque saliste de la pantalla ${MAX_SALIDAS} veces. Las preguntas sin responder cuentan como incorrectas.`)) : modo.salidas ? el('p', { class: 'small muted' }, `Salidas de la pantalla durante el examen: ${modo.salidas}.`) : null),
       ok
         ? el('div', { class: 'card' }, el('h2', {}, '¡Lo lograste!'), el('p', {}, despues?.texto || 'Has demostrado que dominas este tramo.'),
             despues ? el('a', { class: 'btn btn-primary', href: despues.href }, despues.boton) : null)
@@ -144,7 +179,8 @@ function jugar({ titulo, clave, preguntas, alAprobar, area }) {
             el('ul', { class: 'plain-list' }, repasar.map(({ l, n }) => el('li', {}, el('a', { href: 'leccion.html?id=' + l.id }, l.titulo), el('span', { class: 'small muted' }, ` · ${plural(n, 'fallo', 'fallos')}`))))),
       ok && fallos.length ? el('div', { class: 'card mt' }, el('h2', {}, 'Revisa lo que fallaste'), fallos.map(({ q }) => el('div', { class: 'question' },
         el('p', {}, el('strong', {}, q.q)),
-        el('p', { class: 'small' }, 'Correcta: ', q.opciones.filter(o => o.correcta).map(o => o.texto).join(' · ')),
+        q.contexto?.codigo ? el('pre', { class: 'code exam-code' }, el('code', {}, q.contexto.codigo)) : null,
+        el('p', { class: 'small' }, 'Correcta: ', q.generada ? q.respuesta : q.opciones.filter(o => o.correcta).map(o => o.texto).join(' · ')),
         el('p', { class: 'small muted' }, q.explain)))) : null,
       el('div', { class: 'hero-cta' }, ok ? null : el('a', { class: 'btn btn-primary', href: location.pathname + location.search }, 'Intentar de nuevo (preguntas nuevas)'),
         el('a', { class: 'btn btn-ghost', href: 'curso.html?area=' + area }, 'Volver a la escalera'), el('a', { class: 'btn btn-ghost', href: 'examen.html' }, 'Todos mis exámenes'))].filter(Boolean)); // replaceChildren escribiría «null» como texto
@@ -168,7 +204,7 @@ if (escId && AREAS[escId.split('-')[0]] && escaleraDe(curso, escId.split('-')[0]
     inicio({ titulo, ceja: `Escalón ${esc.n} de ${escalera.length}`, area, clave: esc.examen,
       descripcion: `Preguntas de las ${esc.lecciones.length} lecciones de este escalón (${esc.modulos.join(', ')}). Al aprobarlo se abre ${siguiente ? 'el escalón ' + siguiente.n : 'el examen final del área'}.`,
       tamanos: [esc.tamano],
-      generar: n => elegirPreguntas(pool, n, intentos(esc.examen)).map(prepararPregunta),
+      generar: n => conGeneradas(area, elegirPreguntas(pool, n - 2, intentos(esc.examen)), 2),
       alAprobar: () => siguiente
         ? { texto: `Se ha abierto el escalón ${siguiente.n}. Sigue con su primera lección.`, href: 'leccion.html?id=' + siguiente.lecciones[0].id, boton: `Empezar el escalón ${siguiente.n} →` }
         : { texto: 'Has terminado todos los escalones del área. Te queda el examen final.', href: urlFinal(area), boton: 'Ir al examen final →' } });
@@ -189,9 +225,10 @@ if (escId && AREAS[escId.split('-')[0]] && escaleraDe(curso, escId.split('-')[0]
       descripcion: area === 'redes' ? 'Preguntas de todo el temario, repartidas con el peso de cada dominio del CCNA real.' : 'Preguntas de todos los módulos del área.',
       tamanos,
       generar: n => {
-        const cupo = repartir(n, pesos, Object.fromEntries(Object.entries(porModulo).map(([k, v]) => [k, v.length])));
+        const generadas = Math.min(6, Math.max(3, Math.round(n / 10)));
+        const cupo = repartir(n - generadas, pesos, Object.fromEntries(Object.entries(porModulo).map(([k, v]) => [k, v.length])));
         const prev = intentos('final-' + area);
-        return barajar(Object.entries(cupo).flatMap(([id, k]) => elegirPreguntas(porModulo[id], k, prev))).map(prepararPregunta);
+        return conGeneradas(area, Object.entries(cupo).flatMap(([id, k]) => elegirPreguntas(porModulo[id], k, prev)), generadas);
       },
       alAprobar: () => ({ texto: '¡Has completado la escalera entera de esta área! Añádelo a tu portafolio y sigue con otra área o con una ruta de empleo.', href: 'rutas.html', boton: 'Ver las rutas de empleo →' }) });
   }
