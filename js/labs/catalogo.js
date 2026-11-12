@@ -10,6 +10,7 @@ import { GIT_LABS } from './git-labs.js';
 import { CAPTURAS } from './capturas.js';
 import { RETOS_ER } from './er.js';
 import { RETOS_CONC } from './concurrencia.js';
+import { VOCAB, LECTURAS, FRASES } from '../en/ingles.js';
 import { CONVERSACIONES } from '../ti/atencion.js';
 import { ENCARGOS } from '../ti/hardware.js';
 import { RUTAS_ENTREVISTA } from '../ti/entrevista.js';
@@ -29,9 +30,12 @@ const SQL_INFO = {
 };
 
 export const NIVELES = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
-export const AREAS = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI' };
+export const AREAS = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico' };
 
 export const CATALOGO = [
+  ...Object.entries(VOCAB).map(([id, v]) => ({ clave: 'vocab:' + id, area: 'en', grupo: 'vocab', nivel: 'principiante', progreso: 'vocab-' + id, titulo: 'Vocabulario: ' + v.titulo.toLowerCase(), texto: `${v.palabras.length} palabras con ejemplo y pronunciación.`, tareas: v.palabras.length, unidad: 'palabras' })),
+  ...Object.entries(LECTURAS).map(([id, l]) => ({ clave: 'lectura:' + id, area: 'en', grupo: 'lectura', nivel: id === 'errores' ? 'principiante' : 'intermedio', progreso: 'lectura-' + id, titulo: 'Lectura: ' + l.titulo.toLowerCase(), texto: 'Textos reales en inglés con preguntas de comprensión.', tareas: l.textos.reduce((n, t) => n + t.preguntas.length, 0), unidad: 'preguntas' })),
+  ...Object.entries(FRASES).map(([id, f]) => ({ clave: 'frases:' + id, area: 'en', grupo: 'frases', nivel: id === 'entrevista' ? 'avanzado' : 'intermedio', progreso: 'frases-' + id, titulo: 'Frases: ' + f.titulo.toLowerCase(), texto: 'Elige la forma correcta y profesional de decirlo.', tareas: f.items.length, unidad: 'situaciones' })),
   { clave: 'turno:' + TURNO.id, area: 'ti', grupo: 'proyectos', nivel: TURNO.nivel, progreso: TURNO.progreso, titulo: TURNO.titulo.replace(/^Proyecto: (.)/, (_, c) => c.toUpperCase()), texto: TURNO.resumen, tareas: TURNO.casos.length, unidad: 'tickets' },
   ...Object.entries(GIT_LABS).map(([id, l]) => ({ clave: 'git:' + id, area: 'prog', grupo: 'git', nivel: l.nivel, progreso: 'git-' + id, titulo: 'Git: ' + l.titulo.charAt(0).toLowerCase() + l.titulo.slice(1), texto: l.intro.split('. ')[0] + '.', tareas: l.tareas.length })),
   ...Object.entries(LINUX_LABS).map(([id, l]) => ({ clave: 'linux:' + id, area: 'prog', grupo: 'linux', nivel: l.nivel, progreso: 'linux-' + id, titulo: l.titulo, texto: l.intro.split('. ')[0] + '.', tareas: l.tareas.length })),

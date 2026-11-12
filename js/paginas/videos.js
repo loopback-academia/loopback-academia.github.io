@@ -6,7 +6,7 @@ import { crearVideo } from '../video/reproductor.js';
 
 iniciarPagina();
 const curso = await cargarCurso().catch(() => null);
-const ICONO = { redes: '🌐', bd: '🗄️', prog: '💻', ti: '🏢' };
+const ICONO = { redes: '🌐', bd: '🗄️', prog: '💻', ti: '🏢', en: '🇬🇧' };
 let area = '';
 const pedido = location.hash.slice(1);
 let actual = VIDEOS[pedido] ? pedido : Object.keys(VIDEOS)[0];

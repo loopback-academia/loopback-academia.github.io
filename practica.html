@@ -45,11 +45,12 @@
 <section class="page"><div class="container">
   <div class="page-head"><h1>Práctica</h1><p>Laboratorios con corrección automática, ordenados por nivel. Cada práctica se abre cuando llegas a su lección en la escalera (🔒 = todavía cerrada); las que completes quedan marcadas en tu progreso.</p></div>
   <div class="cmd-tools">
-    <div class="tabs area-tabs cuatro" role="tablist" aria-label="Área" id="filtroArea">
+    <div class="tabs area-tabs cinco" role="tablist" aria-label="Área" id="filtroArea">
       <button type="button" role="tab" data-area="redes" aria-selected="true">🌐 Redes</button>
       <button type="button" role="tab" data-area="bd" aria-selected="false">🗄️ Bases de datos</button>
       <button type="button" role="tab" data-area="prog" aria-selected="false">💻 Programación</button>
       <button type="button" role="tab" data-area="ti" aria-selected="false">🏢 Empleo TI</button>
+      <button type="button" role="tab" data-area="en" aria-selected="false">🇬🇧 Inglés</button>
     </div>
     <div class="tabs level-filter" role="group" aria-label="Filtrar por nivel" id="filtroNivel">
       <button type="button" data-nivel="" aria-pressed="true">Todos</button>
@@ -110,6 +111,16 @@
     <div class="grid-3" data-grupo="libre"></div>
   </section>
 
+  <section class="area-section" id="area-en" data-area="en" hidden>
+    <p class="alert alert-info mb"><span>Inglés técnico para trabajar en TI: vocabulario con pronunciación, lectura de mensajes y documentación, y frases para tickets, llamadas y entrevistas.</span></p>
+    <h2>Vocabulario</h2>
+    <div class="grid-3" data-grupo="vocab"></div>
+    <h2>Lectura</h2>
+    <div class="grid-3" data-grupo="lectura"></div>
+    <h2>Frases útiles</h2>
+    <div class="grid-3" data-grupo="frases"></div>
+  </section>
+
   <section class="area-section" id="area-ti" data-area="ti" hidden>
     <p class="alert alert-info mb"><span>Prácticas de empleo con una empresa ficticia (oficinas, tiendas, almacenes y sucursales). Elige tu <a href="rutas.html">ruta de empleo</a> para saber en qué orden hacerlas.</span></p>
     <h2>Proyectos de portafolio</h2>
@@ -134,7 +145,7 @@
 </div></section>
 </main>
 <footer class="site-footer"><div class="container">
-  <span>Loopback · Redes, bases de datos, programación y empleo en TI desde cero. El temario de redes sigue el Cisco CCNA 200-301; no es un curso oficial de Cisco.</span>
+  <span>Loopback · Redes, bases de datos, programación, empleo en TI e inglés técnico desde cero. El temario de redes sigue el Cisco CCNA 200-301; no es un curso oficial de Cisco.</span>
   <span><a href="glosario.html">Glosario</a> · <a href="cv.html">Mi CV</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a></span>
 </div></footer>
 <nav class="mobile-nav" aria-label="Navegación móvil"><a href="curso.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2.5Z"/><path d="M8 7h7M8 11h5"/></svg><span>Curso</span></a><a href="practica.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="m7 9 3 2-3 2M12 14h5"/></svg><span>Práctica</span></a><a href="examen.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg><span>Examen</span></a><a href="tutor.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>Buscar</span></a><a href="cuenta.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Cuenta</span></a></nav>

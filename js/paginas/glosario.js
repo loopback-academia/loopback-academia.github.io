@@ -4,7 +4,7 @@ import { cargarGlosario, slug } from '../glosario.js';
 
 iniciarPagina();
 const terminos = await cargarGlosario();
-const AREA = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI' };
+const AREA = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico' };
 let area = '';
 const sinTildes = t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 

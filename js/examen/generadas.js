@@ -91,6 +91,17 @@ const GEN = {
     return { area: 'ti', modulo: 's1', q: `${imp[1](elegir(rnd, sedes))} ${urg[1]} ¿Qué prioridad le asignas según la matriz impacto × urgencia? (escribe P1, P2, P3 o P4)`, respuesta: p,
       explain: `Impacto ${imp[0]} y urgencia ${urg[0]} → ${p}.` };
   },
+  // ------------------------------------------------------------- inglés técnico
+  'leer-aviso': rnd => {
+    const n = entero(rnd, 2, 14), p = entero(rnd, 81, 99), h = entero(rnd, 1, 11), u = entero(rnd, 2, 9);
+    const t = elegir(rnd, [
+      [`Your password will expire in ${n} days. Change it now to avoid losing access.`, '¿En cuántos días caduca la contraseña? (escribe solo el número)', n, `«will expire in ${n} days» = caducará dentro de ${n} días.`],
+      [`Low disk space: drive C: is ${p}% full. Free up space to avoid performance issues.`, '¿Qué porcentaje del disco C: está lleno? (solo el número)', p, `«is ${p}% full» = está lleno al ${p} %.`],
+      [`The nightly backup failed at ${h}:00 a.m. because the destination drive was full.`, '¿A qué hora falló la copia de seguridad? (solo el número de la hora)', h, `«failed at ${h}:00 a.m.» = falló a las ${h} de la madrugada.`],
+      [`${u} updates are ready to install. Your device will restart automatically tonight.`, '¿Cuántas actualizaciones están listas para instalar? (solo el número)', u, `«${u} updates are ready to install» = hay ${u} actualizaciones listas.`],
+    ]);
+    return { area: 'en', modulo: 's11', q: `Lee el aviso: «${t[0]}» ${t[1]}`, respuesta: String(t[2]), explain: t[3] };
+  },
 };
 
 export const TIPOS_POR_AREA = {
@@ -98,6 +109,7 @@ export const TIPOS_POR_AREA = {
   bd: ['sql-contar', 'sql-suma'],
   prog: ['py-bucle', 'py-condicion', 'py-lista'],
   ti: ['prioridad'],
+  en: ['leer-aviso'],
 };
 
 // n preguntas de razonamiento para un área, de tipos variados.

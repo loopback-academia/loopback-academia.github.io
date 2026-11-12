@@ -13,6 +13,9 @@ const HABILIDAD_GRUPO = {
   consola: 'Diagnóstico de Windows por consola (ipconfig, netsh, servicios, directivas)',
   casos: 'Gestión de tickets, prioridades y SLA',
   phishing: 'Detección de phishing e ingeniería social',
+  vocab: 'Inglés técnico: vocabulario de TI',
+  lectura: 'Inglés técnico: lectura de errores y documentación',
+  frases: 'Inglés técnico: tickets, llamadas y entrevistas',
   proyectos: 'Proyectos completos documentados',
 };
 
@@ -31,7 +34,7 @@ export function datosCv({ curso, catalogo, leccionHecha, labHecho, finalAprobado
 // Resumen profesional sugerido a partir de lo completado (el alumno lo edita).
 export function resumenSugerido(d, titular = '') {
   if (!d.lecciones) return '';
-  const NOMBRE = { redes: 'redes', bd: 'bases de datos y SQL', prog: 'programación', ti: 'soporte técnico' };
+  const NOMBRE = { redes: 'redes', bd: 'bases de datos y SQL', prog: 'programación', ti: 'soporte técnico', en: 'inglés técnico' };
   const areas = [...new Set([...d.modulos.map(m => m.area), ...d.practicas.map(p => p.area)])].map(a => NOMBRE[a]).filter(Boolean);
   const lista = areas.length > 1 ? areas.slice(0, -1).join(', ') + ' y ' + areas[areas.length - 1] : areas[0];
   const partes = [`${titular || 'Profesional de TI en formación'} con formación práctica en ${lista || 'tecnología'}.`];

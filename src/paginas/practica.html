@@ -2,11 +2,12 @@
 <section class="page"><div class="container">
   <div class="page-head"><h1>Práctica</h1><p>Laboratorios con corrección automática, ordenados por nivel. Cada práctica se abre cuando llegas a su lección en la escalera (🔒 = todavía cerrada); las que completes quedan marcadas en tu progreso.</p></div>
   <div class="cmd-tools">
-    <div class="tabs area-tabs cuatro" role="tablist" aria-label="Área" id="filtroArea">
+    <div class="tabs area-tabs cinco" role="tablist" aria-label="Área" id="filtroArea">
       <button type="button" role="tab" data-area="redes" aria-selected="true">🌐 Redes</button>
       <button type="button" role="tab" data-area="bd" aria-selected="false">🗄️ Bases de datos</button>
       <button type="button" role="tab" data-area="prog" aria-selected="false">💻 Programación</button>
       <button type="button" role="tab" data-area="ti" aria-selected="false">🏢 Empleo TI</button>
+      <button type="button" role="tab" data-area="en" aria-selected="false">🇬🇧 Inglés</button>
     </div>
     <div class="tabs level-filter" role="group" aria-label="Filtrar por nivel" id="filtroNivel">
       <button type="button" data-nivel="" aria-pressed="true">Todos</button>
@@ -65,6 +66,16 @@
     <h2>Zona libre</h2>
     <p class="muted">Escribe y ejecuta lo que quieras, sin corrección.</p>
     <div class="grid-3" data-grupo="libre"></div>
+  </section>
+
+  <section class="area-section" id="area-en" data-area="en" hidden>
+    <p class="alert alert-info mb"><span>Inglés técnico para trabajar en TI: vocabulario con pronunciación, lectura de mensajes y documentación, y frases para tickets, llamadas y entrevistas.</span></p>
+    <h2>Vocabulario</h2>
+    <div class="grid-3" data-grupo="vocab"></div>
+    <h2>Lectura</h2>
+    <div class="grid-3" data-grupo="lectura"></div>
+    <h2>Frases útiles</h2>
+    <div class="grid-3" data-grupo="frases"></div>
   </section>
 
   <section class="area-section" id="area-ti" data-area="ti" hidden>

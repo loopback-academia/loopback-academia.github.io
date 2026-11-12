@@ -1,6 +1,6 @@
 # Loopback
 
-Plataforma de aprendizaje con **cuatro áreas**, de principiante a nivel de empleo: **Redes** (temario completo del **Cisco CCNA 200-301**), **Bases de datos**, **Programación** y **Empleo TI** (soporte técnico y mesa de ayuda).
+Plataforma de aprendizaje con **cinco áreas**, de principiante a nivel de empleo: **Redes** (temario completo del **Cisco CCNA 200-301**), **Bases de datos**, **Programación**, **Empleo TI** (soporte técnico, mesa de ayuda, Windows y administración corporativa) e **Inglés técnico para TI**.
 
 > No es un curso oficial de Cisco ni otorga certificaciones oficiales. Los certificados de Loopback solo acreditan que terminaste un área: no están avalados por ninguna institución y no influyen en conseguir un empleo.
 
@@ -8,7 +8,7 @@ Plataforma de aprendizaje con **cuatro áreas**, de principiante a nivel de empl
 
 | | |
 | --- | --- |
-| **134 lecciones** en 4 áreas y 3 niveles | **Redes** (69 lecciones, los 6 dominios del CCNA), **Bases de datos** (23: modelo relacional, SQL, diseño, rendimiento, transacciones, administración, NoSQL), **Programación** (29: fundamentos, lenguajes, Git, POO, APIs, algoritmos, código seguro, web y automatización de redes) y **Empleo TI** (13: soporte, mesa de ayuda, tickets y rutas profesionales) |
+| **165 lecciones** en 5 áreas y 3 niveles | **Redes** (77 lecciones: los 6 dominios del CCNA, IPv6, Wireshark y temas más allá del CCNA), **Bases de datos** (29: modelo relacional, SQL, diseño, rendimiento, transacciones, administración, NoSQL y análisis de datos), **Programación** (32: fundamentos, lenguajes, Git, POO, APIs, algoritmos, código seguro, depuración, Linux, web y automatización), **Empleo TI** (21: soporte, mesa de ayuda, Windows, Active Directory, hardware, phishing, entrevistas y rutas profesionales) e **Inglés técnico** (6: vocabulario, errores, documentación, tickets, llamadas y entrevista) |
 | **Escalera por área** | Los módulos se desbloquean en orden. Cada escalón termina con un examen (mínimo 80 %) con preguntas distintas en cada intento, y el área con un examen final |
 | **Exámenes con tiempo total** | 20 minutos en nivel principiante, 35 en intermedio, 45 en avanzado y 60 en el examen final. Al acabarse el tiempo se entrega solo con lo respondido |
 | **Certificado de Loopback** | Al aprobar el examen final de un área: con tu nombre, la firma de Gabriel PD y un código. Se descarga como imagen o se guarda como PDF |
@@ -19,7 +19,14 @@ Plataforma de aprendizaje con **cuatro áreas**, de principiante a nivel de empl
 | **Entrenadores** | Subnetting, binario y VLSM con ejercicios infinitos y explicación |
 | **Laboratorio SQL** | SQLite en el navegador (WebAssembly) con el inventario de red de una empresa |
 | **Casos de soporte** | Tickets simulados con prioridad, SLA y turnos de mesa de ayuda |
-| **522 preguntas** | Cuestionario en cada lección, banco de preguntas de examen y preguntas de razonamiento generadas |
+| **Terminales simuladas** | Consola de Windows (ipconfig, ping, nslookup…), terminal Linux (archivos, permisos, procesos, registros) y Git visual con el grafo de commits |
+| **Más laboratorios** | IPv6, seguridad de capa 2 (DHCP snooping, DAI), lectura de capturas tipo Wireshark, caso detective SQL, inyección SQL, diagrama entidad-relación, formas normales, dos sesiones concurrentes, análisis de datos con gráficos, Active Directory, armar un PC, averías de hardware, phishing, atención al usuario y entrevista |
+| **Inglés técnico** | Vocabulario con pronunciación, lectura de errores y documentación, frases para tickets, llamadas y entrevistas |
+| **Reto diario y racha** | Cinco preguntas cada día y racha de días seguidos |
+| **Glosario** | 110 términos con definición emergente dentro de las lecciones |
+| **Mi CV** | Currículum generado con lo que has completado en cada área |
+| **Sin conexión** | Un service worker guarda lo visitado para estudiar sin internet |
+| **767 preguntas** | Cuestionario en cada lección, banco de preguntas de examen y preguntas de razonamiento generadas |
 | **Buscador del curso** | Desde cualquier página, encuentra las lecciones y el fragmento que responden a una duda |
 | **Cuentas** | Registro con confirmación por correo, verificación en dos pasos y progreso sincronizado |
 

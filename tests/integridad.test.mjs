@@ -8,7 +8,7 @@ import { AVISO_COPIA, INSTRUCCION_IA } from '../js/examen/integridad.js';
 const semilla = s => () => ((s = (s * 1664525 + 1013904223) >>> 0) / 2 ** 32);
 
 test('cada área tiene preguntas de razonamiento y todas traen respuesta y explicación', () => {
-  for (const area of ['redes', 'bd', 'prog', 'ti']) {
+  for (const area of ['redes', 'bd', 'prog', 'ti', 'en']) {
     const ps = generarPreguntas(area, 6, semilla(7));
     assert.equal(ps.length, 6);
     for (const p of ps) {

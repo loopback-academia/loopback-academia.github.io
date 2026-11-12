@@ -54,7 +54,7 @@ test('las tres áreas (Redes, Bases de datos y Programación) tienen contenido d
     for (const n of [1, 2, 3]) assert.ok(ls.some(l => l.nivel === n), `${area} sin nivel ${n}`);
     assert.ok(examen.filter(q => q.area === area).length >= 60, area + ': pocas preguntas para el simulacro');
   }
-  assert.ok(curso.modulos.every(m => ['redes', 'bd', 'prog', 'ti'].includes(m.area)));
+  assert.ok(curso.modulos.every(m => ['redes', 'bd', 'prog', 'ti', 'en'].includes(m.area)));
 });
 
 test('el área Empleo TI tiene teoría, ejercicios guiados, retos con solución, evaluación práctica y proyecto', () => {

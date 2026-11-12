@@ -6,6 +6,7 @@ export const TITULO_AREA = {
   bd: 'Bases de datos y SQL',
   prog: 'Programación',
   ti: 'Empleo TI: soporte técnico y mesa de ayuda',
+  en: 'Inglés técnico para TI',
 };
 
 export const FIRMA = 'Gabriel PD';

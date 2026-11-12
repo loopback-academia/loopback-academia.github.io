@@ -855,8 +855,17 @@ a.node-in { transition: background-color 150ms ease; }
 .glosario-letra dd { margin: 2px 0 0; color: var(--ink-2); }
 .glosario-letra dt.resaltado { color: var(--accent); }
 #buscarTermino { width: 100%; max-width: 520px; margin-bottom: 10px; }
-.area-tabs.cinco { grid-template-columns: repeat(5, 1fr); }
-@media (max-width: 640px) { .area-tabs.cinco { grid-template-columns: repeat(3, 1fr); } }
+
+/* ---------------------------------------------------------------- inglés técnico */
+.en-palabra { font-size: 1.6rem; font-weight: 800; display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+.en-ejemplo { font-style: italic; color: var(--ink-2); }
+.en-ops { display: grid; gap: 6px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin: 8px 0; }
+.en-op { text-align: left; white-space: normal; height: auto; line-height: 1.4; padding: 8px 12px; }
+.en-op.ok { border-color: var(--ok); background: var(--ok-soft); }
+.en-op.bad { border-color: var(--warn); background: var(--warn-soft); }
+.en-texto { margin-bottom: 10px; }
+.en-ingles { font-size: 1rem; background: var(--surface-2); border-radius: var(--radius-sm); padding: 10px 12px; }
+.en-oir { padding: 2px 6px; }
 
 /* ---------------------------------------------------------------- correo (phishing) */
 .mail { border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); margin: 8px 0 14px; overflow: hidden; }
