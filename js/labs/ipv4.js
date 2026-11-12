@@ -8,12 +8,6 @@ export function aEntero(ip) {
 export const aTexto = n => [24, 16, 8, 0].map(s => Math.floor(n / 2 ** s) % 256).join('.');
 export const mascara = prefijo => (prefijo === 0 ? 0 : (2 ** 32 - 2 ** (32 - prefijo)));
 export const wildcard = prefijo => 2 ** (32 - prefijo) - 1;
-export function prefijoDeMascara(m) {
-  const n = typeof m === 'number' ? m : aEntero(m);
-  if (n == null) return null;
-  for (let p = 0; p <= 32; p++) if (mascara(p) === n) return p;
-  return null;
-}
 export const tamano = prefijo => 2 ** (32 - prefijo);
 export const red = (ip, prefijo) => ip - (ip % tamano(prefijo));
 export const broadcast = (ip, prefijo) => red(ip, prefijo) + tamano(prefijo) - 1;
@@ -46,12 +40,6 @@ export function bloqueInfo(prefijo) {
 }
 
 // Generador con semilla opcional para pruebas reproducibles.
-export function aleatorio(semilla) {
-  if (semilla == null) return Math.random;
-  let s = semilla >>> 0;
-  return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 2 ** 32; };
-}
-
 export function generarEjercicio(nivel = 'normal', rnd = Math.random) {
   const rangos = { facil: [24, 30], normal: [20, 30], dificil: [12, 30] }[nivel] || [20, 30];
   const prefijo = rangos[0] + Math.floor(rnd() * (rangos[1] - rangos[0] + 1));

@@ -17,7 +17,7 @@ async function archivos(dir, ext) {
   }
   return out;
 }
-const propios = [...await archivos('js/', ['.js']), ...await archivos('supabase/functions/', ['.ts'])];
+const propios = await archivos('js/', ['.js']);
 
 test('todas las páginas tienen una CSP estricta', async () => {
   assert.ok(html.length >= 10);
@@ -68,16 +68,6 @@ test('la base de datos activa y fuerza RLS en todas sus tablas', async () => {
     assert.match(sql, new RegExp(`revoke all on [^;]*public\\.${t}[^;]* from anon`));
   }
   for (const f of sql.matchAll(/create or replace function (public\.\w+)[\s\S]*?security definer([^\n]*)/g)) assert.match(f[2], /set search_path = ''/, f[1]);
-});
-
-test('la función del tutor valida al usuario y no expone la clave de Anthropic', async () => {
-  const s = await leer('supabase/functions/tutor/index.ts');
-  assert.match(s, /auth\.getUser/);
-  assert.match(s, /email_confirmed_at/);
-  assert.match(s, /new Anthropic\(\)/); // la clave sale del secreto ANTHROPIC_API_KEY
-  assert.doesNotMatch(s, /apiKey\s*:/);
-  assert.match(s, /ALLOWED_ORIGINS/);
-  assert.doesNotMatch(s, /Access-Control-Allow-Origin["']?\s*:\s*["']\*/);
 });
 
 test('el código de los alumnos se ejecuta aislado del resto de la web', async () => {

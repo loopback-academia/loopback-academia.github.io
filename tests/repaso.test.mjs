@@ -55,9 +55,7 @@ test('el panel recomienda reforzar las lecciones con fallos y cuenta el repaso d
   assert.equal(R.resumenRepaso(curso, 'redes', T0).enRepaso, 1);
 });
 
-test('la siguiente lección sigue la ruta por niveles y las prácticas pendientes salen de lecciones estudiadas', () => {
-  const sig = R.siguienteLeccion(curso, 'redes');
-  assert.equal(sig.nivel, Math.min(...curso.lecciones.filter(l => l.modulo.area === 'redes').map(l => l.nivel)));
+test('las prácticas pendientes salen de lecciones estudiadas', () => {
   P.completarLeccion('m4-proyecto-oficina');
   const pend = R.practicasPendientes(curso, 'redes', 10);
   assert.ok(pend.some(p => p.clave === 'proyecto:oficina'), 'el proyecto aparece como práctica pendiente');

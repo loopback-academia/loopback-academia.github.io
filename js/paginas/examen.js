@@ -23,8 +23,10 @@ const params = new URLSearchParams(location.search);
 const intentos = clave => local.get('aula:intentos:' + clave, []);
 const anotarIntento = (clave, ids) => local.set('aula:intentos:' + clave, [...intentos(clave), ids].slice(-2));
 const MAX_SALIDAS = 3;
-// Tiempo total del examen (no hay límite por pregunta): unos 1,25 minutos por pregunta, mínimo 10.
-const minutos = n => Math.max(10, Math.ceil(n * 1.25));
+// Tiempo total del examen según su dificultad (no hay límite por pregunta). Al acabarse, se entrega solo con lo
+// respondido hasta ese momento.
+const MINUTOS_NIVEL = { 1: 20, 2: 35, 3: 45 };
+const MINUTOS_FINAL = 60;
 // Mezcla preguntas del banco con preguntas de razonamiento generadas para este intento.
 const conGeneradas = (area, delBanco, cuantas) => barajar([...delBanco.map(prepararPregunta), ...generarPreguntas(area, cuantas)]);
 const cabecera = (ceja, titulo, texto) => el('div', { class: 'page-head' }, el('span', { class: 'eyebrow' }, ceja), el('h1', {}, titulo), texto ? el('p', {}, texto) : null);
@@ -42,7 +44,8 @@ function centro() {
       paso && paso.tipo === 'Lección' ? el('p', { class: 'small muted' }, 'Para llegar al próximo examen te faltan lecciones. Siguiente: ', el('a', { href: paso.href }, paso.texto), '.') : null,
       el('ul', { class: 'exam-list' },
         est.escalones.map(e => { const q = notaQuiz(e.examen); return fila(`Examen del escalón ${e.n}`, e.estadoExamen, urlExamen(e), q ? `mejor nota ${pct(q.puntos, q.total)} %` : `${e.tamano} preguntas`); }),
-        (() => { const q = notaQuiz('final-' + area); return fila('Examen final del área', est.final, urlFinal(area), q ? `mejor nota ${pct(q.puntos, q.total)} %` : 'al terminar todos los escalones'); })()));
+        (() => { const q = notaQuiz('final-' + area); return fila('Examen final del área', est.final, urlFinal(area), q ? `mejor nota ${pct(q.puntos, q.total)} %` : 'al terminar todos los escalones'); })()),
+      est.final === 'aprobado' ? el('p', { class: 'mt' }, el('a', { class: 'btn btn-primary btn-sm', href: 'certificado.html?area=' + area }, '🎓 Ver mi certificado')) : null);
   });
   raiz.replaceChildren(cabecera('Exámenes', 'Tus exámenes', 'Cada examen se abre al completar el escalón anterior. Se aprueban con un 80 % y cada intento tiene preguntas distintas.'), ...bloques);
 }
@@ -57,31 +60,31 @@ function bloqueado(titulo, area) {
 }
 
 // ---------------------------------------------------------------- portada del examen
-function inicio({ titulo, ceja, descripcion, clave, tamanos, generar, alAprobar, area }) {
+function inicio({ titulo, ceja, descripcion, clave, tamanos, generar, alAprobar, area, minutos }) {
   const q = notaQuiz(clave);
   let n = tamanos[0];
-  const lista = () => [el('li', {}, `${n} preguntas y ${minutos(n)} minutos. No se puede volver atrás.`), el('li', {}, `Apruebas con ${minimoPara(n)} correctas o más (80 %).`),
+  const lista = () => [el('li', {}, `${n} preguntas y ${minutos} minutos en total. No se puede volver atrás; si se acaba el tiempo, el examen se entrega solo con lo que hayas respondido.`), el('li', {}, `Apruebas con ${minimoPara(n)} correctas o más (80 %).`),
     el('li', {}, 'Cada intento tiene preguntas distintas a las del anterior, y algunas se generan en el momento: tendrás que razonarlas y escribir la respuesta.'),
     el('li', {}, `Modo examen: no se puede copiar, imprimir ni salir de la pantalla. Si sales ${MAX_SALIDAS} veces, el examen se entrega solo.`),
     el('li', {}, 'Si no apruebas, no se muestran las respuestas: verás qué lecciones repasar.')];
   const reglas = el('ul', { class: 'exam-rules' }, lista());
   const selector = tamanos.length > 1 ? el('div', { class: 'field' }, el('label', { for: 'nPreg' }, 'Número de preguntas'),
-    el('select', { id: 'nPreg' }, tamanos.map(t => el('option', { value: String(t) }, `${t} preguntas · ${minutos(t)} minutos`)))) : null;
+    el('select', { id: 'nPreg' }, tamanos.map(t => el('option', { value: String(t) }, `${t} preguntas · ${minutos} minutos`)))) : null;
   selector?.querySelector('select').addEventListener('change', e => { n = Number(e.target.value); reglas.replaceChildren(...lista()); });
   const btn = el('button', { type: 'button', class: 'btn btn-primary btn-lg' }, q ? 'Hacer el examen otra vez' : 'Empezar el examen');
-  btn.addEventListener('click', () => { pedirPantallaCompleta(); jugar({ titulo, clave, preguntas: generar(n), alAprobar, area }); });
+  btn.addEventListener('click', () => { pedirPantallaCompleta(); jugar({ titulo, clave, preguntas: generar(n), alAprobar, area, minutos }); });
   raiz.replaceChildren(cabecera(ceja, titulo, descripcion),
     el('div', { class: 'card' }, q ? el('p', { class: 'alert ' + (q.hecho ? 'alert-ok' : 'alert-info') + ' mb' }, el('span', {}, q.hecho ? `✓ Ya lo aprobaste (mejor nota ${pct(q.puntos, q.total)} %). Puedes repetirlo para mejorar: tendrá otras preguntas.` : `Tu mejor nota hasta ahora: ${pct(q.puntos, q.total)} %. Necesitas un 80 %.`)) : null,
       selector, reglas, btn));
 }
 
 // ---------------------------------------------------------------- el examen
-function jugar({ titulo, clave, preguntas, alAprobar, area }) {
+function jugar({ titulo, clave, preguntas, alAprobar, area, minutos }) {
   anotarIntento(clave, preguntas.filter(q => !q.generada).map(q => q.id)); // se anota al empezar: recargar no repite el examen
   const inicioT = Date.now();
   const respuestas = [];
   let i = 0, terminado = false, porSalidas = false;
-  const finExamen = inicioT + minutos(preguntas.length) * 60000;
+  const finExamen = inicioT + minutos * 60000;
   const intentoId = Math.random().toString(36).slice(2, 8).toUpperCase();
   const marca = `${usuario?.nombre || usuario?.email || 'Invitado'} · ${new Date().toLocaleString('es')} · intento ${intentoId} · Loopback`;
   const timer = el('span', { class: 'timer', 'aria-label': 'Tiempo restante' });
@@ -148,7 +151,7 @@ function jugar({ titulo, clave, preguntas, alAprobar, area }) {
     modo.desactivar();
     removeEventListener('beforeunload', salirAviso);
     for (let k = 0; k < preguntas.length; k++) if (respuestas[k] === undefined) respuestas[k] = false; // sin responder = incorrecta
-    const segundos = Math.round((Date.now() - inicioT) / 1000);
+    const segundos = Math.min(minutos * 60, Math.round((Date.now() - inicioT) / 1000));
     const total = preguntas.length;
     const puntos = respuestas.filter(Boolean).length;
     const nota = pct(puntos, total);
@@ -199,7 +202,7 @@ if (escId && AREAS[escId.split('-')[0]] && escaleraDe(curso, escId.split('-')[0]
   else {
     const pool = bancoDe(banco, esc.lecciones);
     const siguiente = escalera[esc.n];
-    inicio({ titulo, ceja: `Escalón ${esc.n} de ${escalera.length}`, area, clave: esc.examen,
+    inicio({ titulo, ceja: `Escalón ${esc.n} de ${escalera.length}`, area, clave: esc.examen, minutos: MINUTOS_NIVEL[Math.max(...esc.niveles)],
       descripcion: `Preguntas de las ${esc.lecciones.length} lecciones de este escalón (${esc.modulos.join(', ')}). Al aprobarlo se abre ${siguiente ? 'el escalón ' + siguiente.n : 'el examen final del área'}.`,
       tamanos: [esc.tamano],
       generar: n => conGeneradas(area, elegirPreguntas(pool, n - 2, intentos(esc.examen)), 2),
@@ -214,12 +217,12 @@ if (escId && AREAS[escId.split('-')[0]] && escaleraDe(curso, escId.split('-')[0]
   else {
     const pool = banco.filter(q => q.area === area && !q.dup);
     const tope = Math.floor(pool.length / 2);
-    const tamanos = [...new Set([20, 50, 100].filter(t => t <= tope).concat(tope < 50 ? [tope] : []))].sort((a, b) => a - b);
+    const tamanos = [...new Set([20, 50].filter(t => t <= tope).concat(tope < 50 ? [tope] : []))].sort((a, b) => a - b); // en una hora: hasta 50 preguntas
     // Redes: reparto según el peso de cada dominio del CCNA. Otras áreas: todos los módulos por igual.
     const pesos = Object.fromEntries(curso.modulos.filter(m => m.area === area && (area !== 'redes' || m.peso > 0)).map(m => [m.id, area === 'redes' ? m.peso : 1]));
     const porModulo = {};
     for (const q of pool) if (pesos[q.modulo]) (porModulo[q.modulo] ||= []).push(q);
-    inicio({ titulo, ceja: 'Examen final del área', area, clave: 'final-' + area,
+    inicio({ titulo, ceja: 'Examen final del área', area, clave: 'final-' + area, minutos: MINUTOS_FINAL,
       descripcion: area === 'redes' ? 'Preguntas de todo el temario, repartidas con el peso de cada dominio del CCNA real.' : 'Preguntas de todos los módulos del área.',
       tamanos,
       generar: n => {
@@ -228,6 +231,6 @@ if (escId && AREAS[escId.split('-')[0]] && escaleraDe(curso, escId.split('-')[0]
         const prev = intentos('final-' + area);
         return conGeneradas(area, Object.entries(cupo).flatMap(([id, k]) => elegirPreguntas(porModulo[id], k, prev)), generadas);
       },
-      alAprobar: () => ({ texto: '¡Has completado la escalera entera de esta área! Añádelo a tu portafolio y sigue con otra área o con una ruta de empleo.', href: 'rutas.html', boton: 'Ver las rutas de empleo →' }) });
+      alAprobar: () => ({ texto: '¡Has completado la escalera entera de esta área! Ya puedes obtener tu certificado de Loopback.', href: 'certificado.html?area=' + area, boton: '🎓 Obtener mi certificado →' }) });
   }
 } else centro();

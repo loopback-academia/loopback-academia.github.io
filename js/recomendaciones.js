@@ -10,11 +10,6 @@ export function labsDeLeccion(leccion) {
   return (leccion.blocks || []).flatMap(b => (b.t === 'embed' && PORTADA.has(b.kind) ? [CATALOGO.find(c => c.clave === `${b.kind}:${b.id}`)] : [])).filter(Boolean);
 }
 
-// Siguiente lección de la ruta por niveles del área (todo el nivel 1, luego el 2 y el 3).
-export function siguienteLeccion(curso, area) {
-  return curso.lecciones.filter(l => l.modulo.area === area).sort((a, b) => a.nivel - b.nivel).find(l => !leccionHecha(l.id)) || null;
-}
-
 // Prácticas sin terminar de las lecciones ya estudiadas (completadas o con el cuestionario hecho), más los proyectos empezados.
 export function practicasPendientes(curso, area, max = 4) {
   const vistas = new Set();

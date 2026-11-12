@@ -6,9 +6,6 @@ import { readdir, readFile, writeFile } from 'node:fs/promises';
 
 const check = process.argv.includes('--check');
 const config = JSON.parse(await readFile('config.json', 'utf8'));
-const ia = config.tutorIA === true;
-// Bloques condicionales en las páginas: <!--ia-->…<!--/ia--> solo con el tutor con IA; <!--sin-ia-->…<!--/sin-ia--> sin él.
-const condicional = t => t.replace(/<!--(sin-)?ia-->([\s\S]*?)<!--\/(?:sin-)?ia-->/g, (_, sin, dentro) => (!!sin !== ia ? dentro : ''));
 const supa = config.supabaseUrl ? new URL(config.supabaseUrl).origin : '';
 if (supa && !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(supa)) throw new Error('supabaseUrl no parece un proyecto de Supabase: ' + supa);
 if (config.supabaseKey && /service_role|sb_secret_/.test(config.supabaseKey + atobSafe(config.supabaseKey))) throw new Error('¡Esa es una clave secreta! En config.json solo va la clave publishable/anon.');
@@ -19,6 +16,7 @@ const CSP = `default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src
 
 const LOGO = '<svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M22.5 10.5A8.5 8.5 0 1 1 9.5 10.5" fill="none" stroke="var(--accent-ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M12.6 6.9 12.1 12.9 6.9 8.6Z" fill="var(--accent-ink)" stroke="var(--accent-ink)" stroke-width="1" stroke-linejoin="round"/><circle cx="16" cy="16" r="3.4" fill="var(--accent-ink)"/></svg>';
 const ICON = {
+  certificado: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 8 5-3 5 3-1.5-8"/></svg>',
   salir: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg>',
   luces: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg>',
   curso: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2.5Z"/><path d="M8 7h7M8 11h5"/></svg>',
@@ -29,7 +27,7 @@ const ICON = {
   cuenta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
   tema: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>',
 };
-const NAV = [['curso.html', 'Curso', 'curso'], ['practica.html', 'Práctica', 'practica'], ['comandos.html', 'Comandos', 'comandos'], ['examen.html', 'Examen', 'examen'], ['repaso.html', 'Repaso', 'repaso'], ['rutas.html', 'Rutas', 'rutas'], ia ? ['tutor.html', 'Tutor IA', 'tutor'] : ['tutor.html', 'Buscar', 'buscar']];
+const NAV = [['curso.html', 'Curso', 'curso'], ['practica.html', 'Práctica', 'practica'], ['comandos.html', 'Comandos', 'comandos'], ['examen.html', 'Examen', 'examen'], ['repaso.html', 'Repaso', 'repaso'], ['rutas.html', 'Rutas', 'rutas'], ['tutor.html', 'Buscar', 'buscar']];
 // Qué hay en cada sección (se muestra al pasar el ratón): así nadie tiene que adivinar.
 const DESCRIPCION = {
   'curso.html': 'Tus lecciones por niveles y tu progreso',
@@ -38,7 +36,7 @@ const DESCRIPCION = {
   'examen.html': 'Examen de cada escalón y examen final de cada área',
   'repaso.html': 'Las preguntas que fallaste, para dominarlas',
   'rutas.html': 'Rutas para conseguir empleo en TI',
-  'tutor.html': ia ? 'Pregunta tus dudas al tutor con IA' : 'Busca cualquier tema del curso',
+  'tutor.html': 'Busca cualquier tema del curso',
 };
 
 function header(active) {
@@ -55,6 +53,7 @@ function header(active) {
       <div class="menu-pop" id="menuCuentaPop" role="menu" hidden>
         <p class="menu-user"><strong data-user="name"></strong><span>Tu progreso se guarda en tu cuenta</span></p>
         <a role="menuitem" href="curso.html">${ICON.curso}<span>Mi progreso</span></a>
+        <a role="menuitem" href="certificado.html">${ICON.certificado}<span>Mis certificados</span></a>
         <a role="menuitem" href="cuenta.html">${ICON.cuenta}<span>Mi cuenta y seguridad</span></a>
         <button type="button" role="menuitem" class="menu-salir" id="cerrarSesion">${ICON.salir}<span>Cerrar sesión</span></button>
       </div>
@@ -115,11 +114,10 @@ for (const name of (await readdir('src/paginas')).filter(n => n.endsWith('.html'
   const m = src.match(/^<!--(\{[\s\S]*?\})-->\s*/);
   if (!m) throw new Error(name + ': falta la cabecera JSON');
   const meta = JSON.parse(m[1]);
-  if (!ia && meta.sinIa) Object.assign(meta, meta.sinIa);
-  outputs.set(name, page({ ...meta, file: name }, condicional(src.slice(m[0].length))));
+  outputs.set(name, page({ ...meta, file: name }, src.slice(m[0].length)));
 }
 outputs.set('js/config.js', `// Generado por scripts/paginas.mjs a partir de config.json. No editar a mano.
-export const CONFIG = Object.freeze(${JSON.stringify({ nombre: config.nombre, url: config.url, supabaseUrl: supa, supabaseKey: config.supabaseKey || '', tutorIA: ia }, null, 2)});
+export const CONFIG = Object.freeze(${JSON.stringify({ nombre: config.nombre, url: config.url, supabaseUrl: supa, supabaseKey: config.supabaseKey || '' }, null, 2)});
 `);
 
 const stale = [];

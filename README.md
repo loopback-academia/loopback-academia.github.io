@@ -1,41 +1,43 @@
 # Loopback
 
-Plataforma de aprendizaje con **tres áreas completas**, de principiante a nivel de empleo: **Redes** (temario completo del **Cisco CCNA 200-301**), **Bases de datos** y **Programación**.
+Plataforma de aprendizaje con **cuatro áreas**, de principiante a nivel de empleo: **Redes** (temario completo del **Cisco CCNA 200-301**), **Bases de datos**, **Programación** y **Empleo TI** (soporte técnico y mesa de ayuda).
 
-> No es un curso oficial de Cisco ni otorga certificación: prepara para aprobar el examen oficial.
+> No es un curso oficial de Cisco ni otorga certificaciones oficiales. Los certificados de Loopback solo acreditan que terminaste un área: no están avalados por ninguna institución y no influyen en conseguir un empleo.
 
 ## Qué incluye
 
 | | |
 | --- | --- |
-| **120 lecciones** en 3 áreas y 3 niveles | **Redes** (68 lecciones, los 6 dominios del CCNA), **Bases de datos** (23: modelo relacional, SQL completo, diseño, rendimiento, transacciones, administración, NoSQL) y **Programación** (29: fundamentos, los lenguajes más usados, Git, POO, APIs, algoritmos, código seguro, web y automatización de redes) |
-| **Laboratorio de código** | Python (Pyodide) y JavaScript ejecutados en el navegador, en un entorno aislado; 9 bloques de ejercicios corregidos automáticamente y zonas libres |
-| **12 animaciones** paso a paso | Encapsulación, switch, ARP, TCP, DHCP, DNS, VLAN, STP, enrutamiento, NAT, ACL, OSPF |
-| **Simulador de Cisco IOS** | 12 laboratorios guiados (router, switch, VLAN, trunk, router-on-a-stick, rutas estáticas, OSPF, DHCP, NAT, ACL, SSH, port security) y 8 de averías (puerto, trunk, dúplex, gestión, rutas, OSPF, SSH, ACL). Se corrigen sobre el estado del equipo; Tab autocompleta y hay pistas |
-| **Guía de comandos** | 82 comandos de IOS por tema y nivel: qué hacen, en qué modo, un ejemplo y el laboratorio donde practicarlos |
+| **134 lecciones** en 4 áreas y 3 niveles | **Redes** (69 lecciones, los 6 dominios del CCNA), **Bases de datos** (23: modelo relacional, SQL, diseño, rendimiento, transacciones, administración, NoSQL), **Programación** (29: fundamentos, lenguajes, Git, POO, APIs, algoritmos, código seguro, web y automatización de redes) y **Empleo TI** (13: soporte, mesa de ayuda, tickets y rutas profesionales) |
+| **Escalera por área** | Los módulos se desbloquean en orden. Cada escalón termina con un examen (mínimo 80 %) con preguntas distintas en cada intento, y el área con un examen final |
+| **Exámenes con tiempo total** | 20 minutos en nivel principiante, 35 en intermedio, 45 en avanzado y 60 en el examen final. Al acabarse el tiempo se entrega solo con lo respondido |
+| **Certificado de Loopback** | Al aprobar el examen final de un área: con tu nombre, la firma de Gabriel PD y un código. Se descarga como imagen o se guarda como PDF |
+| **Laboratorio de código** | Python (Pyodide) y JavaScript ejecutados en el navegador, en un entorno aislado, con ejercicios corregidos automáticamente |
+| **12 animaciones y 14 vídeos narrados** | Encapsulación, switch, ARP, TCP, DHCP, DNS, VLAN, STP, enrutamiento, NAT, ACL, OSPF y más, paso a paso |
+| **Simulador de Cisco IOS** | Laboratorios guiados y de averías que se corrigen sobre el estado del equipo; Tab autocompleta y hay pistas |
+| **Guía de comandos** | Comandos de IOS por tema y nivel: qué hacen, en qué modo, un ejemplo y el laboratorio donde practicarlos |
 | **Entrenadores** | Subnetting, binario y VLSM con ejercicios infinitos y explicación |
-| **Laboratorio SQL** | SQLite en el navegador (WebAssembly) con el inventario de red de una empresa: 9 bloques, de SELECT a funciones de ventana y DDL |
-| **464 preguntas** | Cuestionario en cada lección y simulacro de examen por área (en Redes, ponderado por dominio del CCNA), con cronómetro |
+| **Laboratorio SQL** | SQLite en el navegador (WebAssembly) con el inventario de red de una empresa |
+| **Casos de soporte** | Tickets simulados con prioridad, SLA y turnos de mesa de ayuda |
+| **522 preguntas** | Cuestionario en cada lección, banco de preguntas de examen y preguntas de razonamiento generadas |
 | **Buscador del curso** | Desde cualquier página, encuentra las lecciones y el fragmento que responden a una duda |
-| **Tutor con IA (Claude), opcional** | Desactivado por defecto (la API de Anthropic se paga por uso). Se activa con `"tutorIA": true` en `config.json`; ver la guía |
-| **Cuentas** | Registro con confirmación por correo, verificación en dos pasos, progreso sincronizado |
+| **Cuentas** | Registro con confirmación por correo, verificación en dos pasos y progreso sincronizado |
 
 ## Lenguajes y tecnologías
 
 - **HTML, CSS y JavaScript** (módulos ES, sin frameworks) para la web.
 - **Python** compila el temario (`contenido/*.md` → `data/*.json`).
 - **SQL (PostgreSQL)** para la base de datos con seguridad a nivel de fila.
-- **TypeScript (Deno)** para la función del servidor que habla con Claude.
 - **SQL (SQLite/WebAssembly)** en el laboratorio de bases de datos.
 - **YAML** para la integración continua en GitHub Actions.
 
 ## Seguridad
 
-- Política de seguridad de contenidos (**CSP**) estricta en todas las páginas: sin scripts en línea, solo se conecta con el propio sitio y con Supabase. Protección contra *clickjacking*.
-- El DOM se construye sin `innerHTML`; las respuestas de la IA se muestran con un renderizador de Markdown propio que solo crea texto.
+- Política de seguridad de contenidos (**CSP**) estricta en todas las páginas: sin scripts ni estilos en línea, solo se conecta con el propio sitio y con Supabase. Protección contra *clickjacking*.
+- El DOM se construye sin `innerHTML`.
 - **Row Level Security** forzada en todas las tablas: cada alumno solo puede leer y escribir lo suyo. Si activa la verificación en dos pasos, sus datos exigen una sesión verificada (aal2).
 - El código que escriben los alumnos se ejecuta en un `iframe` con `sandbox="allow-scripts"` (origen opaco) y dentro de un Worker con tiempo límite: no puede leer la sesión, las cookies ni el almacenamiento de la web.
-- La clave de Anthropic vive solo como secreto de la función de Supabase. La función valida el JWT, exige correo confirmado, limita los mensajes diarios de forma atómica en la base de datos, limita tamaños y solo acepta peticiones del dominio del curso (cerrado por defecto).
+- En los exámenes, copiar o salir de la pantalla queda registrado y el enunciado lleva una marca de agua.
 - Contraseñas de 12+ caracteres, recuperación sin revelar qué correos existen, cierre de sesión en todos los dispositivos y eliminación de la cuenta.
 - Las pruebas automáticas comprueban la CSP, que no haya código inseguro ni claves en el repositorio, y las reglas RLS sobre un PostgreSQL real.
 
@@ -50,7 +52,7 @@ python3 -m http.server 8000   # y abre http://localhost:8000
 
 - El temario está en `contenido/*.md` (formato explicado al principio de `scripts/build_curso.py`).
 - Las páginas se editan en `src/paginas/*.html`; `node scripts/paginas.mjs` genera las del directorio raíz con la cabecera, el pie y la CSP.
-- Para activar cuentas y tutor, sigue **[docs/CONFIGURAR.md](docs/CONFIGURAR.md)**.
+- Para activar las cuentas, sigue **[docs/CONFIGURAR.md](docs/CONFIGURAR.md)**.
 
 Sin configurar Supabase la web funciona igualmente en **modo invitado** (progreso guardado en el navegador).
 

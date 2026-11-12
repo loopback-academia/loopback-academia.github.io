@@ -1,9 +1,9 @@
-// Página de lección: contenido, elementos interactivos, cuestionario, navegación y tutor con IA que conoce la lección.
+// Página de lección: contenido, elementos interactivos, cuestionario, navegación y buscador del curso.
 import { iniciarPagina, el, $, toast } from '../core.js';
 import { cargarCurso, buscarLeccion, numeroModulo } from '../curso.js';
 import { renderBlocks } from '../render.js';
 import { montarQuiz } from '../quiz.js';
-import { crearTutor } from '../tutor.js';
+import { crearBuscador } from '../buscador.js';
 import { cargar, alCambiar, completarLeccion, guardarQuiz, leccionHecha, notaQuiz, registrarRespuestas } from '../progreso.js';
 import { aprueba } from '../escalera.js';
 import { estadoArea, pasoSiguiente, despuesDe, escalonDe, urlExamen, rutaArea } from '../escalera-alumno.js';
@@ -15,18 +15,6 @@ const curso = await cargarCurso().catch(() => null);
 const r = curso && buscarLeccion(curso, id);
 await cargar();
 
-// Texto plano de los bloques, para dar contexto al tutor.
-function textoPlano(blocks) {
-  const seg = c => (Array.isArray(c) ? c.map(s => s.v).join('') : '');
-  return blocks.map(b => {
-    if (b.t === 'p' || b.t === 'h') return seg(b.c);
-    if (b.t === 'ul' || b.t === 'ol') return b.items.map(i => '- ' + seg(i)).join('\n');
-    if (b.t === 'code') return b.v;
-    if (b.t === 'table') return [b.head, ...b.rows].map(r => r.map(seg).join(' | ')).join('\n');
-    if (b.t === 'callout') return textoPlano(b.c);
-    return '';
-  }).filter(Boolean).join('\n');
-}
 
 function nav() {
   const m = r.leccion.modulo;
@@ -102,5 +90,5 @@ if (!r) {
       },
     });
   }
-  crearTutor({ leccion: { id: leccion.id, titulo: leccion.titulo, texto: textoPlano(leccion.blocks) } });
+  crearBuscador({ leccion: { id: leccion.id } });
 }

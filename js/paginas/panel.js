@@ -2,7 +2,6 @@
 // ruta por niveles (principiante → intermedio → avanzado) o por módulos del CCNA.
 import { iniciarPagina, el, $, $$, setMeter, plural, pct, local } from '../core.js';
 import { cuentasActivas } from '../auth.js';
-import { CONFIG } from '../config.js';
 import { cargarCurso, numeroModulo } from '../curso.js';
 import { CATALOGO } from '../labs/catalogo.js';
 import { practicasPendientes, temasAReforzar, resumenRepaso } from '../recomendaciones.js';
@@ -16,21 +15,6 @@ const abiertos = new Set();
 let vista = local.get('aula:panel:vista', 'niveles');
 const pedida = new URLSearchParams(location.search).get('area');
 let area = ['redes', 'bd', 'prog', 'ti'].includes(pedida) ? pedida : local.get('aula:panel:area', 'redes');
-
-const TEXTOS = {
-  redes: ['Los cimientos: qué es una red, cómo viajan los datos (OSI, Ethernet, ARP), direcciones IP, tus primeros comandos en un Cisco y las VLAN.',
-    'Ya configuras redes: subnetting, trunks, enrutamiento entre VLAN, rutas estáticas, DHCP, NAT, SSH, ACL y resolución de averías.',
-    'Nivel de empleo y de examen: OSPF, EtherChannel, redundancia, seguridad de capa 2, IPv6, QoS, wireless y automatización.'],
-  bd: ['Qué es una base de datos, el modelo relacional, los tipos de datos y tus primeras consultas SQL.',
-    'SQL a fondo: JOIN, agregados, subconsultas, funciones, modificar datos, crear tablas y diseñar bien una base de datos.',
-    'Como un profesional: índices y rendimiento, transacciones, seguridad, copias, NoSQL, escalado y administración.'],
-  prog: ['Programar desde cero: variables, condiciones, bucles, funciones, listas y cómo pensar un algoritmo.',
-    'Los lenguajes más usados y las herramientas del día a día: Git, depuración, errores, archivos, JSON, APIs y POO.',
-    'Nivel profesional: algoritmos y estructuras de datos, pruebas, código seguro, arquitectura, web, automatización de redes y tu carrera.'],
-  ti: ['Lo básico del trabajo de soporte: método de diagnóstico, Windows, programas, acceso remoto, tickets y atención al usuario.',
-    'Casos de oficinas, tiendas, almacenes y sucursales: impresoras de etiquetas, sucursales sin conexión, ingresos de personal y el turno de mesa de ayuda.',
-    'Mejora continua: gestión de problemas, causa raíz y base de conocimiento.'],
-};
 const NIVEL_INFO = [1, 2, 3].map(n => ({ n, clave: ['principiante', 'intermedio', 'avanzado'][n - 1], titulo: ['Nivel 1 · Principiante', 'Nivel 2 · Intermedio', 'Nivel 3 · Avanzado'][n - 1] }));
 // Orden de la ruta: primero todo el nivel 1, luego el 2 y luego el 3 (dentro de cada nivel, en el orden del temario).
 const delArea = () => curso.lecciones.filter(l => l.modulo.area === area);
@@ -99,7 +83,7 @@ function pintarEscalera() {
   const final = el('li', { class: 'ladder-step' }, el('div', { class: 'step-final ' + est.final },
     el('span', { class: 'node-dot', 'aria-hidden': 'true' }, est.final === 'aprobado' ? '🏆' : est.final === 'disponible' ? '🎓' : '🔒'),
     el('div', {}, el('strong', {}, 'Examen final del área'), el('p', { class: 'small muted' }, est.final === 'aprobado' ? `Aprobado con ${pct(qf.puntos, qf.total)} %. ¡Escalera completada!` : est.final === 'disponible' ? 'Último paso: demuestra todo lo aprendido (mínimo 80 %).' : 'Se abre al aprobar el examen de todos los escalones.')),
-    est.final === 'bloqueado' ? null : el('a', { class: 'btn btn-sm ' + (est.final === 'disponible' ? 'btn-primary' : 'btn-ghost'), href: urlFinal(area) }, est.final === 'disponible' ? 'Hacer el examen final' : 'Repetir')));
+    est.final === 'bloqueado' ? null : est.final === 'aprobado' ? el('a', { class: 'btn btn-sm btn-primary', href: 'certificado.html?area=' + area }, '🎓 Mi certificado') : el('a', { class: 'btn btn-sm btn-primary', href: urlFinal(area) }, 'Hacer el examen final')));
   return el('div', {}, el('p', { class: 'small muted ladder-help' }, 'Se avanza paso a paso: cada lección se abre al aprobar la anterior con un 80 %, y cada escalón al aprobar el examen del anterior. Lo completado queda abierto para repasar.'),
     el('ol', { class: 'ladder' }, items, final));
 }
@@ -214,7 +198,7 @@ $('#vistas').addEventListener('click', e => {
 if (usuario) {
   $('#saludo').textContent = `Hola, ${usuario.nombre || usuario.email.split('@')[0]}`;
 } else if (cuentasActivas()) {
-  $('#avisoCuenta').replaceChildren(el('div', { class: 'alert alert-info mb' }, el('p', {}, 'Estás como invitado: tu progreso se guarda solo en este navegador. Crea una cuenta gratuita para no perderlo' + (CONFIG.tutorIA ? ' y usar el tutor con IA.' : ' y seguir en cualquier dispositivo.')), el('a', { class: 'btn btn-primary btn-sm', href: 'cuenta.html?siguiente=curso.html' }, 'Crear cuenta')));
+  $('#avisoCuenta').replaceChildren(el('div', { class: 'alert alert-info mb' }, el('p', {}, 'Estás como invitado: tu progreso se guarda solo en este navegador. Crea una cuenta gratuita para no perderlo y seguir en cualquier dispositivo.'), el('a', { class: 'btn btn-primary btn-sm', href: 'cuenta.html?siguiente=curso.html' }, 'Crear cuenta')));
 }
 await cargar();
 pintar();
