@@ -113,8 +113,17 @@ function pintarSesion(u) {
 }
 
 // Se llama al principio de cada página.
+// Funcionar sin conexión: registra el service worker (sw.js) y avisa al perder o recuperar la conexión.
+function initSinConexion() {
+  if (!('serviceWorker' in navigator) || !(location.protocol === 'https:' || location.hostname === 'localhost')) return;
+  navigator.serviceWorker.register('sw.js').catch(() => { /* sin service worker la web funciona igual */ });
+  addEventListener('offline', () => toast('Sin conexión: puedes seguir estudiando con lo que ya está guardado. Tu progreso se guarda en este navegador.'));
+  addEventListener('online', () => toast('Conexión recuperada.'));
+}
+
 export async function iniciarPagina() {
   initTheme();
+  initSinConexion();
   const u = await usuarioActual();
   pintarSesion(u);
   try { const aviso = sessionStorage.getItem('aula:aviso'); if (aviso) { sessionStorage.removeItem('aula:aviso'); toast(aviso); } } catch { /* nada */ }

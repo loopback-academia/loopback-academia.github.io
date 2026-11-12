@@ -821,6 +821,31 @@ a.node-in { transition: background-color 150ms ease; }
 .terminal-win { background: #0c0c0c; color: #cccccc; }
 .terminal-win .in { color: #f2f2f2; }
 
+/* ---------------------------------------------------------------- reto del día */
+.reto-cab { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.reto-cab h2 { margin: 2px 0 8px; font-size: 1.15rem; }
+.reto-racha { text-align: center; min-width: 74px; padding: 6px 10px; border-radius: var(--radius-sm); background: var(--accent-soft); }
+.reto-racha strong { display: block; font-size: 1.5rem; line-height: 1.1; color: var(--accent); }
+.reto-form fieldset { border: 0; padding: 0; margin: 0 0 10px; display: grid; gap: 6px; }
+.reto-form legend { font-weight: 650; margin-bottom: 6px; }
+
+/* ---------------------------------------------------------------- glosario */
+.term { background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: help; text-decoration: underline dotted var(--accent); text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+.term[aria-expanded="true"] { color: var(--accent); }
+.term-pop { position: absolute; z-index: 60; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: var(--radius-sm); box-shadow: var(--shadow); padding: 10px 12px; font-size: .92rem; line-height: 1.45; transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out); }
+.term-pop p { margin: 4px 0 6px; }
+.term-pop a { font-size: .85rem; }
+@starting-style { .term-pop { opacity: 0; transform: translateY(4px); } }
+@media (prefers-reduced-motion: reduce) { .term-pop { transition: opacity 150ms ease; } @starting-style { .term-pop { transform: none; } } }
+.glosario-letra h2 { margin: 1.6rem 0 .4rem; color: var(--accent); }
+.glosario-letra dt { font-weight: 750; margin-top: 12px; scroll-margin-top: 90px; }
+.glosario-letra dd { margin: 2px 0 0; color: var(--ink-2); }
+.glosario-letra dt.resaltado { color: var(--accent); }
+#buscarTermino { width: 100%; max-width: 520px; margin-bottom: 10px; }
+.area-tabs.cinco { grid-template-columns: repeat(5, 1fr); }
+@media (max-width: 640px) { .area-tabs.cinco { grid-template-columns: repeat(3, 1fr); } }
+
 /* ---------------------------------------------------------------- correo (phishing) */
 .mail { border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); margin: 8px 0 14px; overflow: hidden; }
 .mail-cab { padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--surface-2); }

@@ -8,6 +8,7 @@ import { practicasPendientes, temasAReforzar, resumenRepaso } from '../recomenda
 import { labAccesible, leccionDeLab, minimoPara } from '../escalera.js';
 import { estadoArea, pasoSiguiente, urlExamen, urlFinal } from '../escalera-alumno.js';
 import { cargar, alCambiar, leccionHecha, notaQuiz, labHecho, examenes, racha, exportar } from '../progreso.js';
+import { montarReto } from '../reto-ui.js';
 
 const usuario = await iniciarPagina();
 const curso = await cargarCurso().catch(() => null);
@@ -203,6 +204,7 @@ if (usuario) {
 await cargar();
 pintar();
 alCambiar(pintar);
+if (curso) montarReto($('#retoDia'), { curso, leccionHecha });
 
 // Guía de primeros pasos: una lista que se marca sola con lo que el alumno va haciendo. Sin tutoriales: cada paso
 // lleva directamente a donde se hace. Desaparece al completarla o si el alumno la oculta.
@@ -217,7 +219,7 @@ function pintarGuia() {
   if (!caja || !curso) return;
   if (local.get('aula:guia:oculta', false)) { caja.hidden = true; return; }
   const items = Object.keys(exportar().items || {});
-  const hay = pref => items.some(k => k.startsWith(pref));
+  const hay = pref => items.some(k => k.startsWith(pref) && !k.startsWith('quiz:reto-'));
   const eligio = !!local.get('aula:guia:area', '') || hay('leccion:');
   const primera = ruta()[0];
   const pasos = [

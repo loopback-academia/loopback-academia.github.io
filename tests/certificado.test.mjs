@@ -37,3 +37,23 @@ test('el certificado dice que no es oficial, que no está avalado y que no influ
   assert.match(AVISO, /no está avalado/);
   assert.match(AVISO, /no garantiza ni influye en la obtención de un empleo/);
 });
+
+// ---------------------------------------------------------------- reto del día
+import { retoDelDia, rachaRetos, insigniasDe, fechaLocal } from '../js/reto.js';
+const banco = JSON.parse(readFileSync(new URL('../data/examen.json', import.meta.url)));
+test('reto del día: estable durante el día, de los módulos empezados y con racha', () => {
+  const a = retoDelDia(banco, '2026-11-12', new Set(['b1']), 'm0');
+  assert.equal(a, retoDelDia(banco, '2026-11-12', new Set(['b1']), 'm0'));
+  assert.equal(a.modulo, 'b1');
+  assert.equal(retoDelDia(banco, '2026-11-12', new Set(), 'm0').modulo, 'm0');
+  const dias = new Set(Array.from({ length: 10 }, (_, k) => retoDelDia(banco, `2026-11-${String(k + 1).padStart(2, '0')}`, new Set(['m1', 'm2']), 'm0').id));
+  assert.ok(dias.size >= 6, 'cambia de un día a otro');
+  const k = d => 'quiz:reto-' + d;
+  assert.equal(rachaRetos([k('2026-11-10'), k('2026-11-11'), k('2026-11-12'), 'quiz:m1-osi'], '2026-11-12'), 3);
+  assert.equal(rachaRetos([k('2026-11-10'), k('2026-11-11')], '2026-11-12'), 2, 'hoy aún no lo ha hecho');
+  assert.equal(rachaRetos([k('2026-11-09'), k('2026-11-11')], '2026-11-12'), 1);
+  assert.equal(rachaRetos([], '2026-11-12'), 0);
+  assert.equal(rachaRetos([k('2026-02-28'), k('2026-03-01')], '2026-03-01'), 2, 'cambio de mes');
+  assert.deepEqual(insigniasDe(7).map(x => x[0]), [3, 7]);
+  assert.match(fechaLocal(), /^\d{4}-\d{2}-\d{2}$/);
+});

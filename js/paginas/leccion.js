@@ -2,6 +2,7 @@
 import { iniciarPagina, el, $, toast } from '../core.js';
 import { cargarCurso, buscarLeccion, numeroModulo } from '../curso.js';
 import { renderBlocks } from '../render.js';
+import { cargarGlosario, marcarTerminos, terminosDeArea } from '../glosario.js';
 import { montarQuiz } from '../quiz.js';
 import { crearBuscador } from '../buscador.js';
 import { cargar, alCambiar, completarLeccion, guardarQuiz, leccionHecha, notaQuiz, registrarRespuestas } from '../progreso.js';
@@ -63,6 +64,7 @@ if (!r) {
 
   const prose = el('div', { class: 'prose' });
   prose.append(renderBlocks(leccion.blocks, { leccion }));
+  cargarGlosario().then(g => marcarTerminos(prose, terminosDeArea(g, leccion.modulo.area)));
   const quizBox = el('div');
   box.replaceChildren(...[
     el('header', { class: 'lesson-head' },

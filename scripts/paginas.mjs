@@ -3,6 +3,7 @@
 // La política de seguridad (CSP) se calcula aquí: solo se permite conectar con este sitio y con el proyecto de Supabase.
 // Uso: node scripts/paginas.mjs [--check]
 import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 
 const check = process.argv.includes('--check');
 const config = JSON.parse(await readFile('config.json', 'utf8'));
@@ -68,7 +69,7 @@ function mobileNav(active) {
 }
 const footer = `<footer class="site-footer"><div class="container">
   <span>Loopback · Redes, bases de datos, programación y empleo en TI desde cero. El temario de redes sigue el Cisco CCNA 200-301; no es un curso oficial de Cisco.</span>
-  <span><a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a></span>
+  <span><a href="glosario.html">Glosario</a> · <a href="cv.html">Mi CV</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a></span>
 </div></footer>`;
 
 function page(meta, body) {
@@ -122,10 +123,54 @@ outputs.set('js/config.js', `// Generado por scripts/paginas.mjs a partir de con
 export const CONFIG = Object.freeze(${JSON.stringify({ nombre: config.nombre, url: config.url, supabaseUrl: supa, supabaseKey: config.supabaseKey || '' }, null, 2)});
 `);
 
+// ---------------------------------------------------------------- funcionar sin conexión (service worker)
+// Precarga las páginas, el código, los estilos, los datos y las imágenes. La versión es un resumen del contenido:
+// cada despliegue con cambios crea una caché nueva y borra la anterior.
+async function listar(dir) {
+  const out = [];
+  for (const e of await readdir(dir, { withFileTypes: true })) {
+    const ruta = dir + '/' + e.name;
+    if (e.isDirectory()) out.push(...await listar(ruta)); else out.push(ruta);
+  }
+  return out;
+}
+const precarga = [...[...outputs.keys()].filter(f => f.endsWith('.html')),
+  ...(await Promise.all(['js', 'css', 'data', 'img'].map(listar))).flat().filter(f => !/(^|\/)\./.test(f)),
+  'manifest.webmanifest', 'sandbox.html', 'vendor/supabase.js', 'vendor/sql-wasm.js', 'vendor/sql-wasm.wasm'].sort();
+const resumen = createHash('sha256');
+for (const f of precarga) resumen.update(f + '\0' + (outputs.get(f) ?? await readFile(f)) + '\0');
+const VERSION = resumen.digest('hex').slice(0, 12);
+outputs.set('sw.js', `// Generado por scripts/paginas.mjs: permite usar Loopback sin conexión. No editar a mano.
+const CACHE = 'loopback-${VERSION}';
+const PRECARGA = ${JSON.stringify(['./', ...precarga.map(f => './' + f)])};
+
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(PRECARGA)).then(() => self.skipWaiting()));
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith('loopback-') && k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+});
+// Con conexión, siempre la versión nueva (y se actualiza la copia); sin conexión, la copia guardada.
+// Pyodide (versionado y pesado) se guarda la primera vez que se usa y después se sirve desde la caché.
+self.addEventListener('fetch', e => {
+  const r = e.request;
+  const url = new URL(r.url);
+  if (r.method !== 'GET' || url.origin !== location.origin) return;
+  if (url.pathname.includes('/vendor/pyodide/')) {
+    e.respondWith(caches.match(r).then(c => c || fetch(r).then(res => { if (res.ok) { const copia = res.clone(); caches.open(CACHE).then(k => k.put(r, copia)); } return res; })));
+    return;
+  }
+  e.respondWith(fetch(r).then(res => {
+    if (res.ok && res.type === 'basic') { const copia = res.clone(); caches.open(CACHE).then(k => k.put(r, copia)); }
+    return res;
+  }).catch(() => caches.match(r, { ignoreSearch: r.mode === 'navigate' }).then(c => c || (r.mode === 'navigate' ? caches.match('./index.html') : Response.error()))));
+});
+`);
+
 const stale = [];
 for (const [file, content] of outputs) {
   if (check) { if ((await readFile(file, 'utf8').catch(() => '')) !== content) stale.push(file); }
   else await writeFile(file, content);
 }
 if (stale.length) { console.error('Sin regenerar (ejecuta node scripts/paginas.mjs): ' + stale.join(', ')); process.exit(1); }
-console.log(check ? 'Páginas al día.' : 'Páginas generadas: ' + (outputs.size - 1) + ' y js/config.js.');
+console.log(check ? 'Páginas al día.' : 'Páginas generadas: ' + (outputs.size - 2) + ', js/config.js y sw.js.');

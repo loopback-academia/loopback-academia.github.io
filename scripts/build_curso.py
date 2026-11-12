@@ -298,7 +298,7 @@ def parse_module(path: Path) -> dict:
 
 
 def build() -> dict[str, str]:
-    modules = [parse_module(p) for p in sorted(SRC.glob("*.md")) if not p.name.startswith("_")]
+    modules = [parse_module(p) for p in sorted(SRC.glob("*.md")) if not p.name.startswith("_") and p.name != "glosario.md"]
     ids = [l["id"] for m in modules for l in m["lecciones"]]
     dup = {i for i in ids if ids.count(i) > 1}
     if dup:
@@ -331,7 +331,28 @@ def build() -> dict[str, str]:
             mod["lecciones"].append({**{k: l[k] for k in ("id", "titulo", "minutos", "nivel", "blocks", "quiz")}, "preguntas": propias})
         curso["modulos"].append(mod)
     dump = lambda o: json.dumps(o, ensure_ascii=False, separators=(",", ":")) + "\n"
-    return {"curso.json": dump(curso), "buscar.json": dump(buscar), "examen.json": dump(examen)}
+    return {"curso.json": dump(curso), "buscar.json": dump(buscar), "examen.json": dump(examen), "glosario.json": dump(glosario())}
+
+
+def glosario() -> list:
+    """Lee contenido/glosario.md: una fila de tabla por término (término | otras formas | área | definición)."""
+    terminos, vistos = [], set()
+    for n, linea in enumerate((SRC / "glosario.md").read_text(encoding="utf-8").splitlines(), 1):
+        if not linea.startswith("| ") or linea.startswith("| Término") or linea.startswith("|---"):
+            continue
+        celdas = [c.strip() for c in linea.strip().strip("|").split("|")]
+        if len(celdas) != 4 or not celdas[0] or not celdas[3]:
+            raise ContentError(f"glosario.md, línea {n}: se esperan 4 columnas (término | otras formas | área | definición)")
+        termino, otras, area, definicion = celdas
+        if area not in AREAS:
+            raise ContentError(f"glosario.md, línea {n}: área desconocida {area!r}")
+        formas = [termino] + [x.strip() for x in otras.split(",") if x.strip()]
+        for f in formas:
+            if f.lower() in vistos:
+                raise ContentError(f"glosario.md, línea {n}: «{f}» ya está en otro término")
+            vistos.add(f.lower())
+        terminos.append({"t": termino, "formas": formas, "area": area, "d": definicion})
+    return sorted(terminos, key=lambda x: x["t"].lower())
 
 
 def main() -> int:
@@ -356,7 +377,8 @@ def main() -> int:
     if stale:
         print("data/ no está al día (ejecuta python3 scripts/build_curso.py): " + ", ".join(stale), file=sys.stderr)
         return 1
-    print(f"Temario {'al día' if check else 'compilado'}: {len(curso['modulos'])} módulos, {n_lessons} lecciones, {n_q} preguntas.")
+    n_g = len(json.loads(files["glosario.json"]))
+    print(f"Temario {'al día' if check else 'compilado'}: {len(curso['modulos'])} módulos, {n_lessons} lecciones, {n_q} preguntas, {n_g} términos del glosario.")
     return 0
 
 
