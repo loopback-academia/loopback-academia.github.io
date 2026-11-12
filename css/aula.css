@@ -1044,6 +1044,64 @@ a.node-in { transition: background-color 150ms ease; }
   .hero { padding-top: 36px; }
   input[type=text], input[type=email], input[type=password], input[type=search], input[type=number], select, textarea { font-size: 16px; }
 }
+/* ---------------------------------------------------------------- seis y siete áreas */
+.area-tabs.seis { grid-template-columns: repeat(6, 1fr); max-width: 1000px; }
+.area-tabs.siete { grid-template-columns: repeat(7, 1fr); max-width: 1080px; }
+@media (max-width: 900px) { .area-tabs.seis, .area-tabs.siete { grid-template-columns: repeat(3, 1fr); } .area-tabs.seis button, .area-tabs.siete button { font-size: .78rem; } }
+@media (min-width: 560px) and (max-width: 900px) { .area-tabs.siete { grid-template-columns: repeat(4, 1fr); } }
+
+/* ---------------------------------------------------------------- ciberseguridad */
+.sec-preg { margin: 0 0 14px; }
+.sec-ops { display: grid; gap: 6px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin: 6px 0; }
+.sec-ops.dos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.sec-op { text-align: left; white-space: normal; height: auto; line-height: 1.4; padding: 8px 12px; overflow-wrap: anywhere; }
+.sec-op.ok { border-color: var(--ok); background: var(--ok-soft); }
+.sec-op.bad { border-color: var(--warn); background: var(--warn-soft); }
+.sec-resp { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.sec-resp input { flex: 1 1 200px; max-width: 360px; font-family: var(--mono); }
+.sec-pass { font-family: var(--mono); font-size: 1.1rem; margin: 4px 0 10px; }
+.sec-barra { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; height: 8px; margin: 0 0 8px; }
+.sec-barra span { background: var(--line); border-radius: 4px; }
+.sec-barra[data-n="1"] span:nth-child(-n+1) { background: var(--danger); }
+.sec-barra[data-n="2"] span:nth-child(-n+2) { background: var(--warn); }
+.sec-barra[data-n="3"] span:nth-child(-n+3) { background: var(--accent); }
+.sec-barra[data-n="4"] span { background: var(--ok); }
+.sec-nivel { font-weight: 700; min-height: 1.4em; margin: 0 0 6px; }
+.sec-dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 0 0 6px; }
+.sec-dl dt { color: var(--muted); }
+.sec-dl dd { margin: 0; }
+.sec-problemas { margin: 0 0 8px; padding-left: 1.2em; color: var(--ink-2); }
+.sec-hash { font-family: var(--mono); font-size: .85rem; overflow-wrap: anywhere; }
+.sec-hash-celda { font-size: .75rem; overflow-wrap: anywhere; min-width: 180px; }
+.sec-roja { color: var(--danger); font-family: var(--mono); }
+.sec-tabla { margin: 0; font-size: .9rem; }
+.sec-tabla td, .sec-tabla th { vertical-align: middle; }
+.sec-herr { display: grid; gap: 8px; }
+.sec-tool { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 8px 12px; }
+.sec-tool summary { cursor: pointer; font-weight: 600; }
+.sec-tool textarea, .sec-tool input[type=text] { margin: 4px 0 8px; }
+.sec-tool input[type=range] { width: 100%; }
+.sec-salida { background: var(--surface-2); border-radius: var(--radius-sm); padding: 8px 10px; min-height: 1.6em; overflow-wrap: anywhere; margin: 4px 0; }
+.sec-filtro { margin: 8px 0; }
+.sec-fila { display: flex; gap: 8px; align-items: center; }
+.sec-fila input { flex: 1; }
+.sec-log { max-height: 340px; overflow: auto; font-size: .78rem; white-space: pre; margin: 0 0 12px; }
+.sec-permitir td:nth-child(2)::before { content: "✓ "; color: var(--ok); font-weight: 700; }
+.sec-denegar td:nth-child(2)::before { content: "✕ "; color: var(--danger); font-weight: 700; }
+.sec-acciones { white-space: nowrap; text-align: right; }
+.sec-acciones .btn { padding: 4px 8px; }
+.sec-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 6px; margin: 10px 0 6px; }
+.sec-form select { padding: 7px 8px; font-size: .9rem; }
+.sec-flujos li { font-size: .88rem; }
+.sec-ir-hist { padding-left: 1.2em; margin: 0 0 12px; }
+.sec-ir-hist li { margin-bottom: 6px; }
+.sec-ir-hist p { margin: 0; }
+.sec-ir-ok::marker { color: var(--ok); }
+.sec-ir-medio::marker { color: var(--warn); }
+.sec-ir-mal::marker { color: var(--danger); }
+.sec-ir-paso { padding: 14px; }
+@media (max-width: 560px) { .sec-ops.dos { grid-template-columns: minmax(0, 1fr); } }
+
 /* ---------------------------------------------------------------- simulador de topologías */
 .topo-barra { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 10px 0 4px; }
 .topo-grupo { display: flex; flex-wrap: wrap; gap: 6px; }

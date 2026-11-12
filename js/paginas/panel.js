@@ -15,7 +15,7 @@ const curso = await cargarCurso().catch(() => null);
 const abiertos = new Set();
 let vista = local.get('aula:panel:vista', 'niveles');
 const pedida = new URLSearchParams(location.search).get('area');
-let area = ['redes', 'bd', 'prog', 'ti', 'en'].includes(pedida) ? pedida : local.get('aula:panel:area', 'redes');
+let area = ['redes', 'bd', 'prog', 'ti', 'en', 'sec'].includes(pedida) ? pedida : local.get('aula:panel:area', 'redes');
 const NIVEL_INFO = [1, 2, 3].map(n => ({ n, clave: ['principiante', 'intermedio', 'avanzado'][n - 1], titulo: ['Nivel 1 · Principiante', 'Nivel 2 · Intermedio', 'Nivel 3 · Avanzado'][n - 1] }));
 // Orden de la ruta: primero todo el nivel 1, luego el 2 y luego el 3 (dentro de cada nivel, en el orden del temario).
 const delArea = () => curso.lecciones.filter(l => l.modulo.area === area);
@@ -112,9 +112,9 @@ function pintar() {
   $('#stRacha').textContent = racha();
   $('#stLabs').textContent = `${labsArea.filter(l => labHecho(l.progreso)).length}/${labsArea.length}`;
   $$('#areas button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.area === area)));
-  $('#progresoTitulo').textContent = 'TU PROGRESO EN ' + { redes: 'REDES', bd: 'BASES DE DATOS', prog: 'PROGRAMACIÓN', ti: 'EMPLEO TI', en: 'INGLÉS TÉCNICO' }[area];
+  $('#progresoTitulo').textContent = 'TU PROGRESO EN ' + { redes: 'REDES', bd: 'BASES DE DATOS', prog: 'PROGRAMACIÓN', ti: 'EMPLEO TI', en: 'INGLÉS TÉCNICO', sec: 'CIBERSEGURIDAD' }[area];
   $('#vistaModulos').textContent = area === 'redes' ? 'Por módulos del CCNA' : 'Por módulos';
-  const [href, texto] = { redes: ['laboratorio.html?l=lab:subnetting', 'Entrenador de subnetting'], bd: ['laboratorio.html?l=sql:select', 'Laboratorio SQL'], prog: ['laboratorio.html?l=code:python-libre', 'Zona libre de Python'], ti: ['rutas.html', 'Rutas de empleo'], en: ['laboratorio.html?l=vocab:basico', 'Vocabulario técnico'] }[area];
+  const [href, texto] = { redes: ['laboratorio.html?l=lab:subnetting', 'Entrenador de subnetting'], bd: ['laboratorio.html?l=sql:select', 'Laboratorio SQL'], prog: ['laboratorio.html?l=code:python-libre', 'Zona libre de Python'], ti: ['rutas.html', 'Rutas de empleo'], en: ['laboratorio.html?l=vocab:basico', 'Vocabulario técnico'], sec: ['laboratorio.html?l=pass:fuerza', 'Analizador de contraseñas'] }[area];
   $('#practicaArea').setAttribute('href', href);
   $('#practicaArea').textContent = texto;
 
@@ -214,6 +214,7 @@ function pintarGuia() {
     ['ti', '🏢', 'Conseguir empleo en TI', 'Soporte técnico, mesa de ayuda y casos reales de empresa'],
     ['prog', '💻', 'Programación', 'Python y JavaScript desde cero, ejecutando código aquí mismo'],
     ['bd', '🗄️', 'Bases de datos', 'SQL de verdad en tu navegador, de cero a profesional'],
+    ['sec', '🛡️', 'Ciberseguridad', 'Contraseñas, cifrado, cortafuegos, registros y respuesta a incidentes'],
     ['en', '🇬🇧', 'Inglés técnico', 'El inglés que piden en TI: errores, documentación, tickets y entrevistas'],
   ];
   const caja = $('#primerosPasos');

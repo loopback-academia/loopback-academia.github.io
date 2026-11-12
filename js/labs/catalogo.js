@@ -43,8 +43,22 @@ export const TOPO_INFO = [
   ['libre', 'Modo libre: diseña tu red', 'principiante', 1, 'Lienzo en blanco con PC, servidores, switches y routers.'],
 ];
 
+// Prácticas de ciberseguridad: [clave, grupo, nivel, título, texto, tareas, unidad]. tests/seguridad.test.mjs comprueba que
+// coinciden con js/sec/seguridad.js (así el catálogo no carga los datos de los laboratorios en cada página).
+export const SEC_INFO = [
+  ['pass:fuerza', 'contrasenas', 'principiante', 'Analizador de contraseñas', 'Mide la fortaleza de contraseñas de prueba y aprende qué patrones caen primero.', 3, 'tareas'],
+  ['pass:hash', 'contrasenas', 'principiante', 'Hashes, sal y ataque de diccionario', 'Calcula hashes SHA-256 y ataca una base de datos filtrada con y sin sal.', 5, 'preguntas'],
+  ['cripto:retos', 'cripto', 'intermedio', 'Retos de criptografía', 'César, Vigenère, Base64 y qué clave se usa para cifrar y para firmar.', 7, 'retos'],
+  ['fw:oficina', 'firewall', 'intermedio', 'Cortafuegos: la oficina', 'Reglas de mínimo privilegio entre la LAN e Internet.', 6, 'flujos'],
+  ['fw:dmz', 'firewall', 'intermedio', 'Cortafuegos: publicar un servidor en la DMZ', 'Ordena y corrige reglas para publicar la tienda sin exponer la LAN.', 7, 'flujos'],
+  ['logs:ssh', 'logs', 'avanzado', 'Registros: fuerza bruta contra SSH', 'Investiga auth.log y descubre quién entró, cuándo y qué hizo.', 6, 'preguntas'],
+  ['logs:web', 'logs', 'avanzado', 'Registros: ataques contra la tienda web', 'Encuentra escaneos, inyección SQL y recorrido de directorios en access.log.', 5, 'preguntas'],
+  ['ir:ransomware', 'incidentes', 'avanzado', 'Incidente: ransomware en contabilidad', 'Toma las decisiones de un incidente real, de la contención a las lecciones aprendidas.', 6, 'decisiones'],
+  ['ir:cuenta', 'incidentes', 'avanzado', 'Incidente: una cuenta de correo comprometida', 'Echa al atacante, encuentra sus reglas ocultas y protege a los clientes.', 5, 'decisiones'],
+];
+
 export const NIVELES = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
-export const AREAS = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico' };
+export const AREAS = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico', sec: 'Ciberseguridad' };
 
 export const CATALOGO = [
   ...Object.entries(VOCAB).map(([id, v]) => ({ clave: 'vocab:' + id, area: 'en', grupo: 'vocab', nivel: 'principiante', progreso: 'vocab-' + id, titulo: 'Vocabulario: ' + v.titulo.toLowerCase(), texto: `${v.palabras.length} palabras con ejemplo y pronunciación.`, tareas: v.palabras.length, unidad: 'palabras' })),
@@ -63,6 +77,7 @@ export const CATALOGO = [
   ...Object.entries(RUTAS_ENTREVISTA).map(([id, t]) => ({ clave: 'entrevista:' + id, area: 'ti', grupo: 'empleo', nivel: 'intermedio', progreso: 'entrevista-' + id, titulo: 'Entrevista: ' + t.split(' (')[0].toLowerCase().replace(/^./, c => c.toUpperCase()), texto: 'Seis preguntas de entrevista real con puntos clave y respuesta modelo.', tareas: 6, unidad: 'preguntas' })),
   ...Object.values(CASOS).map(c => ({ clave: 'caso:' + c.id, area: 'ti', grupo: 'casos', nivel: c.nivel, progreso: 'caso-' + c.id, titulo: c.titulo, texto: c.resumen, lugar: c.lugar })),
   ...Object.values(PROYECTOS).map(p => ({ clave: 'proyecto:' + p.id, area: p.area, grupo: 'proyectos', nivel: p.nivel, progreso: p.progreso, titulo: p.titulo.replace(/^Proyecto: (.)/, (_, c) => c.toUpperCase()), texto: p.resumen, tareas: p.fases.reduce((n, f) => n + f.requisitos.length, 0) })),
+  ...SEC_INFO.map(([clave, grupo, nivel, titulo, texto, tareas, unidad]) => ({ clave, area: 'sec', grupo, nivel, progreso: clave.replace(':', '-'), titulo, texto, tareas, unidad })),
   ...TOPO_INFO.map(([id, titulo, nivel, tareas, texto]) => ({ clave: 'topo:' + id, area: 'redes', grupo: 'topologias', nivel, progreso: 'topo-' + id, titulo, texto, tareas, unidad: tareas === 1 ? 'tarea' : 'tareas' })),
   ...Object.entries(CAPTURAS).map(([id, c]) => ({ clave: 'cap:' + id, area: 'redes', grupo: 'capturas', nivel: 'intermedio', progreso: 'cap-' + id, titulo: 'Captura: ' + c.titulo.charAt(0).toLowerCase() + c.titulo.slice(1), texto: c.intro.split('. ')[0] + '.', tareas: c.preguntas.length, unidad: 'preguntas' })),
   { clave: 'lab:subnetting', area: 'redes', grupo: 'numeros', nivel: 'principiante', progreso: 'subnetting', titulo: 'Entrenador de subnetting', texto: 'Red, broadcast, hosts y máscara de direcciones al azar. Completa 10 aciertos seguidos.' },

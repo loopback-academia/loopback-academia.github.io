@@ -16,6 +16,12 @@ const HABILIDAD_GRUPO = {
   vocab: 'Inglés técnico: vocabulario de TI',
   lectura: 'Inglés técnico: lectura de errores y documentación',
   frases: 'Inglés técnico: tickets, llamadas y entrevistas',
+  topologias: 'Diseño y diagnóstico de topologías de red (VLAN, troncales, enrutamiento y DHCP)',
+  contrasenas: 'Contraseñas seguras, hashes y sal',
+  cripto: 'Criptografía simétrica, asimétrica y firmas digitales',
+  firewall: 'Reglas de cortafuegos y segmentación con DMZ',
+  logs: 'Análisis de registros y detección de ataques',
+  incidentes: 'Respuesta a incidentes de seguridad',
   proyectos: 'Proyectos completos documentados',
 };
 
@@ -34,7 +40,7 @@ export function datosCv({ curso, catalogo, leccionHecha, labHecho, finalAprobado
 // Resumen profesional sugerido a partir de lo completado (el alumno lo edita).
 export function resumenSugerido(d, titular = '') {
   if (!d.lecciones) return '';
-  const NOMBRE = { redes: 'redes', bd: 'bases de datos y SQL', prog: 'programación', ti: 'soporte técnico', en: 'inglés técnico' };
+  const NOMBRE = { redes: 'redes', bd: 'bases de datos y SQL', prog: 'programación', ti: 'soporte técnico', en: 'inglés técnico', sec: 'ciberseguridad' };
   const areas = [...new Set([...d.modulos.map(m => m.area), ...d.practicas.map(p => p.area)])].map(a => NOMBRE[a]).filter(Boolean);
   const lista = areas.length > 1 ? areas.slice(0, -1).join(', ') + ' y ' + areas[areas.length - 1] : areas[0];
   const partes = [`${titular || 'Profesional de TI en formación'} con formación práctica en ${lista || 'tecnología'}.`];

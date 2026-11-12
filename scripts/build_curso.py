@@ -60,6 +60,11 @@ KNOWN = {
     "vocab": {"basico"},
     "lectura": {"errores", "docs"},
     "frases": {"tickets", "llamadas", "entrevista"},
+    "pass": {"fuerza", "hash"},
+    "cripto": {"retos"},
+    "logs": {"ssh", "web"},
+    "fw": {"oficina", "dmz"},
+    "ir": {"ransomware", "cuenta"},
     "er": {"tienda", "escuela"},
     "fn": {"formas"},
     "conc": {"sucia", "bloqueo", "perdida", "deadlock"},
@@ -73,7 +78,7 @@ KNOWN = {
              "python-errores", "js-errores", "python-automatizacion"},
 }
 CALLOUTS = {"nota", "examen", "cuidado", "practica", "comando", "reto", "solucion", "externo"}
-AREAS = ("redes", "bd", "prog", "ti", "en")
+AREAS = ("redes", "bd", "prog", "ti", "en", "sec")
 LESSON_RE = re.compile(r"^===\s*([a-z0-9-]+)\s*\|\s*(.+?)\s*\|\s*(\d+)\s*\|\s*([123])\s*$")
 INLINE_RE = re.compile(r"(\*\*.+?\*\*|`[^`]+`|\[[^\]]+\]\((?:https://|\./|#)[^)\s]+\)|(?<![\w*])\*[^*\s][^*]*?\*(?!\w))")
 

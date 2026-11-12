@@ -139,6 +139,34 @@ const GEN = {
     ]);
     return { area: 'en', modulo: 's11', q: `Lee el aviso: «${t[0]}» ${t[1]}`, respuesta: String(t[2]), explain: t[3] };
   },
+  // ------------------------------------------------------------- ciberseguridad
+  'sec-bits': rnd => {
+    const [n, nombre] = elegir(rnd, [[16, 'hexadecimales (0-9 y a-f)'], [32, 'de un alfabeto de 32 símbolos'], [64, 'de un alfabeto de 64 símbolos (como Base64)']]);
+    const L = entero(rnd, 8, 20), b = Math.log2(n);
+    return { area: 'sec', modulo: 'c1', q: `Una contraseña tiene ${L} caracteres elegidos totalmente al azar entre ${n} posibles, ${nombre}. ¿Cuántos bits de entropía tiene? (solo el número)`, respuesta: String(L * b),
+      explain: `Cada carácter aporta log₂(${n}) = ${b} bits. ${L} caracteres × ${b} bits = ${L * b} bits: ${2}^${L * b} combinaciones posibles.` };
+  },
+  'sec-cesar': rnd => {
+    const palabra = elegir(rnd, ['RED', 'CLAVE', 'SERVIDOR', 'COPIA', 'ROUTER', 'FIREWALL', 'PARCHE', 'ALERTA', 'REGISTRO', 'CORREO', 'ACCESO', 'TICKET']);
+    const k = entero(rnd, 1, 9);
+    const cif = [...palabra].map(c => String.fromCharCode(((c.charCodeAt(0) - 65 + k) % 26) + 65)).join('');
+    return { area: 'sec', modulo: 'c2', q: `«${cif}» se cifró con César desplazando cada letra ${k} posiciones hacia delante. ¿Qué palabra es?`, respuesta: palabra,
+      explain: `Hay que retroceder ${k} posiciones cada letra: ${cif} → ${palabra}. Con solo 25 claves posibles, César se rompe probándolas todas.` };
+  },
+  'sec-log': rnd => {
+    const ip = `203.0.113.${entero(rnd, 2, 250)}`, otra = `198.51.100.${entero(rnd, 2, 250)}`;
+    const n = entero(rnd, 3, 7), lineas = [];
+    let s = entero(rnd, 0, 50);
+    const t = () => `03:${String(Math.floor(s / 60) + 10).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+    for (let i = 0; i < n + 3; i++) {
+      const del = i < n ? ip : otra, ok = i >= n + 2;
+      lineas.push({ k: rnd(), txt: `${del === ip ? 'Failed' : ok ? 'Accepted' : 'Failed'} password for ${elegir(rnd, ['root', 'admin'])} from ${del} port ${entero(rnd, 40000, 60000)} ssh2` });
+    }
+    lineas.sort((a, b) => a.k - b.k);
+    const codigo = lineas.map(l => { s += entero(rnd, 1, 4); return `Mar 14 ${t()} srv01 sshd: ${l.txt}`; }).join('\n');
+    return { area: 'sec', modulo: 'c3', q: `En este fragmento de auth.log, ¿cuántos intentos fallidos hay desde ${ip}? (solo el número)`, contexto: { codigo }, respuesta: String(n),
+      explain: `Hay que contar solo las líneas «Failed password» cuyo origen es ${ip}: ${n}. Es lo que haría grep "Failed" auth.log | grep ${ip} | wc -l.` };
+  },
 };
 
 export const TIPOS_POR_AREA = {
@@ -147,6 +175,7 @@ export const TIPOS_POR_AREA = {
   prog: ['py-bucle', 'py-condicion', 'py-lista'],
   ti: ['prioridad'],
   en: ['leer-aviso'],
+  sec: ['sec-bits', 'sec-cesar', 'sec-log'],
 };
 
 // n preguntas de razonamiento para un área, de tipos variados.

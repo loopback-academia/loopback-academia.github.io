@@ -8,7 +8,7 @@ import { CATALOGO } from '../js/labs/catalogo.js';
 const curso = JSON.parse(readFileSync(new URL('../data/curso.json', import.meta.url)));
 curso.lecciones = curso.modulos.flatMap(m => m.lecciones.map(l => ({ ...l, modulo: m })));
 const banco = JSON.parse(readFileSync(new URL('../data/examen.json', import.meta.url)));
-const AREAS = ['redes', 'bd', 'prog', 'ti', 'en'];
+const AREAS = ['redes', 'bd', 'prog', 'ti', 'en', 'sec'];
 
 test('el mínimo para aprobar es 80 %', () => {
   assert.equal(APROBADO, 0.8);

@@ -9,7 +9,7 @@ const g = JSON.parse(readFileSync(new URL('../data/glosario.json', import.meta.u
 test('glosario: más de 100 términos, con definición, área y anclas únicas', () => {
   assert.ok(g.length >= 100);
   assert.equal(new Set(g.map(t => slug(t.t))).size, g.length);
-  for (const t of g) assert.ok(t.d.length > 20 && ['redes', 'bd', 'prog', 'ti'].includes(t.area) && t.formas[0] === t.t, t.t);
+  for (const t of g) assert.ok(t.d.length > 20 && ['redes', 'bd', 'prog', 'ti', 'en', 'sec'].includes(t.area) && t.formas[0] === t.t, t.t);
 });
 
 test('glosario: encuentra términos completos, respeta siglas y no repite', () => {

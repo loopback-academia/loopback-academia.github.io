@@ -1,6 +1,6 @@
 # Loopback
 
-Plataforma de aprendizaje con **cinco áreas**, de principiante a nivel de empleo: **Redes** (temario completo del **Cisco CCNA 200-301**), **Bases de datos**, **Programación**, **Empleo TI** (soporte técnico, mesa de ayuda, Windows y administración corporativa) e **Inglés técnico para TI**.
+Plataforma de aprendizaje con **seis áreas**, de principiante a nivel de empleo: **Redes** (temario completo del **Cisco CCNA 200-301**), **Bases de datos**, **Programación**, **Ciberseguridad**, **Empleo TI** (soporte técnico, mesa de ayuda, Windows y administración corporativa) e **Inglés técnico para TI**.
 
 > No es un curso oficial de Cisco ni otorga certificaciones oficiales. Los certificados de Loopback solo acreditan que terminaste un área: no están avalados por ninguna institución y no influyen en conseguir un empleo.
 
@@ -8,7 +8,7 @@ Plataforma de aprendizaje con **cinco áreas**, de principiante a nivel de emple
 
 | | |
 | --- | --- |
-| **165 lecciones** en 5 áreas y 3 niveles | **Redes** (77 lecciones: los 6 dominios del CCNA, IPv6, Wireshark y temas más allá del CCNA), **Bases de datos** (29: modelo relacional, SQL, diseño, rendimiento, transacciones, administración, NoSQL y análisis de datos), **Programación** (32: fundamentos, lenguajes, Git, POO, APIs, algoritmos, código seguro, depuración, Linux, web y automatización), **Empleo TI** (21: soporte, mesa de ayuda, Windows, Active Directory, hardware, phishing, entrevistas y rutas profesionales) e **Inglés técnico** (6: vocabulario, errores, documentación, tickets, llamadas y entrevista) |
+| **181 lecciones** en 6 áreas y 3 niveles | **Redes** (77 lecciones: los 6 dominios del CCNA, IPv6, Wireshark y temas más allá del CCNA), **Bases de datos** (29: modelo relacional, SQL, diseño, rendimiento, transacciones, administración, NoSQL y análisis de datos), **Programación** (32: fundamentos, lenguajes, Git, POO, APIs, algoritmos, código seguro, depuración, Linux, web y automatización), **Empleo TI** (21: soporte, mesa de ayuda, Windows, Active Directory, hardware, phishing, entrevistas y rutas profesionales) **Ciberseguridad** (16: fundamentos, contraseñas y hashes, ingeniería social, malware, criptografía, TLS, cortafuegos, OWASP, vulnerabilidades, registros, SOC, respuesta a incidentes, normas y carrera) e **Inglés técnico** (6: vocabulario, errores, documentación, tickets, llamadas y entrevista) |
 | **Escalera por área** | Los módulos se desbloquean en orden. Cada escalón termina con un examen (mínimo 80 %) con preguntas distintas en cada intento, y el área con un examen final |
 | **Exámenes con tiempo total** | 20 minutos en nivel principiante, 35 en intermedio, 45 en avanzado y 60 en el examen final. Al acabarse el tiempo se entrega solo con lo respondido |
 | **Certificado de Loopback** | Al aprobar el examen final de un área: con tu nombre, la firma de Gabriel PD y un código. Se descarga como imagen o se guarda como PDF |
@@ -22,12 +22,13 @@ Plataforma de aprendizaje con **cinco áreas**, de principiante a nivel de emple
 | **Casos de soporte** | Tickets simulados con prioridad, SLA y turnos de mesa de ayuda |
 | **Terminales simuladas** | Consola de Windows (ipconfig, ping, nslookup…), terminal Linux (archivos, permisos, procesos, registros) y Git visual con el grafo de commits |
 | **Más laboratorios** | IPv6, seguridad de capa 2 (DHCP snooping, DAI), lectura de capturas tipo Wireshark, caso detective SQL, inyección SQL, diagrama entidad-relación, formas normales, dos sesiones concurrentes, análisis de datos con gráficos, Active Directory, armar un PC, averías de hardware, phishing, atención al usuario y entrevista |
+| **Laboratorios de ciberseguridad** | Analizador de contraseñas, hashes con sal y ataque de diccionario, retos de criptografía, cortafuegos con DMZ, análisis de auth.log y access.log, y casos de respuesta a incidentes (ransomware y cuenta comprometida) |
 | **Inglés técnico** | Vocabulario con pronunciación, lectura de errores y documentación, frases para tickets, llamadas y entrevistas |
 | **Reto diario y racha** | Cinco preguntas cada día y racha de días seguidos |
-| **Glosario** | 110 términos con definición emergente dentro de las lecciones |
+| **Glosario** | 130 términos con definición emergente dentro de las lecciones |
 | **Mi CV** | Currículum generado con lo que has completado en cada área |
 | **Sin conexión** | Un service worker guarda lo visitado para estudiar sin internet |
-| **767 preguntas** | Cuestionario en cada lección, banco de preguntas de examen y preguntas de razonamiento generadas |
+| **887 preguntas** | Cuestionario en cada lección, banco de preguntas de examen y preguntas de razonamiento generadas |
 | **Buscador del curso** | Desde cualquier página, encuentra las lecciones y el fragmento que responden a una duda |
 | **Cuentas** | Registro con confirmación por correo, verificación en dos pasos y progreso sincronizado |
 

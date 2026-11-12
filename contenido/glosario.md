@@ -115,3 +115,23 @@ Las otras formas son plurales, siglas o variantes que también se marcan en las 
 | SLA | | ti | Acuerdo de nivel de servicio: tiempos máximos comprometidos para responder y resolver. |
 | Spooler | cola de impresión | ti | Servicio de Windows que gestiona los trabajos de impresión pendientes. |
 | Ticket | tickets | ti | Registro de una incidencia o petición, con su estado, prioridad e historial. |
+| Hash | hashes, función hash | sec | Huella de tamaño fijo calculada a partir de un texto. No se puede revertir; se usa para guardar contraseñas y comprobar que un archivo no ha cambiado. |
+| Sal criptográfica | | sec | Valor aleatorio distinto para cada usuario que se añade a la contraseña antes de calcular el hash, para que contraseñas iguales den hashes distintos. |
+| Cifrado simétrico | | sec | Cifrado en el que la misma clave cifra y descifra. Es rápido; el estándar es AES. |
+| Cifrado asimétrico | criptografía asimétrica | sec | Cifrado con dos claves: una pública que se reparte y una privada que solo tiene su dueño. Ejemplos: RSA y curvas elípticas. |
+| Firma digital | firmas digitales | sec | Hash de un documento cifrado con la clave privada de quien firma. Demuestra quién lo firmó y que no ha cambiado. |
+| TLS | | sec | Protocolo que cifra y autentica conexiones; HTTPS es HTTP sobre TLS. Hoy se usan las versiones 1.2 y 1.3. |
+| Certificado digital | certificados digitales | sec | Documento firmado por una autoridad de certificación que asocia un dominio o una persona con su clave pública. |
+| DMZ | zona desmilitarizada | sec | Zona de red para los servidores publicados en Internet, separada de la LAN por el cortafuegos. |
+| SIEM | | sec | Sistema que reúne y correlaciona los registros de muchos equipos y genera alertas de seguridad. |
+| SOC | centro de operaciones de seguridad | sec | Equipo que vigila la seguridad de una organización, normalmente 24/7, revisando alertas y respondiendo a incidentes. |
+| EDR | | sec | Protección de equipos que vigila el comportamiento de los procesos y permite investigar y aislar un equipo a distancia. |
+| IDS | IPS, IDS/IPS | sec | Sistema que detecta patrones de ataque en el tráfico (IDS) o además los bloquea (IPS). |
+| CVE | | sec | Identificador único de una vulnerabilidad publicada, por ejemplo CVE-2021-44228. |
+| CVSS | | sec | Puntuación de 0 a 10 de la gravedad de una vulnerabilidad: baja, media, alta o crítica. |
+| XSS | cross-site scripting | sec | Vulnerabilidad web que permite ejecutar un script malicioso en el navegador de otros usuarios. |
+| OWASP | | sec | Comunidad abierta que publica guías de seguridad web y el Top 10 de riesgos de las aplicaciones. |
+| Fuerza bruta | ataque de fuerza bruta | sec | Probar muchas contraseñas o claves hasta acertar. Se frena con contraseñas largas, límites de intentos y MFA. |
+| Ingeniería social | | sec | Engañar a las personas para que entreguen información o hagan algo que beneficia al atacante. |
+| Base64 | | sec | Codificación que convierte datos en texto. No es cifrado: cualquiera la revierte. |
+| Día cero | zero-day, vulnerabilidad de día cero | sec | Vulnerabilidad que se explota antes de que exista un parche. |
