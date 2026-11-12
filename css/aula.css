@@ -871,6 +871,26 @@ a.node-in { transition: background-color 150ms ease; }
 .mail-senales legend { font-weight: 700; padding: 0 4px; }
 .entrevista-pregunta { font-size: 1.15rem; font-weight: 700; margin: 12px 0; }
 
+/* ---------------------------------------------------------------- visor de capturas */
+.cap-barra { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.cap-filtro { flex: 1 1 320px; }
+.cap-filtro.bien { border-color: var(--ok); background: var(--ok-soft); }
+.cap-filtro.mal { border-color: var(--warn); background: var(--warn-soft); }
+.cap-tabla { max-height: 300px; overflow: auto; border: 1px solid var(--line); border-radius: var(--radius-sm); margin-top: 8px; }
+.cap { font: 12.5px/1.4 var(--mono); white-space: nowrap; }
+.cap tr { cursor: pointer; }
+.cap tr.sel td { background: var(--accent-soft) !important; font-weight: 700; }
+.cap-arp td { background: #fbf5dc; } .cap-dhcp td { background: #e4f1fb; } .cap-dns td { background: #e8f6ee; }
+.cap-http td { background: #e4f7e0; } .cap-tls td { background: #efe8fb; } .cap-icmp td { background: #fbe6ef; } .cap-tcp td { background: #eef2f7; }
+:root[data-theme="dark"] .cap tr td { background: transparent; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .cap tr td { background: transparent; } }
+.cap-detalle { font: 12.5px/1.5 var(--mono); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 8px 10px; background: var(--surface); }
+.cap-detalle summary { cursor: pointer; font-weight: 700; }
+.cap-detalle ul { margin: 2px 0 6px; padding-left: 22px; }
+.cap-preguntas { display: grid; gap: 12px; padding-left: 20px; }
+.cap-preguntas input[type=text] { width: 100%; max-width: 360px; }
+.cap-opciones { display: grid; gap: 6px; }
+
 /* ---------------------------------------------------------------- Active Directory */
 .ad-tickets { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
 .ad-ticket { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px 12px; background: var(--surface); }

@@ -169,3 +169,28 @@ test('inyección SQL: los ataques funcionan en la versión vulnerable y fallan c
   assert.equal(retoArreglo(db, 'SELECT usuario, rol FROM usuarios WHERE usuario = ? OR clave = ?').ok, false);
   assert.equal(retoArreglo(db, 'SELECT usuario, rol FROM usuarios WHERE usuario = ? AND clave = ?;').ok, true);
 });
+
+// ---------------------------------------------------------------- visor de capturas
+import { CAPTURAS, filtrar, compilarFiltro, fila, detalle, corregirPregunta } from '../js/labs/capturas.js';
+test('capturas: filtros, filas, detalle y respuestas', () => {
+  const web = CAPTURAS.web.paquetes;
+  assert.equal(filtrar(web, 'dns').length, 4);
+  assert.equal(filtrar(web, 'tcp.port == 80 && tcp.flags.syn == 1').length, 2);
+  assert.equal(filtrar(web, 'http').length, 3);
+  assert.equal(filtrar(web, '!tcp').length, 4);
+  assert.equal(filtrar(web, 'ip.addr == 203.0.113.80 || dns.qry.name contains proveedor').length, 8);
+  assert.equal(filtrar(web, '').length, web.length);
+  assert.throws(() => compilarFiltro('ip.addr =='), /valor/);
+  assert.throws(() => compilarFiltro('foo'), /no es un protocolo/);
+  assert.throws(() => compilarFiltro('(dns'), /paréntesis/);
+  for (const [id, c] of Object.entries(CAPTURAS)) {
+    c.paquetes.forEach((p, i) => { assert.equal(p.n, i + 1, id); assert.ok(fila(p).info !== undefined && detalle(p).length >= 2); });
+    for (const q of c.preguntas) {
+      const buena = q.tipo === 'opcion' ? q.respuesta : q.tipo === 'lista' ? q.respuesta.join(', ') : q.respuesta[0];
+      assert.ok(corregirPregunta(q, buena), `${id}: ${q.texto}`);
+      assert.ok(!corregirPregunta(q, q.tipo === 'opcion' ? (q.respuesta + 1) % q.opciones.length : 'nada'), `${id}: acepta cualquier cosa`);
+    }
+  }
+  assert.ok(corregirPregunta(CAPTURAS.web.preguntas[1], '5,3, 4'));
+  assert.equal(filtrar(CAPTURAS.dhcp.paquetes, 'dhcp').length, 6);
+});

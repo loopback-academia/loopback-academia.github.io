@@ -1110,6 +1110,114 @@ ipconfig /flushdns        # vacía la caché DNS
 = Sin un gateway correcto, el equipo no sabe enviar tráfico fuera de su red.
 :::
 
+=== m1-wireshark | Ver el tráfico de verdad: capturas con Wireshark | 18 | 2
+Hasta ahora has estudiado los protocolos en teoría. Con un **analizador de tráfico** como **Wireshark** (o `tcpdump` en Linux) se ven los paquetes reales que pasan por la tarjeta de red: es la herramienta definitiva cuando nadie sabe qué está fallando.
+
+## La ventana de Wireshark
+
+1. **Lista de paquetes**: una fila por paquete, con número, tiempo, origen, destino, protocolo, longitud e información. Los colores ayudan a distinguir protocolos.
+2. **Detalle**: el paquete seleccionado capa por capa: Ethernet (MAC), IP, TCP o UDP y la aplicación. Es el modelo OSI hecho realidad.
+3. **Bytes**: el contenido en hexadecimal.
+
+## Filtros de visualización
+
+Una captura de un minuto puede tener miles de paquetes. Los filtros muestran solo lo que interesa:
+
+| Filtro | Muestra |
+|---|---|
+| `dhcp` | El intercambio DHCP (Discover, Offer, Request, ACK) |
+| `dns` | Consultas y respuestas de nombres |
+| `arp` | Peticiones y respuestas ARP |
+| `ip.addr == 192.168.10.20` | Todo lo que va o viene de esa IP |
+| `tcp.port == 443` | Tráfico HTTPS |
+| `tcp.flags.syn == 1` | Intentos de abrir conexiones |
+| `http && ip.src == 192.168.10.57` | Peticiones web de un equipo |
+
+Se combinan con `&&` (y), `||` (o) y `!` (no). El filtro se pone verde si es válido.
+
+## Qué buscar
+
+- **Un PC sin IP**: ¿sale el Discover? ¿Alguien contesta con un Offer? ¿Desde qué servidor?
+- **«Internet va lento»**: ¿tardan las respuestas DNS? ¿Hay retransmisiones TCP?
+- **Un equipo que no responde**: si no contesta ni al ARP, el problema está en la capa 2 o en el propio equipo.
+- **Seguridad**: con HTTP sin cifrar las contraseñas se ven en claro; con HTTPS (TLS) solo se ve a qué servidor te conectas.
+
+::: cuidado
+Capturar tráfico de una red ajena, o de otras personas sin autorización, es ilegal en muchos países y motivo de despido en una empresa. Captura solo en tus equipos o con permiso.
+:::
+
+[[cap:dhcp]]
+
+[[cap:web]]
+
+[[cap:ping]]
+
+::: quiz
+? ¿Qué filtro de Wireshark muestra solo el tráfico DNS?
+- port 53 only
++ dns
+- ip.dns
+- udp == dns
+= El filtro de visualización dns muestra consultas y respuestas DNS.
+
+? En una captura ves SYN, SYN-ACK y ACK entre dos equipos. ¿Qué está pasando?
++ Se está abriendo una conexión TCP (three-way handshake)
+- Se está cerrando una conexión
+- Una consulta DNS
+- Una petición ARP
+= Es el saludo de tres vías que abre cada conexión TCP.
+
+? Un PC envía DHCP Discover y nadie responde con un Offer. ¿Dónde está el problema?
++ En el servidor DHCP o en el camino hasta él (VLAN, helper-address, cable)
+- En el DNS
+- En el navegador
+= Sin Offer, el cliente nunca recibe dirección y acaba con una APIPA.
+
+? ¿Por qué con HTTPS no puedes leer la contraseña en la captura?
++ Porque TLS cifra el contenido de la conexión
+- Porque HTTPS no usa TCP
+- Porque Wireshark no captura el puerto 443
+= Se ve que hay conexión y a qué servidor, pero no lo que viaja dentro.
+:::
+
+::: banco
+? ¿Qué muestra el filtro ip.addr == 10.0.0.5?
++ Los paquetes cuyo origen o destino es 10.0.0.5
+- Solo los que salen de 10.0.0.5
+- Solo los que llegan a 10.0.0.5
+= ip.addr coincide con origen o destino; ip.src e ip.dst son más concretos.
+
+? Varias respuestas DHCP Offer llegan desde un servidor de una red distinta a la de la empresa. ¿Qué sospechas?
++ Un servidor DHCP no autorizado conectado a la red
+- Que el DNS está caído
+- Que el cable es demasiado largo
+= Un router doméstico conectado por error reparte direcciones falsas; DHCP snooping lo evita.
+
+? ¿Qué herramienta de línea de comandos captura tráfico en Linux?
++ tcpdump
+- traceroute
+- nslookup
+= tcpdump guarda capturas que después se pueden abrir en Wireshark.
+
+? En la captura, un PC envía tres peticiones ARP por la misma IP y nadie contesta. ¿Qué indica?
++ Que el equipo con esa IP no está accesible en la red local
+- Que el router bloquea ICMP
+- Que falta la ruta por defecto
+= Sin respuesta ARP no hay comunicación de capa 2 con ese equipo.
+
+? ¿Qué filtro muestra los intentos de abrir conexiones TCP?
++ tcp.flags.syn == 1
+- tcp.flags.reset == 1
+- udp
+= El bit SYN se activa en el primer paso del saludo de tres vías.
+
+? ¿Qué capa del modelo OSI ves en la línea «Ethernet II, Src: …, Dst: …» del detalle?
++ La capa 2 (enlace de datos), con las direcciones MAC
+- La capa 3, con las direcciones IP
+- La capa 7, con la aplicación
+= Ethernet II es la trama de capa 2.
+:::
+
 === m1-inalambrico | Principios de las redes inalámbricas | 16 | 1
 Las WLAN usan los estándares **IEEE 802.11**. Comparten el aire, así que conviene entender cómo se reparten las frecuencias.
 

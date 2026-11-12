@@ -131,6 +131,8 @@ const PRIV_SHOW = [
   ['show cdp neighbors', s => showCdp(s)],
   ['show {arp|ip arp}', s => showArp(s)],
   ['show ip dhcp pool', s => showDhcpPool(s)],
+  ['show ip dhcp snooping', s => showSnooping(s)],
+  ['show ip arp inspection', s => showDai(s)],
   ['show ip dhcp binding', s => showDhcpBinding(s)],
   ['show ip nat translations', s => showNat(s)],
   ['show history', s => s.historial.slice(-20).map(h => '  ' + h).join('\n')],
@@ -198,6 +200,11 @@ const CONFIG = [
   ['ip routing', s => { s.ipRouting = true; }],
   ['no ip routing', s => { s.ipRouting = false; }],
   ['ipv6 unicast-routing', s => { s.ipv6Routing = true; }],
+  ['ip dhcp snooping', s => { if (s.tipo !== 'switch') return '% DHCP snooping se configura en el switch.'; s.snooping = s.snooping || { vlans: new Set() }; s.snooping.activo = true; }],
+  ['no ip dhcp snooping', s => { if (s.snooping) s.snooping.activo = false; }],
+  ['ip dhcp snooping vlan <l:word>', (s, a) => { const v = listaNumeros(a.l); if (!v) return '% Lista de VLAN no válida'; s.snooping = s.snooping || { vlans: new Set(), activo: false }; v.forEach(x => s.snooping.vlans.add(x)); }],
+  ['no ip dhcp snooping information option', s => { s.snoopOpt82 = false; }],
+  ['ip arp inspection vlan <l:word>', (s, a) => { const v = listaNumeros(a.l); if (!v) return '% Lista de VLAN no válida'; s.dai = s.dai || new Set(); v.forEach(x => s.dai.add(x)); }],
   ['no ipv6 unicast-routing', s => { s.ipv6Routing = false; }],
   ['ipv6 route <p:word> <h:word> [<x:word>] [<ad:num>]', (s, a) => rutaEstatica6(s, a)],
   ['no ipv6 route <p:word> [<h:word>] [<x:word>]', (s, a) => { const c = cidr(a.p); if (!c) return '% Invalid input detected: prefijo IPv6 no válido'; s.rutas6 = s.rutas6.filter(r => !(r.len === c.len && enPrefijo(r.pref, c.dir, 128))); }],
@@ -256,6 +263,11 @@ const IF = [
   ['no switchport', s => paraCada(s, i => { if (s.tipo !== 'switch') return; i.routed = true; i.mode = null; })],
   ['switchport', s => paraCada(s, i => { i.routed = false; i.mode = 'dynamic auto'; })],
   ['spanning-tree portfast', s => paraCada(s, i => { i.portfast = true; })],
+  ['ip dhcp snooping trust', s => paraCada(s, i => { i.snoopTrust = true; })],
+  ['no ip dhcp snooping trust', s => paraCada(s, i => { i.snoopTrust = false; })],
+  ['ip dhcp snooping limit rate <n:num>', (s, a) => paraCada(s, i => { i.snoopRate = a.n; })],
+  ['ip arp inspection trust', s => paraCada(s, i => { i.daiTrust = true; })],
+  ['no ip arp inspection trust', s => paraCada(s, i => { i.daiTrust = false; })],
   ['spanning-tree bpduguard enable', s => paraCada(s, i => { i.bpduguard = true; })],
   ['ip access-group <n:word> {in|out}', (s, a) => paraCada(s, i => { i.acl[a['in|out']] = a.n; })],
   ['no ip access-group <n:word> {in|out}', (s, a) => paraCada(s, i => { delete i.acl[a['in|out']]; })],
@@ -557,6 +569,20 @@ export function buscarRuta(s, destino) {
   let mejor = null;
   for (const r of rutas(s)) if (enRed(d, r.net, r.mask) && (!mejor || r.mask > mejor.mask)) mejor = r;
   return mejor;
+}
+
+// ---------------------------------------------------------------- seguridad de capa 2
+const listaNumeros = t => { const out = []; for (const p of String(t).split(',')) { const m = p.match(/^(\d+)(?:-(\d+))?$/); if (!m) return null; for (let v = +m[1]; v <= +(m[2] || m[1]); v++) out.push(v); } return out; };
+function showSnooping(s) {
+  const sn = s.snooping;
+  const L = [`Switch DHCP snooping is ${sn?.activo ? 'enabled' : 'disabled'}`, `DHCP snooping is configured on following VLANs:\n${sn?.vlans.size ? [...sn.vlans].sort((a, b) => a - b).join(',') : 'none'}`,
+    `Insertion of option 82 is ${s.snoopOpt82 === false ? 'disabled' : 'enabled'}`, '', 'Interface                  Trusted    Allow option    Rate limit (pps)', '-----------------------    -------    ------------    ----------------'];
+  for (const i of Object.values(s.ifs)) if (i.snoopTrust || i.snoopRate) L.push(pad(i.nombre, 27) + pad(i.snoopTrust ? 'yes' : 'no', 11) + pad(i.snoopTrust ? 'yes' : 'no', 16) + (i.snoopRate || 'unlimited'));
+  return L.join('\n');
+}
+function showDai(s) {
+  const v = s.dai ? [...s.dai].sort((a, b) => a - b) : [];
+  return [' Vlan     Configuration    Operation', ' ----     -------------    ---------', ...v.map(x => ` ${pad(x, 9)}Enabled          ${s.vlans[x] ? 'Active' : 'Inactive'}`), '', ' Interface        Trust State', ' ---------        -----------', ...Object.values(s.ifs).filter(i => i.daiTrust).map(i => ' ' + pad(abreviar(i.nombre), 17) + 'Trusted')].join('\n');
 }
 
 // ---------------------------------------------------------------- IPv6
@@ -893,6 +919,10 @@ export function runningConfig(s) {
   if (s.domain) L.push('ip domain-name ' + s.domain);
   if (s.sshVersion === 2) L.push('ip ssh version 2');
   if (s.ipv6Routing) L.push('ipv6 unicast-routing');
+  if (s.snooping?.activo) L.push('ip dhcp snooping');
+  if (s.snooping?.vlans.size) L.push('ip dhcp snooping vlan ' + [...s.snooping.vlans].sort((a, b) => a - b).join(','));
+  if (s.snoopOpt82 === false) L.push('no ip dhcp snooping information option');
+  if (s.dai?.size) L.push('ip arp inspection vlan ' + [...s.dai].sort((a, b) => a - b).join(','));
   if (s.stpMode) L.push('spanning-tree mode ' + s.stpMode);
   for (const [a, b] of s.dhcp.excluidas) L.push(`ip dhcp excluded-address ${a}${b !== a ? ' ' + b : ''}`);
   for (const [n, p] of Object.entries(s.dhcp.pools)) { L.push('!', 'ip dhcp pool ' + n); if (p.net) L.push(` network ${p.net} ${p.mask}`); if (p.gw) L.push(' default-router ' + p.gw); if (p.dns.length) L.push(' dns-server ' + p.dns.join(' ')); if (p.dominio) L.push(' domain-name ' + p.dominio); }
@@ -910,6 +940,9 @@ export function runningConfig(s) {
     if (i.nonegotiate) L.push(' switchport nonegotiate');
     if (i.ps && !i.ps.off) { L.push(' switchport port-security'); if (i.ps.max !== 1) L.push(' switchport port-security maximum ' + i.ps.max); if (i.ps.violation !== 'shutdown') L.push(' switchport port-security violation ' + i.ps.violation); if (i.ps.sticky) L.push(' switchport port-security mac-address sticky'); }
     else if (i.ps) { if (i.ps.max !== 1) L.push(' switchport port-security maximum ' + i.ps.max); if (i.ps.sticky) L.push(' switchport port-security mac-address sticky'); if (i.ps.violation !== 'shutdown') L.push(' switchport port-security violation ' + i.ps.violation); }
+    if (i.snoopTrust) L.push(' ip dhcp snooping trust');
+    if (i.snoopRate) L.push(' ip dhcp snooping limit rate ' + i.snoopRate);
+    if (i.daiTrust) L.push(' ip arp inspection trust');
     if (i.portfast) L.push(' spanning-tree portfast');
     if (i.bpduguard) L.push(' spanning-tree bpduguard enable');
     if (i.ip) L.push(` ip address ${i.ip} ${i.mask}`); else if (s.tipo === 'router' || i.virtual || i.routed) L.push(' no ip address');

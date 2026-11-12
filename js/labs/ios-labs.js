@@ -243,6 +243,26 @@ export const LABS = {
     solucion: ['configure terminal', 'ip route 0.0.0.0 0.0.0.0 203.0.113.1', 'interface g0/0', 'ip nat inside', 'interface g0/1', 'ip nat outside', 'exit', 'access-list 1 permit 192.168.1.0 0.0.0.255', 'ip nat inside source list 1 interface g0/1 overload', 'ip nat inside source static 192.168.1.50 203.0.113.10', 'end', 'show ip nat translations'],
   },
 
+  capa2: {
+    nivel: 'avanzado', tipo: 'guiado',
+    titulo: 'Seguridad de capa 2: DHCP snooping, DAI y BPDU Guard',
+    intro: 'La semana pasada alguien conectó un router doméstico en una toma de la oficina y empezó a repartir direcciones falsas. Protege SW1: los puertos Fa0/1-24 son de usuarios en la VLAN 10 y Gi0/1 sube al router, donde está el único servidor DHCP legítimo.',
+    topologia: 'Router (DHCP legítimo) ── Gi0/1 [SW1] Fa0/1-24 ── PCs de usuarios (VLAN 10)',
+    equipo: {
+      tipo: 'switch', hostname: 'SW1', interfaces: puertosSwitch(),
+      estadoInicial: s => { s.modo = 'priv'; s.vlans[10] = 'USUARIOS'; for (const i of Object.values(s.ifs)) { if (i.nombre.startsWith('Fast')) { i.mode = 'access'; i.accessVlan = 10; } } s.ifs['GigabitEthernet0/1'].mode = 'trunk'; },
+    },
+    tareas: [
+      { texto: 'Activa DHCP snooping en el switch y en la VLAN 10.', ok: s => !!s.snooping?.activo && s.snooping.vlans.has(10) },
+      { texto: 'Marca Gi0/1 (hacia el servidor DHCP legítimo) como puerto de confianza.', ok: s => !!ifc(s, 'GigabitEthernet0/1').snoopTrust && !Object.values(s.ifs).some(i => i.nombre.startsWith('Fast') && i.snoopTrust) },
+      { texto: 'Limita a 10 paquetes DHCP por segundo los puertos de usuario Fa0/1-24.', ok: s => Object.values(s.ifs).filter(i => i.nombre.startsWith('Fast')).every(i => i.snoopRate === 10) },
+      { texto: 'Activa la inspección ARP dinámica (DAI) en la VLAN 10 y confía en Gi0/1.', ok: s => !!s.dai?.has(10) && !!ifc(s, 'GigabitEthernet0/1').daiTrust },
+      { texto: 'En Fa0/1-24 activa PortFast y BPDU Guard.', ok: s => Object.values(s.ifs).filter(i => i.nombre.startsWith('Fast')).every(i => i.portfast && i.bpduguard) },
+      { texto: 'Verifica con show ip dhcp snooping.', ok: s => s.patrones.has('show ip dhcp snooping') },
+    ],
+    pistas: ['Con DHCP snooping, solo los puertos «trust» pueden enviar respuestas DHCP (Offer y ACK). Todos los demás son no confiables por defecto.', 'interface range fa0/1 - 24 configura los 24 puertos de una vez.', 'DAI usa la tabla de DHCP snooping para comprobar que cada ARP dice la verdad. BPDU Guard apaga el puerto si alguien conecta un switch.'],
+    solucion: ['configure terminal', 'ip dhcp snooping', 'ip dhcp snooping vlan 10', 'interface g0/1', 'ip dhcp snooping trust', 'ip arp inspection trust', 'exit', 'interface range fa0/1 - 24', 'ip dhcp snooping limit rate 10', 'spanning-tree portfast', 'spanning-tree bpduguard enable', 'exit', 'ip arp inspection vlan 10', 'end', 'show ip dhcp snooping'],
+  },
   ipv6: {
     nivel: 'avanzado', tipo: 'guiado',
     titulo: 'IPv6: direcciones, EUI-64 y rutas estáticas',

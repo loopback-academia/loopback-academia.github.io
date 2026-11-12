@@ -7,6 +7,7 @@ import { CASOS, TURNO } from '../casos/casos.js';
 import { WIN_LABS } from './windows-labs.js';
 import { LINUX_LABS } from './linux-labs.js';
 import { GIT_LABS } from './git-labs.js';
+import { CAPTURAS } from './capturas.js';
 import { CONVERSACIONES } from '../ti/atencion.js';
 import { ENCARGOS } from '../ti/hardware.js';
 import { RUTAS_ENTREVISTA } from '../ti/entrevista.js';
@@ -41,6 +42,7 @@ export const CATALOGO = [
   ...Object.entries(RUTAS_ENTREVISTA).map(([id, t]) => ({ clave: 'entrevista:' + id, area: 'ti', grupo: 'empleo', nivel: 'intermedio', progreso: 'entrevista-' + id, titulo: 'Entrevista: ' + t.split(' (')[0].toLowerCase().replace(/^./, c => c.toUpperCase()), texto: 'Seis preguntas de entrevista real con puntos clave y respuesta modelo.', tareas: 6, unidad: 'preguntas' })),
   ...Object.values(CASOS).map(c => ({ clave: 'caso:' + c.id, area: 'ti', grupo: 'casos', nivel: c.nivel, progreso: 'caso-' + c.id, titulo: c.titulo, texto: c.resumen, lugar: c.lugar })),
   ...Object.values(PROYECTOS).map(p => ({ clave: 'proyecto:' + p.id, area: p.area, grupo: 'proyectos', nivel: p.nivel, progreso: p.progreso, titulo: p.titulo.replace(/^Proyecto: (.)/, (_, c) => c.toUpperCase()), texto: p.resumen, tareas: p.fases.reduce((n, f) => n + f.requisitos.length, 0) })),
+  ...Object.entries(CAPTURAS).map(([id, c]) => ({ clave: 'cap:' + id, area: 'redes', grupo: 'capturas', nivel: 'intermedio', progreso: 'cap-' + id, titulo: 'Captura: ' + c.titulo.charAt(0).toLowerCase() + c.titulo.slice(1), texto: c.intro.split('. ')[0] + '.', tareas: c.preguntas.length, unidad: 'preguntas' })),
   { clave: 'lab:subnetting', area: 'redes', grupo: 'numeros', nivel: 'principiante', progreso: 'subnetting', titulo: 'Entrenador de subnetting', texto: 'Red, broadcast, hosts y máscara de direcciones al azar. Completa 10 aciertos seguidos.' },
   { clave: 'lab:binario', area: 'redes', grupo: 'numeros', nivel: 'principiante', progreso: 'binario', titulo: 'Binario y decimal', texto: 'Convierte octetos de binario a decimal y al revés hasta hacerlo de cabeza.' },
   { clave: 'lab:ipv6', area: 'redes', grupo: 'numeros', nivel: 'intermedio', progreso: 'ipv6', titulo: 'Entrenador IPv6', texto: 'Abreviar y expandir direcciones, EUI-64, tipos de dirección y prefijos. Dos aciertos de cada tipo.' },

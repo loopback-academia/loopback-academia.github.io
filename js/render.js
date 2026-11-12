@@ -101,6 +101,7 @@ const LOADERS = {
   win: () => import('./labs/windows-ui.js').then(m => m.montarWindows),
   linux: () => import('./labs/linux-ui.js').then(m => m.montarLinux),
   git: () => import('./labs/git-ui.js').then(m => m.montarGit),
+  cap: () => import('./labs/capturas-ui.js').then(m => m.montarCaptura),
   ad: () => import('./ti/ad-ui.js').then(m => m.montarAd),
   atencion: () => import('./ti/atencion-ui.js').then(m => m.montarAtencion),
   pc: () => import('./ti/hardware-ui.js').then(m => m.montarPc),

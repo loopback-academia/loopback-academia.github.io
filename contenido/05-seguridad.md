@@ -520,6 +520,10 @@ SW1(config-if)# ip arp inspection trust
 
 [[cli:portsecurity]]
 
+## Laboratorio
+
+[[cli:capa2]]
+
 ::: quiz
 ? ¿Cuál es el modo de violación de port security por defecto?
 + shutdown
