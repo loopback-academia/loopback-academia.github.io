@@ -51,6 +51,8 @@ KNOWN = {
     "sqli": {"login"},
     "phishing": {"bandeja"},
     "entrevista": {"soporte", "redes", "datos", "prog"},
+    "git": {"primeros", "ramas", "conflicto", "remoto"},
+    "linux": {"archivos", "permisos", "logs", "servicio", "disco"},
     "win": {"apipa", "dns", "impresora", "lento", "unidad-red"},
     "sql": {"select", "join", "agregacion", "funciones", "subconsultas", "modificar", "ddl", "ventanas", "inventario", "detective"},
     "code": {"python-basico", "python-condicionales", "python-bucles", "python-colecciones", "python-redes", "python-poo",

@@ -5,6 +5,8 @@ import { EJERCICIOS as CODIGO } from '../codigo/ejercicios.js';
 import { PROYECTOS } from '../proyectos/proyectos.js';
 import { CASOS, TURNO } from '../casos/casos.js';
 import { WIN_LABS } from './windows-labs.js';
+import { LINUX_LABS } from './linux-labs.js';
+import { GIT_LABS } from './git-labs.js';
 import { RUTAS_ENTREVISTA } from '../ti/entrevista.js';
 
 const SQL_INFO = {
@@ -25,6 +27,8 @@ export const AREAS = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programació
 
 export const CATALOGO = [
   { clave: 'turno:' + TURNO.id, area: 'ti', grupo: 'proyectos', nivel: TURNO.nivel, progreso: TURNO.progreso, titulo: TURNO.titulo.replace(/^Proyecto: (.)/, (_, c) => c.toUpperCase()), texto: TURNO.resumen, tareas: TURNO.casos.length, unidad: 'tickets' },
+  ...Object.entries(GIT_LABS).map(([id, l]) => ({ clave: 'git:' + id, area: 'prog', grupo: 'git', nivel: l.nivel, progreso: 'git-' + id, titulo: 'Git: ' + l.titulo.charAt(0).toLowerCase() + l.titulo.slice(1), texto: l.intro.split('. ')[0] + '.', tareas: l.tareas.length })),
+  ...Object.entries(LINUX_LABS).map(([id, l]) => ({ clave: 'linux:' + id, area: 'prog', grupo: 'linux', nivel: l.nivel, progreso: 'linux-' + id, titulo: l.titulo, texto: l.intro.split('. ')[0] + '.', tareas: l.tareas.length })),
   ...Object.entries(WIN_LABS).map(([id, l]) => ({ clave: 'win:' + id, area: 'ti', grupo: 'consola', nivel: l.nivel, progreso: 'win-' + id, titulo: l.titulo, texto: l.intro.split('. ')[0] + '.', tareas: l.tareas.length })),
   { clave: 'phishing:bandeja', area: 'ti', grupo: 'empleo', nivel: 'principiante', progreso: 'phishing-bandeja', titulo: 'Detector de phishing', texto: 'Revisa una bandeja de 14 correos: decide cuáles son trampas y señala lo que las delata.', tareas: 14, unidad: 'correos' },
   ...Object.entries(RUTAS_ENTREVISTA).map(([id, t]) => ({ clave: 'entrevista:' + id, area: 'ti', grupo: 'empleo', nivel: 'intermedio', progreso: 'entrevista-' + id, titulo: 'Entrevista: ' + t.split(' (')[0].toLowerCase().replace(/^./, c => c.toUpperCase()), texto: 'Seis preguntas de entrevista real con puntos clave y respuesta modelo.', tareas: 6, unidad: 'preguntas' })),

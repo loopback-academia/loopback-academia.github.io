@@ -692,3 +692,122 @@ Para tareas cortas, Bash o PowerShell son perfectos. Si el script crece (más de
 - > lee y >> escribe
 = Con >> se acumulan los resultados de varias ejecuciones.
 :::
+
+=== p2-linux | La terminal de Linux: administrar un servidor | 22 | 2
+La mayoría de los servidores del mundo (webs, bases de datos, la nube) funcionan con **Linux** y se administran **por terminal**, normalmente conectándose por SSH. Saber moverse en la terminal es imprescindible en sistemas, redes, programación y ciberseguridad.
+
+## Lo esencial
+
+| Comando | Para qué |
+|---|---|
+| `pwd`, `ls -la`, `cd carpeta`, `cd ..`, `cd ~` | Dónde estoy, qué hay, moverse |
+| `mkdir -p a/b`, `touch archivo`, `cp`, `mv`, `rm`, `rm -r` | Crear, copiar, mover y borrar (¡`rm` no tiene papelera!) |
+| `cat`, `head`, `tail -n 50`, `less` | Ver archivos (`tail -f` sigue un registro en directo) |
+| `grep "texto" archivo`, `grep -r` | Buscar dentro de archivos |
+| `find / -name "*.log"` | Buscar archivos por nombre |
+| `sudo comando` | Ejecutar como administrador (root) |
+| `chmod`, `chown` | Cambiar permisos y propietario |
+| `df -h`, `du -sh *`, `free -h` | Disco y memoria |
+| `ps aux`, `top`, `kill PID` | Procesos |
+| `ip addr`, `ip route`, `ping`, `ss -tuln`, `curl` | Red |
+| `systemctl status/start/stop/restart/enable servicio` | Servicios (systemd) |
+| `journalctl -u servicio` | Registro de un servicio |
+| `sudo apt update && sudo apt install paquete` | Instalar programas (Ubuntu/Debian) |
+
+## Permisos
+
+`ls -l` muestra algo como `-rwxr-x--- alumno www-data`. Son tres grupos de tres letras: **dueño**, **grupo** y **otros**; `r` leer, `w` escribir, `x` ejecutar. En números, r = 4, w = 2, x = 1, y se suman: `chmod 640` es rw- para el dueño, r-- para el grupo y nada para los demás.
+
+::: cuidado
+Nunca uses `chmod 777` «para que funcione»: deja el archivo abierto a cualquiera. Da el permiso mínimo que haga falta.
+:::
+
+## Tuberías y redirecciones
+
+La salida de un comando puede ser la entrada del siguiente con `|`, y se guarda en un archivo con `>` (sobrescribe) o `>>` (añade):
+
+```bash
+sudo grep "Failed password" /var/log/auth.log | awk '{print $13}' | sort | uniq -c | sort -rn | head -5
+```
+
+Esa línea lista las cinco IP con más intentos fallidos de entrar por SSH: es el tipo de cosa que hace un administrador cada semana.
+
+## Registros
+
+Los registros están en `/var/log`: `auth.log` (accesos), `syslog` (sistema) y los de cada programa. Con systemd, `journalctl -u nginx` muestra el de un servicio. Cuando algo falla, **lo primero es leer el registro**.
+
+[[linux:archivos]]
+
+[[linux:permisos]]
+
+[[linux:logs]]
+
+[[linux:servicio]]
+
+[[linux:disco]]
+
+::: quiz
+? ¿Qué permisos da chmod 600 a un archivo?
++ Lectura y escritura solo para el dueño
+- Lectura para todos
+- Todos los permisos para todos
+- Solo ejecución para el dueño
+= 6 = 4 + 2 (leer y escribir) para el dueño, y 0 para el grupo y los demás.
+
+? Un servicio no arranca. ¿Dónde miras primero la causa?
++ En su registro, con journalctl -u servicio (o en /var/log)
+- Reinstalando el sistema operativo
+- Con chmod 777 en /etc
+= El registro suele decir exactamente qué falló.
+
+? ¿Qué hace el símbolo | en la terminal?
++ Envía la salida de un comando como entrada del siguiente
+- Ejecuta los dos comandos a la vez sin relación
+- Guarda la salida en un archivo
+= Es una tubería: permite encadenar comandos pequeños.
+
+? El disco está lleno por un registro que un programa tiene abierto. ¿Qué haces?
+- rm del archivo, y listo
++ Vaciarlo con truncate -s 0 (o rotarlo), sin borrarlo
+- Reiniciar el servidor sin mirar nada
+= Si se borra un archivo abierto, el espacio no se libera hasta que el programa lo cierra.
+:::
+
+::: banco
+? ¿Qué comando muestra los puertos en escucha y el proceso que los usa?
++ ss -tuln
+- df -h
+- chmod
+= ss (o el antiguo netstat) lista las conexiones y los puertos abiertos.
+
+? ¿Para qué sirve sudo?
++ Para ejecutar un comando con permisos de administrador
+- Para cambiar de carpeta
+- Para apagar el equipo
+= sudo pide permiso para actuar como root en ese comando.
+
+? ¿Qué diferencia hay entre > y >>?
++ > sobrescribe el archivo y >> añade al final
+- > añade y >> sobrescribe
+- No hay diferencia
+= Con > se pierde el contenido anterior.
+
+? ¿Qué hace systemctl enable nginx?
++ Que nginx arranque automáticamente al encender el servidor
+- Arranca nginx ahora mismo
+- Desinstala nginx
+= enable configura el arranque; start lo arranca en ese momento.
+
+? Un script da «Permiso denegado» al ejecutarlo con ./script.sh. ¿Qué le falta probablemente?
++ El permiso de ejecución (chmod u+x script.sh)
+- Estar en la carpeta /etc
+- Una conexión a internet
+= Sin el bit x, el sistema no lo ejecuta.
+
+? ¿Qué comando muestra cuánto ocupa cada carpeta?
++ du -sh *
+- df -h
+- free -h
+= df muestra el disco entero; du, lo que ocupa cada carpeta o archivo.
+:::
+

@@ -5,13 +5,14 @@ import { guardarLab, labHecho, cargar } from '../progreso.js';
 
 const NIVEL = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
 
-export async function montarTerminal(holder, { lab, motor, progreso, nombre, bienvenida, clase = '' }) {
+export async function montarTerminal(holder, { lab, motor, progreso, nombre, bienvenida, clase = '', panel = null }) {
   await cargar();
   let s, hist = [], pos = 0, completado = labHecho(progreso);
   const salida = el('div', { class: 'terminal ' + clase, role: 'log', 'aria-live': 'polite', 'aria-label': 'Salida de la consola', tabindex: '0' });
   const promptTxt = el('span');
   const input = el('input', { type: 'text', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', 'aria-label': 'Escribe un comando', enterkeyhint: 'send' });
   const lista = el('ul', { class: 'tasks' });
+  const zonaPanel = panel ? el('div', { class: 'term-panel', 'aria-live': 'polite' }) : null;
   const marcador = el('span', { class: 'badge badge-accent' });
   const btnReset = el('button', { type: 'button', class: 'btn btn-ghost btn-sm' }, 'Reiniciar');
   const btnSol = el('button', { type: 'button', class: 'btn btn-quiet btn-sm' }, 'Ver solución');
@@ -30,6 +31,7 @@ export async function montarTerminal(holder, { lab, motor, progreso, nombre, bie
   function revisar() {
     const hechas = lab.tareas.map(t => { try { return !!t.ok(s); } catch { return false; } });
     lista.replaceChildren(...lab.tareas.map((t, i) => el('li', {}, el('span', { class: 'check' + (hechas[i] ? ' on' : ''), 'aria-hidden': 'true' }, '✓'), el('span', { class: hechas[i] ? 'muted' : null }, (hechas[i] ? '(hecha) ' : '') + t.texto))));
+    if (zonaPanel) zonaPanel.replaceChildren(panel(s));
     const n = hechas.filter(Boolean).length;
     marcador.textContent = `${n}/${lab.tareas.length} tareas`;
     if (n === lab.tareas.length && !completado) {
@@ -77,7 +79,7 @@ export async function montarTerminal(holder, { lab, motor, progreso, nombre, bie
     el('div', { class: 'lab-tags' }, lab.nivel ? el('span', { class: 'badge level-' + lab.nivel }, NIVEL[lab.nivel]) : null),
     el('p', { class: 'muted' }, lab.intro),
     el('div', { class: 'cli-layout' },
-      el('div', {}, salida, el('div', { class: 'term-input' }, promptTxt, input)),
+      el('div', {}, zonaPanel, salida, el('div', { class: 'term-input' }, promptTxt, input)),
       el('div', {}, el('h4', {}, 'Tareas'), lista, lab.pistas?.length ? el('div', { class: 'hints-box' }, btnPista, listaPistas) : null, el('div', { class: 'hero-cta' }, btnReset, btnSol), solucion))));
   reiniciar();
 }

@@ -75,6 +75,18 @@ Se edita el fichero dejando la versión correcta, se quitan las marcas y se hace
 
 Los reclutadores miran tu perfil de GitHub. Proyectos propios con un buen `README` (qué hace, cómo se usa, una captura) valen más que muchas líneas del currículum.
 
+## Practica Git (con el gráfico del historial)
+
+Cada comando redibuja el gráfico de commits y ramas, para que veas lo que pasa por dentro.
+
+[[git:primeros]]
+
+[[git:ramas]]
+
+[[git:conflicto]]
+
+[[git:remoto]]
+
 ::: quiz
 ? ¿Qué es un commit?
 + Una instantánea de los cambios con un mensaje que los explica

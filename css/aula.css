@@ -819,6 +819,18 @@ a.node-in { transition: background-color 150ms ease; }
 @media (max-width: 640px) { .sqli-form, .sqli-form:has(> input:only-of-type) { grid-template-columns: 1fr; } }
 
 .terminal-win { background: #0c0c0c; color: #cccccc; }
+.terminal-linux { background: #300a24; color: #f0e6ee; }
+.terminal-linux .in { color: #8ae234; }
+.term-panel { margin-bottom: 10px; }
+.git-grafo { margin: 0; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 8px; overflow-x: auto; max-height: 280px; overflow-y: auto; }
+.git-grafo svg { display: block; min-width: 520px; height: auto; }
+.git-msg { font: 12px var(--mono); fill: var(--ink); }
+.git-chip { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1; }
+.git-chip.head { fill: var(--accent); }
+.git-chip.head + .git-chip-txt { fill: var(--accent-ink); }
+.git-chip.remoto { fill: var(--violet-soft); stroke: var(--violet); }
+.git-chip-txt { font: 600 11px var(--sans); fill: var(--ink); }
+.git-vacio { padding: 12px; border: 1px dashed var(--line); border-radius: var(--radius-sm); }
 .terminal-win .in { color: #f2f2f2; }
 
 /* ---------------------------------------------------------------- reto del día */
