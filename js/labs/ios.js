@@ -4,6 +4,8 @@
 // port security). No pretende ser un IOS completo: cubre lo que piden los laboratorios del CCNA.
 
 // ---------------------------------------------------------------- utilidades IP
+import { valida as ip6Valida, cidr, abreviar as abrev6, direccionEui64, linkLocal, tipo as tipo6, enPrefijo, redDe as redDe6, aNumero as num6 } from './ipv6.js';
+
 export const ipNum = s => { const p = String(s).split('.'); if (p.length !== 4 || !p.every(x => /^\d{1,3}$/.test(x) && +x < 256)) return null; return p.reduce((n, x) => n * 256 + +x, 0); };
 export const ipStr = n => [24, 16, 8, 0].map(s => Math.floor(n / 2 ** s) % 256).join('.');
 const esMascara = n => n != null && n >= 0 && n <= 2 ** 32 - 1 && Number.isInteger(Math.log2(2 ** 32 - n));
@@ -31,6 +33,7 @@ const TIPOS = {
   word: t => t,
   num: t => (/^\d+$/.test(t) ? Number(t) : undefined),
   ip: t => (ipNum(t) != null ? t : undefined),
+  ip6: t => (ip6Valida(t) ? t.toLowerCase() : undefined),
   rest: null, iface: null, ifrange: null,
 };
 function compilar(p) {
@@ -86,12 +89,12 @@ function encajar(pat, toks) {
 // ---------------------------------------------------------------- estado inicial
 export function nuevoEquipo({ tipo = 'switch', hostname, interfaces, vecinos = [], hosts = [], cdp = [], vecinoL2 = {}, soloConectados = false, estadoInicial } = {}) {
   const ifs = {};
-  for (const i of interfaces) ifs[i.nombre] = { nombre: i.nombre, shutdown: i.shutdown ?? tipo === 'router', ip: i.ip || null, mask: i.mask || null, conectada: i.conectada ?? true, mode: tipo === 'switch' && !/^(Vlan|Loopback)/.test(i.nombre) ? 'dynamic auto' : null, accessVlan: 1, nativeVlan: 1, allowed: 'all', nonegotiate: false, description: '', ps: null, acl: {}, ospfArea: null, encap: null, portfast: false, nat: null, helper: null, duplex: 'auto', speed: 'auto' };
+  for (const i of interfaces) ifs[i.nombre] = { nombre: i.nombre, shutdown: i.shutdown ?? tipo === 'router', ip: i.ip || null, mask: i.mask || null, conectada: i.conectada ?? true, mode: tipo === 'switch' && !/^(Vlan|Loopback)/.test(i.nombre) ? 'dynamic auto' : null, accessVlan: 1, nativeVlan: 1, allowed: 'all', nonegotiate: false, description: '', ps: null, acl: {}, ospfArea: null, encap: null, portfast: false, nat: null, helper: null, duplex: 'auto', speed: 'auto', ipv6: [], ll: null, ipv6Enable: false };
   const eq = {
     tipo, hostname: hostname || (tipo === 'switch' ? 'Switch' : 'Router'), modo: 'user', ctx: null,
     enableSecret: null, enablePassword: null, spe: false, banner: null, domain: null, domainLookup: true, rsa: 0, sshVersion: 1,
     users: {}, lines: { con: { password: null, login: false, local: false, timeout: null }, vty: { password: null, login: false, local: false, transport: 'all', timeout: null, accessClass: null } },
-    vlans: tipo === 'switch' ? { 1: 'default' } : {}, ifs, rutas: [], ospf: null, acls: {}, ipRouting: tipo === 'router', ipv6Routing: false, defaultGateway: null,
+    vlans: tipo === 'switch' ? { 1: 'default' } : {}, ifs, rutas: [], ospf: null, acls: {}, ipRouting: tipo === 'router', ipv6Routing: false, rutas6: [], defaultGateway: null,
     guardada: null, vecinos, hosts, cdp, vecinoL2, historial: [], patrones: new Set(),
     dhcp: { excluidas: [], pools: {} }, nat: { listas: [], estaticas: [] },
   };
@@ -107,6 +110,8 @@ const PRIV_SHOW = [
   ['show running-config', s => runningConfig(s)],
   ['show startup-config', s => s.guardada || 'startup-config is not present'],
   ['show ip interface brief', s => showIpIntBrief(s)],
+  ['show ipv6 interface brief', s => showIpv6Brief(s)],
+  ['show ipv6 route', s => showIpv6Route(s)],
   ['show interfaces trunk', s => showTrunk(s)],
   ['show vlan brief', s => showVlan(s)],
   ['show vlan', s => showVlan(s)],
@@ -140,7 +145,9 @@ const PRIV = [
   ['disable', s => { s.modo = 'user'; }],
   ['exit', s => { s.modo = 'user'; return '\n(sesión cerrada; pulsa Intro para volver a entrar)'; }],
   ['ping <ip:ip>', (s, a) => ping(s, a.ip)],
+  ['ping [ipv6] <d:ip6>', (s, a) => ping6(s, a.d)],
   ['traceroute <ip:ip>', (s, a) => ping(s, a.ip, true)],
+  ['traceroute [ipv6] <d:ip6>', (s, a) => ping6(s, a.d, true)],
   ['reload', () => '% El simulador no reinicia el equipo. Usa copy running-config startup-config para guardar.'],
   ['clear ip ospf process', () => 'Reset ALL OSPF processes? [no]: yes'],
 ];
@@ -191,6 +198,9 @@ const CONFIG = [
   ['ip routing', s => { s.ipRouting = true; }],
   ['no ip routing', s => { s.ipRouting = false; }],
   ['ipv6 unicast-routing', s => { s.ipv6Routing = true; }],
+  ['no ipv6 unicast-routing', s => { s.ipv6Routing = false; }],
+  ['ipv6 route <p:word> <h:word> [<x:word>] [<ad:num>]', (s, a) => rutaEstatica6(s, a)],
+  ['no ipv6 route <p:word> [<h:word>] [<x:word>]', (s, a) => { const c = cidr(a.p); if (!c) return '% Invalid input detected: prefijo IPv6 no válido'; s.rutas6 = s.rutas6.filter(r => !(r.len === c.len && enPrefijo(r.pref, c.dir, 128))); }],
   ['router ospf <p:num>', (s, a) => { if (!s.ospf) s.ospf = { pid: a.p, rid: null, redes: [], pasivas: new Set(), defaultOriginate: false }; else if (s.ospf.pid !== a.p) return '% Este simulador admite un único proceso OSPF (ya existe el ' + s.ospf.pid + ').'; s.modo = 'router'; }],
   ['no router ospf <p:num>', s => { s.ospf = null; }],
   ['access-list <n:num> {permit|deny|remark} <r:rest>', (s, a) => aclNumerada(s, a)],
@@ -225,6 +235,9 @@ const IF = [
     } else return '% Esta interfaz es de capa 2: en un switch, la IP de gestión se configura en una SVI (interface vlan X).';
   })],
   ['no ip address', s => paraCada(s, i => { i.ip = null; i.mask = null; })],
+  ['ipv6 address <a:word> [{eui-64|link-local}]', (s, a) => paraCada(s, i => direccion6(s, i, a.a, a['eui-64|link-local']))],
+  ['no ipv6 address', s => paraCada(s, i => { i.ipv6 = []; i.ll = null; })],
+  ['ipv6 enable', s => paraCada(s, i => { if (s.tipo !== 'router' && !i.routed && !i.nombre.startsWith('Vlan')) return '% Esta interfaz es de capa 2.'; i.ipv6Enable = true; })],
   ['shutdown', s => paraCada(s, i => { i.shutdown = true; return null; }) || logEstado(s, false)],
   ['no shutdown', s => { const r = paraCada(s, i => { i.shutdown = false; }); return r || logEstado(s, true); }],
   ['description <d:rest>', (s, a) => paraCada(s, i => { i.description = a.d; })],
@@ -546,6 +559,106 @@ export function buscarRuta(s, destino) {
   return mejor;
 }
 
+// ---------------------------------------------------------------- IPv6
+export const macInterfaz = nombre => macDe(nombre.length * 7 + (parseInt(nombre.replace(/\D/g, '').slice(-2), 10) || 0));
+function direccion6(s, i, txt, opcion) {
+  if (s.tipo !== 'router' && !i.routed && !i.nombre.startsWith('Vlan')) return '% Esta interfaz es de capa 2: en un switch, la dirección IPv6 va en una SVI o en un puerto con no switchport.';
+  if (opcion === 'link-local') {
+    if (!ip6Valida(txt) || tipo6(txt) !== 'link-local') return '% Invalid link-local address (debe empezar por FE80 y escribirse sin /longitud)';
+    i.ll = abrev6(txt); return;
+  }
+  const c = cidr(txt);
+  if (!c) return '% Invalid input detected: escribe la dirección con su longitud de prefijo, por ejemplo 2001:DB8:ACAD:1::1/64';
+  if (tipo6(c.dir) === 'link-local') return '% Para una dirección link-local usa: ipv6 address FE80::1 link-local';
+  if (opcion === 'eui-64') {
+    if (c.len !== 64) return '% EUI-64 necesita un prefijo /64';
+    const dir = direccionEui64(c.dir, macInterfaz(i.nombre));
+    i.ipv6 = (i.ipv6 ||= []).filter(d => !(d.len === 64 && enPrefijo(d.dir, dir, 64)));
+    (i.ipv6 ||= []).push({ dir, len: 64, pref: redDe6(dir, 64), eui: true });
+    return;
+  }
+  for (const o of Object.values(s.ifs)) if (o !== i && (o.ipv6 || []).some(d => enPrefijo(d.dir, c.dir, Math.min(d.len, c.len)))) return `% ${abrev6(c.dir).toUpperCase()}/${c.len} overlaps with ${abreviar(o.nombre)}`;
+  const dir = abrev6(c.dir);
+  i.ipv6 = (i.ipv6 ||= []).filter(d => !(d.len === c.len && enPrefijo(d.dir, dir, c.len)));
+  (i.ipv6 ||= []).push({ dir, len: c.len, pref: redDe6(dir, c.len), eui: false });
+}
+export const linkLocalDe = i => (i.ll || ((i.ipv6?.length || i.ipv6Enable) ? linkLocal(macInterfaz(i.nombre)) : null));
+function rutaEstatica6(s, a) {
+  const c = cidr(a.p);
+  if (!c) return '% Invalid input detected: prefijo IPv6 no válido (ejemplo: 2001:DB8:ACAD:2::/64 o ::/0)';
+  if (redDe6(c.dir, c.len) !== abrev6(c.dir)) return '% Prefijo inconsistente: los bits de host deben ser 0 (' + redDe6(c.dir, c.len).toUpperCase() + '/' + c.len + ')';
+  let nh = null, iface = null, ad = a.ad || 1;
+  if (ip6Valida(a.h)) { nh = abrev6(a.h); if (a.x && /^\d+$/.test(a.x)) ad = +a.x; }
+  else {
+    iface = normalizarIf(a.h);
+    if (!iface || !s.ifs[iface]) return '% Invalid input detected: interfaz o siguiente salto no válidos';
+    if (a.x) { if (ip6Valida(a.x)) nh = abrev6(a.x); else if (/^\d+$/.test(a.x)) ad = +a.x; }
+  }
+  if (nh && tipo6(nh) === 'link-local' && !iface) return '% Interface has to be specified for a link-local nexthop';
+  s.rutas6 = s.rutas6.filter(r => !(r.len === c.len && r.pref === abrev6(c.dir) && r.nh === nh && r.iface === iface));
+  s.rutas6.push({ pref: abrev6(c.dir), len: c.len, nh, iface, ad });
+}
+function conectadas6(s) {
+  const out = [];
+  for (const i of Object.values(s.ifs)) if (ifUp(s, i)) for (const d of i.ipv6 || []) out.push({ i, d });
+  return out;
+}
+export function rutas6(s) {
+  const out = [];
+  for (const { i, d } of conectadas6(s)) {
+    if (!out.some(o => o.cod === 'C' && o.pref === d.pref && o.len === d.len)) out.push({ cod: 'C', pref: d.pref, len: d.len, iface: i.nombre, ad: 0 });
+    out.push({ cod: 'L', pref: d.dir, len: 128, iface: i.nombre, ad: 0 });
+  }
+  const porPrefijo = new Map();
+  for (const r of s.rutas6) {
+    let salida = r.iface ? s.ifs[r.iface] : null;
+    if (!salida && r.nh) salida = conectadas6(s).find(c => enPrefijo(r.nh, c.d.dir, c.d.len))?.i;
+    if (!salida || !ifUp(s, salida)) continue;
+    if (out.some(o => o.pref === r.pref && o.len === r.len)) continue;
+    const k = r.pref + '/' + r.len, prev = porPrefijo.get(k);
+    if (!prev || r.ad < prev.ad) porPrefijo.set(k, { cod: 'S', pref: r.pref, len: r.len, nh: r.nh, iface: salida.nombre, ad: r.ad });
+  }
+  return [...out, ...porPrefijo.values()];
+}
+export function buscarRuta6(s, destino) {
+  let mejor = null;
+  for (const r of rutas6(s)) if (enPrefijo(destino, r.pref, r.len) && (!mejor || r.len > mejor.len)) mejor = r;
+  return mejor;
+}
+function ping6(s, destino, traza = false) {
+  const d = abrev6(destino);
+  const propias = Object.values(s.ifs).filter(i => ifUp(s, i)).flatMap(i => [...(i.ipv6 || []).map(x => x.dir), linkLocalDe(i)].filter(Boolean));
+  let ok = propias.includes(d);
+  if (!ok) {
+    const host = s.hosts.find(h => h.ip6 && abrev6(h.ip6) === d);
+    const r = buscarRuta6(s, d);
+    if (r && host) ok = r.cod === 'C' ? !host.remoto : !!host.remoto && (!host.via6 || abrev6(host.via6) === r.nh);
+  }
+  const D = d.toUpperCase();
+  if (traza) return `Type escape sequence to abort.\nTracing the route to ${D}\n` + (ok ? `  1 ${D} 1 msec 1 msec 1 msec` : '  1  *  *  *\n  2  *  *  *');
+  return `Type escape sequence to abort.\nSending 5, 100-byte ICMP Echos to ${D}, timeout is 2 seconds:\n${ok ? '!!!!!' : '.....'}\nSuccess rate is ${ok ? 100 : 0} percent (${ok ? 5 : 0}/5)${ok ? ', round-trip min/avg/max = 1/1/2 ms' : ''}`;
+}
+function showIpv6Brief(s) {
+  return Object.values(s.ifs).sort((a, b) => a.nombre.localeCompare(b.nombre, 'en', { numeric: true })).map(i => {
+    const up = ifUp(s, i);
+    const st = i.shutdown ? 'administratively down/down' : up ? 'up/up' : 'down/down';
+    const ll = linkLocalDe(i);
+    const dirs = [ll, ...(i.ipv6 || []).map(d => d.dir)].filter(Boolean).map(x => '    ' + x.toUpperCase());
+    return pad(i.nombre, 23) + `[${st}]\n` + (dirs.length ? dirs.join('\n') : '    unassigned');
+  }).join('\n');
+}
+function showIpv6Route(s) {
+  if (!s.ipv6Routing && !s.rutas6.length && !conectadas6(s).length) return 'IPv6 Routing Table - default - 1 entries\nCodes: C - Connected, L - Local, S - Static\nL   FF00::/8 [0/0]\n     via Null0, receive';
+  const r = rutas6(s);
+  const L = [`IPv6 Routing Table - default - ${r.length + 1} entries`, 'Codes: C - Connected, L - Local, S - Static', ''];
+  for (const x of r) {
+    L.push(`${pad(x.cod, 4)}${abrev6(x.pref).toUpperCase()}/${x.len} [${x.ad}/0]`);
+    L.push(x.cod === 'C' ? `     via ${x.iface}, directly connected` : x.cod === 'L' ? `     via ${x.iface}, receive` : `     via ${x.nh ? x.nh.toUpperCase() : x.iface}${x.nh && x.iface && s.rutas6.some(y => y.iface) ? ', ' + x.iface : ''}`);
+  }
+  L.push('L   FF00::/8 [0/0]', '     via Null0, receive');
+  return L.join('\n');
+}
+
 function ping(s, destino, traza = false) {
   const d = ipNum(destino);
   const propias = Object.values(s.ifs).filter(i => i.ip && ifUp(s, i)).map(i => i.ip);
@@ -800,6 +913,9 @@ export function runningConfig(s) {
     if (i.portfast) L.push(' spanning-tree portfast');
     if (i.bpduguard) L.push(' spanning-tree bpduguard enable');
     if (i.ip) L.push(` ip address ${i.ip} ${i.mask}`); else if (s.tipo === 'router' || i.virtual || i.routed) L.push(' no ip address');
+    if (i.ll) L.push(` ipv6 address ${i.ll.toUpperCase()} link-local`);
+    for (const d of i.ipv6 || []) L.push(d.eui ? ` ipv6 address ${abrev6(d.pref).toUpperCase()}/${d.len} eui-64` : ` ipv6 address ${d.dir.toUpperCase()}/${d.len}`);
+    if (i.ipv6Enable) L.push(' ipv6 enable');
     if (i.helper) L.push(' ip helper-address ' + i.helper);
     if (i.nat) L.push(' ip nat ' + i.nat);
     if (i.duplex && i.duplex !== 'auto') L.push(' duplex ' + i.duplex);
@@ -824,6 +940,7 @@ export function runningConfig(s) {
   for (const n of s.nat.listas) L.push(`ip nat inside source list ${n.lista} interface ${n.iface} overload`);
   for (const n of s.nat.estaticas) L.push(`ip nat inside source static ${n.local} ${n.global}`);
   if (s.defaultGateway) L.push('ip default-gateway ' + s.defaultGateway);
+  for (const r of s.rutas6) L.push(`ipv6 route ${abrev6(r.pref).toUpperCase()}/${r.len} ${[r.iface, r.nh && r.nh.toUpperCase()].filter(Boolean).join(' ')}${r.ad !== 1 ? ' ' + r.ad : ''}`);
   for (const r of s.rutas) L.push(`ip route ${r.net} ${r.mask} ${[r.iface, r.nh].filter(Boolean).join(' ')}${r.ad !== 1 ? ' ' + r.ad : ''}`);
   for (const [n, a] of Object.entries(s.acls)) {
     if (a.nombre) { L.push(`ip access-list ${a.tipo === 'std' ? 'standard' : 'extended'} ${n}`); a.reglas.forEach(r => L.push(` ${r.seq} ${r.accion} ${r.texto}`)); }

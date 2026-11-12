@@ -298,6 +298,114 @@ logging.warning("SW-02 no responde, se reintentará")
 = Captura errores concretos y deja que los inesperados se vean.
 :::
 
+=== p3-depurar | Depurar: encontrar el error en código ajeno | 16 | 2
+En un trabajo pasarás más tiempo **leyendo y arreglando código** que escribiéndolo desde cero. Depurar no es probar cosas al azar hasta que funcione: es un método.
+
+## El método en cinco pasos
+
+1. **Reproduce el fallo.** Consigue un caso concreto que falle siempre: "con [10, 20, 30] da 16.67 y debería dar 20". Sin esto no sabrás si lo arreglaste.
+2. **Lee el mensaje de error entero.** En Python, el *traceback* se lee **de abajo arriba**: la última línea dice qué pasó (`TypeError`, `KeyError`…) y la de encima, en qué línea.
+3. **Aísla.** Reduce el problema: ¿falla con una lista de un elemento? ¿Y vacía? ¿Qué valor tiene cada variable justo antes del fallo?
+4. **Formula una hipótesis y compruébala.** "Creo que el bucle se salta el primer elemento". Mira el valor de `i` en cada vuelta.
+5. **Arregla y escribe una prueba** que reproduzca el fallo, para que no vuelva.
+
+## Herramientas
+
+- **`print()` estratégicos**: `print("i =", i, "total =", total)` dentro del bucle. Rápido y eficaz.
+- **El depurador** del editor (VS Code, PyCharm, las herramientas del navegador): pones un **punto de interrupción** (*breakpoint*), el programa se para ahí y avanzas línea a línea viendo cada variable.
+- **Explicarlo en voz alta** (la técnica del "patito de goma"): al contar qué hace cada línea, muchas veces ves el error tú solo.
+
+## Los errores más típicos
+
+| Error | Ejemplo | Cómo se detecta |
+|---|---|---|
+| **Uno de más o de menos** (*off-by-one*) | `range(1, len(x))` se salta el primero; `i <= len` se pasa del último | Prueba con listas de 0, 1 y 2 elementos |
+| **Tipos mezclados** | `"443" == 443` es falso; `"100" + "50"` da `"10050"` | Imprime `type(x)` |
+| **Condición mal combinada** | `v >= 1 or v <= 4094` siempre es verdad | Prueba los valores del borde |
+| **Sangría** (Python) | Un `return` dentro del bucle sale en la primera vuelta | Mira a qué bloque pertenece cada línea |
+| **Modificar una lista mientras la recorres** | `lista.remove()` dentro de un `for` se salta elementos | Crea una lista nueva |
+| **Valores por defecto mutables** | `def f(cola=[])` comparte la misma lista en cada llamada | Usa `None` y crea la lista dentro |
+| **Comparar objetos** (JavaScript) | `{a: 1} === {a: 1}` es `false` | Compara sus propiedades |
+| **Ordenar números como texto** (JavaScript) | `[100, 20, 3].sort()` → `[100, 20, 3]` | Usa `sort((a, b) => a - b)` |
+
+::: cuidado
+No arregles el síntoma: si una función devuelve un valor de más, no lo quites "a mano" al final. Busca **por qué** aparece; si no, el error volverá con otros datos.
+:::
+
+## Practica: encuentra el error
+
+Cada ejercicio trae código que **casi** funciona. Lee el enunciado, ejecuta, mira qué prueba falla y corrígelo.
+
+[[code:python-errores]]
+
+[[code:js-errores]]
+
+::: quiz
+? Un traceback de Python termina en "KeyError: 'ip'". ¿Qué significa?
+- Falta importar el módulo ip
++ Se buscó la clave "ip" en un diccionario que no la tiene
+- La dirección IP no es válida
+- Hay un error de sangría
+= KeyError aparece al pedir a un diccionario una clave que no existe; la última línea del traceback dice qué pasó.
+
+? ¿Cuál es el primer paso para depurar un fallo?
++ Conseguir un caso concreto que lo reproduzca siempre
+- Reescribir la función desde cero
+- Añadir try/except para que no se vea el error
+- Pedir a otra persona que lo arregle
+= Sin un caso que falle de forma fiable no puedes saber si tu arreglo funciona.
+
+? En JavaScript, ¿por qué [100, 20, 3].sort() devuelve [100, 20, 3]?
+- Porque sort() solo ordena textos y falla con números
++ Porque sin función de comparación ordena como texto, y "100" va antes que "20"
+- Porque el array ya estaba ordenado
+= sort() convierte los elementos a texto; para números hay que usar sort((a, b) => a - b).
+
+? ¿Para qué sirve un punto de interrupción (breakpoint)?
++ Para parar el programa en una línea y ver el valor de las variables
+- Para impedir que el programa se cierre si hay un error
+- Para cortar la conexión de red durante las pruebas
+= El depurador detiene la ejecución ahí y permite avanzar paso a paso.
+:::
+
+::: banco
+? Una función con for i in range(1, len(lista)) da un resultado algo menor del esperado. ¿Qué error es probable?
++ Se salta el primer elemento (posición 0)
+- Se sale de la lista y da IndexError
+- La lista está desordenada
+= range(1, …) empieza en 1; la posición 0 nunca se procesa.
+
+? ¿Qué devuelve "5" == 5 en Python?
++ False
+- True
+- Un error de tipo
+= Un texto nunca es igual a un número en Python; hay que convertir con int() o str().
+
+? En Python, def f(x, lista=[]) acumula datos entre llamadas. ¿Por qué?
++ Porque la lista por defecto se crea una sola vez y se comparte entre todas las llamadas
+- Porque Python guarda las variables globales automáticamente
+- Porque falta un return
+= Los valores por defecto se evalúan una vez al definir la función; con tipos mutables, usa None.
+
+? ¿Qué técnica consiste en explicar el código línea por línea para encontrar el error?
++ El patito de goma (rubber duck)
+- La prueba unitaria
+- El refactor
+= Al verbalizar qué hace cada línea se descubren supuestos falsos.
+
+? Has arreglado un error. ¿Qué haces para que no vuelva a aparecer?
++ Escribir una prueba automática que reproduzca el caso que fallaba
+- Borrar el historial de Git
+- Añadir un comentario que diga "no tocar"
+= La prueba falla si alguien reintroduce el error.
+
+? Un bucle de Python siempre devuelve el resultado de la primera vuelta. ¿Qué miras primero?
++ La sangría del return: probablemente está dentro del bucle
+- La versión de Python instalada
+- Si la lista tiene duplicados
+= Un return dentro del for termina la función en la primera iteración.
+:::
+
 === p3-datos | Archivos y formatos de datos: TXT, CSV, JSON y YAML | 16 | 2
 Los programas leen y escriben datos constantemente: inventarios, configuraciones, informes, respuestas de APIs. Conocer los formatos más comunes es imprescindible.
 

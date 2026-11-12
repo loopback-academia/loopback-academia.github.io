@@ -1,8 +1,14 @@
 // Laboratorio SQL en el navegador con SQLite (sql.js, WebAssembly). Nada sale del equipo del alumno.
 import { el, toast } from '../core.js';
 import { guardarLab, labHecho, cargar } from '../progreso.js';
-import { ESQUEMA, DATOS } from './sql-datos.js';
-import { EJERCICIOS } from './sql-ejercicios.js';
+import { ESQUEMA, DATOS, ESQUEMA_DETECTIVE, DATOS_DETECTIVE } from './sql-datos.js';
+import { EJERCICIOS, CONJUNTOS } from './sql-ejercicios.js';
+
+export const BASES = {
+  inventario: { titulo: 'Laboratorio SQL: inventario de red', esquema: ESQUEMA, datos: DATOS },
+  detective: { titulo: 'Caso detective: registros de la empresa', esquema: ESQUEMA_DETECTIVE, datos: DATOS_DETECTIVE },
+};
+export const baseDe = id => CONJUNTOS[id]?.base || 'inventario';
 
 let motor = null;
 function cargarMotor() {
@@ -16,12 +22,20 @@ function cargarMotor() {
   }).then(init => init({ locateFile: f => new URL('../../vendor/' + f, import.meta.url).href })));
 }
 
-export async function nuevaBase() {
+export async function nuevaBaseDesde(esquema, datos) {
+  const SQL = await cargarMotor();
+  const db = new SQL.Database();
+  db.run(esquema);
+  db.run(datos);
+  return db;
+}
+
+export async function nuevaBase(base = 'inventario') {
   const SQL = await cargarMotor();
   const db = new SQL.Database();
   db.run('PRAGMA foreign_keys = ON;');
-  db.run(ESQUEMA);
-  db.run(DATOS);
+  db.run(BASES[base].esquema);
+  db.run(BASES[base].datos);
   return db;
 }
 
@@ -32,8 +46,8 @@ export function ejecutarSql(db, sql) {
 }
 
 const firma = (filas, ordenado) => { const f = filas.map(r => JSON.stringify(r.map(v => (typeof v === 'number' ? Math.round(v * 1e6) / 1e6 : v)))); return ordenado ? f : f.sort(); };
-export async function corregir(ej, sqlAlumno) {
-  const [dbA, dbB] = await Promise.all([nuevaBase(), nuevaBase()]);
+export async function corregir(ej, sqlAlumno, base = 'inventario') {
+  const [dbA, dbB] = await Promise.all([nuevaBase(base), nuevaBase(base)]);
   try {
     let rA, rB;
     try { rA = ejecutarSql(dbA, sqlAlumno); } catch (e) { return { ok: false, error: 'Error de SQL: ' + e.message }; }
@@ -59,6 +73,8 @@ export async function montarSql(holder, id) {
   const lista = EJERCICIOS[id];
   if (!lista) throw new Error('Ejercicios SQL desconocidos: ' + id);
   await cargar();
+  const conjunto = CONJUNTOS[id] || null;
+  const base = baseDe(id);
   let n = 0;
   const hechos = new Set();
   const titulo = el('h3', {});
@@ -72,7 +88,8 @@ export async function montarSql(holder, id) {
   const btnPrev = el('button', { type: 'button', class: 'btn btn-quiet btn-sm' }, '‹ Anterior');
   const btnNext = el('button', { type: 'button', class: 'btn btn-quiet btn-sm' }, 'Siguiente ›');
   const btnSol = el('button', { type: 'button', class: 'btn btn-quiet btn-sm' }, 'Ver solución');
-  const esquema = el('details', {}, el('summary', { class: 'small' }, 'Ver las tablas de la base de datos'), el('pre', { class: 'code' }, ESQUEMA.trim()));
+  const esquema = el('details', {}, el('summary', { class: 'small' }, 'Ver las tablas de la base de datos'), el('pre', { class: 'code' }, BASES[base].esquema.trim()));
+  const historia = el('div', { 'aria-live': 'polite' });
 
   function pintar() {
     const ej = lista[n];
@@ -84,18 +101,19 @@ export async function montarSql(holder, id) {
     btnPrev.disabled = n === 0; btnNext.disabled = n === lista.length - 1;
   }
   btnRun.addEventListener('click', async () => {
-    const db = await nuevaBase();
+    const db = await nuevaBase(base);
     try { salida.replaceChildren(tablaResultado(ejecutarSql(db, editor.value))); feedback.textContent = ''; }
     catch (e) { feedback.className = 'feedback bad'; feedback.textContent = 'Error de SQL: ' + e.message; }
     finally { db.close(); }
   });
   btnCheck.addEventListener('click', async () => {
     if (!editor.value.trim()) { feedback.className = 'feedback bad'; feedback.textContent = 'Escribe una consulta primero.'; return; }
-    const r = await corregir(lista[n], editor.value);
+    const r = await corregir(lista[n], editor.value, base);
     if (r.resultado !== undefined) salida.replaceChildren(tablaResultado(r.resultado));
     if (r.ok) {
       hechos.add(n);
-      feedback.className = 'feedback ok'; feedback.textContent = '¡Correcto!' + (n < lista.length - 1 ? ' Pasa al siguiente ejercicio.' : '');
+      feedback.className = 'feedback ok'; feedback.textContent = '¡Correcto!' + (lista[n].descubre ? ' Pista descubierta: ' + lista[n].descubre : '') + (n < lista.length - 1 ? ' Pasa al siguiente ejercicio.' : '');
+      if (conjunto && hechos.size === lista.length) historia.replaceChildren(el('div', { class: 'alert alert-ok' }, el('p', {}, el('strong', {}, '🔎 ' + conjunto.final))));
       marcador.textContent = `${hechos.size}/${lista.length} resueltos`;
       if (hechos.size === lista.length && !labHecho('sql-' + id)) { guardarLab('sql-' + id); toast('Laboratorio SQL completado.'); }
     } else { feedback.className = 'feedback bad'; feedback.textContent = r.error || r.motivo; }
@@ -106,9 +124,9 @@ export async function montarSql(holder, id) {
   btnSol.addEventListener('click', () => { editor.value = lista[n].solucion; editor.focus(); });
 
   holder.append(el('section', { class: 'lab', 'aria-label': 'Laboratorio SQL' },
-    el('div', { class: 'lab-head' }, el('h3', {}, 'Laboratorio SQL: inventario de red'), marcador),
-    esquema, titulo, enunciado, editor, el('p', { class: 'hint' }, 'Ctrl + Intro para comprobar. La base de datos se reinicia en cada ejecución.'),
-    el('div', { class: 'hero-cta' }, btnRun, btnCheck, btnPrev, btnNext, btnSol), feedback, salida));
+    el('div', { class: 'lab-head' }, el('h3', {}, conjunto ? conjunto.titulo : BASES[base].titulo), marcador),
+    conjunto ? el('p', { class: 'alert alert-info' }, el('span', {}, conjunto.intro)) : null, esquema, titulo, enunciado, editor, el('p', { class: 'hint' }, 'Ctrl + Intro para comprobar. La base de datos se reinicia en cada ejecución.'),
+    el('div', { class: 'hero-cta' }, btnRun, btnCheck, btnPrev, btnNext, btnSol), feedback, historia, salida));
   pintar();
   salida.replaceChildren(el('p', { class: 'muted small' }, 'Preparando SQLite en tu navegador…'));
   await cargarMotor();

@@ -243,6 +243,12 @@ R1# show ipv6 route static
 Si el siguiente salto es una dirección **link-local** (FE80::), es **obligatorio** indicar la interfaz de salida, porque la misma link-local puede existir en varios enlaces.
 :::
 
+## Laboratorio
+
+Configura un router con IPv6 de principio a fin: direcciones globales, link-local, EUI-64, rutas estáticas, ruta por defecto y verificación.
+
+[[cli:ipv6]]
+
 ::: quiz
 ? ¿Cómo se escribe la ruta por defecto en IPv6?
 - 0.0.0.0/0

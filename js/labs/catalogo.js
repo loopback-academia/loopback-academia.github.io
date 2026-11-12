@@ -15,6 +15,7 @@ const SQL_INFO = {
   ddl: ['Crear tablas, índices y vistas (DDL)', 'intermedio'],
   ventanas: ['Funciones de ventana (OVER)', 'avanzado'],
   inventario: ['Reto: informes del inventario de red', 'avanzado'],
+  detective: ['Caso detective: el apagón de la sucursal', 'intermedio'],
 };
 
 export const NIVELES = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
@@ -26,8 +27,10 @@ export const CATALOGO = [
   ...Object.values(PROYECTOS).map(p => ({ clave: 'proyecto:' + p.id, area: p.area, grupo: 'proyectos', nivel: p.nivel, progreso: p.progreso, titulo: p.titulo.replace(/^Proyecto: (.)/, (_, c) => c.toUpperCase()), texto: p.resumen, tareas: p.fases.reduce((n, f) => n + f.requisitos.length, 0) })),
   { clave: 'lab:subnetting', area: 'redes', grupo: 'numeros', nivel: 'principiante', progreso: 'subnetting', titulo: 'Entrenador de subnetting', texto: 'Red, broadcast, hosts y máscara de direcciones al azar. Completa 10 aciertos seguidos.' },
   { clave: 'lab:binario', area: 'redes', grupo: 'numeros', nivel: 'principiante', progreso: 'binario', titulo: 'Binario y decimal', texto: 'Convierte octetos de binario a decimal y al revés hasta hacerlo de cabeza.' },
+  { clave: 'lab:ipv6', area: 'redes', grupo: 'numeros', nivel: 'intermedio', progreso: 'ipv6', titulo: 'Entrenador IPv6', texto: 'Abreviar y expandir direcciones, EUI-64, tipos de dirección y prefijos. Dos aciertos de cada tipo.' },
   { clave: 'lab:vlsm', area: 'redes', grupo: 'numeros', nivel: 'intermedio', progreso: 'vlsm', titulo: 'Diseño VLSM', texto: 'Reparte un bloque de direcciones entre varias redes de distinto tamaño.' },
   ...Object.entries(LABS).map(([id, l]) => ({ clave: 'cli:' + id, area: 'redes', grupo: l.tipo === 'averia' ? 'averias' : 'cli', nivel: l.nivel, progreso: 'cli-' + id, titulo: l.titulo.replace(/^Avería:\s*/, ''), texto: l.intro.split('. ')[0] + '.', tareas: l.tareas.length })),
-  ...Object.entries(EJERCICIOS).map(([id, l]) => ({ clave: 'sql:' + id, area: 'bd', grupo: 'sql', nivel: SQL_INFO[id]?.[1] || 'intermedio', progreso: 'sql-' + id, titulo: SQL_INFO[id]?.[0] || id, texto: `${l.length} ejercicios sobre la base de datos del inventario de red de una empresa (SQLite en tu navegador).`, tareas: l.length })),
+  { clave: 'sqli:login', area: 'bd', grupo: 'seguridad', nivel: 'avanzado', progreso: 'sqli-login', titulo: 'Inyección SQL: atacar y defender', texto: 'Entra como administrador sin contraseña, saca datos por un buscador y arregla la aplicación con consultas parametrizadas.', tareas: 3, unidad: 'retos' },
+  ...Object.entries(EJERCICIOS).map(([id, l]) => ({ clave: 'sql:' + id, area: 'bd', grupo: 'sql', nivel: SQL_INFO[id]?.[1] || 'intermedio', progreso: 'sql-' + id, titulo: SQL_INFO[id]?.[0] || id, texto: id === 'detective' ? 'Investiga un incidente real con consultas: registros de cambios, VPN, SSH y tarjetas de acceso. Sigue las pistas.' : `${l.length} ejercicios sobre la base de datos del inventario de red de una empresa (SQLite en tu navegador).`, tareas: l.length })),
   ...Object.entries(CODIGO).map(([id, c]) => ({ clave: 'code:' + id, area: 'prog', grupo: c.libre ? 'libre' : c.lang, nivel: c.nivel, progreso: 'code-' + id, titulo: c.titulo, texto: c.libre ? `Escribe y ejecuta cualquier programa en ${c.lang === 'python' ? 'Python' : 'JavaScript'}, sin corrección.` : `${c.ejercicios.length} ejercicios en ${c.lang === 'python' ? 'Python' : 'JavaScript'} que se corrigen solos.`, tareas: c.libre ? null : c.ejercicios.length, libre: !!c.libre })),
 ];

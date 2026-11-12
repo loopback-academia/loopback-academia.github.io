@@ -2,11 +2,13 @@
 import { el, toast } from '../core.js';
 import { guardarLab } from '../progreso.js';
 import { calcular, generarEjercicio, explicar, aEntero, aBinario, generarVlsm, resolverVlsm, validarVlsm } from './ipv4.js';
+import { MODOS as MODOS6, TIPOS as TIPOS6, generarIpv6, corregirIpv6, explicarIpv6 } from './ipv6.js';
 
 export function montarLab(holder, id) {
   if (id === 'subnetting') return subnetting(holder);
   if (id === 'binario') return binario(holder);
   if (id === 'vlsm') return vlsm(holder);
+  if (id === 'ipv6') return ipv6(holder);
   throw new Error('Laboratorio desconocido: ' + id);
 }
 
@@ -203,5 +205,64 @@ function vlsm(holder) {
   });
   btnNuevo.addEventListener('click', nuevo);
   holder.append(form);
+  nuevo();
+}
+
+// ---------------------------------------------------------------- IPv6
+// Cinco tipos de ejercicio; el entrenador se completa con 2 aciertos de cada tipo.
+function ipv6(holder) {
+  const META = 2;
+  const aciertos = Object.fromEntries(Object.keys(MODOS6).map(m => [m, 0]));
+  let modo = 'abreviar', ej = null, guardado = false;
+  const tabs = el('div', { class: 'tabs tabs-auto', role: 'tablist', 'aria-label': 'Tipo de ejercicio' },
+    Object.entries(MODOS6).map(([m, t]) => el('button', { type: 'button', role: 'tab', 'aria-selected': String(m === modo), dataset: { modo: m } }, t)));
+  const texto = el('p', {});
+  const pregunta = el('p', { class: 'mono ipv6-pregunta' });
+  const entrada = el('input', { type: 'text', autocomplete: 'off', spellcheck: 'false', autocapitalize: 'off', 'aria-label': 'Tu respuesta', class: 'mono' });
+  const opciones = el('div', { class: 'hero-cta', role: 'group', 'aria-label': 'Tipos de dirección' });
+  const comprobar = el('button', { type: 'submit', class: 'btn btn-primary' }, 'Comprobar');
+  const otro = el('button', { type: 'button', class: 'btn btn-ghost' }, 'Otro ejercicio');
+  const feedback = el('div', { class: 'feedback', role: 'status', 'aria-live': 'polite' });
+  const pasos = el('ol', { class: 'small', hidden: true });
+  const marcador = el('span', { class: 'badge badge-accent' });
+  const progreso = el('p', { class: 'small muted' });
+  const form = el('form', { class: 'lab', novalidate: true },
+    el('div', { class: 'lab-head' }, el('h3', {}, 'Entrenador IPv6'), marcador), tabs, texto, pregunta,
+    el('div', { class: 'field' }, entrada), opciones, el('div', { class: 'hero-cta' }, comprobar, otro), feedback, pasos, progreso);
+
+  function contar() {
+    const hechos = Object.values(aciertos).reduce((n, v) => n + Math.min(v, META), 0);
+    marcador.textContent = `${hechos}/${Object.keys(MODOS6).length * META}`;
+    progreso.textContent = 'Aciertos: ' + Object.entries(MODOS6).map(([m, t]) => `${t} ${Math.min(aciertos[m], META)}/${META}`).join(' · ');
+    if (hechos === Object.keys(MODOS6).length * META && !guardado) { guardado = true; guardarLab('ipv6'); toast('Entrenador IPv6 completado.'); }
+  }
+  function responder(valor) {
+    const ok = corregirIpv6(ej, valor);
+    pasos.replaceChildren(...explicarIpv6(ej).map(t => el('li', {}, t)));
+    pasos.hidden = false;
+    if (ok) { aciertos[modo]++; feedback.className = 'feedback ok'; feedback.textContent = '¡Correcto!'; contar(); }
+    else { feedback.className = 'feedback bad'; feedback.textContent = 'No es correcto. Mira los pasos y prueba con otro.'; }
+  }
+  function nuevo() {
+    ej = generarIpv6(modo);
+    texto.textContent = ej.texto;
+    pregunta.textContent = ej.pregunta;
+    feedback.textContent = ''; feedback.className = 'feedback'; pasos.hidden = true;
+    const esTipo = modo === 'tipo';
+    entrada.hidden = esTipo; comprobar.hidden = esTipo; entrada.value = '';
+    opciones.replaceChildren(...(esTipo ? ej.opciones.map(o => { const b = el('button', { type: 'button', class: 'btn btn-ghost btn-sm' }, TIPOS6[o]); b.addEventListener('click', () => responder(o)); return b; }) : []));
+    if (!esTipo) entrada.focus({ preventScroll: true });
+  }
+  tabs.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    modo = b.dataset.modo;
+    tabs.querySelectorAll('button').forEach(x => x.setAttribute('aria-selected', String(x === b)));
+    nuevo();
+  });
+  form.addEventListener('submit', e => { e.preventDefault(); if (entrada.value.trim()) responder(entrada.value); });
+  otro.addEventListener('click', nuevo);
+  holder.append(form);
+  contar();
   nuevo();
 }

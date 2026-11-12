@@ -41,16 +41,18 @@ OUT = ROOT / "data"
 # Elementos interactivos que existen en la web (se comprueba que cada [[tipo:id]] apunta a uno real).
 KNOWN = {
     "anim": {"encapsulacion", "switch", "arp", "tcp", "dhcp", "dns", "vlan", "stp", "enrutamiento", "nat", "acl", "ospf"},
-    "lab": {"subnetting", "binario", "vlsm"},
+    "lab": {"subnetting", "binario", "vlsm", "ipv6"},
     "cli": {"basico", "vlan", "trunk", "estatica", "ospf", "acl", "ssh", "portsecurity", "router", "intervlan", "dhcp", "nat",
-            "averia-puerto", "averia-trunk", "averia-gestion", "averia-ruta", "averia-ospf", "averia-ssh", "averia-acl", "averia-duplex"},
+            "ipv6", "averia-puerto", "averia-trunk", "averia-gestion", "averia-ruta", "averia-ospf", "averia-ssh", "averia-acl", "averia-duplex"},
     "proyecto": {"oficina"},
     "caso": {"login", "impresora-etiquetas", "sucursal", "nuevo-empleado", "lento"},
     "turno": {"soporte"},
     "video": {"viaje-mensaje", "vlan-switch", "router-decide", "dhcp-nat", "phishing", "automatizar", "tablas-claves", "join", "transaccion", "bucle", "lenguajes", "git-flujo", "busqueda", "ticket-vida"},
-    "sql": {"select", "join", "agregacion", "funciones", "subconsultas", "modificar", "ddl", "ventanas", "inventario"},
+    "sqli": {"login"},
+    "sql": {"select", "join", "agregacion", "funciones", "subconsultas", "modificar", "ddl", "ventanas", "inventario", "detective"},
     "code": {"python-basico", "python-condicionales", "python-bucles", "python-colecciones", "python-redes", "python-poo",
-             "js-basico", "js-arrays", "js-avanzado", "python-libre", "js-libre"},
+             "js-basico", "js-arrays", "js-avanzado", "python-libre", "js-libre",
+             "python-errores", "js-errores", "python-automatizacion"},
 }
 CALLOUTS = {"nota", "examen", "cuidado", "practica", "comando", "reto", "solucion", "externo"}
 AREAS = ("redes", "bd", "prog", "ti")

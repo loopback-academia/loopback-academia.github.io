@@ -562,3 +562,107 @@ FROM trafico_interfaz;
 - FIRST
 = LAG mira hacia atrás; LEAD hacia delante.
 :::
+
+=== b2-detective | Caso práctico: investigar un incidente con SQL | 20 | 2
+Cuando algo grave pasa en una empresa, la respuesta casi nunca está en un solo sitio. Está repartida en **registros** (*logs*): quién se conectó a la VPN, quién abrió una sesión en un switch, qué comandos ejecutó, quién pasó la tarjeta por la puerta. Saber **cruzar esos registros con SQL** es una habilidad muy valorada en soporte, redes y ciberseguridad.
+
+## Cómo se investiga
+
+1. **Empieza por el efecto**: qué falló, dónde y cuándo. Acota la hora.
+2. **Sigue los identificadores**: un cambio tiene un `sesion_id`; la sesión tiene una IP de origen; esa IP la asignó la VPN a un usuario. Cada respuesta te da la clave de la siguiente consulta.
+3. **Busca patrones**, no solo filas sueltas: muchos intentos fallidos desde la misma IP en pocos minutos indican un ataque. `GROUP BY` y `COUNT(*)` son tus aliados.
+4. **Comprueba la coartada**: ¿encaja con otros registros (horarios, tarjetas, ubicación)?
+5. **Escribe la conclusión con pruebas** y propone medidas para que no vuelva a pasar.
+
+## Las consultas que más vas a usar
+
+```sql
+-- Acotar en el tiempo (fechas guardadas como texto ISO)
+SELECT * FROM cambios WHERE fecha_hora BETWEEN '2026-11-08 02:00' AND '2026-11-08 03:00';
+
+-- Contar intentos por origen
+SELECT ip_publica, COUNT(*) FROM accesos_vpn WHERE resultado = 'fallo' GROUP BY ip_publica ORDER BY 2 DESC;
+
+-- Unir dos registros por un identificador común
+SELECT c.comando, s.usuario, s.ip_origen
+FROM cambios c JOIN sesiones_ssh s ON s.id = c.sesion_id;
+```
+
+::: nota
+Las fechas en formato `AAAA-MM-DD HH:MM:SS` se pueden comparar y ordenar como texto: `'2026-11-08 02:14' > '2026-11-07 23:59'` es verdadero. Por eso es el formato recomendado para guardar fechas.
+:::
+
+## Lecciones del caso
+
+- Las **cuentas compartidas** (como `admin-red`) destruyen la trazabilidad: no puedes saber quién hizo qué. Cada persona debe tener su usuario.
+- Sin **límite de intentos** y sin **MFA**, una contraseña débil cae en minutos.
+- Un atacante intentará **borrar sus huellas** (por ejemplo, dejar de enviar registros a un servidor central). Por eso los registros se copian fuera del equipo.
+
+[[sql:detective]]
+
+::: quiz
+? En una investigación, ¿por qué conviene empezar acotando la hora del incidente?
++ Porque reduce los registros a revisar y permite cruzarlos por tiempo
+- Porque SQL no puede leer registros de más de un día
+- Porque las fechas se guardan como números
+= Con una ventana de tiempo pequeña es mucho más fácil relacionar eventos de distintas tablas.
+
+? Muchos intentos fallidos de VPN desde la misma IP a varias cuentas en pocos minutos indican…
+- Un fallo del servidor VPN
++ Un ataque de adivinación de contraseñas
+- Que los usuarios olvidaron su contraseña
+- Una caída de internet
+= Probar contraseñas contra varias cuentas desde un mismo origen es un patrón típico de ataque.
+
+? ¿Qué cláusula usarías para contar los intentos fallidos por usuario?
+- ORDER BY usuario
++ GROUP BY usuario con COUNT(*)
+- DISTINCT usuario
+- LIMIT 1
+= GROUP BY agrupa las filas de cada usuario y COUNT(*) las cuenta.
+
+? ¿Por qué una cuenta compartida como admin-red dificulta una investigación?
++ Porque todos la usan y los registros no dicen qué persona hizo cada cambio
+- Porque tiene menos permisos que una cuenta personal
+- Porque no se puede usar por SSH
+= Sin cuentas individuales se pierde la trazabilidad.
+:::
+
+::: banco
+? Un cambio tiene sesion_id = 4471 y quieres saber desde qué IP se abrió la sesión. ¿Qué haces?
++ Consultar la tabla de sesiones filtrando por id = 4471, o unirla con JOIN
+- Buscar la IP en la tabla de cambios
+- Contar los cambios con COUNT(*)
+= El identificador común permite saltar de una tabla a otra.
+
+? ¿Qué formato de fecha permite ordenar y comparar fechas guardadas como texto?
++ AAAA-MM-DD HH:MM:SS
+- DD/MM/AAAA
+- MM-DD-AAAA
+= En formato ISO el orden alfabético coincide con el orden cronológico.
+
+? Un atacante ejecuta "no logging host 10.10.99.50" en un switch. ¿Qué pretende?
++ Que el switch deje de enviar sus registros al servidor central y no quede rastro
+- Acelerar el switch
+- Cambiar la VLAN de gestión
+= Desactivar el envío de registros es una forma de borrar huellas.
+
+? ¿Qué medida evita mejor el acceso con contraseñas adivinadas a la VPN?
++ Activar la autenticación multifactor (MFA)
+- Cambiar el nombre de la VPN
+- Usar una IP privada distinta
+= Con MFA, conocer la contraseña no basta para entrar.
+
+? ¿Para qué sirve BETWEEN en una consulta de registros?
++ Para filtrar un rango, por ejemplo entre dos horas
+- Para unir dos tablas
+- Para contar filas
+= BETWEEN a AND b incluye los valores de a hasta b.
+
+? Encuentras que una cuenta entró a la VPN cuando su dueña no estaba en la oficina ni trabajando. ¿Qué concluyes primero?
++ Que la cuenta probablemente fue comprometida, y lo confirmas con más registros
+- Que la empleada es culpable sin más
+- Que el registro de tarjetas está mal
+= Una investigación se apoya en varias pruebas antes de acusar a nadie.
+:::
+

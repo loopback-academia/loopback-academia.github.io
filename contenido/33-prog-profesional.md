@@ -543,6 +543,122 @@ En el laboratorio de abajo practicas las piezas básicas sin equipos reales: cal
 = El código no se rompe por un espacio de más en la salida.
 :::
 
+=== p4-proyectos | Proyectos de automatización para tu portafolio | 20 | 3
+Los reclutadores de TI no preguntan "¿sabes Python?": preguntan **"¿qué has automatizado?"**. Estos cinco proyectos resuelven tareas reales de soporte y redes. Primero los haces aquí, con datos simulados, y después los llevas a tu portafolio.
+
+## 1. Barrido de IPs
+
+**Problema real:** "¿Qué equipos están encendidos en esta red?". Recorres todas las direcciones de host de una subred y anotas cuáles responden.
+
+- Aquí `responde(ip)` está simulada. En tu equipo usarías `subprocess.run(["ping", "-c", "1", ip])` (Linux/macOS) o `-n 1` en Windows, y comprobarías el código de salida.
+- Mejora: hacerlo en paralelo con `concurrent.futures` para que 254 direcciones no tarden minutos.
+
+## 2. Analizador de registros (logs)
+
+**Problema real:** un switch genera miles de líneas al día. Necesitas saber qué equipos tienen puertos que se caen.
+
+- Recorres las líneas, filtras las que interesan y cuentas por equipo con un diccionario.
+- Mejora: leer el archivo con `open()`, filtrar por fecha y exportar el resumen a CSV.
+
+## 3. Comparar respaldos de configuración
+
+**Problema real:** "Ayer funcionaba y hoy no". Comparar la configuración de ayer con la de hoy dice exactamente qué cambió.
+
+- Aquí comparas dos textos línea a línea. Python trae el módulo `difflib`, que hace comparaciones más completas.
+- Mejora: descargar la configuración cada noche con **Netmiko** y guardar solo si cambió (con Git, tienes el historial completo).
+
+## 4. Clasificador de tickets
+
+**Problema real:** en una mesa de ayuda llegan cientos de correos. Un primer filtro automático por palabras clave ayuda a atender antes lo urgente.
+
+- Reglas simples, de lo más grave a lo menos grave. Un humano revisa siempre la prioridad final.
+
+## 5. Inventario a CSV
+
+**Problema real:** el jefe pide "una hoja con todos los equipos". Generas el CSV desde los datos que ya tienes y se abre en Excel.
+
+- Python trae el módulo `csv`, que se encarga de las comas y comillas dentro de los valores.
+
+[[code:python-automatizacion]]
+
+## Cómo presentarlos en GitHub
+
+1. Un repositorio por proyecto (o uno con carpetas), con un **README** que explique el problema, cómo se usa y un ejemplo de salida.
+2. **Datos de ejemplo inventados**. Nunca subas IP, nombres ni registros reales de una empresa.
+3. **Nada de contraseñas en el código**: léelas de variables de entorno o pídelas al ejecutar con `getpass`.
+4. Pruebas automáticas (aunque sean pocas) y un archivo `requirements.txt` con las dependencias.
+
+::: cuidado
+Haz el barrido de IPs y cualquier conexión a equipos **solo en redes donde tengas permiso**. Escanear redes ajenas puede ser ilegal y, en una empresa, motivo de despido.
+:::
+
+::: quiz
+? En el analizador de registros, ¿qué estructura de Python es la más adecuada para contar caídas por equipo?
+- Una lista de textos
++ Un diccionario {equipo: contador}
+- Una tupla
+- Un conjunto (set)
+= El diccionario asocia cada equipo con su contador y se actualiza con cuenta.get(equipo, 0) + 1.
+
+? ¿Qué módulo de Python da las direcciones de host de una red como 192.168.1.0/24?
++ ipaddress
+- socket
+- os
+- random
+= ipaddress.ip_network("192.168.1.0/24").hosts() recorre las direcciones de host.
+
+? ¿Dónde NO deben ir las contraseñas de tus scripts de automatización?
++ Escritas dentro del código que subes a GitHub
+- En variables de entorno
+- En un gestor de secretos
+- Pedidas al ejecutar con getpass
+= El código se comparte y se copia; las credenciales nunca deben ir en él.
+
+? Para descargar la configuración de cientos de switches Cisco cada noche, ¿qué librería es la más habitual?
++ Netmiko
+- Pandas
+- Flask
+= Netmiko abre sesiones SSH con equipos de red y ejecuta comandos.
+:::
+
+::: banco
+? ¿Por qué conviene guardar los respaldos de configuración en Git?
++ Porque queda el historial completo y se ve qué cambió y cuándo
+- Porque Git comprime mejor que un ZIP
+- Porque Git cifra la configuración
+= Cada respaldo es un commit; git diff muestra los cambios entre dos fechas.
+
+? ¿Qué módulo de Python trae comparaciones de texto línea a línea listas para usar?
++ difflib
+- json
+- math
+= difflib genera diferencias como las de git diff.
+
+? Un barrido de 254 direcciones tarda varios minutos. ¿Cómo lo aceleras?
++ Haciendo los ping en paralelo con concurrent.futures o hilos
+- Usando una red /16
+- Quitando el timeout del ping
+= Cada ping espera la respuesta; en paralelo se solapan las esperas.
+
+? ¿Qué debe incluir el README de un proyecto de portafolio?
++ Qué problema resuelve, cómo se usa y un ejemplo de salida
+- Las IP reales de tu empresa
+- Tu contraseña de prueba
+= El README es lo primero que leerá quien revise tu trabajo.
+
+? ¿Por qué el clasificador de tickets comprueba primero las palabras más graves?
++ Para que un ticket que contenga varias señales quede con la prioridad más alta
+- Porque Python lee el texto al revés
+- Para que el programa sea más rápido
+= Si se comprobara primero "no puedo", un ticket con "toda la oficina" quedaría como P2.
+
+? ¿Qué módulo de Python evita problemas con comas y comillas dentro de los valores al escribir CSV?
++ csv
+- string
+- re
+= csv.writer escapa correctamente los valores con comas o comillas.
+:::
+
 === p4-ia | Programar con asistentes de IA, con criterio | 12 | 2
 Los asistentes de IA (Claude, GitHub Copilot, ChatGPT, Gemini…) se han convertido en una herramienta diaria de muchos programadores. Bien usados, multiplican la productividad; mal usados, generan código que no entiendes y que falla en el peor momento.
 

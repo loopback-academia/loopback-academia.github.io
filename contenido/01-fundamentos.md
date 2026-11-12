@@ -741,6 +741,12 @@ R1# show ipv6 interface brief
 `ipv6 unicast-routing` es imprescindible para que un router Cisco **enrute** IPv6 y envíe Router Advertisements. Sin ese comando las interfaces tienen dirección IPv6, pero el router no reenvía paquetes IPv6.
 :::
 
+## Practica
+
+El entrenador tiene cinco tipos de ejercicio: abreviar, expandir, calcular EUI-64, reconocer el tipo de dirección y sacar el prefijo de red. Se completa con dos aciertos de cada tipo.
+
+[[lab:ipv6]]
+
 ::: quiz
 ? ¿Cuál es la abreviatura correcta de 2001:0DB8:0000:0000:0001:0000:0000:0001?
 - 2001:DB8::1::1
@@ -778,6 +784,129 @@ R1# show ipv6 interface brief
 + Unique local (FC00::/7)
 - Link-local
 = Las ULA (FD00::/8 en la práctica) son para uso interno y no se enrutan en internet.
+:::
+
+=== m1-ipv6-ndp | IPv6 a fondo: NDP, SLAAC y DHCPv6 | 18 | 3
+En IPv4, ARP traduce IP a MAC y DHCP reparte direcciones. IPv6 sustituye ARP por **NDP** (*Neighbor Discovery Protocol*) y puede configurar los equipos **sin servidor**. Esta lección explica qué pasa realmente cuando conectas un portátil a una red IPv6.
+
+## NDP: cinco mensajes ICMPv6
+
+| Mensaje | Quién lo envía | Para qué |
+|---|---|---|
+| **RS** (Router Solicitation) | El equipo al arrancar | "¿Hay algún router aquí?" (a FF02::2, todos los routers) |
+| **RA** (Router Advertisement) | El router, periódicamente o al recibir un RS | Anuncia el prefijo, la puerta de enlace y cómo configurarse |
+| **NS** (Neighbor Solicitation) | Cualquier equipo | "¿Cuál es la MAC de esta IPv6?" (sustituye a la petición ARP) |
+| **NA** (Neighbor Advertisement) | El dueño de la dirección | "Soy yo, mi MAC es…" (sustituye a la respuesta ARP) |
+| **Redirect** | El router | "Para ese destino hay un camino mejor" |
+
+La pregunta NS no va a todos los equipos, como el broadcast de ARP: va a la dirección **multicast de nodo solicitado** `FF02::1:FFxx:xxxx`, formada con los últimos 24 bits de la dirección buscada. Solo la escuchan los pocos equipos cuya dirección termina igual.
+
+## DAD: detectar direcciones duplicadas
+
+Antes de usar una dirección nueva, el equipo envía un NS preguntando por **su propia dirección**. Si alguien responde, la dirección está ocupada y no la usa. Esto se llama **DAD** (*Duplicate Address Detection*) y ocurre incluso con la link-local.
+
+## Cómo se configura un equipo: los indicadores del RA
+
+El RA lleva tres indicadores que dicen al equipo qué hacer:
+
+| Indicadores del RA | Método | Dirección | DNS y otros datos |
+|---|---|---|---|
+| A = 1, O = 0, M = 0 | **SLAAC** | La crea el equipo con el prefijo del RA | Opción RDNSS del propio RA |
+| A = 1, O = 1, M = 0 | **SLAAC + DHCPv6 sin estado** | La crea el equipo | Servidor DHCPv6 |
+| A = 0, M = 1 | **DHCPv6 con estado** | Se la da el servidor DHCPv6 | Servidor DHCPv6 |
+
+La **puerta de enlace** siempre la aprende del RA: es la **link-local del router** que lo envió. Por eso en `ipconfig` de un Windows con IPv6 verás una puerta de enlace que empieza por `fe80::`.
+
+## El identificador de interfaz: EUI-64 o aleatorio
+
+Con SLAAC el equipo necesita inventarse los 64 bits de interfaz. Los routers Cisco usan **EUI-64** (derivado de la MAC). Windows, macOS, Android e iOS usan por defecto un identificador **aleatorio** y, además, **direcciones temporales** que cambian cada cierto tiempo (*privacy extensions*): así no se puede seguir a una persona por su MAC de red en red.
+
+## Convivir con IPv4
+
+- **Doble pila (*dual stack*)**: cada equipo tiene IPv4 e IPv6 a la vez. Es lo más común y lo recomendado.
+- **Túneles**: IPv6 viaja dentro de paquetes IPv4 (o al revés) para cruzar una red que solo habla uno de los dos.
+- **NAT64 / DNS64**: traduce entre IPv6 e IPv4 para que una red solo IPv6 pueda llegar a servidores solo IPv4. Lo usan muchas redes móviles.
+
+## Comandos para verificar
+
+```ios
+R1# show ipv6 interface g0/0          ! direcciones, grupos multicast y si envía RA
+R1# show ipv6 neighbors               ! la "tabla ARP" de IPv6
+R1(config-if)# ipv6 nd other-config-flag    ! indicador O: DHCPv6 sin estado
+R1(config-if)# ipv6 nd managed-config-flag  ! indicador M: DHCPv6 con estado
+```
+
+En Windows: `ipconfig /all` muestra las direcciones IPv6 (pública, temporal y link-local) y `netsh interface ipv6 show neighbors` la caché de vecinos.
+
+::: examen
+Un clásico del examen: **el router no envía RA** porque falta `ipv6 unicast-routing`. Sin RA, los equipos solo tienen link-local y no pueden salir de su red.
+:::
+
+::: quiz
+? ¿Qué mensaje NDP sustituye a la petición ARP de IPv4?
+- Router Solicitation
++ Neighbor Solicitation
+- Router Advertisement
+- Redirect
+= El NS pregunta la MAC de una dirección IPv6; el dueño responde con un NA.
+
+? ¿De dónde aprende un equipo con SLAAC su puerta de enlace predeterminada?
+- Del servidor DHCPv6
++ De la dirección link-local del router que envía el RA
+- De la primera dirección del prefijo /64
+- Se configura siempre a mano
+= La puerta de enlace es la link-local (FE80::) del router que anuncia el RA.
+
+? Un RA llega con A = 1, O = 1 y M = 0. ¿Qué hace el equipo?
+- Pide la dirección al servidor DHCPv6
++ Crea su dirección con SLAAC y pide el DNS a un servidor DHCPv6 sin estado
+- Usa solo la dirección link-local
+- Desactiva IPv6
+= A = 1 indica SLAAC para la dirección; O = 1, que otros datos (como el DNS) vienen de DHCPv6 sin estado.
+
+? ¿Para qué sirve DAD?
++ Para comprobar que nadie usa ya la dirección antes de asignarla
+- Para cifrar las direcciones temporales
+- Para elegir el router con mejor métrica
+= El equipo pregunta por su propia dirección con un NS; si alguien responde, está duplicada.
+:::
+
+::: banco
+? ¿A qué dirección se envía el NS que busca la MAC de 2001:DB8::1:2:3?
++ A la multicast de nodo solicitado FF02::1:FF02:3
+- A FF02::1, todos los nodos
+- A la dirección de broadcast del enlace
+= La multicast de nodo solicitado se forma con FF02::1:FF y los últimos 24 bits de la dirección buscada.
+
+? Los PC de una LAN solo tienen dirección FE80:: y no salen de la red. El router tiene la IPv6 bien puesta en la interfaz. ¿Qué es lo más probable?
++ Falta ipv6 unicast-routing y el router no envía RA
+- El DNS está mal configurado
+- La interfaz del router está en modo trunk
+= Sin ipv6 unicast-routing el router no envía RA, así que los PC no conocen el prefijo ni la puerta de enlace.
+
+? ¿Por qué Windows no usa EUI-64 por defecto para sus direcciones SLAAC?
++ Por privacidad: una dirección basada en la MAC permitiría seguir al equipo entre redes
+- Porque EUI-64 solo funciona con prefijos /48
+- Porque Windows no admite SLAAC
+= Los sistemas actuales generan identificadores aleatorios y direcciones temporales.
+
+? ¿Qué método de transición hace que cada equipo tenga IPv4 e IPv6 a la vez?
++ Doble pila (dual stack)
+- NAT64
+- Túnel 6to4
+= En doble pila conviven las dos versiones; es lo más habitual.
+
+? ¿Qué comando de IOS muestra la caché de vecinos IPv6?
++ show ipv6 neighbors
+- show arp ipv6
+- show ipv6 route
+= Es el equivalente IPv6 de show arp.
+
+? Con DHCPv6 con estado (M = 1), ¿de dónde sale la puerta de enlace?
++ Del RA del router, igual que con SLAAC
+- Del servidor DHCPv6
+- No hay puerta de enlace
+= DHCPv6 no entrega la puerta de enlace; siempre se aprende del RA.
 :::
 
 === m1-transporte | TCP y UDP | 16 | 1

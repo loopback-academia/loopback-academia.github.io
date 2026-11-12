@@ -358,6 +358,120 @@ cursor.execute("SELECT * FROM usuarios WHERE nombre = %s", (usuario,))
 = 3306 es MySQL y 1433, SQL Server.
 :::
 
+=== b3-inyeccion | Inyección SQL: atacar y defender | 18 | 3
+La **inyección SQL** lleva más de veinte años en las listas de vulnerabilidades más graves de la web (OWASP Top 10). Ocurre cuando una aplicación **pega el texto que escribe el usuario dentro de una consulta SQL**: el usuario deja de introducir datos y pasa a **escribir código** que la base de datos ejecuta.
+
+## Cómo funciona el ataque
+
+Una aplicación construye así el inicio de sesión:
+
+```python
+sql = "SELECT * FROM usuarios WHERE usuario = '" + usuario + "' AND clave = '" + clave + "'"
+```
+
+Si alguien escribe como usuario `admin' --`, la consulta queda:
+
+```sql
+SELECT * FROM usuarios WHERE usuario = 'admin' --' AND clave = 'lo que sea'
+```
+
+La comilla cierra el texto y `--` convierte el resto en comentario: **la comprobación de la contraseña desaparece**.
+
+Con `UNION SELECT`, un buscador cualquiera puede devolver **filas de otras tablas** (usuarios, contraseñas, tarjetas…). Con otras variantes se pueden modificar o borrar datos.
+
+## La defensa: consultas parametrizadas
+
+La solución no es "quitar las comillas" ni filtrar palabras peligrosas: siempre hay una forma de saltárselo. La solución es **separar el código de los datos**:
+
+```python
+cursor.execute("SELECT * FROM usuarios WHERE usuario = ? AND clave = ?", (usuario, clave))
+```
+
+```javascript
+db.query('SELECT * FROM usuarios WHERE usuario = $1 AND clave = $2', [usuario, clave]);
+```
+
+La consulta se envía con marcadores (`?`, `$1`, `:nombre`) y los valores **por separado**. Aunque el usuario escriba comillas o `--`, el motor los trata siempre como texto, nunca como SQL. Los ORM (Django, SQLAlchemy, Prisma…) lo hacen por ti si no construyes SQL a mano.
+
+## Defensa en profundidad
+
+- **Mínimo privilegio**: la cuenta de la aplicación solo debe poder hacer lo que necesita (por ejemplo, no `DROP TABLE`).
+- **Contraseñas con hash** (bcrypt, Argon2), nunca en texto plano: si roban la tabla, no obtienen las contraseñas.
+- **Mensajes de error genéricos** para el usuario: los detalles del error van al registro, no a la pantalla.
+- **Validar** formatos esperados (un número de pedido es un número) como capa adicional, no como única defensa.
+
+::: cuidado
+Practica estas técnicas **solo** en laboratorios propios o con autorización por escrito. Probar una inyección en una web ajena es un delito aunque "solo mires".
+:::
+
+[[sqli:login]]
+
+::: quiz
+? ¿Cuál es la causa de la inyección SQL?
++ Construir la consulta pegando el texto del usuario dentro del SQL
+- Usar contraseñas cortas
+- Tener la base de datos en otro servidor
+- Usar índices en la tabla de usuarios
+= Si el texto del usuario forma parte del código SQL, puede cambiar lo que hace la consulta.
+
+? ¿Qué hace "--" en el ataque admin' --?
+- Resta dos valores
++ Convierte en comentario el resto de la consulta, incluida la comprobación de la clave
+- Borra el usuario admin
+= En SQL, -- inicia un comentario hasta el final de la línea.
+
+? ¿Cuál es la defensa principal contra la inyección SQL?
+- Prohibir la palabra SELECT en los formularios
+- Quitar las comillas del texto
++ Usar consultas parametrizadas
+- Ocultar los mensajes de error
+= Los parámetros envían los valores por separado del código: nunca se ejecutan como SQL.
+
+? ¿Para qué usa un atacante UNION SELECT?
++ Para añadir al resultado filas de otras tablas, como la de usuarios
+- Para unir dos bases de datos
+- Para acelerar la consulta
+= UNION combina el resultado original con el de otra consulta elegida por el atacante.
+:::
+
+::: banco
+? ¿Por qué filtrar palabras como "OR" o "--" no es una buena defensa?
++ Porque siempre hay variantes para saltarse el filtro; la solución es separar código y datos
+- Porque esas palabras son necesarias en los nombres de usuario
+- Porque los filtros ralentizan la web
+= Las listas negras se esquivan con mayúsculas, codificaciones u otras sintaxis.
+
+? ¿Qué limita el daño si a pesar de todo hay una inyección?
++ Que la cuenta de la aplicación tenga solo los permisos mínimos
+- Que la base de datos tenga muchos índices
+- Que la web use HTTPS
+= Con mínimo privilegio, el atacante no puede borrar tablas ni leer lo que la aplicación no necesita.
+
+? ¿Cómo deben guardarse las contraseñas en la base de datos?
++ Con un hash lento y con sal, como bcrypt o Argon2
+- En texto plano en una columna oculta
+- Cifradas con la misma clave en todas las filas
+= Un hash no se puede revertir; si roban la tabla no obtienen las contraseñas.
+
+? En Python con sqlite3, ¿cuál es la forma segura?
++ cursor.execute("SELECT * FROM t WHERE id = ?", (valor,))
+- cursor.execute("SELECT * FROM t WHERE id = " + valor)
+- cursor.execute(f"SELECT * FROM t WHERE id = {valor}")
+= Los marcadores ? reciben los valores por separado.
+
+? Un formulario muestra el error completo de SQL al usuario. ¿Por qué es un problema?
++ Porque da pistas al atacante sobre la estructura de la consulta y las tablas
+- Porque el texto es demasiado largo
+- Porque ralentiza la base de datos
+= Los detalles van al registro interno; al usuario, un mensaje genérico.
+
+? ¿En qué lista de riesgos web aparece la inyección desde hace años?
++ OWASP Top 10
+- El modelo OSI
+- La lista de puertos bien conocidos
+= OWASP publica las vulnerabilidades web más críticas; la inyección siempre está entre ellas.
+:::
+
 === b3-administracion | Copias de seguridad, recuperación y alta disponibilidad | 18 | 3
 Los datos son lo más valioso de una empresa. Un buen administrador de bases de datos (DBA) piensa siempre en una pregunta: **"si esto se rompe ahora mismo, ¿cuánto pierdo y cuánto tardo en volver?"**
 

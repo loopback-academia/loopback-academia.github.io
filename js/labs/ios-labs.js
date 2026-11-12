@@ -1,6 +1,7 @@
 // Laboratorios guiados del simulador de IOS. Cada tarea se comprueba sobre el estado del equipo, no sobre el texto
 // escrito: da igual si el alumno abrevia ("sw mode acc") o lo hace en otro orden, mientras el resultado sea correcto.
-import { interfazUp, buscarRuta, vecinosOspf, evaluarAcl, modoOperativo, vlanPasa, concesiones, traduccionesNat } from './ios.js';
+import { interfazUp, buscarRuta, vecinosOspf, evaluarAcl, modoOperativo, vlanPasa, concesiones, traduccionesNat, buscarRuta6, macInterfaz } from './ios.js';
+import { direccionEui64, iguales as iguales6 } from './ipv6.js';
 
 const puertosSwitch = () => [...Array.from({ length: 24 }, (_, i) => ({ nombre: 'FastEthernet0/' + (i + 1) })), { nombre: 'GigabitEthernet0/1' }, { nombre: 'GigabitEthernet0/2' }];
 const ifc = (s, n) => s.ifs[n] || {};
@@ -240,6 +241,31 @@ export const LABS = {
     ],
     pistas: ['Sin ruta por defecto no hay por dónde salir, y no se crea ninguna traducción.', 'inside = donde están las IP privadas; outside = hacia Internet.', 'La ACL de NAT dice QUÉ se traduce; no filtra tráfico.'],
     solucion: ['configure terminal', 'ip route 0.0.0.0 0.0.0.0 203.0.113.1', 'interface g0/0', 'ip nat inside', 'interface g0/1', 'ip nat outside', 'exit', 'access-list 1 permit 192.168.1.0 0.0.0.255', 'ip nat inside source list 1 interface g0/1 overload', 'ip nat inside source static 192.168.1.50 203.0.113.10', 'end', 'show ip nat translations'],
+  },
+
+  ipv6: {
+    nivel: 'avanzado', tipo: 'guiado',
+    titulo: 'IPv6: direcciones, EUI-64 y rutas estáticas',
+    intro: 'R1 tiene tres enlaces: la LAN de usuarios por Gi0/0 (prefijo 2001:DB8:ACAD:1::/64), el enlace con R2 por Gi0/1 (2001:DB8:ACAD:12::/64, R2 es ::2) y la LAN de impresoras por Gi0/2 (2001:DB8:ACAD:3::/64). Detrás de R2 está la LAN 2001:DB8:ACAD:2::/64. Las interfaces están apagadas y sin IPv6.',
+    topologia: 'LAN 1 ── Gi0/0 [R1] Gi0/1 ── [R2] ── LAN 2 (2001:DB8:ACAD:2::/64)\n                 Gi0/2 ── impresoras',
+    equipo: {
+      tipo: 'router', hostname: 'R1',
+      interfaces: [{ nombre: 'GigabitEthernet0/0' }, { nombre: 'GigabitEthernet0/1' }, { nombre: 'GigabitEthernet0/2' }],
+      hosts: [{ ip6: '2001:db8:acad:1::10' }, { ip6: '2001:db8:acad:12::2' }, { ip6: '2001:db8:acad:2::10', remoto: true, via6: '2001:db8:acad:12::2' }, { ip6: '2001:db8:acad:99::1', remoto: true, via6: '2001:db8:acad:12::2' }],
+      estadoInicial: s => { s.modo = 'priv'; },
+    },
+    tareas: [
+      { texto: 'Activa el enrutamiento IPv6 en el router.', ok: s => s.ipv6Routing },
+      { texto: 'Gi0/0: 2001:DB8:ACAD:1::1/64 y link-local FE80::1. Actívala.', ok: s => ifc(s, 'GigabitEthernet0/0').ipv6?.some(d => iguales6(d.dir, '2001:db8:acad:1::1') && d.len === 64) && iguales6(ifc(s, 'GigabitEthernet0/0').ll || '', 'fe80::1') && interfazUp(s, 'GigabitEthernet0/0') },
+      { texto: 'Gi0/1: 2001:DB8:ACAD:12::1/64 y actívala.', ok: s => ifc(s, 'GigabitEthernet0/1').ipv6?.some(d => iguales6(d.dir, '2001:db8:acad:12::1') && d.len === 64) && interfazUp(s, 'GigabitEthernet0/1') },
+      { texto: 'Gi0/2: dirección automática con EUI-64 en el prefijo 2001:DB8:ACAD:3::/64. Actívala.', ok: s => ifc(s, 'GigabitEthernet0/2').ipv6?.some(d => d.eui && iguales6(d.dir, direccionEui64('2001:db8:acad:3::', macInterfaz('GigabitEthernet0/2')))) && interfazUp(s, 'GigabitEthernet0/2') },
+      { texto: 'Ruta estática a 2001:DB8:ACAD:2::/64 por R2 (2001:DB8:ACAD:12::2).', ok: s => s.rutas6.some(r => r.len === 64 && iguales6(r.pref, '2001:db8:acad:2::') && r.nh && iguales6(r.nh, '2001:db8:acad:12::2')) },
+      { texto: 'Ruta por defecto IPv6 (::/0) también por R2.', ok: s => s.rutas6.some(r => r.len === 0 && r.nh && iguales6(r.nh, '2001:db8:acad:12::2')) },
+      { texto: 'Comprueba las direcciones con show ipv6 interface brief y la tabla con show ipv6 route.', ok: s => s.patrones.has('show ipv6 interface brief') && s.patrones.has('show ipv6 route') },
+      { texto: 'Haz ping con éxito a 2001:DB8:ACAD:2::10.', ok: s => s.historial.some(h => /^(ping|pin|pi)\s+(ipv6\s+)?2001:db8:acad:2::10$/i.test(h)) && buscarRuta6(s, '2001:db8:acad:2::10')?.cod === 'S' },
+    ],
+    pistas: ['ipv6 unicast-routing va en configuración global. Sin él, el router no reenvía IPv6.', 'La link-local se escribe sin /64: ipv6 address FE80::1 link-local.', 'EUI-64: ipv6 address 2001:DB8:ACAD:3::/64 eui-64. Mira la dirección resultante con show ipv6 interface brief.', 'Ruta: ipv6 route PREFIJO/LONGITUD SIGUIENTE-SALTO. La ruta por defecto es ::/0.'],
+    solucion: ['configure terminal', 'ipv6 unicast-routing', 'interface g0/0', 'ipv6 address 2001:db8:acad:1::1/64', 'ipv6 address fe80::1 link-local', 'no shutdown', 'interface g0/1', 'ipv6 address 2001:db8:acad:12::1/64', 'no shutdown', 'interface g0/2', 'ipv6 address 2001:db8:acad:3::/64 eui-64', 'no shutdown', 'exit', 'ipv6 route 2001:db8:acad:2::/64 2001:db8:acad:12::2', 'ipv6 route ::/0 2001:db8:acad:12::2', 'end', 'show ipv6 interface brief', 'show ipv6 route', 'ping 2001:db8:acad:2::10'],
   },
 
   // ================================================================ averías (empiezan rotos)

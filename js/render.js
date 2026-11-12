@@ -97,6 +97,7 @@ const LOADERS = {
   caso: () => import('./casos/caso-ui.js').then(m => m.montarCaso),
   turno: () => import('./casos/caso-ui.js').then(m => m.montarTurno),
   video: () => import('./video/reproductor.js').then(m => m.montarVideo),
+  sqli: () => import('./labs/inyeccion.js').then(m => m.montarInyeccion),
 };
 
 async function montarEmbed(holder, kind, id, ctx) {

@@ -809,6 +809,15 @@ a.node-in { transition: background-color 150ms ease; }
 .exam-q table { width: auto; min-width: 260px; margin: 10px 0; }
 @media print { .modo-examen body * { visibility: hidden !important; } .modo-examen body::after { content: 'Imprimir no está permitido durante un examen.'; visibility: visible; } }
 
+/* ---------------------------------------------------------------- laboratorios nuevos */
+.tabs.tabs-auto { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+.ipv6-pregunta { font-size: 1.35rem; font-weight: 800; overflow-wrap: anywhere; }
+.lab h4 { margin: 1.4rem 0 0.4rem; }
+.sqli-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; }
+.sqli-form:has(> input:only-of-type) { grid-template-columns: 1fr auto; }
+.sqli-sql { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 640px) { .sqli-form, .sqli-form:has(> input:only-of-type) { grid-template-columns: 1fr; } }
+
 /* ---------------------------------------------------------------- certificado */
 .cert-marco { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; overflow-x: auto; }
 .cert-svg { display: block; width: 100%; height: auto; min-width: 560px; box-shadow: var(--shadow); }

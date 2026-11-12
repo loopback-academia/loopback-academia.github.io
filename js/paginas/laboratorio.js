@@ -19,6 +19,7 @@ const MONTAR = {
   proyecto: () => import('../proyectos/proyecto-ui.js').then(m => m.montarProyecto),
   caso: () => import('../casos/caso-ui.js').then(m => m.montarCaso),
   turno: () => import('../casos/caso-ui.js').then(m => m.montarTurno),
+  sqli: () => import('../labs/inyeccion.js').then(m => m.montarInyeccion),
 };
 if (!info) {
   box.replaceChildren(el('h1', {}, 'Laboratorio no encontrado'), el('a', { class: 'btn btn-primary', href: 'practica.html' }, 'Ver los laboratorios'));

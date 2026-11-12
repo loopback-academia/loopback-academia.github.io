@@ -84,3 +84,83 @@ INSERT INTO incidencias (dispositivo_id,fecha,gravedad,descripcion,resuelta) VAL
  (12,'2026-10-06',4,'Puerto Fa0/2 en err-disabled por port security',0),
  (14,'2026-10-18',2,'Pérdida de un enlace hacia el spine',1),
  (15,'2026-11-02',2,'Enlace Eth1/49 caído',0);`;
+
+// ---------------------------------------------------------------- caso detective
+// Base de datos del caso «El apagón de la sucursal»: registros de cambios, sesiones SSH, VPN y tarjetas de acceso.
+export const ESQUEMA_DETECTIVE = `
+CREATE TABLE empleados (
+  id INTEGER PRIMARY KEY,
+  nombre TEXT NOT NULL,
+  departamento TEXT NOT NULL,
+  usuario TEXT NOT NULL UNIQUE
+);
+CREATE TABLE accesos_vpn (
+  id INTEGER PRIMARY KEY,
+  usuario TEXT NOT NULL,
+  fecha_hora TEXT NOT NULL,
+  ip_publica TEXT NOT NULL,
+  ip_asignada TEXT,
+  resultado TEXT NOT NULL CHECK (resultado IN ('ok','fallo'))
+);
+CREATE TABLE sesiones_ssh (
+  id INTEGER PRIMARY KEY,
+  usuario TEXT NOT NULL,
+  equipo TEXT NOT NULL,
+  ip_origen TEXT NOT NULL,
+  inicio TEXT NOT NULL,
+  fin TEXT
+);
+CREATE TABLE cambios (
+  id INTEGER PRIMARY KEY,
+  sesion_id INTEGER NOT NULL REFERENCES sesiones_ssh(id),
+  equipo TEXT NOT NULL,
+  fecha_hora TEXT NOT NULL,
+  comando TEXT NOT NULL
+);
+CREATE TABLE tarjetas (
+  id INTEGER PRIMARY KEY,
+  empleado_id INTEGER NOT NULL REFERENCES empleados(id),
+  puerta TEXT NOT NULL,
+  fecha_hora TEXT NOT NULL
+);`;
+
+export const DATOS_DETECTIVE = `
+INSERT INTO empleados VALUES
+ (1,'Paula Gómez','Redes','pgomez'),(2,'Luis Rosario','Redes','lrosario'),(3,'Marta Fernández','Soporte','mfernandez'),
+ (4,'Carlos Peña','Soporte','cpena'),(5,'Ana Batista','Sistemas','abatista'),(6,'Jorge Martínez','Redes','jmartinez'),
+ (7,'Rosa Valdez','Contabilidad','rvaldez'),(8,'Pedro Santos','Ventas','psantos');
+INSERT INTO accesos_vpn (usuario,fecha_hora,ip_publica,ip_asignada,resultado) VALUES
+ ('lrosario','2026-11-07 08:02:11','190.166.20.14','10.99.0.11','ok'),
+ ('jmartinez','2026-11-07 09:15:40','148.101.7.88','10.99.0.12','ok'),
+ ('pgomez','2026-11-07 10:01:05','190.166.33.201','10.99.0.13','ok'),
+ ('cpena','2026-11-07 14:22:19','152.166.4.9','10.99.0.14','ok'),
+ ('admin','2026-11-08 01:40:02','185.220.101.47',NULL,'fallo'),('admin','2026-11-08 01:40:09','185.220.101.47',NULL,'fallo'),
+ ('admin','2026-11-08 01:40:15','185.220.101.47',NULL,'fallo'),('admin','2026-11-08 01:40:22','185.220.101.47',NULL,'fallo'),
+ ('mfernandez','2026-11-08 01:48:31','185.220.101.47',NULL,'fallo'),('mfernandez','2026-11-08 01:48:37','185.220.101.47',NULL,'fallo'),
+ ('mfernandez','2026-11-08 01:48:44','185.220.101.47',NULL,'fallo'),
+ ('pgomez','2026-11-08 02:01:10','185.220.101.47',NULL,'fallo'),('pgomez','2026-11-08 02:01:16','185.220.101.47',NULL,'fallo'),
+ ('pgomez','2026-11-08 02:01:23','185.220.101.47',NULL,'fallo'),('pgomez','2026-11-08 02:01:29','185.220.101.47',NULL,'fallo'),
+ ('pgomez','2026-11-08 02:01:36','185.220.101.47',NULL,'fallo'),('pgomez','2026-11-08 02:01:42','185.220.101.47',NULL,'fallo'),
+ ('pgomez','2026-11-08 02:09:12','185.220.101.47','10.99.0.23','ok'),
+ ('lrosario','2026-11-08 07:55:03','190.166.20.14','10.99.0.11','ok'),
+ ('jmartinez','2026-11-08 08:20:47','148.101.7.88','10.99.0.12','ok');
+INSERT INTO sesiones_ssh VALUES
+ (4460,'admin-red','R-SDQ-01','10.99.0.11','2026-11-07 08:10:00','2026-11-07 08:40:12'),
+ (4461,'admin-red','SW-SDQ-01','10.99.0.12','2026-11-07 09:20:31','2026-11-07 09:31:02'),
+ (4462,'admin-red','SW-STI-01','10.99.0.13','2026-11-07 10:05:44','2026-11-07 10:20:10'),
+ (4463,'soporte','SW-SDQ-02','10.10.20.15','2026-11-07 15:02:00','2026-11-07 15:05:30'),
+ (4471,'admin-red','SW-STI-01','10.99.0.23','2026-11-08 02:12:58','2026-11-08 02:15:01'),
+ (4472,'admin-red','R-STI-01','10.99.0.11','2026-11-08 08:01:13','2026-11-08 09:12:44');
+INSERT INTO cambios (sesion_id,equipo,fecha_hora,comando) VALUES
+ (4460,'R-SDQ-01','2026-11-07 08:12:40','ntp server 10.10.99.5'),
+ (4461,'SW-SDQ-01','2026-11-07 09:25:02','interface gi1/0/7'),(4461,'SW-SDQ-01','2026-11-07 09:25:10','switchport access vlan 10'),
+ (4462,'SW-STI-01','2026-11-07 10:12:15','interface fa0/4'),(4462,'SW-STI-01','2026-11-07 10:12:30','description Telefono recepcion'),
+ (4471,'SW-STI-01','2026-11-08 02:13:40','configure terminal'),(4471,'SW-STI-01','2026-11-08 02:14:05','no vlan 20'),
+ (4471,'SW-STI-01','2026-11-08 02:14:31','no logging host 10.10.99.50'),(4471,'SW-STI-01','2026-11-08 02:14:50','end'),
+ (4472,'R-STI-01','2026-11-08 08:05:00','show logging'),(4472,'SW-STI-01','2026-11-08 08:40:21','vlan 20');
+INSERT INTO tarjetas (empleado_id,puerta,fecha_hora) VALUES
+ (1,'Entrada principal','2026-11-07 08:55:12'),(1,'Salida principal','2026-11-07 18:31:40'),
+ (2,'Entrada principal','2026-11-07 07:58:03'),(2,'Salida principal','2026-11-07 17:02:11'),
+ (6,'Entrada principal','2026-11-07 09:01:50'),(6,'Salida principal','2026-11-07 18:05:33'),
+ (3,'Entrada principal','2026-11-07 08:30:00'),(3,'Salida principal','2026-11-07 17:30:22'),
+ (2,'Entrada principal','2026-11-08 07:50:41'),(1,'Entrada principal','2026-11-08 09:10:07');`;

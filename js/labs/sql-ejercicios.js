@@ -59,4 +59,22 @@ export const EJERCICIOS = {
     { enunciado: 'Informe 4: hostname de los equipos sin ninguna incidencia registrada.', solucion: 'SELECT d.hostname FROM dispositivos d LEFT JOIN incidencias inc ON inc.dispositivo_id = d.id WHERE inc.id IS NULL;' },
     { enunciado: 'Informe 5: la sede con más incidencias graves (gravedad 1 o 2) sin resolver: nombre de la sede y número de incidencias.', solucion: 'SELECT s.nombre, COUNT(*) AS n FROM incidencias inc JOIN dispositivos d ON d.id = inc.dispositivo_id JOIN sitios s ON s.id = d.sitio_id WHERE inc.gravedad <= 2 AND inc.resuelta = 0 GROUP BY s.nombre ORDER BY n DESC LIMIT 1;' },
   ],
+  detective: [
+    { enunciado: 'Empieza por el equipo afectado. Muestra fecha_hora, comando y sesion_id de los cambios hechos en SW-STI-01 el 2026-11-08, por orden de hora.', solucion: "SELECT fecha_hora, comando, sesion_id FROM cambios WHERE equipo = 'SW-STI-01' AND fecha_hora LIKE '2026-11-08%' ORDER BY fecha_hora;", ordenado: true, pista: "Las fechas son texto: fecha_hora LIKE '2026-11-08%' coge todo ese día.", descubre: 'A las 02:14 alguien ejecutó «no vlan 20» desde la sesión 4471. A las 08:40 la recrearon (vlan 20).' },
+    { enunciado: '¿Quién abrió la sesión 4471? Muestra usuario, ip_origen e inicio de sesiones_ssh.', solucion: 'SELECT usuario, ip_origen, inicio FROM sesiones_ssh WHERE id = 4471;', descubre: 'La sesión usa la cuenta compartida admin-red: no dice quién fue. La IP 10.99.0.23 pertenece al rango de la VPN.' },
+    { enunciado: 'Busca en accesos_vpn la conexión correcta (resultado ok) del 2026-11-08 que recibió la IP 10.99.0.23 (ip_asignada): usuario, fecha_hora e ip_publica.', solucion: "SELECT usuario, fecha_hora, ip_publica FROM accesos_vpn WHERE ip_asignada = '10.99.0.23' AND resultado = 'ok' AND fecha_hora LIKE '2026-11-08%';", descubre: 'La VPN la abrió la cuenta pgomez a las 02:09 desde 185.220.101.47, una IP que nadie de la empresa había usado antes.' },
+    { enunciado: 'Cuenta los intentos fallidos de VPN desde la IP pública 185.220.101.47, agrupados por usuario (usuario y total).', solucion: "SELECT usuario, COUNT(*) FROM accesos_vpn WHERE ip_publica = '185.220.101.47' AND resultado = 'fallo' GROUP BY usuario;", pista: 'WHERE para filtrar la IP y el resultado; GROUP BY usuario para contar por cuenta.', descubre: 'Desde esa IP probaron contraseñas de tres cuentas (admin, mfernandez y pgomez) en pocos minutos: es un ataque de adivinación de contraseñas.' },
+    { enunciado: '¿Estaba Paula en la oficina? Muestra su nombre, la puerta y la fecha_hora de sus fichajes con tarjeta, por orden de hora. Une tarjetas con empleados.', solucion: "SELECT e.nombre, t.puerta, t.fecha_hora FROM tarjetas t JOIN empleados e ON e.id = t.empleado_id WHERE e.usuario = 'pgomez' ORDER BY t.fecha_hora;", ordenado: true, descubre: 'Paula salió el viernes a las 18:31 y no volvió a entrar hasta el sábado a las 9:10. A las 2:09 no estaba en la oficina.' },
+    { enunciado: 'Última prueba: lista equipo, fecha_hora y comando de todo lo que se hizo desde sesiones SSH con ip_origen 10.99.0.23, por orden de hora (une cambios con sesiones_ssh).', solucion: "SELECT c.equipo, c.fecha_hora, c.comando FROM cambios c JOIN sesiones_ssh s ON s.id = c.sesion_id WHERE s.ip_origen = '10.99.0.23' ORDER BY c.fecha_hora;", ordenado: true, descubre: 'Además de borrar la VLAN, desactivó el envío de registros al servidor (no logging host) para tapar sus pasos.' },
+  ],
+};
+
+// Conjuntos que usan otra base de datos o cuentan una historia.
+export const CONJUNTOS = {
+  detective: {
+    base: 'detective',
+    titulo: 'Caso: el apagón de la sucursal',
+    intro: 'El sábado 8 de noviembre de 2026, de madrugada, la sucursal de Santiago se quedó sin red: los teléfonos y los PC de la VLAN 20 dejaron de funcionar. Tienes los registros de la empresa. Resuelve cada consulta y sigue las pistas hasta saber qué pasó.',
+    final: 'Caso resuelto. La cuenta compartida admin-red no dice quién fue, pero los registros sí: alguien desde una IP extranjera probó contraseñas de varias cuentas VPN, entró con la de Paula Gómez (que ese día no llegó a la oficina hasta las 9:10), borró la VLAN 20 y desactivó el envío de registros para no dejar rastro. Medidas: cambiar la contraseña de pgomez, activar MFA en la VPN, bloquear tras varios intentos fallidos y eliminar la cuenta compartida admin-red para que cada técnico use la suya.',
+  },
 };
