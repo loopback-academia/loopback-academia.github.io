@@ -9,7 +9,7 @@ const curso = JSON.parse(readFileSync(new URL('../data/curso.json', import.meta.
 curso.lecciones = curso.modulos.flatMap(m => m.lecciones.map(l => ({ ...l, modulo: m })));
 
 test('hay un certificado por área, firmado por Gabriel PD', () => {
-  assert.deepEqual(Object.keys(TITULO_AREA), ['redes', 'bd', 'prog', 'ti', 'en', 'sec']);
+  assert.deepEqual(Object.keys(TITULO_AREA), ['base', 'redes', 'bd', 'prog', 'ti', 'en', 'sec']);
   assert.equal(FIRMA, 'Gabriel PD');
 });
 

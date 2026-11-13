@@ -10,6 +10,10 @@ descripcion: El trabajo de soporte desde cero: método de diagnóstico, computad
 === s1-ruta | Empleo en TI: cómo usar esta ruta | 10 | 1
 Esta área te prepara para **puestos de entrada en tecnología** en empresas grandes: cadenas de supermercados y tiendas, centros de distribución, bancos, aseguradoras, telecomunicaciones o cualquier empresa con oficinas y sucursales. Aquí no se estudia teoría por estudiarla: cada módulo trabaja lo que se hace en un turno real.
 
+::: nota
+¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico del ordenador, internet y las profesiones de la tecnología.
+:::
+
 ## Las rutas
 
 Elige una ruta en la página [Rutas de empleo](./rutas.html). Cada una indica los módulos en orden, las prácticas que cuentan y un **proyecto final para tu portafolio**:

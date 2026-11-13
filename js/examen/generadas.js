@@ -7,6 +7,7 @@
 // y comprobar(pregunta, texto) → true/false.
 
 import * as Topo from '../labs/topologia.js';
+import { preguntasUnidades } from '../inicio/inicio.js';
 
 const entero = (rnd, a, b) => a + Math.floor(rnd() * (b - a + 1));
 const elegir = (rnd, xs) => xs[Math.floor(rnd() * xs.length)];
@@ -167,6 +168,12 @@ const GEN = {
     return { area: 'sec', modulo: 'c3', q: `En este fragmento de auth.log, ¿cuántos intentos fallidos hay desde ${ip}? (solo el número)`, contexto: { codigo }, respuesta: String(n),
       explain: `Hay que contar solo las líneas «Failed password» cuyo origen es ${ip}: ${n}. Es lo que haría grep "Failed" auth.log | grep ${ip} | wc -l.` };
   },
+  // ------------------------------------------------------------- empieza aquí (bits, bytes y velocidad)
+  ...Object.fromEntries(['bytes', 'bits', 'velocidad', 'tiempo'].map(t => ['base-' + t, rnd => {
+    let p;
+    do { p = preguntasUnidades(6, rnd).find(x => x.tipo === t); } while (!p);
+    return { area: 'base', modulo: 'i2', q: p.q, respuesta: p.respuesta, explain: p.e };
+  }])),
 };
 
 export const TIPOS_POR_AREA = {
@@ -176,6 +183,7 @@ export const TIPOS_POR_AREA = {
   ti: ['prioridad'],
   en: ['leer-aviso'],
   sec: ['sec-bits', 'sec-cesar', 'sec-log'],
+  base: ['base-bytes', 'base-bits', 'base-velocidad', 'base-tiempo'],
 };
 
 // n preguntas de razonamiento para un área, de tipos variados.

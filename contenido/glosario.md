@@ -135,3 +135,18 @@ Las otras formas son plurales, siglas o variantes que también se marcan en las 
 | Ingeniería social | | sec | Engañar a las personas para que entreguen información o hagan algo que beneficia al atacante. |
 | Base64 | | sec | Codificación que convierte datos en texto. No es cifrado: cualquiera la revierte. |
 | Día cero | zero-day, vulnerabilidad de día cero | sec | Vulnerabilidad que se explota antes de que exista un parche. |
+| Hardware | | base | Las piezas físicas de un equipo, las que se pueden tocar: procesador, memoria, disco, pantalla, teclado… |
+| Software | | base | Los programas: instrucciones que le dicen al hardware qué hacer. El sistema operativo y las aplicaciones son software. |
+| Procesador | CPU, procesadores | base | La pieza que ejecuta las instrucciones de los programas: el «cerebro» del ordenador. |
+| Memoria RAM | RAM | base | Memoria rápida donde está lo que se usa en este momento. Se borra al apagar el equipo. |
+| SSD | disco SSD, disco duro, HDD | base | El disco guarda los archivos aunque se apague el equipo. Un SSD es mucho más rápido que un disco duro tradicional (HDD). |
+| Sistema operativo | sistemas operativos | base | El programa principal que hace funcionar el equipo y organiza los demás: Windows, macOS, Linux, Android o iOS. |
+| Navegador | navegadores, navegador web | base | Programa para visitar páginas web, como Chrome, Edge, Firefox o Safari. |
+| Extensión de archivo | extensiones de archivo | base | Lo que va después del último punto del nombre (.pdf, .docx, .jpg) e indica qué tipo de archivo es. |
+| Bit | bits | base | La unidad más pequeña de información: un 0 o un 1. |
+| Byte | bytes | base | Grupo de 8 bits. Los tamaños de archivo se miden en bytes: KB, MB, GB y TB. |
+| Mbps | megabits por segundo | base | Unidad de velocidad de una conexión. Para pasar a megabytes por segundo se divide entre 8. |
+| Almacenamiento en la nube | la nube, en la nube | base | Guardar archivos en servidores de internet (Google Drive, OneDrive, Dropbox) para tenerlos en cualquier dispositivo. |
+| Servidor | servidores | base | Ordenador que da un servicio a otros, como una página web, el correo o los archivos compartidos. |
+| URL | dirección web, direcciones web | base | La dirección de una página web, por ejemplo https://www.ejemplo.com/contacto. |
+| Gestor de contraseñas | gestores de contraseñas | base | Programa que guarda tus contraseñas cifradas y las rellena por ti; solo hay que recordar una contraseña maestra. |

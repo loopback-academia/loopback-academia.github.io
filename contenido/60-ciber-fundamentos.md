@@ -10,6 +10,10 @@ descripcion: Qué protege la ciberseguridad y de quién, contraseñas y verifica
 === c1-que-es | Qué es la ciberseguridad | 14 | 1
 La ciberseguridad protege la **información** y los **sistemas** que la manejan frente a accesos, cambios o caídas no autorizados. No es solo cosa de expertos: la mayoría de los incidentes empieza por un descuido de alguien que no trabaja en seguridad.
 
+::: nota
+¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico del ordenador, internet y las profesiones de la tecnología.
+:::
+
 ## La tríada CIA
 
 Todo lo que se protege se resume en tres propiedades:

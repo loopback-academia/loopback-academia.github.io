@@ -1046,9 +1046,7 @@ a.node-in { transition: background-color 150ms ease; }
 }
 /* ---------------------------------------------------------------- seis y siete áreas */
 .area-tabs.seis { grid-template-columns: repeat(6, 1fr); max-width: 1000px; }
-.area-tabs.siete { grid-template-columns: repeat(7, 1fr); max-width: 1080px; }
-@media (max-width: 900px) { .area-tabs.seis, .area-tabs.siete { grid-template-columns: repeat(3, 1fr); } .area-tabs.seis button, .area-tabs.siete button { font-size: .78rem; } }
-@media (min-width: 560px) and (max-width: 900px) { .area-tabs.siete { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 900px) { .area-tabs.seis { grid-template-columns: repeat(3, 1fr); } .area-tabs.seis button { font-size: .78rem; } }
 
 /* ---------------------------------------------------------------- ciberseguridad */
 .sec-preg { margin: 0 0 14px; }
@@ -1101,6 +1099,26 @@ a.node-in { transition: background-color 150ms ease; }
 .sec-ir-mal::marker { color: var(--danger); }
 .sec-ir-paso { padding: 14px; }
 @media (max-width: 560px) { .sec-ops.dos { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------------------------------------------------------------- siete y ocho áreas */
+.area-tabs.siete { grid-template-columns: repeat(7, 1fr); max-width: 1120px; }
+.area-tabs.ocho { grid-template-columns: repeat(8, 1fr); max-width: 1180px; }
+@media (max-width: 1000px) { .area-tabs.siete, .area-tabs.ocho { grid-template-columns: repeat(4, 1fr); } .area-tabs.siete button, .area-tabs.ocho button { font-size: .78rem; } }
+@media (max-width: 520px) { .area-tabs.siete, .area-tabs.ocho { grid-template-columns: repeat(2, 1fr); } }
+
+/* ---------------------------------------------------------------- empieza aquí */
+.ini-caja { outline: none; }
+.ini-preg { font-size: 1.15rem; font-weight: 700; margin: 4px 0 10px; overflow-wrap: anywhere; }
+.ini-preg.mono { font-family: var(--mono); font-size: 1.3rem; }
+.ini-ops { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 8px 0; }
+.ini-ops.una { grid-template-columns: minmax(0, 1fr); }
+.ini-op { text-align: left; white-space: normal; height: auto; line-height: 1.4; padding: 10px 14px; }
+.ini-op.ok { border-color: var(--ok); background: var(--ok-soft); }
+.ini-op.bad { border-color: var(--warn); background: var(--warn-soft); }
+.ini-num { max-width: 200px; font-family: var(--mono); font-size: 1.1rem; }
+.ini-ranking { list-style: none; padding: 0; margin: 12px 0; display: grid; gap: 8px; }
+.ini-ranking li { display: grid; grid-template-columns: minmax(0, 220px) minmax(80px, 1fr) auto; gap: 10px; align-items: center; }
+@media (max-width: 560px) { .ini-ops { grid-template-columns: minmax(0, 1fr); } .ini-ranking li { grid-template-columns: minmax(0, 1fr) auto; } .ini-ranking .meter { grid-column: 1 / -1; grid-row: 2; } }
 
 /* ---------------------------------------------------------------- panel del profesor */
 .prof-seccion { margin: 0 0 2.4rem; }

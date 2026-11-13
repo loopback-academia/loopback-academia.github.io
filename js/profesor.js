@@ -1,7 +1,7 @@
 // Panel del profesor (sin DOM): convierte las filas de progreso_de_clase() en un resumen por alumno y área, y lo exporta a CSV.
 import { construirEscalera } from './escalera.js';
 
-export const AREAS = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', sec: 'Ciberseguridad', ti: 'Empleo TI', en: 'Inglés técnico' };
+export const AREAS = { base: 'Empieza aquí', redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', sec: 'Ciberseguridad', ti: 'Empleo TI', en: 'Inglés técnico' };
 const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0);
 
 function conLecciones(curso) {

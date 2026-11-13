@@ -10,7 +10,7 @@ const lecciones = curso.modulos.flatMap(m => m.lecciones);
 test('ids de lección únicos y con formato seguro', () => {
   const ids = lecciones.map(l => l.id);
   assert.equal(new Set(ids).size, ids.length);
-  ids.forEach(id => assert.match(id, /^[mbpsc]\d+-[a-z0-9-]+$/));
+  ids.forEach(id => assert.match(id, /^[mbpsci]\d+-[a-z0-9-]+$/));
 });
 
 test('los seis dominios del CCNA suman el 100 %', () => {
@@ -54,7 +54,7 @@ test('las tres áreas (Redes, Bases de datos y Programación) tienen contenido d
     for (const n of [1, 2, 3]) assert.ok(ls.some(l => l.nivel === n), `${area} sin nivel ${n}`);
     assert.ok(examen.filter(q => q.area === area).length >= 60, area + ': pocas preguntas para el simulacro');
   }
-  assert.ok(curso.modulos.every(m => ['redes', 'bd', 'prog', 'ti', 'en', 'sec'].includes(m.area)));
+  assert.ok(curso.modulos.every(m => ['base', 'redes', 'bd', 'prog', 'ti', 'en', 'sec'].includes(m.area)));
 });
 
 test('el área Empleo TI tiene teoría, ejercicios guiados, retos con solución, evaluación práctica y proyecto', () => {

@@ -10,6 +10,10 @@ descripcion: Qué es una base de datos, tipos (relacionales y NoSQL), el modelo 
 === b1-intro | ¿Qué es una base de datos? | 12 | 1
 Una **base de datos** guarda información de forma organizada para consultarla y modificarla con eficacia. En redes las encontrarás en todas partes: el inventario de equipos, las direcciones IP asignadas (IPAM), los usuarios de RADIUS, los registros de un SIEM, la configuración de Catalyst Center.
 
+::: nota
+¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico del ordenador, internet y las profesiones de la tecnología.
+:::
+
 ## El modelo relacional
 
 La información se organiza en **tablas** (relaciones):

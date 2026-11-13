@@ -9,6 +9,10 @@ descripcion: Cómo funciona el curso, qué es el CCNA y cómo montar tu laborato
 === m0-curso | Cómo aprovechar este curso | 8 | 1
 Bienvenido a **Loopback**. Este curso te lleva desde cero hasta el nivel que pide el examen **Cisco CCNA 200-301**, la certificación de redes más solicitada en las ofertas de empleo de Latinoamérica y España. Además de esta área de **Redes**, la plataforma tiene otras dos completas: **Bases de datos** y **Programación**, cada una con su ruta por niveles. Las tres se complementan: un buen profesional de redes hoy consulta bases de datos y automatiza con Python.
 
+::: nota
+¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico del ordenador, internet y las profesiones de la tecnología.
+:::
+
 ## Cómo está organizado
 
 El temario sigue los seis dominios oficiales del examen, con el mismo peso que tienen en él:

@@ -9,7 +9,7 @@ import { estadoArea } from '../escalera-alumno.js';
 iniciarPagina();
 const [curso] = await Promise.all([cargarCurso(), cargar()]);
 let nivel = local.get('aula:practica:nivel', '');
-const pedida = (location.hash.match(/^#area-(redes|bd|prog|ti|en|sec)$/) || [])[1];
+const pedida = (location.hash.match(/^#area-(base|redes|bd|prog|ti|en|sec)$/) || [])[1];
 let area = pedida || local.get('aula:practica:area', 'redes');
 
 function tarjeta(l) {

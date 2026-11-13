@@ -10,6 +10,10 @@ descripcion: Programar desde cero: qué es un algoritmo, variables y tipos de da
 === p1-que-es | Qué es programar | 12 | 1
 **Programar** es escribir instrucciones precisas para que un ordenador resuelva un problema. El ordenador no entiende "más o menos": hace **exactamente** lo que le dices, ni más ni menos.
 
+::: nota
+¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico del ordenador, internet y las profesiones de la tecnología.
+:::
+
 ## Algoritmo y programa
 
 - Un **algoritmo** es la receta: una secuencia finita de pasos claros para resolver un problema. Existe antes de cualquier lenguaje.

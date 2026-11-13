@@ -10,6 +10,10 @@ descripcion: El inglés que se necesita para trabajar en tecnología: vocabulari
 === s11-por-que | Por qué el inglés abre puertas en TI | 10 | 1
 En tecnología casi todo está en inglés: los mensajes de error, la documentación de los fabricantes, los comandos, los foros donde se buscan soluciones y muchas certificaciones. Además, muchas empresas atienden a clientes de otros países (centros de soporte, *call centers* técnicos, empresas extranjeras) y pagan mejor a quien se comunica en inglés.
 
+::: nota
+¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico del ordenador, internet y las profesiones de la tecnología.
+:::
+
 ## Qué nivel hace falta
 
 No necesitas hablar como un nativo. Para empezar en soporte basta con:

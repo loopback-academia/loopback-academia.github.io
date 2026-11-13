@@ -34,6 +34,7 @@ const MONTAR = {
   fw: () => import('../sec/seguridad-ui.js').then(m => m.montarFirewall),
   ir: () => import('../sec/seguridad-ui.js').then(m => m.montarIncidente),
   paso: () => import('../codigo/paso-ui.js').then(m => m.montarPaso),
+  inicio: () => import('../inicio/inicio-ui.js').then(m => m.montarInicio),
   er: () => import('../labs/er-ui.js').then(m => m.montarEr),
   fn: () => import('../labs/er-ui.js').then(m => m.montarFormas),
   conc: () => import('../labs/concurrencia-ui.js').then(m => m.montarConc),

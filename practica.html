@@ -46,7 +46,8 @@
 <section class="page"><div class="container">
   <div class="page-head"><h1>Práctica</h1><p>Laboratorios con corrección automática, ordenados por nivel. Cada práctica se abre cuando llegas a su lección en la escalera (🔒 = todavía cerrada); las que completes quedan marcadas en tu progreso.</p></div>
   <div class="cmd-tools">
-    <div class="tabs area-tabs seis" role="tablist" aria-label="Área" id="filtroArea">
+    <div class="tabs area-tabs siete" role="tablist" aria-label="Área" id="filtroArea">
+      <button type="button" role="tab" data-area="base" aria-selected="false">🚀 Empieza aquí</button>
       <button type="button" role="tab" data-area="redes" aria-selected="true">🌐 Redes</button>
       <button type="button" role="tab" data-area="bd" aria-selected="false">🗄️ Bases de datos</button>
       <button type="button" role="tab" data-area="prog" aria-selected="false">💻 Programación</button>
@@ -61,6 +62,12 @@
       <button type="button" data-nivel="avanzado" aria-pressed="false">Nivel 3</button>
     </div>
   </div>
+
+  <section class="area-section" id="area-base" data-area="base" hidden>
+    <p class="alert alert-info mb"><span>Prácticas para quien empieza de cero. No necesitas saber nada antes: cada pregunta trae su explicación y puedes repetir todas las veces que quieras.</span></p>
+    <h2>Primeros pasos</h2>
+    <div class="grid-3" data-grupo="inicio"></div>
+  </section>
 
   <section class="area-section" id="area-redes" data-area="redes">
     <p class="alert alert-info mb"><span>¿No recuerdas un comando? Consulta la <a href="comandos.html">guía de comandos Cisco IOS</a>: qué hace cada uno, en qué modo va y un ejemplo.</span></p>

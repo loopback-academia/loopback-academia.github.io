@@ -16,6 +16,7 @@ const HABILIDAD_GRUPO = {
   vocab: 'Inglés técnico: vocabulario de TI',
   lectura: 'Inglés técnico: lectura de errores y documentación',
   frases: 'Inglés técnico: tickets, llamadas y entrevistas',
+  inicio: 'Uso del ordenador: atajos de teclado, archivos y unidades',
   paso: 'Lectura y seguimiento de código paso a paso (variables, pila de llamadas)',
   topologias: 'Diseño y diagnóstico de topologías de red (VLAN, troncales, enrutamiento y DHCP)',
   contrasenas: 'Contraseñas seguras, hashes y sal',
@@ -31,7 +32,7 @@ const PREFIJO = { consola: 'Caso de soporte en Windows: ', cli: 'Cisco IOS: ', a
 export function datosCv({ curso, catalogo, leccionHecha, labHecho, finalAprobado }) {
   const modulos = curso.modulos.filter(m => m.lecciones.length && !/bienvenida|carrera/i.test(m.titulo) && m.lecciones.every(l => leccionHecha(l.id)))
     .map(m => ({ area: m.area, titulo: m.titulo }));
-  const practicas = catalogo.filter(l => !l.libre && !l.clave.startsWith('entrevista:') && labHecho(l.progreso)).map(l => ({ area: l.area, titulo: (PREFIJO[l.grupo] || '') + l.titulo, grupo: l.grupo }));
+  const practicas = catalogo.filter(l => !l.libre && !l.clave.startsWith('entrevista:') && l.clave !== 'inicio:orientacion' && labHecho(l.progreso)).map(l => ({ area: l.area, titulo: (PREFIJO[l.grupo] || '') + l.titulo, grupo: l.grupo }));
   const certificados = Object.keys(TITULO_AREA).filter(a => finalAprobado(a)).map(a => ({ area: a, titulo: TITULO_AREA[a] }));
   const habilidades = [...new Set(practicas.map(p => HABILIDAD_GRUPO[p.grupo]).filter(Boolean))];
   const lecciones = curso.modulos.reduce((n, m) => n + m.lecciones.filter(l => leccionHecha(l.id)).length, 0);
@@ -41,7 +42,7 @@ export function datosCv({ curso, catalogo, leccionHecha, labHecho, finalAprobado
 // Resumen profesional sugerido a partir de lo completado (el alumno lo edita).
 export function resumenSugerido(d, titular = '') {
   if (!d.lecciones) return '';
-  const NOMBRE = { redes: 'redes', bd: 'bases de datos y SQL', prog: 'programación', ti: 'soporte técnico', en: 'inglés técnico', sec: 'ciberseguridad' };
+  const NOMBRE = { base: 'fundamentos de informática', redes: 'redes', bd: 'bases de datos y SQL', prog: 'programación', ti: 'soporte técnico', en: 'inglés técnico', sec: 'ciberseguridad' };
   const areas = [...new Set([...d.modulos.map(m => m.area), ...d.practicas.map(p => p.area)])].map(a => NOMBRE[a]).filter(Boolean);
   const lista = areas.length > 1 ? areas.slice(0, -1).join(', ') + ' y ' + areas[areas.length - 1] : areas[0];
   const partes = [`${titular || 'Profesional de TI en formación'} con formación práctica en ${lista || 'tecnología'}.`];
