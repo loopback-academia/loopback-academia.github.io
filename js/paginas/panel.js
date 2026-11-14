@@ -46,8 +46,8 @@ function pintarEscalera() {
     const estado = e.completo ? 'completo' : actual ? 'actual' : e.abierto ? 'abierto' : 'cerrado';
     const nodos = e.pasos.map((p, i) => {
       const l = p.leccion;
-      const ico = p.estado === 'hecha' ? '✓' : p.estado === 'actual' ? '▶' : '🔒';
-      const contenido = [el('span', { class: 'node-dot', 'aria-hidden': 'true' }, ico), el('span', { class: 'node-txt' }, el('strong', {}, l.titulo), el('span', { class: 'small muted' }, p.estado === 'actual' ? 'Tu siguiente paso · ' + l.minutos + ' min' : p.estado === 'hecha' ? 'Completada' : 'Cerrada'))];
+      const ico = p.estado === 'hecha' ? '✓' : p.estado === 'convalidada' ? '✓' : p.estado === 'actual' ? '▶' : '🔒';
+      const contenido = [el('span', { class: 'node-dot', 'aria-hidden': 'true' }, ico), el('span', { class: 'node-txt' }, el('strong', {}, l.titulo), el('span', { class: 'small muted' }, p.estado === 'actual' ? 'Tu siguiente paso · ' + l.minutos + ' min' : p.estado === 'hecha' ? 'Completada' : p.estado === 'convalidada' ? 'Convalidada por examen · ábrela si quieres repasar' : 'Cerrada'))];
       const li = el('li', { class: 'node ' + p.estado },
         p.estado === 'bloqueada' ? el('span', { class: 'node-in' }, contenido) : el('a', { class: 'node-in', href: 'leccion.html?id=' + l.id }, contenido));
       li.style.setProperty('--x', Math.round(Math.sin(i * 0.9) * 36) + 'px'); // CSSOM: permitido por la CSP (style-src 'self')
@@ -85,7 +85,8 @@ function pintarEscalera() {
     el('span', { class: 'node-dot', 'aria-hidden': 'true' }, est.final === 'aprobado' ? '🏆' : est.final === 'disponible' ? '🎓' : '🔒'),
     el('div', {}, el('strong', {}, 'Examen final del área'), el('p', { class: 'small muted' }, est.final === 'aprobado' ? `Aprobado con ${pct(qf.puntos, qf.total)} %. ¡Escalera completada!` : est.final === 'disponible' ? 'Último paso: demuestra todo lo aprendido (mínimo 80 %).' : 'Se abre al aprobar el examen de todos los escalones.')),
     est.final === 'bloqueado' ? null : est.final === 'aprobado' ? el('a', { class: 'btn btn-sm btn-primary', href: 'certificado.html?area=' + area }, '🎓 Mi certificado') : el('a', { class: 'btn btn-sm btn-primary', href: urlFinal(area) }, 'Hacer el examen final')));
-  return el('div', {}, el('p', { class: 'small muted ladder-help' }, 'Se avanza paso a paso: cada lección se abre al aprobar la anterior con un 80 %, y cada escalón al aprobar el examen del anterior. Lo completado queda abierto para repasar.'),
+  return el('div', {}, el('p', { class: 'small muted ladder-help' }, 'Se avanza paso a paso: cada lección se abre al aprobar la anterior con un 80 %, y cada escalón al aprobar el examen del anterior. Lo completado queda abierto para repasar.',
+    area !== 'base' ? [' ¿Ya dominas parte de esta área? ', el('a', { href: 'nivel.html?area=' + area }, 'Haz la prueba de nivel'), ' y empieza en tu escalón.'] : null),
     el('ol', { class: 'ladder' }, items, final));
 }
 function bloque(clave, cabecera, desc, lecciones, extra, abrirPorDefecto) {
@@ -204,7 +205,7 @@ if (usuario) {
 await cargar();
 pintar();
 alCambiar(pintar);
-if (curso) montarReto($('#retoDia'), { curso, leccionHecha });
+if (curso) montarReto($('#retoDia'), { curso, leccionHecha, area });
 
 // Guía de primeros pasos: una lista que se marca sola con lo que el alumno va haciendo. Sin tutoriales: cada paso
 // lleva directamente a donde se hace. Desaparece al completarla o si el alumno la oculta.
@@ -226,7 +227,7 @@ function pintarGuia() {
   const eligio = !!local.get('aula:guia:area', '') || hay('leccion:');
   const primera = ruta()[0];
   const pasos = [
-    { ok: eligio, titulo: 'Elige qué quieres aprender', texto: 'Puedes cambiar de área cuando quieras con las pestañas de arriba.' },
+    { ok: eligio, titulo: 'Elige qué quieres aprender', texto: '¿Ya sabes de alguna área? Haz el examen de entrada (enlace en la parte de arriba de esta página) y empieza en tu nivel. Puedes cambiar de área cuando quieras con las pestañas.' },
     { ok: hay('leccion:'), titulo: 'Haz tu primera lección', texto: 'Lecciones cortas, con ejemplos, animaciones y videos.', accion: primera && ['Empezar la primera lección', 'leccion.html?id=' + primera.id] },
     { ok: hay('quiz:'), titulo: 'Responde un cuestionario', texto: 'Está al final de cada lección. Con un 80 % o más la lección se completa y se abre la siguiente.' },
     { ok: CATALOGO.some(l => labHecho(l.progreso)), titulo: 'Practica en un laboratorio', texto: 'Ejercicios que se corrigen solos: consola, SQL, código o casos de soporte.', accion: ['Ver las prácticas', 'practica.html#area-' + area] },

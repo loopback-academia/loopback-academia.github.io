@@ -1,5 +1,5 @@
 // Prácticas del área «Empieza aquí» ([[inicio:<id>]]): una pregunta cada vez, con explicación al responder.
-import { el, toast } from '../core.js';
+import { el, toast, local } from '../core.js';
 import { guardarLab, labHecho, cargar } from '../progreso.js';
 import * as I from './inicio.js';
 
@@ -104,6 +104,7 @@ function orientacion(caja, marcador) {
     const max = Math.max(1, r[0][1]);
     const [prim] = r[0];
     if (!labHecho('inicio-orientacion')) guardarLab('inicio-orientacion');
+    local.set('aula:orientacion', prim);
     marcador.textContent = 'Resultado';
     caja.replaceChildren(
       el('div', { class: 'alert alert-ok' }, el('p', {}, el('strong', {}, `Te recomendamos empezar por: ${I.AREAS_ORIENTACION[prim][0]}. `), I.AREAS_ORIENTACION[prim][1])),

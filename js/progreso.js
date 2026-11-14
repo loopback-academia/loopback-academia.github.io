@@ -168,7 +168,7 @@ const DIA = 86400000;
 export function registrarRespuestas(respuestas, origen = 'quiz', ahora = Date.now()) {
   let cambios = 0;
   for (const { id, ok } of respuestas) {
-    if (!/^[a-z]\d-[a-z0-9-]+#\d+$/.test(id || '')) continue;
+    if (!/^[a-z]\d+-[a-z0-9-]+#\d+$/.test(id || '')) continue;
     const k = 'repaso:' + id;
     const prev = estado.items[k];
     if (ok && !prev) continue;                       // acertada y nunca fallada: nada que repasar

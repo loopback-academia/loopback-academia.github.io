@@ -70,7 +70,7 @@ function mobileNav(active) {
 }
 const footer = `<footer class="site-footer"><div class="container">
   <span>Loopback · Redes, bases de datos, programación, ciberseguridad, empleo en TI e inglés técnico desde cero. El temario de redes sigue el Cisco CCNA 200-301; no es un curso oficial de Cisco.</span>
-  <span><a href="glosario.html">Glosario</a> · <a href="cv.html">Mi CV</a> · <a href="profesor.html">Clases</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a></span>
+  <span><a href="nivel.html">Examen de entrada</a> · <a href="glosario.html">Glosario</a> · <a href="cv.html">Mi CV</a> · <a href="profesor.html">Clases</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a></span>
 </div></footer>`;
 
 function page(meta, body) {
@@ -93,6 +93,14 @@ ${meta.private ? '<meta name="robots" content="noindex">' : `<link rel="canonica
 <meta property="og:title" content="${meta.title}">
 <meta property="og:description" content="${meta.description}">
 <meta property="og:type" content="website">
+<meta property="og:url" content="${url}">
+<meta property="og:site_name" content="Loopback">
+<meta property="og:locale" content="es_ES">
+<meta property="og:image" content="${config.url}/img/compartir.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Loopback: aprende tecnología desde cero hasta tu primer empleo">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0b7285">
 <link rel="icon" href="img/icono.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">

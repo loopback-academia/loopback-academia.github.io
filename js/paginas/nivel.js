@@ -1,0 +1,144 @@
+// Examen de entrada: pregunta qué sabes y, si ya tienes conocimientos, hace una prueba por bloques (uno por escalón) que
+// convalida los escalones que dominas y te deja empezar en tu nivel. Todo se guarda como el progreso normal del curso.
+import { iniciarPagina, el, $, local, toast } from '../core.js';
+import { cargarCurso } from '../curso.js';
+import { cargar, guardarQuiz, notaQuiz, registrarRespuestas } from '../progreso.js';
+import { prepararPregunta } from '../quiz.js';
+import { escaleraDe } from '../escalera-alumno.js';
+import { bloquesNivel, superaBloque, puntoDePartida, PERFILES, POR_BLOQUE, MINIMO_BLOQUE } from '../nivel.js';
+import { AREAS } from '../labs/catalogo.js';
+import { textoInvisible, protegerCopia } from '../examen/integridad.js';
+
+await iniciarPagina();
+const raiz = $('#nivel');
+const [curso, banco] = await Promise.all([cargarCurso(), fetch('data/examen.json').then(r => r.json()), cargar()]);
+const ICONO = { base: '🚀', redes: '🌐', bd: '🗄️', prog: '💻', sec: '🛡️', ti: '🏢', en: '🇬🇧' };
+const DESCR = {
+  redes: 'Del modelo OSI al CCNA: direcciones IP, switches, VLAN, enrutamiento, OSPF, servicios y seguridad.',
+  bd: 'Modelo relacional, SQL (de SELECT a funciones de ventana), diseño y administración.',
+  prog: 'Fundamentos, lenguajes, Git, POO, APIs, algoritmos y buenas prácticas.',
+  sec: 'Contraseñas y cifrado, cortafuegos, vulnerabilidades web, registros y respuesta a incidentes.',
+  ti: 'Soporte técnico, mesa de ayuda, Windows, Active Directory y hardware.',
+  en: 'Inglés técnico: vocabulario, lectura de errores y documentación, tickets y entrevistas.',
+  base: 'Lo básico del ordenador, internet, archivos, seguridad y unidades.',
+};
+const NIVEL = ['', 'Principiante', 'Intermedio', 'Avanzado'];
+const resumenEsc = e => `${NIVEL[Math.min(...e.niveles)] || ''} · ${e.modulos.slice(0, 2).join(', ')}${e.modulos.length > 2 ? '…' : ''}`;
+const cabecera = (titulo, texto) => el('div', { class: 'page-head' }, el('span', { class: 'eyebrow' }, 'Examen de entrada'), el('h1', {}, titulo), texto ? el('p', {}, texto) : null);
+
+// ------------------------------------------------------------------ 1. ¿Quién eres?
+function inicio() {
+  raiz.replaceChildren(cabecera('¿Desde dónde empiezas?', 'Responde con sinceridad: así te llevamos al punto exacto del curso, sin repetir lo que ya sabes ni saltarte lo que te falta.'),
+    el('div', { class: 'nivel-perfiles' }, PERFILES.map(p => el('button', { type: 'button', class: 'goal nivel-perfil', onclick: () => elegirPerfil(p.id) },
+      el('span', { class: 'goal-ico', 'aria-hidden': 'true' }, p.icono), el('strong', {}, p.titulo), el('span', { class: 'small muted' }, p.texto)))),
+    el('p', { class: 'small muted' }, 'La prueba no tiene tiempo límite y puedes repetirla cuando quieras. Si no sabes una respuesta, pulsa «No lo sé»: adivinar solo te llevaría a un nivel que no es el tuyo.'));
+  raiz.querySelector('button')?.focus({ preventScroll: true });
+}
+function elegirPerfil(id) {
+  if (id === 'cero') {
+    raiz.replaceChildren(cabecera('Empieza por «Empieza aquí»', 'Es la puerta de entrada para quien empieza de cero: 12 lecciones cortas, en lenguaje sencillo, con prácticas.'),
+      el('div', { class: 'card' }, el('ul', { class: 'plain-list' }, ['Las partes del ordenador, el teclado y los archivos', 'Qué es internet, cómo buscar y aprender por tu cuenta', 'Seguridad básica para que no te engañen', 'Las profesiones de la tecnología y un test para elegir tu camino'].map(t => el('li', {}, '✓ ' + t))),
+        el('div', { class: 'hero-cta' }, el('a', { class: 'btn btn-primary', href: 'curso.html?area=base' }, '🚀 Empezar desde cero'), el('button', { type: 'button', class: 'btn btn-ghost', onclick: inicio }, '‹ Volver'))));
+    return;
+  }
+  if (id === 'usuario') return explicar('base');
+  raiz.replaceChildren(cabecera('¿De qué área tienes conocimientos?', 'Haz la prueba del área que quieras estudiar. Después puedes hacer la de otra.'),
+    el('div', { class: 'goal-grid nivel-areas' }, Object.keys(AREAS).filter(a => a !== 'base').map(a => el('button', { type: 'button', class: 'goal', onclick: () => explicar(a) },
+      el('span', { class: 'goal-ico', 'aria-hidden': 'true' }, ICONO[a]), el('strong', {}, AREAS[a]), el('span', { class: 'small muted' }, DESCR[a])))),
+    el('button', { type: 'button', class: 'btn btn-quiet', onclick: inicio }, '‹ Volver'));
+}
+
+// ------------------------------------------------------------------ 2. Explicación y prueba
+function explicar(area) {
+  const esc = escaleraDe(curso, area);
+  const previo = local.get('aula:nivel:' + area, null);
+  raiz.replaceChildren(cabecera(`Prueba de nivel · ${AREAS[area]}`, `${esc.length} bloques de ${POR_BLOQUE} preguntas, uno por cada escalón del área, de más fácil a más difícil.`),
+    el('div', { class: 'card' },
+      el('ul', { class: 'plain-list' },
+        el('li', {}, `✓ Cada bloque que superes (${MINIMO_BLOQUE} de ${POR_BLOQUE}) convalida ese escalón: sus lecciones quedan abiertas para repasar y pasas directamente al siguiente.`),
+        el('li', {}, '✓ En cuanto falles un bloque, la prueba termina: ese es tu punto de partida.'),
+        el('li', {}, '✓ Sin tiempo límite. Si no sabes algo, pulsa «No lo sé».'),
+        el('li', {}, '✓ Lo que ya tengas aprobado no se pierde nunca.')),
+      previo ? el('p', { class: 'small muted' }, `La última vez (${new Date(previo.fecha).toLocaleDateString('es')}) superaste ${previo.superados} de ${esc.length} bloques.`) : null,
+      el('div', { class: 'hero-cta' }, el('button', { type: 'button', class: 'btn btn-primary', onclick: () => prueba(area) }, 'Empezar la prueba'), el('button', { type: 'button', class: 'btn btn-ghost', onclick: inicio }, '‹ Volver'))));
+}
+
+function prueba(area) {
+  const bloques = bloquesNivel(curso, banco, area);
+  const esc = escaleraDe(curso, area);
+  let b = 0, i = 0, aciertos = 0, superados = 0;
+  const respuestas = [];
+  const pintar = () => {
+    const bl = bloques[b], q = prepararPregunta(bl.preguntas[i]);
+    const totalPreg = bloques.reduce((n, x) => n + x.preguntas.length, 0), hechas = bloques.slice(0, b).reduce((n, x) => n + x.preguntas.length, 0) + i;
+    const sig = el('button', { type: 'submit', class: 'btn btn-primary', disabled: true }, 'Siguiente');
+    const noSe = el('button', { type: 'button', class: 'btn btn-ghost' }, 'No lo sé');
+    const form = el('form', { class: 'question exam-q nivel-q' },
+      el('fieldset', {}, el('legend', {}, q.q, textoInvisible(el), q.multiple ? ` (elige ${q.correct.length})` : ''),
+        q.opciones.map((o, k) => el('label', { class: 'option' }, el('input', { type: q.multiple ? 'checkbox' : 'radio', name: 'r', value: String(k) }), el('span', {}, o.texto)))),
+      el('div', { class: 'quiz-head' }, noSe, sig));
+    form.addEventListener('change', () => { sig.disabled = !form.querySelector('input:checked'); });
+    const responder = ok => {
+      if (ok) aciertos++;
+      respuestas.push({ id: q.id, ok });
+      i++;
+      if (i < bl.preguntas.length) return pintar();
+      finBloque();
+    };
+    form.addEventListener('submit', e => { e.preventDefault(); const el2 = new Set([...form.querySelectorAll('input:checked')].map(x => +x.value)); responder(q.opciones.every((o, k) => o.correcta === el2.has(k))); });
+    noSe.addEventListener('click', () => responder(false));
+    raiz.replaceChildren(
+      el('div', { class: 'nivel-cab' }, el('span', { class: 'eyebrow' }, `Prueba de nivel · ${AREAS[area]}`),
+        el('p', { class: 'small' }, el('strong', {}, `Bloque ${bl.n} de ${bloques.length}`), ` · ${resumenEsc(bl.escalon)}`),
+        el('div', { class: 'meter' }, el('span', { class: 'nivel-fill' })), el('p', { class: 'small muted' }, `Pregunta ${i + 1} de ${bl.preguntas.length} de este bloque`)),
+      form);
+    raiz.querySelector('.nivel-fill').style.setProperty('--p', String(hechas / totalPreg));
+    protegerCopia(form);
+    form.querySelector('input')?.focus({ preventScroll: true });
+  };
+  const finBloque = async () => {
+    const bl = bloques[b];
+    const ok = superaBloque(aciertos);
+    if (ok) {
+      superados++;
+      if (!notaQuiz(bl.escalon.examen)?.hecho) await guardarQuiz(bl.escalon.examen, aciertos, bl.preguntas.length);
+      if (b + 1 < bloques.length) {
+        raiz.replaceChildren(el('div', { class: 'card nivel-entre' }, el('p', { class: 'nivel-ok' }, `✓ Bloque ${bl.n} superado (${aciertos} de ${bl.preguntas.length})`),
+          el('p', {}, `Escalón ${bl.n} convalidado. Sigue con el bloque ${bl.n + 1}: un poco más difícil.`),
+          el('div', { class: 'hero-cta' }, el('button', { type: 'button', class: 'btn btn-primary', onclick: () => { b++; i = 0; aciertos = 0; pintar(); } }, `Bloque ${bl.n + 1} ›`),
+            el('button', { type: 'button', class: 'btn btn-ghost', onclick: () => resultado(area, bloques, superados, respuestas) }, 'Parar aquí y ver mi resultado'))));
+        raiz.querySelector('.btn-primary')?.focus({ preventScroll: true });
+        return;
+      }
+    }
+    resultado(area, bloques, superados, respuestas, ok ? null : { n: bl.n, aciertos, total: bl.preguntas.length });
+  };
+  pintar();
+}
+
+// ------------------------------------------------------------------ 3. Resultado
+function resultado(area, bloques, superados, respuestas, fallo) {
+  registrarRespuestas(respuestas, 'nivel');
+  local.set('aula:nivel:' + area, { fecha: Date.now(), superados });
+  const p = puntoDePartida(bloques, superados);
+  const lista = el('ol', { class: 'nivel-escalones' }, bloques.map((bl, k) => el('li', { class: k < superados ? 'ok' : k === superados ? 'aqui' : null },
+    el('span', {}, el('strong', {}, `Escalón ${bl.n}`), el('span', { class: 'small muted' }, ' · ' + resumenEsc(bl.escalon))), el('span', { class: 'small nivel-estado' }, k < superados ? 'convalidado ✓' : k === superados ? '← empiezas aquí' : ''))));
+  const acciones = p.todo
+    ? [el('a', { class: 'btn btn-primary', href: 'examen.html?final=' + area }, '🎓 Hacer el examen final del área'), el('a', { class: 'btn btn-ghost', href: 'curso.html?area=' + area }, 'Ver la escalera')]
+    : [el('a', { class: 'btn btn-primary', href: 'leccion.html?id=' + p.leccion.id }, `Empezar: ${p.leccion.titulo} ›`), el('a', { class: 'btn btn-ghost', href: 'curso.html?area=' + area }, 'Ver la escalera')];
+  const texto = area === 'base' && superados >= bloques.length
+    ? 'Dominas lo básico: no necesitas el área «Empieza aquí». Haz su examen final si quieres el certificado, o elige ya tu camino.'
+    : p.todo ? `Has superado todos los bloques de ${AREAS[area]}. Si apruebas el examen final, consigues el certificado del área.`
+      : superados ? `Has convalidado ${superados === 1 ? 'el escalón 1' : `los escalones 1 a ${superados}`}. Tu punto de partida es el escalón ${p.n}.`
+        : `Te conviene empezar ${AREAS[area]} desde el principio: así no te faltará ninguna base.`;
+  raiz.replaceChildren(...[cabecera(`Tu resultado en ${AREAS[area]}`, texto),
+    fallo ? el('p', { class: 'small muted' }, `En el bloque ${fallo.n} acertaste ${fallo.aciertos} de ${fallo.total} (hacían falta ${MINIMO_BLOQUE}). Lo que fallaste pasa a tu repaso.`) : null,
+    el('div', { class: 'card' }, lista, el('div', { class: 'hero-cta' }, ...acciones)),
+    area === 'base' && superados >= bloques.length ? el('p', {}, el('a', { href: 'laboratorio.html?l=inicio:orientacion' }, 'Test de orientación: ¿por qué área sigo? →')) : null,
+    el('p', { class: 'small muted' }, 'Las lecciones convalidadas siguen abiertas para repasar cuando quieras. Puedes repetir esta prueba más adelante para avanzar más escalones.'),
+    el('button', { type: 'button', class: 'btn btn-quiet', onclick: inicio }, 'Hacer la prueba de otra área')].filter(Boolean));
+  if (superados) toast(`${superados} ${superados === 1 ? 'escalón convalidado' : 'escalones convalidados'}`);
+}
+
+const pedida = new URLSearchParams(location.search).get('area');
+if (pedida && AREAS[pedida]) explicar(pedida); else inicio();

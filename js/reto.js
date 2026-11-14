@@ -5,9 +5,11 @@ export const fechaLocal = (d = new Date()) => new Date(d.getTime() - d.getTimezo
 const resumen = t => { let h = 0x811c9dc5; for (const c of t) { h ^= c.codePointAt(0); h = Math.imul(h, 0x01000193) >>> 0; } return h; };
 
 // banco: data/examen.json. modulosEmpezados: Set de ids de módulo. respaldo: id de módulo si aún no ha empezado ninguno.
-export function retoDelDia(banco, fecha, modulosEmpezados, respaldo) {
+// leccionesHechas (opcional): si hay alguna, la pregunta sale de lo ya estudiado, nunca de una lección sin leer.
+export function retoDelDia(banco, fecha, modulosEmpezados, respaldo, leccionesHechas = new Set()) {
   const validas = banco.filter(q => !q.dup && q.options?.length >= 2);
-  let pool = validas.filter(q => modulosEmpezados.has(q.modulo));
+  let pool = validas.filter(q => leccionesHechas.has(String(q.id).split('#')[0]));
+  if (!pool.length) pool = validas.filter(q => modulosEmpezados.has(q.modulo));
   if (!pool.length) pool = validas.filter(q => q.modulo === respaldo);
   if (!pool.length) pool = validas;
   return pool[resumen('reto|' + fecha) % pool.length];

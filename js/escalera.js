@@ -59,9 +59,13 @@ export function estadoEscalera(escalera, { leccionHecha, examenAprobado }) {
   let siguiente = null;
   const lecciones = new Map();
   const escalones = escalera.map(e => {
+    // Si el examen del escalón está aprobado (por ejemplo, en la prueba de nivel), sus lecciones pendientes quedan
+    // convalidadas: abiertas para repasar y sin bloquear el camino.
+    const convalidado = examenAprobado(e.examen);
     const ls = e.lecciones.map(l => {
       let estado;
       if (leccionHecha(l.id)) estado = 'hecha';
+      else if (convalidado) estado = 'convalidada';
       else if (libre) { estado = 'actual'; libre = false; siguiente ||= { tipo: 'leccion', leccion: l, escalon: e }; }
       else estado = 'bloqueada';
       lecciones.set(l.id, estado);
@@ -71,7 +75,7 @@ export function estadoEscalera(escalera, { leccionHecha, examenAprobado }) {
     if (examenAprobado(e.examen)) examen = 'aprobado';
     else if (libre) { examen = 'disponible'; libre = false; siguiente ||= { tipo: 'examen', escalon: e }; }
     else examen = 'bloqueado';
-    const hechas = ls.filter(x => x.estado === 'hecha').length;
+    const hechas = ls.filter(x => x.estado === 'hecha' || x.estado === 'convalidada').length;
     const abierto = ls.some(x => x.estado !== 'bloqueada') || examen !== 'bloqueado';
     return { ...e, pasos: ls, estadoExamen: examen, hechas, abierto, completo: examen === 'aprobado' && hechas === ls.length };
   });
@@ -81,7 +85,7 @@ export function estadoEscalera(escalera, { leccionHecha, examenAprobado }) {
   return {
     escalones, final, siguiente,
     estadoLeccion: id => lecciones.get(id) || 'bloqueada',
-    accesible: id => ['hecha', 'actual'].includes(lecciones.get(id)),
+    accesible: id => ['hecha', 'actual', 'convalidada'].includes(lecciones.get(id)),
   };
 }
 

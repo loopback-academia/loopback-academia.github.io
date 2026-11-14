@@ -60,6 +60,16 @@ function bloqueado(titulo, area) {
 }
 
 // ---------------------------------------------------------------- portada del examen
+// Al terminar «Empieza aquí»: a dónde seguir (lo que recomendó el test de orientación, si se hizo).
+const CAMINOS = { ti: ['🏢', 'Empleo TI: soporte técnico'], redes: ['🌐', 'Redes'], prog: ['💻', 'Programación'], bd: ['🗄️', 'Bases de datos'], sec: ['🛡️', 'Ciberseguridad'], en: ['🇬🇧', 'Inglés técnico'] };
+function siguienteCamino() {
+  const rec = local.get('aula:orientacion', null);
+  return el('div', { class: 'card mt' }, el('h2', {}, '¿Y ahora? Elige tu camino'),
+    el('p', {}, rec && CAMINOS[rec] ? `Según tu test de orientación, te recomendamos seguir con ${CAMINOS[rec][1]}. Puedes elegir cualquier otra.` : 'Ya tienes la base. Elige el área que más te atraiga; si dudas, haz el test de orientación o empieza por Empleo TI, la puerta de entrada más rápida a un trabajo.'),
+    el('div', { class: 'goal-grid' }, Object.entries(CAMINOS).map(([a, [ico, nombre]]) => el('a', { class: 'goal' + (a === rec ? ' sel' : ''), href: 'curso.html?area=' + a }, el('span', { class: 'goal-ico', 'aria-hidden': 'true' }, ico), el('strong', {}, nombre), a === rec ? el('span', { class: 'small muted' }, 'Recomendada para ti') : null))),
+    rec ? null : el('p', { class: 'small' }, el('a', { href: 'laboratorio.html?l=inicio:orientacion' }, 'Hacer el test de orientación (2 minutos) →')));
+}
+
 function inicio({ titulo, ceja, descripcion, clave, tamanos, generar, alAprobar, area, minutos }) {
   const q = notaQuiz(clave);
   let n = tamanos[0];
@@ -175,6 +185,9 @@ function jugar({ titulo, clave, preguntas, alAprobar, area, minutos }) {
       ok
         ? el('div', { class: 'card' }, el('h2', {}, '¡Lo lograste!'), el('p', {}, despues?.texto || 'Has demostrado que dominas este tramo.'),
             despues ? el('a', { class: 'btn btn-primary', href: despues.href }, despues.boton) : null)
+        : null,
+      ok && area === 'base' && clave === 'final-base' ? siguienteCamino() : null,
+      ok ? null
         : el('div', { class: 'card' }, el('h2', {}, 'Qué repasar antes del próximo intento'),
             el('p', { class: 'small muted' }, 'No mostramos las respuestas para que el próximo intento mida lo que sabes de verdad. El siguiente examen tendrá preguntas distintas.'),
             el('ul', { class: 'plain-list' }, repasar.map(({ l, n }) => el('li', {}, el('a', { href: 'leccion.html?id=' + l.id }, l.titulo), el('span', { class: 'small muted' }, ` · ${plural(n, 'fallo', 'fallos')}`))))),

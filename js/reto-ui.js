@@ -6,12 +6,14 @@ import { retoDelDia, claveReto, fechaLocal, rachaRetos, insigniasDe, INSIGNIAS }
 let banco = null;
 const cargarBanco = () => banco || (banco = fetch('data/examen.json').then(r => r.json()));
 
-export async function montarReto(caja, { curso, leccionHecha }) {
+export async function montarReto(caja, { curso, leccionHecha, area }) {
   const preguntas = await cargarBanco().catch(() => null);
   if (!preguntas || !caja) return;
   const hoy = fechaLocal();
   const empezados = new Set(curso.modulos.filter(m => m.lecciones.some(l => leccionHecha(l.id))).map(m => m.id));
-  const q = retoDelDia(preguntas, hoy, empezados, curso.modulos[0]?.id);
+  const hechas = new Set(curso.modulos.flatMap(m => m.lecciones.filter(l => leccionHecha(l.id)).map(l => l.id)));
+  const respaldo = (curso.modulos.find(m => m.area === area) || curso.modulos[0])?.id;
+  const q = retoDelDia(preguntas, hoy, empezados, respaldo, hechas);
   const multiple = q.correct.length > 1;
 
   function pintar() {
