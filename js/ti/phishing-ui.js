@@ -17,7 +17,7 @@ export async function montarPhishing(holder) {
     if (r.respondidos === r.total) {
       const pct = Math.round((r.bien / r.total) * 100);
       final.replaceChildren(el('div', { class: 'alert ' + (r.aprobado ? 'alert-ok' : 'alert-warn') },
-        el('p', {}, el('strong', {}, r.aprobado ? `¡Bandeja revisada! ${pct} % de aciertos.` : `${pct} % de aciertos: necesitas un ${APROBADO * 100} %.`), ' ',
+        el('p', {}, el('strong', {}, r.aprobado ? `Bandeja revisada: ${pct} % de aciertos.` : `${pct} % de aciertos: necesitas un ${APROBADO * 100} %.`), ' ',
           r.aprobado ? 'En la vida real, el phishing se reporta (botón «Reportar» o reenviando a TI) y se borra. Nunca se responde ni se hace clic «para ver qué pasa».' : 'Repasa las explicaciones y vuelve a empezar.'),
         r.aprobado ? null : el('button', { type: 'button', class: 'btn btn-primary btn-sm', onclick: reiniciar }, 'Volver a empezar')));
       if (r.aprobado && !labHecho('phishing-bandeja')) { guardarLab('phishing-bandeja'); toast('Detector de phishing completado.'); }
@@ -73,7 +73,7 @@ export async function montarPhishing(holder) {
 
   holder.append(el('section', { class: 'lab', 'aria-label': 'Detector de phishing' },
     el('div', { class: 'lab-head' }, el('h3', {}, 'Detector de phishing: la bandeja de entrada'), marcador),
-    el('p', { class: 'muted' }, 'Revisa los correos de Comercial La Ceiba (empresa ficticia: todos los nombres y dominios son inventados). El dominio real de la empresa es laceiba.example. Pulsa los enlaces para ver a dónde llevan de verdad: aquí no se abre nada.'),
+    el('p', { class: 'muted' }, 'Revisa los correos de Comercial La Ceiba (empresa ficticia: todos los nombres y dominios son inventados). El dominio real de la empresa es laceiba.example. Presiona los enlaces para ver a dónde llevan de verdad: aquí no se abre nada.'),
     vista, final));
   pintar(); contar();
 }

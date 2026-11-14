@@ -344,7 +344,7 @@ Antes de pagar un examen, comprueba qué piden las ofertas de empleo de tu zona.
 
 ## Cómo practicar legalmente
 
-- **Laboratorios propios**: máquinas virtuales en tu ordenador (Kali Linux, Windows de evaluación, Metasploitable).
+- **Laboratorios propios**: máquinas virtuales en tu computadora (Kali Linux, Windows de evaluación, Metasploitable).
 - **Plataformas de práctica** con permiso explícito: TryHackMe, Hack The Box, PortSwigger Web Security Academy, OverTheWire.
 - **CTF** (*capture the flag*): competiciones con retos legales.
 - Documenta lo que haces en un **portafolio**: informes de laboratorios, reglas de detección que has escrito, análisis de registros.

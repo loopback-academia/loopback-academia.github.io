@@ -461,12 +461,12 @@ export const LABS = {
   'averia-duplex': {
     nivel: 'intermedio', tipo: 'averia',
     titulo: 'Avería: el servidor va lentísimo',
-    intro: 'El servidor de ficheros está en Gi0/2 de SW1. Funciona, pero copiar un archivo tarda una eternidad. La tarjeta del servidor negocia automáticamente (full dúplex).',
+    intro: 'El servidor de archivos está en Gi0/2 de SW1. Funciona, pero copiar un archivo tarda una eternidad. La tarjeta del servidor negocia automáticamente (full dúplex).',
     topologia: '[Servidor full-duplex] ── Gi0/2 [SW1]',
     equipo: {
       tipo: 'switch', hostname: 'SW1', interfaces: puertosSwitch(), soloConectados: true,
       vecinoL2: { 'GigabitEthernet0/2': { mode: 'access', duplex: 'full' } },
-      estadoInicial: s => { s.modo = 'priv'; Object.assign(s.ifs['GigabitEthernet0/2'], { mode: 'access', duplex: 'half', speed: '100', description: 'Servidor ficheros' }); },
+      estadoInicial: s => { s.modo = 'priv'; Object.assign(s.ifs['GigabitEthernet0/2'], { mode: 'access', duplex: 'half', speed: '100', description: 'Servidor archivos' }); },
     },
     tareas: [
       { texto: 'Diagnostica: show interfaces status y show interfaces g0/2 (fíjate en los errores CRC y las colisiones tardías).', ok: s => s.patrones.has('show interfaces status') && s.patrones.has('show interfaces <i:iface>') },

@@ -4,7 +4,7 @@ id: i3
 titulo: Elige tu camino en tecnología
 dominio: Primeros pasos
 peso: 0
-descripcion: Las profesiones de la tecnología explicadas con ejemplos de un día de trabajo, un test para descubrir por qué área empezar y un plan de estudio realista para avanzar sin agobiarte.
+descripcion: Las profesiones de la tecnología explicadas con ejemplos de un día de trabajo, un test para descubrir por qué área empezar y un plan de estudio realista para avanzar de forma constante.
 ---
 
 === i3-profesiones | Las profesiones de la tecnología | 14 | 2
@@ -14,8 +14,8 @@ La tecnología no es un solo trabajo: hay muchos caminos. Todos empiezan desde l
 
 | Camino | Qué hace | Un día de trabajo |
 |---|---|---|
-| **Soporte técnico** (Empleo TI) | Ayuda a las personas con sus equipos, programas y cuentas | Atiende tickets: «no puedo imprimir», «olvidé mi contraseña», prepara el portátil de un empleado nuevo |
-| **Redes** | Conecta ordenadores, oficinas e internet | Configura un router en una sucursal y revisa por qué va lenta la Wi-Fi |
+| **Soporte técnico** (Empleo TI) | Ayuda a las personas con sus equipos, programas y cuentas | Atiende tickets: «no puedo imprimir», «olvidé mi contraseña», prepara la laptop de un empleado nuevo |
+| **Redes** | Conecta computadoras, oficinas e internet | Configura un router en una sucursal y revisa por qué va lenta la Wi-Fi |
 | **Programación** | Crea programas, webs y automatizaciones | Escribe código para una nueva función de la app y corrige errores |
 | **Bases de datos y análisis** | Organiza la información y saca conclusiones | Prepara un informe de ventas con SQL y gráficos |
 | **Ciberseguridad** | Protege sistemas y personas frente a ataques | Revisa alertas, investiga un correo sospechoso y aplica parches |
@@ -23,7 +23,7 @@ La tecnología no es un solo trabajo: hay muchos caminos. Todos empiezan desde l
 ## ¿Por dónde empezar?
 
 - Si quieres **trabajar cuanto antes**: **soporte técnico**. Es el puesto de entrada más común y te da la base para todo lo demás.
-- Si te gusta **montar y conectar** cosas: **redes**. Para practicar en casa te hará falta Cisco Packet Tracer (gratuito): tienes la guía de instalación en la lección [Instala Cisco Packet Tracer paso a paso](./leccion.html?id=m0-packet-tracer).
+- Si te interesa **instalar y conectar** equipos: **redes**. Para practicar en casa te hará falta Cisco Packet Tracer (gratuito): tienes la guía de instalación en la lección [Instala Cisco Packet Tracer paso a paso](./leccion.html?id=m0-packet-tracer).
 - Si te gusta **crear** y resolver acertijos de lógica: **programación**.
 - Si te gustan los **números** y entender un negocio: **bases de datos**.
 - Si te atrae **proteger** y la investigación: **ciberseguridad**. Normalmente se llega a ella después de soporte, redes o sistemas.
@@ -33,7 +33,7 @@ Y en todas, el **inglés técnico** suma mucho.
 ## Lo que piden las empresas, sea cual sea el camino
 
 - Saber **resolver problemas** con método.
-- **Comunicarse** bien: explicar las cosas con claridad a quien no sabe de tecnología.
+- **Comunicarse** bien: explicar con claridad a quien no sabe de tecnología.
 - Ganas de **seguir aprendiendo**: la tecnología cambia cada año.
 - Muchas veces, un **portafolio** (prácticas y proyectos que puedas enseñar) vale tanto como un título.
 
@@ -49,7 +49,7 @@ Y en todas, el **inglés técnico** suma mucho.
 ? ¿Qué hace una persona de redes?
 + Conecta equipos, oficinas e internet y resuelve problemas de conexión
 - Diseña logotipos
-- Vende ordenadores en una tienda
+- Vende computadoras en una tienda
 = Routers, switches, Wi-Fi y conexión entre sedes.
 
 ? ¿Qué habilidad piden en casi todos los trabajos de tecnología?
@@ -74,7 +74,7 @@ Y en todas, el **inglés técnico** suma mucho.
 
 ? ¿Qué es un portafolio en tecnología?
 + Una colección de prácticas y proyectos que puedes enseñar a una empresa
-- Una cartera para el portátil
+- Una cartera para la laptop
 - Un tipo de virus
 = Demuestra lo que sabes hacer.
 
@@ -85,8 +85,8 @@ Y en todas, el **inglés técnico** suma mucho.
 = Muchos expertos en ciberseguridad empezaron en soporte o redes.
 :::
 
-=== i3-estudiar | Cómo estudiar tecnología sin agobiarte | 12 | 2
-Ya conoces lo básico. Ahora toca seguir avanzando. Estos consejos te ayudarán a no abandonar.
+=== i3-estudiar | Cómo organizar tu estudio en tecnología | 12 | 2
+Ya conoces lo básico. El siguiente paso es seguir avanzando. Estos consejos te ayudarán a no abandonar.
 
 ## Un plan realista
 
@@ -129,7 +129,7 @@ Escribe hoy tu plan: qué área vas a estudiar, qué días y a qué hora. Ponlo 
 + Releerla otro día, buscar las palabras que no conoces y hacer la práctica
 - Abandonar el curso
 - Saltarte toda el área
-= Es normal: a casi todo el mundo le pasa.
+= Es normal: le ocurre a la mayoría de las personas.
 
 ? ¿Qué te pide un examen de escalón para aprobar?
 + Un 80 %
@@ -159,7 +159,7 @@ Escribe hoy tu plan: qué área vas a estudiar, qué días y a qué hora. Ponlo 
 
 ? Equivocarte en un simulador de Loopback…
 + No rompe nada y es una buena forma de aprender
-- Estropea tu ordenador
+- Estropea tu computadora
 - Te expulsa del curso
 = Todo ocurre dentro de tu navegador.
 :::

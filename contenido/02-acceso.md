@@ -10,20 +10,20 @@ descripcion: Cisco IOS, VLAN, trunks, enrutamiento entre VLAN, CDP/LLDP, EtherCh
 **IOS** es el sistema operativo de los routers y switches Cisco. Se maneja por línea de comandos (CLI) y en el examen tendrás que leer y escribir configuraciones.
 
 ::: nota
-**¿Nunca has usado una consola?** No pasa nada. Lee esta lección con un cuaderno al lado: cada comando viene explicado y en la práctica del final el modo **🧭 Te acompaño** te dice qué escribir en cada paso, en qué modo estás y qué ha pasado después de cada comando.
+**¿Nunca has usado una consola?** Esta lección parte de cero. Léela con un cuaderno al lado: cada comando está explicado y, en la práctica final, el **modo guiado** indica qué escribir en cada paso, en qué modo estás y qué ha pasado después de cada comando.
 :::
 
 ## Cómo se lee la consola (para quien empieza de cero)
 
-Un switch o un router Cisco no tiene pantalla ni ratón: se configura **escribiendo órdenes** (comandos) en una ventana de texto llamada **consola** o **CLI**. Lo primero que ves es el **prompt**, la «línea de espera»:
+Un switch o un router Cisco no tiene pantalla ni mouse: se configura **escribiendo órdenes** (comandos) en una ventana de texto llamada **consola** o **CLI**. Lo primero que ves es el **prompt**, la «línea de espera»:
 
 ```ios
 Switch>
 ```
 
 - **`Switch`** es el **nombre del equipo**. Si lo cambias a `SW-OFICINA`, el prompt pasa a ser `SW-OFICINA>`.
-- **El símbolo del final** (`>`, `#`, `(config)#`…) te dice **en qué modo estás**, es decir, qué comandos puedes escribir ahí. Es como las habitaciones de una casa: cada comando se hace en su habitación.
-- Escribes el comando y pulsas **Intro** para ejecutarlo.
+- **El símbolo del final** (`>`, `#`, `(config)#`…) te dice **en qué modo estás**, es decir, qué comandos puedes escribir ahí. Funciona como las habitaciones de una casa: cada comando se ejecuta en la que le corresponde.
+- Escribes el comando y presionas **Enter** para ejecutarlo.
 - Si te equivocas, IOS responde con `% Invalid input detected` y una marca `^` debajo de donde está el fallo. No se rompe nada: vuelve a escribirlo.
 - Los comandos **no distinguen mayúsculas**, pero los **nombres y contraseñas sí** (`SW-Oficina` no es lo mismo que `SW-OFICINA`).
 
@@ -60,7 +60,7 @@ Copia esta tabla en tu cuaderno. Después, en la práctica del final de la lecci
 - Los comandos se pueden abreviar mientras no sean ambiguos: `conf t`, `sh run`, `int g0/1`.
 - Desde el modo de configuración se pueden ejecutar comandos `show` anteponiendo `do`: `do show ip interface brief`.
 
-Comprueba que ya reconoces los modos con este juego (toca la respuesta correcta):
+Comprueba que reconoces los modos con este ejercicio (selecciona la respuesta correcta):
 
 [[modos:ios]]
 
@@ -985,7 +985,7 @@ En el examen puede aparecer una captura de la **interfaz gráfica del WLC** y pr
 1. **WLANs → Create New → Go.** Tipo *WLAN*, nombre de perfil, **SSID** y un **ID**.
 2. Pestaña **General:** estado *Enabled*, **Interface/Interface Group** = la interfaz dinámica (VLAN) donde saldrán los clientes.
 3. Pestaña **Security → Layer 2:** *WPA+WPA2* (o WPA3), cifrado **AES (CCMP)**, gestión de claves **PSK** y la contraseña (*PSK Format: ASCII*). Para empresas: **802.1X** con un servidor RADIUS (pestaña *AAA Servers*).
-4. Pestaña **QoS:** perfil *Platinum* para voz, *Gold* para vídeo, *Silver* para el resto (por defecto), *Bronze* para tráfico de fondo.
+4. Pestaña **QoS:** perfil *Platinum* para voz, *Gold* para video, *Silver* para el resto (por defecto), *Bronze* para tráfico de fondo.
 5. Pestaña **Advanced:** opciones como el tiempo de sesión, FlexConnect o Aironet IE.
 6. **Apply.**
 

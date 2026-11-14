@@ -10,7 +10,7 @@ descripcion: Cómo funciona el curso, qué es el CCNA y cómo montar tu laborato
 Bienvenido a **Loopback**. Este curso te lleva desde cero hasta el nivel que pide el examen **Cisco CCNA 200-301**, la certificación de redes más solicitada en las ofertas de empleo de Latinoamérica y España. Además de esta área de **Redes**, la plataforma tiene otras dos completas: **Bases de datos** y **Programación**, cada una con su ruta por niveles. Las tres se complementan: un buen profesional de redes hoy consulta bases de datos y automatiza con Python.
 
 ::: nota
-¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico del ordenador, internet y las profesiones de la tecnología.
+¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico de la computadora, internet y las profesiones de la tecnología.
 :::
 
 ## Cómo está organizado
@@ -64,7 +64,7 @@ Al completar una lección, aprobar su cuestionario o terminar un laboratorio, tu
 :::
 
 === m0-packet-tracer | Instala Cisco Packet Tracer paso a paso | 20 | 1
-**Cisco Packet Tracer** es un programa **gratuito** de Cisco que simula routers, switches, ordenadores y cables en tu ordenador. Con él montas redes completas sin comprar ningún equipo. En esta web tienes un simulador para practicar los comandos; Packet Tracer te permite además **dibujar la red entera, conectar cables y probarla**, igual que en una empresa. Lo usan los estudiantes de redes de todo el mundo.
+**Cisco Packet Tracer** es un programa **gratuito** de Cisco que simula routers, switches, computadoras y cables en tu computadora. Con él montas redes completas sin comprar ningún equipo. En esta web tienes un simulador para practicar los comandos; Packet Tracer te permite además **dibujar la red entera, conectar cables y probarla**, igual que en una empresa. Lo usan los estudiantes de redes de todo el mundo.
 
 ::: nota
 **No necesitas saber nada para instalarlo.** Sigue los pasos en orden y ve marcándolos en la lista del final de la lección. Tardarás unos 20 minutos, la mayor parte esperando a que se descargue.
@@ -74,7 +74,7 @@ Al completar una lección, aprobar su cuestionario o terminar un laboratorio, tu
 
 | Necesitas | Detalle |
 |---|---|
-| Un ordenador | Windows 10 u 11 de 64 bits, macOS o Linux Ubuntu. **No hay versión para móvil, tableta ni Chromebook**: si solo tienes móvil, practica con el simulador de esta web. |
+| Una computadora | Windows 10 u 11 de 64 bits, macOS o Linux Ubuntu. **No hay versión para celular, tableta ni Chromebook**: si solo tienes celular, practica con el simulador de esta web. |
 | Espacio libre | Unos 2 GB en el disco |
 | Un correo electrónico | Para crear la cuenta gratuita |
 | Conexión a Internet | Para descargarlo e iniciar sesión la primera vez |
@@ -84,14 +84,14 @@ Al completar una lección, aprobar su cuestionario o terminar un laboratorio, tu
 Packet Tracer se descarga desde **Cisco Networking Academy**, la plataforma educativa oficial de Cisco.
 
 1. Entra en **[netacad.com](https://www.netacad.com/)**.
-2. Pulsa **Sign up** (Registrarse). Si la página está en inglés, puedes cambiar el idioma abajo del todo.
+2. Haz clic en **Sign up** (Registrarse). Si la página está en inglés, puedes cambiar el idioma abajo del todo.
 3. Escribe tu nombre, tu correo y una contraseña, y acepta las condiciones.
-4. Abre tu correo y pulsa el enlace de confirmación que te envían (si no aparece, mira en **spam**).
+4. Abre tu correo y haz clic en el enlace de confirmación que te envían (si no aparece, mira en **spam**).
 
 ## Paso 2: inscríbete en el curso gratuito de Packet Tracer
 
 1. Ve a la página oficial de Packet Tracer: **[netacad.com/cisco-packet-tracer](https://www.netacad.com/cisco-packet-tracer)**.
-2. Busca el curso **Getting Started with Cisco Packet Tracer** (gratuito, a tu ritmo) y pulsa **Get started** o **Enroll** (Inscribirse).
+2. Busca el curso **Getting Started with Cisco Packet Tracer** (gratuito, a tu ritmo) y haz clic en **Get started** o **Enroll** (Inscribirse).
 3. Inicia sesión con la cuenta que acabas de crear si te lo pide.
 
 Inscribirte en ese curso es lo que te da acceso a la descarga. Además, el curso es un buen complemento para aprender a manejar el programa.
@@ -111,8 +111,8 @@ Descárgalo **solo desde netacad.com**. Las páginas que ofrecen Packet Tracer �
 
 ## Paso 4: instálalo
 
-- **Windows:** abre la carpeta **Descargas**, haz doble clic en el archivo `.exe`, pulsa **Sí** si Windows pregunta si permites cambios, acepta la licencia (*I accept the agreement*) y pulsa **Next** hasta **Install** y después **Finish**.
-- **macOS:** abre el `.dmg`, haz doble clic en el instalador y sigue los pasos. Si macOS dice que no puede abrirlo, ve a **Ajustes del Sistema → Privacidad y seguridad** y pulsa **Abrir igualmente**.
+- **Windows:** abre la carpeta **Descargas**, haz doble clic en el archivo `.exe`, presiona **Sí** si Windows pregunta si permites cambios, acepta la licencia (*I accept the agreement*) y presiona **Next** hasta **Install** y después **Finish**.
+- **macOS:** abre el `.dmg`, haz doble clic en el instalador y sigue los pasos. Si macOS dice que no puede abrirlo, ve a **Configuración del Sistema → Privacidad y seguridad** y presiona **Abrir igualmente**.
 - **Ubuntu:** abre una terminal en la carpeta de descargas y escribe `sudo apt install ./` seguido del nombre del archivo `.deb`.
 
 ## Paso 5: ábrelo e inicia sesión
@@ -124,7 +124,7 @@ La primera vez, Packet Tracer pide que inicies sesión con tu cuenta de **Networ
 | Zona | Dónde está | Para qué sirve |
 |---|---|---|
 | Área de trabajo | El gran espacio en blanco del centro | Ahí colocas los equipos y dibujas tu red |
-| Tipos de equipo | Abajo a la izquierda | Routers, switches, PC (End Devices), servidores… Pulsa una categoría y arrastra el modelo al área de trabajo |
+| Tipos de equipo | Abajo a la izquierda | Routers, switches, PC (End Devices), servidores… Presiona una categoría y arrastra el modelo al área de trabajo |
 | Conexiones (icono del rayo) | En la misma barra de abajo | Los cables. El directo (línea negra continua) sirve para PC↔switch y switch↔router |
 | Pestañas del equipo | Al hacer clic en un equipo | **Physical** (el aparato), **Config** (menús) y **CLI** (la consola, igual que la de esta web) |
 | Escritorio del PC | PC → pestaña **Desktop** | **IP Configuration** para ponerle IP y **Command Prompt** para hacer ping |
@@ -132,13 +132,13 @@ La primera vez, Packet Tracer pide que inicies sesión con tu cuenta de **Networ
 
 ## Tu primera red en Packet Tracer (10 minutos)
 
-1. En la barra de abajo pulsa **Network Devices → Switches** y arrastra un **2960** al área de trabajo.
-2. Pulsa **End Devices** y arrastra **dos PC**.
-3. Pulsa el icono del **rayo** (Connections), elige el cable **Copper Straight-Through** (línea negra continua), haz clic en el primer PC → **FastEthernet0**, y después en el switch → **FastEthernet0/1**. Repite con el segundo PC → **FastEthernet0/2**.
+1. En la barra de abajo presiona **Network Devices → Switches** y arrastra un **2960** al área de trabajo.
+2. Presiona **End Devices** y arrastra **dos PC**.
+3. Presiona el icono del **rayo** (Connections), elige el cable **Copper Straight-Through** (línea negra continua), haz clic en el primer PC → **FastEthernet0**, y después en el switch → **FastEthernet0/1**. Repite con el segundo PC → **FastEthernet0/2**.
 4. Espera a que los triángulos de los cables pasen de naranja a **verde** (unos 30 segundos).
 5. Haz clic en el primer PC → **Desktop → IP Configuration** y escribe: IP `192.168.1.10`, máscara `255.255.255.0`. En el segundo PC: `192.168.1.11` y la misma máscara.
-6. En el primer PC abre **Desktop → Command Prompt** y escribe `ping 192.168.1.11`. Si ves **Reply from 192.168.1.11**, ¡tu red funciona!
-7. Ahora haz clic en el switch → pestaña **CLI**, pulsa Intro y escribe `enable`, `configure terminal` y `hostname SW-CASA`. Igual que en el simulador de la web.
+6. En el primer PC abre **Desktop → Command Prompt** y escribe `ping 192.168.1.11`. Si ves **Reply from 192.168.1.11**, tu red funciona correctamente.
+7. Ahora haz clic en el switch → pestaña **CLI**, presiona Enter y escribe `enable`, `configure terminal` y `hostname SW-CASA`. Igual que en el simulador de la web.
 8. Guarda tu trabajo con **File → Save As**. Esos archivos `.pkt` son tu portafolio.
 
 ## Problemas frecuentes
@@ -150,7 +150,7 @@ La primera vez, Packet Tracer pide que inicies sesión con tu cuenta de **Networ
 | Los triángulos del cable se quedan en naranja | Es normal durante unos 30 segundos (el switch comprueba que no haya bucles). Espera |
 | Los triángulos se ponen en rojo | El cable no es el correcto o el puerto está apagado. En un router, entra en la interfaz y escribe `no shutdown` |
 | El primer ping pierde un paquete | Es normal: el PC tiene que averiguar primero la MAC del otro (ARP). Repite el ping |
-| Mi ordenador es un Chromebook o solo tengo móvil | Packet Tracer no funciona ahí. Haz todas las prácticas en el simulador de esta web y, cuando puedas, usa un ordenador de un centro de estudios o una biblioteca |
+| Mi computadora es un Chromebook o solo tengo celular | Packet Tracer no funciona ahí. Haz todas las prácticas en el simulador de esta web y, cuando puedas, usa una computadora de un centro de estudios o una biblioteca |
 
 [[lista:pt-instalar]]
 
@@ -158,7 +158,7 @@ La primera vez, Packet Tracer pide que inicies sesión con tu cuenta de **Networ
 ? ¿Desde dónde se descarga Cisco Packet Tracer de forma segura?
 - Desde cualquier web que lo ofrezca gratis
 + Desde Cisco Networking Academy (netacad.com), con una cuenta gratuita
-- Desde la tienda de aplicaciones del móvil
+- Desde la tienda de aplicaciones del celular
 = El programa oficial es gratuito y se descarga desde Networking Academy. Las copias de otras webs pueden traer virus.
 
 ? ¿Qué pestaña de un switch en Packet Tracer abre la consola donde se escriben los comandos?
@@ -181,7 +181,7 @@ La primera vez, Packet Tracer pide que inicies sesión con tu cuenta de **Networ
 = Los PC se configuran desde su escritorio (Desktop): IP Configuration para la IP y Command Prompt para hacer ping.
 :::
 
-=== m0-laboratorio | Monta tu laboratorio | 10 | 1
+=== m0-laboratorio | Prepara tu laboratorio | 10 | 1
 Las redes se aprenden tocando equipos. No hace falta comprar nada: hay herramientas gratuitas que simulan routers y switches Cisco.
 
 ## Las herramientas

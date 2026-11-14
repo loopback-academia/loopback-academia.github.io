@@ -4,7 +4,7 @@ import { guardarLab, labHecho, cargar } from '../progreso.js';
 import * as I from './inicio.js';
 
 const TITULOS = {
-  atajos: 'Atajos de teclado', archivos: '¿Qué tipo de archivo es?', partes: 'Las piezas del ordenador', unidades: 'Bits, bytes y velocidad', orientacion: '¿Por qué área empiezo?',
+  atajos: 'Atajos de teclado', archivos: '¿Qué tipo de archivo es?', partes: 'Las piezas de la computadora', unidades: 'Bits, bytes y velocidad', orientacion: '¿Por qué área empiezo?',
 };
 const INTRO = {
   atajos: 'Los atajos ahorran mucho tiempo. Elige la combinación correcta para cada acción.',
@@ -43,7 +43,7 @@ function preguntas(id, caja, marcador) {
       respondida = true;
       if (ok) bien++;
       fb.className = 'small feedback ' + (ok ? 'ok' : 'bad');
-      fb.textContent = (ok ? '✓ ¡Bien! ' : `✗ Era: ${txt}. `) + p.e + (p.mac ? ` En Mac: ${p.mac}.` : '');
+      fb.textContent = (ok ? '✓ Correcto. ' : `✗ Era: ${txt}. `) + p.e + (p.mac ? ` En Mac: ${p.mac}.` : '');
       marcador.textContent = `${i + 1} de ${lista.length} · ${bien} bien`;
       btnSig.hidden = false; btnSig.focus({ preventScroll: true });
     };
@@ -73,15 +73,15 @@ function preguntas(id, caja, marcador) {
     }
     caja.replaceChildren(
       el('p', { class: 'ini-preg' + (p.archivo ? ' mono' : '') }, p.q),
-      p.atajo?.tecla && !tactil() ? el('p', { class: 'small muted' }, 'Truco: también puedes pulsar la combinación en tu teclado.') : null,
+      p.atajo?.tecla && !tactil() ? el('p', { class: 'small muted' }, 'Consejo: también puedes presionar la combinación en tu teclado.') : null,
       control, fb, btnSig);
   };
   const fin = () => {
     const ok = bien / lista.length >= I.APROBADO;
-    if (ok && !labHecho('inicio-' + id)) { guardarLab('inicio-' + id); toast('¡Práctica superada: ' + TITULOS[id] + '!'); }
+    if (ok && !labHecho('inicio-' + id)) { guardarLab('inicio-' + id); toast('Práctica superada: ' + TITULOS[id] + '.'); }
     marcador.textContent = `${bien} de ${lista.length}`;
     caja.replaceChildren(el('div', { class: 'alert ' + (ok ? 'alert-ok' : 'alert-warn') },
-      el('p', {}, el('strong', {}, `${bien} de ${lista.length} (${Math.round((bien / lista.length) * 100)} %). `), ok ? '¡Muy bien! Ya dominas esto.' : `Para superarla hace falta un ${I.APROBADO * 100} %. Repasa las explicaciones e inténtalo otra vez: cada ronda trae preguntas distintas.`),
+      el('p', {}, el('strong', {}, `${bien} de ${lista.length} (${Math.round((bien / lista.length) * 100)} %). `), ok ? 'Práctica superada: ya dominas este tema.' : `Para superarla hace falta un ${I.APROBADO * 100} %. Repasa las explicaciones e inténtalo otra vez: cada ronda trae preguntas distintas.`),
       el('button', { type: 'button', class: 'btn btn-primary btn-sm', onclick: () => montarDeNuevo() }, 'Otra ronda')));
   };
   const montarDeNuevo = () => { const nuevo = id === 'unidades' ? I.preguntasUnidades(8) : I.ronda(id); lista.splice(0, lista.length, ...nuevo); i = 0; bien = 0; siguiente(); };

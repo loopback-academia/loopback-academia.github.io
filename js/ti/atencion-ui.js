@@ -39,7 +39,7 @@ export async function montarAtencion(holder, id) {
     cara.textContent = caraDe(r.animo);
     if (r.aprobado && !labHecho('atencion-' + id)) { guardarLab('atencion-' + id); toast('Conversación superada.'); }
     final.replaceChildren(el('div', { class: 'alert ' + (r.aprobado ? 'alert-ok' : 'alert-warn') },
-      el('p', {}, el('strong', {}, `${r.pct} % · ${r.aprobado ? '¡Buena atención!' : 'Necesitas un 75 %. Repite y prueba otras respuestas.'}`)),
+      el('p', {}, el('strong', {}, `${r.pct} % · ${r.aprobado ? 'Buena atención al usuario.' : 'Necesitas un 75 %. Repite y prueba otras respuestas.'}`)),
       el('ul', { class: 'small' }, Object.entries(r.dims).filter(([, v]) => v.max).map(([k, v]) => el('li', {}, `${DIMENSIONES[k]}: ${v.p}/${v.max}`))),
       el('button', { type: 'button', class: 'btn btn-primary btn-sm', onclick: () => { elecciones = []; animo = c.animoInicial; chat.replaceChildren(); final.replaceChildren(); paso(); } }, 'Repetir la conversación')));
   }

@@ -145,7 +145,7 @@ const PRIV = [
   ['copy running-config startup-config', s => { s.guardada = runningConfig(s); return 'Destination filename [startup-config]? \nBuilding configuration...\n[OK]'; }],
   ['write [memory]', s => { s.guardada = runningConfig(s); return 'Building configuration...\n[OK]'; }],
   ['disable', s => { s.modo = 'user'; }],
-  ['exit', s => { s.modo = 'user'; return '\n(sesión cerrada; pulsa Intro para volver a entrar)'; }],
+  ['exit', s => { s.modo = 'user'; return '\n(sesión cerrada; presiona Enter para volver a entrar)'; }],
   ['ping <ip:ip>', (s, a) => ping(s, a.ip)],
   ['ping [ipv6] <d:ip6>', (s, a) => ping6(s, a.d)],
   ['traceroute <ip:ip>', (s, a) => ping(s, a.ip, true)],
@@ -155,7 +155,7 @@ const PRIV = [
 ];
 const USER = [
   ['enable', s => { s.modo = 'priv'; }],
-  ['exit', () => '\n(sesión cerrada; pulsa Intro para volver a entrar)'],
+  ['exit', () => '\n(sesión cerrada; presiona Enter para volver a entrar)'],
   ['ping <ip:ip>', (s, a) => ping(s, a.ip)],
   ['show ip interface brief', s => showIpIntBrief(s)],
   ['show interfaces status', s => showIfStatus(s)],

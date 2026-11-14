@@ -54,7 +54,7 @@ dbdiagram.io, draw.io, MySQL Workbench o DBeaver generan diagramas E-R; en la no
 
 ## Diseña tú
 
-Crea las tablas y relaciones de cada encargo. El diagrama se dibuja solo y el diseño se comprueba al pulsar el botón.
+Crea las tablas y relaciones de cada encargo. El diagrama se dibuja solo y el diseño se comprueba al presionar el botón.
 
 [[er:tienda]]
 
@@ -280,7 +280,7 @@ COMMIT;   -- o ROLLBACK si algo ha fallado
 Para aislar, el gestor **bloquea** filas o tablas. Si la transacción A bloquea la fila 1 y espera la 2, mientras B bloquea la 2 y espera la 1, ninguna avanza: es un **interbloqueo** (*deadlock*). El gestor lo detecta y cancela una de las dos, que debe **reintentarse**.
 
 Para evitarlos:
-- Transacciones **cortas**: nunca esperes a que el usuario pulse un botón con una transacción abierta.
+- Transacciones **cortas**: nunca esperes a que el usuario presione un botón con una transacción abierta.
 - Acceder a las tablas y filas **siempre en el mismo orden**.
 - Bloqueo explícito cuando hace falta: `SELECT ... FOR UPDATE` (PostgreSQL, MySQL) reserva las filas que vas a modificar.
 

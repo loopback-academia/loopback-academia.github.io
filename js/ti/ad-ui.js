@@ -33,7 +33,7 @@ export async function montarAd(holder) {
   }
   function comprobarFin() {
     marcador.textContent = `${s.cerrados.size}/${TICKETS.length} tickets`;
-    if (s.cerrados.size === TICKETS.length && !labHecho('ad-mesa')) { guardarLab('ad-mesa'); toast('¡Cola de tickets resuelta! Laboratorio completado.'); }
+    if (s.cerrados.size === TICKETS.length && !labHecho('ad-mesa')) { guardarLab('ad-mesa'); toast('Cola de tickets resuelta. Laboratorio completado.'); }
   }
   function pintarArbol() {
     arbol.replaceChildren(el('p', { class: 'small muted' }, '🌐 laceiba.local'), ...OUS.map(o => {
@@ -104,7 +104,7 @@ export async function montarAd(holder) {
 
   holder.append(el('section', { class: 'lab', 'aria-label': 'Active Directory' },
     el('div', { class: 'lab-head' }, el('h3', {}, 'Active Directory: la cola de la mesa de ayuda'), marcador),
-    el('p', { class: 'muted' }, 'Eres técnico de soporte en Comercial La Ceiba (dominio laceiba.local, empresa ficticia). Resuelve cada ticket con la consola de abajo y ciérralo. Ojo: no todo lo que piden se debe hacer.'),
+    el('p', { class: 'muted' }, 'Eres técnico de soporte en Comercial La Ceiba (dominio laceiba.local, empresa ficticia). Resuelve cada ticket con la consola de abajo y ciérralo. Atención: no todas las solicitudes deben atenderse.'),
     el('h4', {}, 'Tickets abiertos'), tickets,
     el('h4', {}, 'Usuarios y equipos de Active Directory'),
     el('div', { class: 'ad-consola' }, el('div', {}, buscador, arbol), lista, props),

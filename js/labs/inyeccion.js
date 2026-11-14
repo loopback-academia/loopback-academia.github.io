@@ -15,7 +15,7 @@ export async function montarInyeccion(holder) {
   const contar = () => {
     marcador.textContent = `${hechos.filter(Boolean).length}/3 retos`;
     if (hechos.every(Boolean)) {
-      final.replaceChildren(el('div', { class: 'alert alert-ok' }, el('p', {}, el('strong', {}, '¡Laboratorio completado! '), 'Has visto el ataque desde dentro y has aplicado la defensa que usan las aplicaciones profesionales: consultas parametrizadas.')));
+      final.replaceChildren(el('div', { class: 'alert alert-ok' }, el('p', {}, el('strong', {}, 'Laboratorio completado. '), 'Has visto el ataque desde dentro y has aplicado la defensa que usan las aplicaciones profesionales: consultas parametrizadas.')));
       if (!labHecho('sqli-login')) { guardarLab('sqli-login'); toast('Laboratorio de inyección SQL completado.'); }
     }
   };
@@ -35,7 +35,7 @@ export async function montarInyeccion(holder) {
     e.preventDefault();
     const r = retoLogin(db, u1.value, c1.value);
     res1.replaceChildren(tabla(r));
-    if (r.ok) { hechos[0] = true; fb1.className = 'feedback ok'; fb1.textContent = '¡Entraste como administrador sin saber la contraseña! Lo que escribiste cambió la lógica de la consulta.'; contar(); }
+    if (r.ok) { hechos[0] = true; fb1.className = 'feedback ok'; fb1.textContent = 'Has entrado como administrador sin conocer la contraseña. Lo que escribiste cambió la lógica de la consulta.'; contar(); }
     else { fb1.className = 'feedback bad'; fb1.textContent = r.filas?.length ? 'Has entrado, pero no como admin.' : 'Acceso denegado. Mira cómo queda la consulta con lo que escribes.'; }
   });
 
@@ -48,7 +48,7 @@ export async function montarInyeccion(holder) {
     e.preventDefault();
     const r = retoBusqueda(db, t2.value);
     res2.replaceChildren(tabla(r));
-    if (r.ok) { hechos[1] = true; fb2.className = 'feedback ok'; fb2.textContent = '¡Has sacado los usuarios y sus contraseñas por un buscador de productos! Y además estaban guardadas sin cifrar.'; contar(); }
+    if (r.ok) { hechos[1] = true; fb2.className = 'feedback ok'; fb2.textContent = 'Has extraído los usuarios y sus contraseñas por un buscador de productos! Y además estaban guardadas sin cifrar.'; contar(); }
     else { fb2.className = 'feedback' + (r.error ? ' bad' : ''); fb2.textContent = r.error ? 'La consulta se rompió: ajusta las comillas o el número de columnas.' : 'Todavía no aparece la contraseña del administrador.'; }
   });
 
@@ -59,7 +59,7 @@ export async function montarInyeccion(holder) {
   const b3 = el('button', { type: 'button', class: 'btn btn-primary' }, 'Probar los ataques');
   b3.addEventListener('click', () => {
     const r = retoArreglo(db, ed.value);
-    if (r.ok) { hechos[2] = true; fb3.className = 'feedback ok'; fb3.textContent = '¡Arreglado! El inicio de sesión normal funciona y los tres ataques fallan: el texto del usuario ya nunca se interpreta como SQL.'; contar(); }
+    if (r.ok) { hechos[2] = true; fb3.className = 'feedback ok'; fb3.textContent = 'Vulnerabilidad corregida: el inicio de sesión normal funciona y los tres ataques fallan: el texto del usuario ya nunca se interpreta como SQL.'; contar(); }
     else { fb3.className = 'feedback bad'; fb3.textContent = r.motivo; }
   });
 

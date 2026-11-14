@@ -63,7 +63,7 @@ function pintarEscalera() {
     const examen = el('div', { class: 'step-exam ' + e.estadoExamen },
       el('span', { class: 'node-dot', 'aria-hidden': 'true' }, e.estadoExamen === 'aprobado' ? '🏅' : e.estadoExamen === 'disponible' ? '🏁' : '🔒'),
       el('div', {}, el('strong', {}, `Examen del escalón ${e.n}`), el('span', { class: 'small muted' }, e.estadoExamen === 'aprobado' ? ` · aprobado con ${pct(q.puntos, q.total)} %` : ` · ${e.tamano} preguntas · mínimo ${minimoPara(e.tamano)} (80 %)`),
-        el('p', { class: 'small muted' }, e.estadoExamen === 'bloqueado' ? 'Se abre al completar todas las lecciones de este escalón.' : e.estadoExamen === 'disponible' ? '¡Listo! Apruébalo para abrir el siguiente escalón.' : 'Puedes repetirlo para mejorar: tendrá preguntas nuevas.')),
+        el('p', { class: 'small muted' }, e.estadoExamen === 'bloqueado' ? 'Se abre al completar todas las lecciones de este escalón.' : e.estadoExamen === 'disponible' ? 'Disponible: apruébalo para abrir el siguiente escalón.' : 'Puedes repetirlo para mejorar: tendrá preguntas nuevas.')),
       e.estadoExamen === 'bloqueado' ? null : el('a', { class: 'btn btn-sm ' + (e.estadoExamen === 'disponible' ? 'btn-primary' : 'btn-ghost'), href: urlExamen(e) }, e.estadoExamen === 'disponible' ? 'Hacer el examen' : 'Repetir'));
     const meter = el('div', { class: 'meter' }, el('span'));
     setMeter(meter, (e.hechas + (e.estadoExamen === 'aprobado' ? 1 : 0)) / (e.pasos.length + 1));
@@ -84,7 +84,7 @@ function pintarEscalera() {
   const qf = notaQuiz('final-' + area);
   const final = el('li', { class: 'ladder-step' }, el('div', { class: 'step-final ' + est.final },
     el('span', { class: 'node-dot', 'aria-hidden': 'true' }, est.final === 'aprobado' ? '🏆' : est.final === 'disponible' ? '🎓' : '🔒'),
-    el('div', {}, el('strong', {}, 'Examen final del área'), el('p', { class: 'small muted' }, est.final === 'aprobado' ? `Aprobado con ${pct(qf.puntos, qf.total)} %. ¡Escalera completada!` : est.final === 'disponible' ? 'Último paso: demuestra todo lo aprendido (mínimo 80 %).' : 'Se abre al aprobar el examen de todos los escalones.')),
+    el('div', {}, el('strong', {}, 'Examen final del área'), el('p', { class: 'small muted' }, est.final === 'aprobado' ? `Aprobado con ${pct(qf.puntos, qf.total)} %. Escalera completada` : est.final === 'disponible' ? 'Último paso: demuestra todo lo aprendido (mínimo 80 %).' : 'Se abre al aprobar el examen de todos los escalones.')),
     est.final === 'bloqueado' ? null : est.final === 'aprobado' ? el('a', { class: 'btn btn-sm btn-primary', href: 'certificado.html?area=' + area }, '🎓 Mi certificado') : el('a', { class: 'btn btn-sm btn-primary', href: urlFinal(area) }, 'Hacer el examen final')));
   return el('div', {}, el('p', { class: 'small muted ladder-help' }, 'Se avanza paso a paso: cada lección se abre al aprobar la anterior con un 80 %, y cada escalón al aprobar el examen del anterior. Lo completado queda abierto para repasar.',
     area !== 'base' ? [' ¿Ya dominas parte de esta área? ', el('a', { href: 'nivel.html?area=' + area }, 'Haz la prueba de nivel'), ' y empieza en tu escalón.'] : null),
@@ -124,7 +124,7 @@ function pintarNivel() {
     el('h2', { class: 'small muted' }, 'TU NIVEL'),
     el('div', { class: 'nivel-cab' }, el('span', { class: 'nivel-num' }, String(nv.actual.n)), el('div', {}, el('strong', {}, nv.actual.nombre), el('span', { class: 'small muted' }, `${xp} XP`))),
     barra,
-    el('p', { class: 'small muted' }, nv.siguiente ? `Te faltan ${nv.faltan} XP para «${nv.siguiente.nombre}». Cada lección suma 20 XP y cada laboratorio 30.` : '¡Has llegado al nivel máximo!'),
+    el('p', { class: 'small muted' }, nv.siguiente ? `Te faltan ${nv.faltan} XP para «${nv.siguiente.nombre}». Cada lección suma 20 XP y cada laboratorio 30.` : 'Has alcanzado el nivel máximo.'),
     pendientes.length ? el('p', { class: 'small' }, el('strong', {}, 'Próxima insignia: '), `${pendientes[0].icono} ${pendientes[0].titulo}: ${pendientes[0].texto.toLowerCase()}`) : null,
     conseguidos.length ? el('ul', { class: 'insignias mini', 'aria-label': 'Tus insignias' }, ...conseguidos.slice(-6).map(l => el('li', { title: l.titulo + ': ' + l.texto }, l.icono))) : null,
     todas,
@@ -159,10 +159,10 @@ function pintar() {
   const cont = $('#continuar');
   cont.hidden = false;
   cont.replaceChildren(...(paso
-    ? [el('div', {}, el('span', { class: 'eyebrow' }, paso.tipo !== 'Lección' ? 'Te toca examen' : hechas ? 'Continúa donde lo dejaste' : 'Empieza por aquí'), el('h2', {}, paso.texto),
+    ? [el('div', {}, el('span', { class: 'eyebrow' }, paso.tipo !== 'Lección' ? 'Examen pendiente' : hechas ? 'Continúa donde lo dejaste' : 'Empieza por aquí'), el('h2', {}, paso.texto),
         el('p', { class: 'muted small' }, siguiente ? `Escalón ${paso.escalon.n} · ${NIVEL_INFO[siguiente.nivel - 1].titulo} · ${siguiente.minutos} min` : paso.escalon ? `Escalón ${paso.escalon.n} · ${paso.escalon.tamano} preguntas · mínimo 80 %` : 'Todo el temario del área · mínimo 80 %')),
        el('a', { class: 'btn btn-primary btn-lg', href: paso.href }, paso.tipo !== 'Lección' ? 'Hacer el examen' : hechas ? 'Continuar' : 'Empezar')]
-    : [el('div', {}, el('span', { class: 'eyebrow' }, '¡Escalera completada!'), el('h2', {}, 'Has aprobado el examen final del área'), el('p', { class: 'muted small' }, 'Sigue con otra área o con una ruta de empleo.')),
+    : [el('div', {}, el('span', { class: 'eyebrow' }, 'Escalera completada'), el('h2', {}, 'Has aprobado el examen final del área'), el('p', { class: 'muted small' }, 'Sigue con otra área o con una ruta de empleo.')),
        el('a', { class: 'btn btn-primary btn-lg', href: 'rutas.html' }, 'Rutas de empleo')]));
 
   pintarContinua();
@@ -203,12 +203,12 @@ function pintarContinua() {
     el('a', { class: 'btn ' + (r.hoy ? 'btn-primary' : 'btn-ghost') + ' btn-sm', href: 'repaso.html' }, r.hoy ? 'Repasar ahora' : 'Ver mi repaso'));
   const practicasCard = el('article', { class: 'card' },
     el('h3', {}, pendientes.length ? 'Prácticas pendientes' : 'Prácticas recomendadas'),
-    sugeridas.length ? el('ul', {}, sugeridas.map(p => el('li', {}, el('a', { href: 'laboratorio.html?l=' + p.clave }, (p.grupo === 'averias' ? '🔧 ' : p.grupo === 'proyectos' ? '🏗️ ' : '') + p.titulo), p.leccion ? el('small', {}, 'De la lección «' + p.leccion.titulo + '»') : el('small', {}, NIVEL_INFO.find(n => n.clave === p.nivel)?.titulo || '')))) : el('p', { class: 'small muted' }, '¡Tienes todas las prácticas al día!'),
+    sugeridas.length ? el('ul', {}, sugeridas.map(p => el('li', {}, el('a', { href: 'laboratorio.html?l=' + p.clave }, (p.grupo === 'averias' ? '🔧 ' : p.grupo === 'proyectos' ? '🏗️ ' : '') + p.titulo), p.leccion ? el('small', {}, 'De la lección «' + p.leccion.titulo + '»') : el('small', {}, NIVEL_INFO.find(n => n.clave === p.nivel)?.titulo || '')))) : el('p', { class: 'small muted' }, 'Todas tus prácticas están al día.'),
     el('a', { class: 'small', href: 'practica.html#area-' + area }, 'Ver todas las prácticas →'));
   const temasCard = el('article', { class: 'card' },
     el('h3', {}, 'Temas a reforzar'),
     temas.length ? el('ul', {}, temas.map(t => el('li', {}, el('a', { href: 'repaso.html?leccion=' + t.leccion.id }, t.leccion.titulo),
-      el('small', {}, [t.enRepaso ? `${t.enRepaso} en repaso` : null, t.suspendido ? `cuestionario ${t.nota.puntos}/${t.nota.total}` : null].filter(Boolean).join(' · '))))) : el('p', { class: 'small muted' }, 'Ningún tema flojo por ahora. Cuando falles preguntas o suspendas un cuestionario, te diremos qué repasar.'));
+      el('small', {}, [t.enRepaso ? `${t.enRepaso} en repaso` : null, t.suspendido ? `cuestionario ${t.nota.puntos}/${t.nota.total}` : null].filter(Boolean).join(' · '))))) : el('p', { class: 'small muted' }, 'No hay temas débiles por ahora. Cuando falles preguntas o suspendas un cuestionario, te diremos qué repasar.'));
   $('#continua').replaceChildren(repasoCard, practicasCard, temasCard);
 }
 function siguienteNivel() {
@@ -239,13 +239,13 @@ if (curso) montarReto($('#retoDia'), { curso, leccionHecha, area });
 // lleva directamente a donde se hace. Desaparece al completarla o si el alumno la oculta.
 function pintarGuia() {
   const OBJETIVOS = [
-    ['base', '🚀', 'Empiezo desde cero', 'Nunca he estudiado tecnología: quiero aprender lo básico paso a paso'],
+    ['base', '🚀', 'Empiezo desde cero', 'Para quienes nunca han estudiado tecnología: los fundamentos, paso a paso'],
     ['redes', '🌐', 'Redes', 'Cómo funciona Internet, routers, switches, VLAN y el CCNA'],
     ['ti', '🏢', 'Conseguir empleo en TI', 'Soporte técnico, mesa de ayuda y casos reales de empresa'],
-    ['prog', '💻', 'Programación', 'Python y JavaScript desde cero, ejecutando código aquí mismo'],
-    ['bd', '🗄️', 'Bases de datos', 'SQL de verdad en tu navegador, de cero a profesional'],
+    ['prog', '💻', 'Programación', 'Python y JavaScript desde cero, con código que se ejecuta en el navegador'],
+    ['bd', '🗄️', 'Bases de datos', 'SQL real en el navegador, desde cero hasta el nivel profesional'],
     ['sec', '🛡️', 'Ciberseguridad', 'Contraseñas, cifrado, cortafuegos, registros y respuesta a incidentes'],
-    ['en', '🇬🇧', 'Inglés técnico', 'El inglés que piden en TI: errores, documentación, tickets y entrevistas'],
+    ['en', '🇬🇧', 'Inglés técnico', 'El inglés que se exige en TI: errores, documentación, tickets y entrevistas'],
   ];
   const caja = $('#primerosPasos');
   if (!caja || !curso) return;
@@ -255,12 +255,12 @@ function pintarGuia() {
   const eligio = !!local.get('aula:guia:area', '') || hay('leccion:');
   const primera = ruta()[0];
   const pasos = [
-    { ok: eligio, titulo: 'Elige qué quieres aprender', texto: '¿Ya sabes de alguna área? Haz el examen de entrada (enlace en la parte de arriba de esta página) y empieza en tu nivel. Puedes cambiar de área cuando quieras con las pestañas.' },
+    { ok: eligio, titulo: 'Elige qué quieres aprender', texto: '¿Ya tienes conocimientos en alguna área? Realiza el examen de entrada (enlace en la parte superior de esta página) y comienza en tu nivel. Puedes cambiar de área en cualquier momento con las pestañas.' },
     { ok: hay('leccion:'), titulo: 'Haz tu primera lección', texto: 'Lecciones cortas, con ejemplos, animaciones y videos.', accion: primera && ['Empezar la primera lección', 'leccion.html?id=' + primera.id] },
     { ok: hay('quiz:'), titulo: 'Responde un cuestionario', texto: 'Está al final de cada lección. Con un 80 % o más la lección se completa y se abre la siguiente.' },
-    { ok: CATALOGO.some(l => labHecho(l.progreso)), titulo: 'Practica en un laboratorio', texto: 'Ejercicios que se corrigen solos: consola, SQL, código o casos de soporte.', accion: ['Ver las prácticas', 'practica.html#area-' + area] },
+    { ok: CATALOGO.some(l => labHecho(l.progreso)), titulo: 'Practica en un laboratorio', texto: 'Ejercicios con corrección automática: consola, SQL, código o casos de soporte.', accion: ['Ver las prácticas', 'practica.html#area-' + area] },
   ];
-  if (cuentasActivas()) pasos.push({ ok: !!usuario, titulo: 'Guarda tu progreso con una cuenta', texto: 'Es gratis y te permite seguir desde el celular o la computadora.', accion: ['Crear mi cuenta', 'cuenta.html'] });
+  if (cuentasActivas()) pasos.push({ ok: !!usuario, titulo: 'Guarda tu progreso con una cuenta', texto: 'Es gratuita y te permite continuar desde el celular o la computadora.', accion: ['Crear mi cuenta', 'cuenta.html'] });
   const hechos = pasos.filter(p => p.ok).length;
   if (hechos === pasos.length) { caja.hidden = true; return; }
   const actual = pasos.findIndex(p => !p.ok);

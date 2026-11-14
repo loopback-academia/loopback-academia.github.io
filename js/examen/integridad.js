@@ -8,7 +8,7 @@
 //  - Salir de la pantalla del examen (otra pestaña, otra aplicación, salir de pantalla completa) se cuenta y se
 //    avisa; al llegar al máximo, el examen se entrega solo. Mientras la ventana no tiene el foco, la pregunta se
 //    difumina (muchas herramientas de captura quitan el foco al abrirse).
-//  - Al pulsar Impr Pant se sustituye el portapapeles por el aviso.
+//  - Al presionar Impr Pant se sustituye el portapapeles por el aviso.
 //  - Marca de agua con el nombre, la fecha y el intento: una foto o captura queda identificada.
 // Límite honesto: ninguna web puede impedir una foto con otro dispositivo ni que alguien reescriba la pregunta a
 // mano. Por eso, además, cada pregunta tiene un tiempo límite y hay preguntas generadas en cada intento.

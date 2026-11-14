@@ -288,6 +288,6 @@ export const EJERCICIOS = {
     ],
   },
   // ================================================================ zonas libres
-  'python-libre': { lang: 'python', nivel: 'principiante', titulo: 'Zona libre de Python', libre: true, inicial: '# Escribe cualquier programa en Python y pulsa Ejecutar.\nimport ipaddress\n\nred = ipaddress.ip_network("192.168.1.0/24")\nfor subred in red.subnets(new_prefix=26):\n    print(subred, "→", subred.num_addresses - 2, "hosts")\n' },
-  'js-libre': { lang: 'javascript', nivel: 'principiante', titulo: 'Zona libre de JavaScript', libre: true, inicial: '// Escribe cualquier programa en JavaScript y pulsa Ejecutar.\nconst puertos = { ssh: 22, http: 80, https: 443 };\nfor (const [servicio, puerto] of Object.entries(puertos)) {\n  console.log(`${servicio.toUpperCase()} usa el puerto ${puerto}`);\n}\n' },
+  'python-libre': { lang: 'python', nivel: 'principiante', titulo: 'Zona libre de Python', libre: true, inicial: '# Escribe cualquier programa en Python y presiona Ejecutar.\nimport ipaddress\n\nred = ipaddress.ip_network("192.168.1.0/24")\nfor subred in red.subnets(new_prefix=26):\n    print(subred, "→", subred.num_addresses - 2, "hosts")\n' },
+  'js-libre': { lang: 'javascript', nivel: 'principiante', titulo: 'Zona libre de JavaScript', libre: true, inicial: '// Escribe cualquier programa en JavaScript y presiona Ejecutar.\nconst puertos = { ssh: 22, http: 80, https: 443 };\nfor (const [servicio, puerto] of Object.entries(puertos)) {\n  console.log(`${servicio.toUpperCase()} usa el puerto ${puerto}`);\n}\n' },
 };

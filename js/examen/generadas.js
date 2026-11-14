@@ -121,7 +121,7 @@ const GEN = {
     const imp = elegir(rnd, [
       ['alto', s => `Toda ${s} está sin sistema y no se puede vender.`],
       ['medio', s => `El área de facturación de ${s} no puede imprimir (las demás áreas trabajan).`],
-      ['bajo', () => 'A una persona le falla el ratón, pero tiene otro de repuesto.'],
+      ['bajo', () => 'A una persona le falla el mouse, pero tiene otro de repuesto.'],
     ]);
     const urg = elegir(rnd, [['alta', 'Hay clientes esperando en este momento.'], ['media', 'Debe quedar resuelto hoy.'], ['baja', 'Puede planificarse para la próxima semana.']]);
     const M = { alto: { alta: 'P1', media: 'P2', baja: 'P3' }, medio: { alta: 'P2', media: 'P3', baja: 'P4' }, bajo: { alta: 'P3', media: 'P4', baja: 'P4' } };

@@ -133,7 +133,7 @@ export async function montarSql(holder, id) {
     if (r.resultado !== undefined) salida.replaceChildren(tablaResultado(r.resultado));
     if (r.ok) {
       hechos.add(n);
-      feedback.className = 'feedback ok'; feedback.textContent = '¡Correcto!' + (lista[n].descubre ? ' Pista descubierta: ' + lista[n].descubre : '') + (n < lista.length - 1 ? ' Pasa al siguiente ejercicio.' : '');
+      feedback.className = 'feedback ok'; feedback.textContent = 'Correcto.' + (lista[n].descubre ? ' Pista descubierta: ' + lista[n].descubre : '') + (n < lista.length - 1 ? ' Pasa al siguiente ejercicio.' : '');
       if (lista[n].grafico) { const g = grafico(r.resultado, lista[n].grafico); if (g) salida.append(g); }
       if (conjunto && hechos.size === lista.length) historia.replaceChildren(el('div', { class: 'alert alert-ok' }, el('p', {}, el('strong', {}, '🔎 ' + conjunto.final))));
       marcador.textContent = `${hechos.size}/${lista.length} resueltos`;
@@ -147,7 +147,7 @@ export async function montarSql(holder, id) {
 
   holder.append(el('section', { class: 'lab', 'aria-label': 'Laboratorio SQL' },
     el('div', { class: 'lab-head' }, el('h3', {}, conjunto ? conjunto.titulo : BASES[base].titulo), marcador),
-    conjunto ? el('p', { class: 'alert alert-info' }, el('span', {}, conjunto.intro)) : null, esquema, titulo, enunciado, editor, el('p', { class: 'hint' }, 'Ctrl + Intro para comprobar. La base de datos se reinicia en cada ejecución.'),
+    conjunto ? el('p', { class: 'alert alert-info' }, el('span', {}, conjunto.intro)) : null, esquema, titulo, enunciado, editor, el('p', { class: 'hint' }, 'Ctrl + Enter para comprobar. La base de datos se reinicia en cada ejecución.'),
     el('div', { class: 'hero-cta' }, btnRun, btnCheck, btnPrev, btnNext, btnSol), feedback, historia, salida));
   pintar();
   salida.replaceChildren(el('p', { class: 'muted small' }, 'Preparando SQLite en tu navegador…'));

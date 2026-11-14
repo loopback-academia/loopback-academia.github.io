@@ -40,7 +40,7 @@ export async function montarLista(holder, id) {
         cb.addEventListener('change', () => {
           if (cb.checked) marcados.add(i); else marcados.delete(i);
           local.set(clave, [...marcados]);
-          if (marcados.size === lista.pasos.length && !labHecho('lista-' + id)) { guardarLab('lista-' + id); toast('🎉 ¡Lista completada! Ya tienes tu laboratorio en casa.'); }
+          if (marcados.size === lista.pasos.length && !labHecho('lista-' + id)) { guardarLab('lista-' + id); toast('Lista completada: tu laboratorio en casa está listo.'); }
           pintar();
           caja.querySelector('#' + CSS.escape(`${id}-${i}`))?.focus();
         });
@@ -48,7 +48,7 @@ export async function montarLista(holder, id) {
           el('label', { for: `${id}-${i}` }, cb, el('span', {}, p.t)),
           p.enlace ? el('a', { href: p.enlace[0], target: '_blank', rel: 'noopener noreferrer', class: 'small' }, p.enlace[1] + ' ↗') : null);
       })),
-      n === lista.pasos.length ? el('p', { class: 'juego-msg ok' }, '🎉 ¡Todo listo! Desde ahora, repite cada laboratorio del curso también en tu Packet Tracer.') : null,
+      n === lista.pasos.length ? el('p', { class: 'juego-msg ok' }, 'Todo listo. A partir de ahora, repite cada laboratorio del curso también en tu Packet Tracer.') : null,
     ].filter(Boolean));
   }
   holder.append(caja);

@@ -428,8 +428,8 @@ C++ moderno (C++17, C++20) usa punteros inteligentes y contenedores que reducen 
 
 ## Dónde se usan
 
-- **C:** sistemas operativos, drivers, **sistemas embebidos y firmware** (routers, switches, electrodomésticos, coches), microcontroladores.
-- **C++:** motores de videojuegos (Unreal), navegadores (Chrome), bases de datos, software financiero de alta frecuencia, programas de edición de vídeo y 3D.
+- **C:** sistemas operativos, drivers, **sistemas embebidos y firmware** (routers, switches, electrodomésticos, autos), microcontroladores.
+- **C++:** motores de videojuegos (Unreal), navegadores (Chrome), bases de datos, software financiero de alta frecuencia, programas de edición de video y 3D.
 
 ::: quiz
 ? ¿En qué lenguaje está escrito principalmente el núcleo de Linux?
@@ -555,7 +555,7 @@ foreach ($equipos as $nombre => $estado) {
 }
 ```
 
-## Kotlin y Swift: el móvil
+## Kotlin y Swift: aplicaciones móviles
 
 | | Kotlin | Swift |
 |---|---|---|
@@ -616,7 +616,7 @@ for (nombre, activo) in equipos where !activo {
 :::
 
 === p2-scripting | Bash y PowerShell: automatizar el sistema | 16 | 2
-Los **lenguajes de scripting de shell** automatizan tareas del sistema operativo: copiar ficheros, revisar registros, crear usuarios, comprobar servidores. Son imprescindibles para administradores de sistemas y redes.
+Los **lenguajes de scripting de shell** automatizan tareas del sistema operativo: copiar archivos, revisar registros, crear usuarios, comprobar servidores. Son imprescindibles para administradores de sistemas y redes.
 
 ## Bash (Linux y macOS)
 
@@ -638,7 +638,7 @@ grep -c "CAÍDO" "$informe" || true
 
 Ideas clave:
 - **Tuberías** (`|`): la salida de un comando es la entrada del siguiente: `cat registro.log | grep ERROR | wc -l`.
-- **Redirecciones:** `>` sobrescribe un fichero, `>>` añade al final, `2>` redirige los errores.
+- **Redirecciones:** `>` sobrescribe un archivo, `>>` añade al final, `2>` redirige los errores.
 - Herramientas de texto: `grep` (buscar), `awk` y `cut` (columnas), `sed` (sustituir), `sort`, `uniq`.
 - `set -euo pipefail` hace que el script se detenga ante el primer error: buena práctica.
 
@@ -677,7 +677,7 @@ Para tareas cortas, Bash o PowerShell son perfectos. Si el script crece (más de
 ? En Bash, ¿qué hace el operador | (tubería)?
 + Envía la salida de un comando como entrada del siguiente
 - Ejecuta dos comandos a la vez sin relación
-- Guarda la salida en un fichero
+- Guarda la salida en un archivo
 = Por ejemplo: cat registro.log | grep ERROR.
 
 ? ¿Qué diferencia principal tiene PowerShell respecto a Bash?
@@ -687,7 +687,7 @@ Para tareas cortas, Bash o PowerShell son perfectos. Si el script crece (más de
 = Los objetos tienen propiedades, así que no hace falta recortar texto.
 
 ? En Bash, ¿qué diferencia hay entre > y >>?
-+ > sobrescribe el fichero; >> añade al final
++ > sobrescribe el archivo; >> añade al final
 - Son iguales
 - > lee y >> escribe
 = Con >> se acumulan los resultados de varias ejecuciones.
@@ -701,7 +701,7 @@ La mayoría de los servidores del mundo (webs, bases de datos, la nube) funciona
 | Comando | Para qué |
 |---|---|
 | `pwd`, `ls -la`, `cd carpeta`, `cd ..`, `cd ~` | Dónde estoy, qué hay, moverse |
-| `mkdir -p a/b`, `touch archivo`, `cp`, `mv`, `rm`, `rm -r` | Crear, copiar, mover y borrar (¡`rm` no tiene papelera!) |
+| `mkdir -p a/b`, `touch archivo`, `cp`, `mv`, `rm`, `rm -r` | Crear, copiar, mover y borrar (atención: `rm` no tiene papelera) |
 | `cat`, `head`, `tail -n 50`, `less` | Ver archivos (`tail -f` sigue un registro en directo) |
 | `grep "texto" archivo`, `grep -r` | Buscar dentro de archivos |
 | `find / -name "*.log"` | Buscar archivos por nombre |

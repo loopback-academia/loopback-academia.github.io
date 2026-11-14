@@ -70,10 +70,10 @@ export const PASO_INFO = [
 
 // Prácticas del área «Empieza aquí»: [id, título, nivel, preguntas, texto]. tests/inicio.test.mjs las compara con js/inicio/inicio.js.
 export const INICIO_INFO = [
-  ['partes', 'Las piezas del ordenador', 'principiante', 10, 'Reconoce cada pieza por lo que hace: procesador, RAM, disco y más.'],
+  ['partes', 'Las piezas de la computadora', 'principiante', 10, 'Reconoce cada pieza por lo que hace: procesador, RAM, disco y más.'],
   ['atajos', 'Atajos de teclado', 'principiante', 10, 'Copiar, pegar, deshacer, guardar, buscar… los atajos que usarás cada día.'],
   ['archivos', '¿Qué tipo de archivo es?', 'principiante', 10, 'Aprende a leer la extensión y a detectar archivos peligrosos.'],
-  ['unidades', 'Bits, bytes y velocidad', 'intermedio', 8, 'Tamaños de archivo y velocidad de internet sin miedo a los números.'],
+  ['unidades', 'Bits, bytes y velocidad', 'intermedio', 8, 'Tamaños de archivo y velocidad de internet, explicados paso a paso.'],
   ['orientacion', '¿Por qué área empiezo?', 'intermedio', 8, 'Un test rápido sobre tus gustos que te recomienda por dónde seguir.'],
 ];
 

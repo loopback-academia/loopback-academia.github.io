@@ -7,7 +7,7 @@ import * as S from './seguridad.js';
 
 const NIVEL = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
 const uid = () => 'sg-' + Math.random().toString(36).slice(2, 9);
-function completar(progreso, titulo) { if (!labHecho(progreso)) { guardarLab(progreso); toast('¡Práctica completada: ' + titulo + '!'); } }
+function completar(progreso, titulo) { if (!labHecho(progreso)) { guardarLab(progreso); toast('Práctica completada: ' + titulo + '.'); } }
 function seccion(titulo, marcador, ...hijos) {
   return el('section', { class: 'lab sec-lab', 'aria-label': titulo }, el('div', { class: 'lab-head' }, el('h3', {}, titulo), marcador), ...hijos);
 }

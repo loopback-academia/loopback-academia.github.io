@@ -50,7 +50,7 @@ export async function montarEntrevista(holder, ruta) {
     function resultado() {
       cerrarReloj();
       const r = puntuar(preguntas, marcadas);
-      const nivel = r.pct >= 75 ? '¡Muy buena entrevista!' : r.pct >= 50 ? 'Vas bien: completa más tus respuestas.' : 'Practica más: tus respuestas se quedan cortas.';
+      const nivel = r.pct >= 75 ? 'Entrevista muy bien resuelta.' : r.pct >= 50 ? 'Vas bien: completa más tus respuestas.' : 'Practica más: tus respuestas se quedan cortas.';
       if (!labHecho('entrevista-' + ruta)) { guardarLab('entrevista-' + ruta); toast('Simulador de entrevista completado.'); }
       caja.replaceChildren(
         el('div', { class: 'alert ' + (r.pct >= 50 ? 'alert-ok' : 'alert-warn') }, el('p', {}, el('strong', {}, `${r.pct} % de los puntos clave. `), nivel)),

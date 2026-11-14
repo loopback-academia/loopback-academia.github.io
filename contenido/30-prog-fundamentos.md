@@ -8,10 +8,10 @@ descripcion: Programar desde cero: qué es un algoritmo, variables y tipos de da
 ---
 
 === p1-que-es | Qué es programar | 12 | 1
-**Programar** es escribir instrucciones precisas para que un ordenador resuelva un problema. El ordenador no entiende "más o menos": hace **exactamente** lo que le dices, ni más ni menos.
+**Programar** es escribir instrucciones precisas para que una computadora resuelva un problema. La computadora no entiende "más o menos": hace **exactamente** lo que le dices, ni más ni menos.
 
 ::: nota
-¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico del ordenador, internet y las profesiones de la tecnología.
+¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico de la computadora, internet y las profesiones de la tecnología.
 :::
 
 ## Algoritmo y programa
@@ -31,7 +31,7 @@ else:
     print("Es impar")
 ```
 
-## Cómo entiende el ordenador tu código
+## Cómo entiende la computadora tu código
 
 El procesador solo ejecuta **código máquina** (instrucciones binarias). Tu código hay que traducirlo:
 
@@ -63,7 +63,7 @@ No hace falta ser "de ciencias" para programar. Hace falta paciencia, practicar 
 ? ¿Qué es un algoritmo?
 + Una secuencia finita de pasos claros para resolver un problema
 - Un lenguaje de programación
-- Un tipo de ordenador
+- Un tipo de computadora
 = El algoritmo es la idea; el programa es el algoritmo escrito en un lenguaje.
 
 ? ¿Cuál de estos lenguajes se suele compilar a código máquina antes de ejecutarse?
@@ -271,7 +271,7 @@ const texto = n % 2 === 0 ? "par" : "impar";
 :::
 
 === p1-bucles | Repetir: bucles for y while | 14 | 1
-Los ordenadores son buenos haciendo lo mismo miles de veces sin cansarse. Para repetir se usan **bucles**.
+Las computadoras son buenas haciendo lo mismo miles de veces sin cansarse. Para repetir se usan **bucles**.
 
 [[video:bucle]]
 
@@ -496,7 +496,7 @@ for (const [clave, valor] of Object.entries(equipo)) console.log(clave, valor);
 
 ## Listas de diccionarios: la estructura más común
 
-Así llegan los datos de una API, de una base de datos o de un fichero JSON:
+Así llegan los datos de una API, de una base de datos o de un archivo JSON:
 
 ```python
 inventario = [
@@ -565,7 +565,7 @@ Una de las sorpresas más comunes: dos variables que apuntan a la misma lista.
 :::
 
 === p1-traza | Seguir un programa paso a paso | 14 | 1
-Leer código **como lo ejecuta el ordenador**, una línea cada vez, es la habilidad que más ayuda a programar y a encontrar errores. Los profesionales lo hacen con el **depurador**; aquí lo practicas con la ejecución paso a paso.
+Leer código **como lo ejecuta la computadora**, una línea cada vez, es la habilidad que más ayuda a programar y a encontrar errores. Los profesionales lo hacen con el **depurador**; aquí lo practicas con la ejecución paso a paso.
 
 ## Qué mirar en cada paso
 
@@ -674,7 +674,7 @@ Para algoritmos con muchas decisiones ayuda dibujar un diagrama: óvalos para in
 | **De ejecución** | Al ejecutar: algo imposible | Dividir por cero, usar una variable que no existe |
 | **Lógicos** | El programa funciona… pero da un resultado incorrecto | Usar `<` en lugar de `<=` |
 
-Los lógicos son los más difíciles: el ordenador no avisa.
+Los lógicos son los más difíciles: la computadora no avisa.
 
 ## Cómo depurar (debugging)
 

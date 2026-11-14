@@ -29,7 +29,7 @@ export const PIEZAS = {
   gpu: [
     { id: 'ninguna', nombre: 'Sin tarjeta gráfica (usar la integrada)', w: 0, precio: 0, potencia: 0 },
     { id: 'gt', nombre: 'Tarjeta gráfica básica (2 GB, para varias pantallas)', w: 30, precio: 4800, potencia: 1 },
-    { id: 'rtx', nombre: 'Tarjeta gráfica media (8 GB, diseño 3D y vídeo)', w: 170, precio: 21500, potencia: 2 },
+    { id: 'rtx', nombre: 'Tarjeta gráfica media (8 GB, diseño 3D y video)', w: 170, precio: 21500, potencia: 2 },
   ],
   fuente: [
     { id: 'f300', nombre: 'Fuente 300 W genérica (sin certificación)', w: 300, precio: 1400, certificada: false },
@@ -50,8 +50,8 @@ export const ENCARGOS = {
     requisitos: { ramMin: 16, ssd: true, gpuPotencia: 0 },
   },
   diseno: {
-    titulo: 'Estación de diseño y vídeo', presupuesto: 70000,
-    texto: 'Mercadeo necesita un equipo para editar vídeo y diseño 3D: 32 GB de RAM, SSD de 1 TB, tarjeta gráfica media y fuente certificada, por menos de RD$70.000.',
+    titulo: 'Estación de diseño y video', presupuesto: 70000,
+    texto: 'Mercadeo necesita un equipo para editar video y diseño 3D: 32 GB de RAM, SSD de 1 TB, tarjeta gráfica media y fuente certificada, por menos de RD$70.000.',
     requisitos: { ramMin: 32, ssd: true, ssdGb: 1000, gpuPotencia: 2, fuenteCertificada: true },
   },
 };
@@ -76,7 +76,7 @@ export function validarPc(sel, encargo) {
   if (p.ram.gb < r.ramMin) problemas.push(`El encargo pide al menos ${r.ramMin} GB de RAM.`);
   if (r.ssd && p.disco.tipo !== 'SSD') problemas.push('El encargo pide un SSD para que el equipo arranque y responda rápido.');
   if (r.ssdGb && p.disco.gb < r.ssdGb) problemas.push(`El encargo pide un SSD de al menos ${r.ssdGb / 1000} TB.`);
-  if (p.gpu.potencia < r.gpuPotencia) problemas.push('El encargo necesita una tarjeta gráfica media para 3D y vídeo.');
+  if (p.gpu.potencia < r.gpuPotencia) problemas.push('El encargo necesita una tarjeta gráfica media para 3D y video.');
   if (r.fuenteCertificada && !p.fuente.certificada) problemas.push('Para un equipo de trabajo exigente, usa una fuente certificada 80 PLUS.');
   if (total > encargo.presupuesto) problemas.push(`Te pasas del presupuesto: RD$${total.toLocaleString('es-DO')} de RD$${encargo.presupuesto.toLocaleString('es-DO')}.`);
   return { ok: !problemas.length, problemas, total, consumo };
@@ -84,15 +84,15 @@ export function validarPc(sel, encargo) {
 
 // ---------------------------------------------------------------- averías de hardware (diagnóstico guiado)
 export const AVERIAS = [
-  { id: 'no-enciende', sintoma: 'Un PC de escritorio no hace nada al pulsar el botón: ni luces ni ventiladores.',
+  { id: 'no-enciende', sintoma: 'Un PC de escritorio no hace nada al presionar el botón: ni luces ni ventiladores.',
     opciones: [['Comprobar el cable, el enchufe (con otro aparato) y el interruptor trasero de la fuente', true, 'Lo primero es lo más simple y lo más probable: la alimentación.'], ['Cambiar la placa base', false, 'Es caro y prematuro: antes descarta lo sencillo.'], ['Reinstalar Windows', false, 'Si no enciende, el sistema operativo ni siquiera llega a arrancar.']] },
   { id: 'pitidos', sintoma: 'Enciende, los ventiladores giran, no hay imagen y suenan pitidos repetidos.',
     opciones: [['Buscar el significado del código de pitidos en el manual de la placa (suele ser la RAM) y recolocar los módulos de memoria', true, 'Los pitidos son el diagnóstico de la BIOS; los de memoria son los más comunes.'], ['Cambiar el monitor', false, 'Los pitidos indican un fallo que la placa detecta antes de dar imagen.'], ['Formatear el disco', false, 'No tiene relación: el equipo no llega a cargar el sistema.']] },
-  { id: 'apagones', sintoma: 'El portátil se apaga solo al rato de usarlo, sobre todo con videollamadas. Está muy caliente y el ventilador suena mucho.',
+  { id: 'apagones', sintoma: 'La laptop se apaga sola al rato de usarla, sobre todo con videollamadas. Está muy caliente y el ventilador suena mucho.',
     opciones: [['Revisar la temperatura y limpiar el polvo de las rejillas y el ventilador', true, 'Es un apagado por sobrecalentamiento: la protección térmica corta para no dañar el procesador.'], ['Cambiar la batería', false, 'La batería no explica el calor ni el ventilador a tope.'], ['Desinstalar el antivirus', false, 'Quitar protección no arregla un problema térmico.']] },
   { id: 'disco', sintoma: 'El PC va muy lento, a veces se congela unos segundos y en el Visor de eventos hay avisos de «disco con sectores defectuosos».',
     opciones: [['Hacer copia de seguridad de los datos cuanto antes y revisar el estado SMART del disco para cambiarlo', true, 'Un disco que falla puede morir en cualquier momento: primero salvar los datos.'], ['Desfragmentar el disco varias veces', false, 'Forzar un disco dañado puede acelerar su fallo y perder los datos.'], ['Instalar más RAM', false, 'No arregla un disco que está fallando.']] },
-  { id: 'pantalla', sintoma: 'Un portátil arranca (se oye y las luces se encienden) pero la pantalla está negra.',
+  { id: 'pantalla', sintoma: 'Una laptop arranca (se oye y las luces se encienden) pero la pantalla está negra.',
     opciones: [['Conectar un monitor externo para saber si falla la pantalla o la gráfica', true, 'Así separas el problema: si el monitor externo funciona, la avería está en la pantalla o en su cable.'], ['Cambiar el disco duro', false, 'El equipo arranca: el disco no tiene que ver con la imagen.'], ['Restablecer la configuración de red', false, 'No tiene relación con la imagen.']] },
 ];
 export const evaluarAverias = elecciones => { const bien = AVERIAS.filter(a => a.opciones[elecciones[a.id]]?.[1]).length; return { bien, total: AVERIAS.length, aprobado: bien >= 4 }; };
@@ -105,7 +105,7 @@ export const ORDENES = {
       'Crear un USB de instalación con la herramienta oficial de Microsoft',
       'Entrar en la UEFI/BIOS y poner el USB como primera opción de arranque',
       'Instalar Windows en el SSD (borrando las particiones antiguas si es un equipo reutilizado)',
-      'Instalar los controladores del fabricante (chipset, red, vídeo)',
+      'Instalar los controladores del fabricante (chipset, red, video)',
       'Pasar Windows Update hasta que no queden actualizaciones',
       'Unir el equipo al dominio y moverlo a su unidad organizativa',
       'Instalar el antivirus corporativo y los programas del puesto',

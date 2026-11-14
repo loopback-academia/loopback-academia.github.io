@@ -39,11 +39,11 @@ export async function montarConc(holder, id) {
   function panel(n) {
     const log = el('div', { class: 'terminal conc-log', role: 'log', 'aria-live': 'polite', 'aria-label': 'Sesión ' + n });
     const estado = el('span', { class: 'badge' });
-    const input = el('input', { type: 'text', class: 'mono', 'aria-label': 'Sentencia SQL de la sesión ' + n, placeholder: 'Escribe SQL y pulsa Intro', spellcheck: 'false', autocapitalize: 'off' });
+    const input = el('input', { type: 'text', class: 'mono', 'aria-label': 'Sentencia SQL de la sesión ' + n, placeholder: 'Escribe SQL y presiona Enter', spellcheck: 'false', autocapitalize: 'off' });
     input.addEventListener('keydown', e => { if (e.key === 'Enter' && input.value.trim()) { e.preventDefault(); ejecutar(n, input.value); input.value = ''; } });
     const chips = el('div', { class: 'conc-chips' }, reto.ejemplos[n].map(t => { const b = el('button', { type: 'button', class: 'btn btn-quiet btn-sm mono' }, t); b.addEventListener('click', () => ejecutar(n, t)); return b; }));
     paneles[n] = { log, estado };
-    return el('div', { class: 'conc-panel' }, el('div', { class: 'conc-cab' }, el('strong', {}, 'Sesión ' + n), estado), log, input, el('p', { class: 'small muted' }, 'Pulsa una sentencia para ejecutarla:'), chips);
+    return el('div', { class: 'conc-panel' }, el('div', { class: 'conc-cab' }, el('strong', {}, 'Sesión ' + n), estado), log, input, el('p', { class: 'small muted' }, 'Presiona una sentencia para ejecutarla:'), chips);
   }
   const reiniciar = el('button', { type: 'button', class: 'btn btn-ghost btn-sm' }, 'Reiniciar la base de datos');
   reiniciar.addEventListener('click', () => { const marcasPrevias = s.marcas, bien = s.bien; s = nuevaBdConc(); s.marcas = marcasPrevias; s.bien = bien; for (const n of ['A', 'B']) paneles[n].log.replaceChildren(); pintarDatos(); });

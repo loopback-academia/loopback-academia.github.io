@@ -7,13 +7,13 @@ peso: 20
 descripcion: Qué es una red, qué hace cada equipo, los modelos OSI y TCP/IP, cableado, Ethernet, direccionamiento IPv4 e IPv6, subnetting, TCP/UDP, inalámbrico y virtualización.
 ---
 === m1-redes | ¿Qué es una red? | 12 | 1
-Una **red** es un conjunto de dispositivos conectados que comparten información y recursos. Cuando abres una página web, tu móvil manda datos a través de varias redes (la wifi de tu casa, la red de tu proveedor de internet, la red troncal de internet y la red del servidor) y la respuesta vuelve por el mismo tipo de camino en milisegundos.
+Una **red** es un conjunto de dispositivos conectados que comparten información y recursos. Cuando abres una página web, tu celular manda datos a través de varias redes (la wifi de tu casa, la red de tu proveedor de internet, la red troncal de internet y la red del servidor) y la respuesta vuelve por el mismo tipo de camino en milisegundos.
 
 [[video:viaje-mensaje]]
 
 ## Los elementos de cualquier red
 
-- **Dispositivos finales (endpoints):** los que originan o reciben los datos. PC, portátiles, móviles, impresoras, cámaras IP, servidores.
+- **Dispositivos finales (endpoints):** los que originan o reciben los datos. PC, laptops, celulares, impresoras, cámaras IP, servidores.
 - **Dispositivos intermedios:** los que mueven los datos. Switches, routers, puntos de acceso inalámbricos, firewalls.
 - **Medios:** por donde viajan los datos. Cobre (cable UTP), fibra óptica o el aire (wifi).
 - **Servicios y protocolos:** las reglas que todos siguen para entenderse (Ethernet, IP, TCP, DNS, HTTP...).
@@ -98,7 +98,7 @@ Un **sistema de prevención de intrusiones (IPS)** analiza el tráfico buscando 
 
 ## Servidores y endpoints
 
-Los **servidores** ofrecen servicios (web, correo, DNS, DHCP, ficheros). Los **endpoints** son los equipos de usuario y los dispositivos IoT.
+Los **servidores** ofrecen servicios (web, correo, DNS, DHCP, archivos). Los **endpoints** son los equipos de usuario y los dispositivos IoT.
 
 ## PoE (Power over Ethernet)
 
@@ -163,7 +163,7 @@ Para que equipos de fabricantes distintos se entiendan, la comunicación se divi
 | 2 | Enlace de datos | Entrega en el mismo enlace, MAC, detección de errores | Trama | Ethernet, 802.11, PPP |
 | 1 | Física | Bits sobre el medio: voltajes, luz, ondas | Bits | Cables, conectores, radio |
 
-Truco para recordarlas de abajo arriba: **"Fíjate En Raquel Todos Sus Pasos Antiguos"** (Física, Enlace, Red, Transporte, Sesión, Presentación, Aplicación).
+Regla mnemotécnica para recordarlas de abajo arriba: **"Fíjate En Raquel Todos Sus Pasos Antiguos"** (Física, Enlace, Red, Transporte, Sesión, Presentación, Aplicación).
 
 ## El modelo TCP/IP (el que se usa en la práctica)
 
@@ -791,7 +791,7 @@ El entrenador tiene cinco tipos de ejercicio: abreviar, expandir, calcular EUI-6
 :::
 
 === m1-ipv6-ndp | IPv6 a fondo: NDP, SLAAC y DHCPv6 | 18 | 3
-En IPv4, ARP traduce IP a MAC y DHCP reparte direcciones. IPv6 sustituye ARP por **NDP** (*Neighbor Discovery Protocol*) y puede configurar los equipos **sin servidor**. Esta lección explica qué pasa realmente cuando conectas un portátil a una red IPv6.
+En IPv4, ARP traduce IP a MAC y DHCP reparte direcciones. IPv6 sustituye ARP por **NDP** (*Neighbor Discovery Protocol*) y puede configurar los equipos **sin servidor**. Esta lección explica qué pasa realmente cuando conectas una laptop a una red IPv6.
 
 ## NDP: cinco mensajes ICMPv6
 
@@ -935,7 +935,7 @@ Una conexión se identifica por el **socket**: IP + puerto de origen y IP + puer
 
 ## UDP: rápido y sin conexión
 
-No establece conexión, no confirma ni retransmite, no ordena. Su cabecera mide solo **8 bytes** (TCP, 20 como mínimo). Es ideal cuando la rapidez importa más que perder algún dato: **voz y vídeo en tiempo real, DNS, DHCP, TFTP, SNMP, syslog**.
+No establece conexión, no confirma ni retransmite, no ordena. Su cabecera mide solo **8 bytes** (TCP, 20 como mínimo). Es ideal cuando la rapidez importa más que perder algún dato: **voz y video en tiempo real, DNS, DHCP, TFTP, SNMP, syslog**.
 
 ## Puertos que tienes que saberte
 
@@ -1118,7 +1118,7 @@ ipconfig /flushdns        # vacía la caché DNS
 = Sin un gateway correcto, el equipo no sabe enviar tráfico fuera de su red.
 :::
 
-=== m1-wireshark | Ver el tráfico de verdad: capturas con Wireshark | 18 | 2
+=== m1-wireshark | Análisis de tráfico real: capturas con Wireshark | 18 | 2
 Hasta ahora has estudiado los protocolos en teoría. Con un **analizador de tráfico** como **Wireshark** (o `tcpdump` en Linux) se ven los paquetes reales que pasan por la tarjeta de red: es la herramienta definitiva cuando nadie sabe qué está fallando.
 
 ## La ventana de Wireshark

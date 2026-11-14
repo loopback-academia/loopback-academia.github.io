@@ -20,7 +20,7 @@ const DESCR = {
   sec: 'Contraseñas y cifrado, cortafuegos, vulnerabilidades web, registros y respuesta a incidentes.',
   ti: 'Soporte técnico, mesa de ayuda, Windows, Active Directory y hardware.',
   en: 'Inglés técnico: vocabulario, lectura de errores y documentación, tickets y entrevistas.',
-  base: 'Lo básico del ordenador, internet, archivos, seguridad y unidades.',
+  base: 'Lo básico de la computadora, internet, archivos, seguridad y unidades.',
 };
 const NIVEL = ['', 'Principiante', 'Intermedio', 'Avanzado', 'Profesional'];
 const resumenEsc = e => `${NIVEL[Math.min(...e.niveles)] || ''} · ${e.modulos.slice(0, 2).join(', ')}${e.modulos.length > 2 ? '…' : ''}`;
@@ -31,13 +31,13 @@ function inicio() {
   raiz.replaceChildren(cabecera('¿Desde dónde empiezas?', 'Responde con sinceridad: así te llevamos al punto exacto del curso, sin repetir lo que ya sabes ni saltarte lo que te falta.'),
     el('div', { class: 'nivel-perfiles' }, PERFILES.map(p => el('button', { type: 'button', class: 'goal nivel-perfil', onclick: () => elegirPerfil(p.id) },
       el('span', { class: 'goal-ico', 'aria-hidden': 'true' }, p.icono), el('strong', {}, p.titulo), el('span', { class: 'small muted' }, p.texto)))),
-    el('p', { class: 'small muted' }, 'La prueba no tiene tiempo límite y puedes repetirla cuando quieras. Si no sabes una respuesta, pulsa «No lo sé»: adivinar solo te llevaría a un nivel que no es el tuyo.'));
+    el('p', { class: 'small muted' }, 'La prueba no tiene tiempo límite y puedes repetirla cuando quieras. Si no sabes una respuesta, presiona «No lo sé»: adivinar solo te llevaría a un nivel que no es el tuyo.'));
   raiz.querySelector('button')?.focus({ preventScroll: true });
 }
 function elegirPerfil(id) {
   if (id === 'cero') {
     raiz.replaceChildren(cabecera('Empieza por «Empieza aquí»', 'Es la puerta de entrada para quien empieza de cero: 12 lecciones cortas, en lenguaje sencillo, con prácticas.'),
-      el('div', { class: 'card' }, el('ul', { class: 'plain-list' }, ['Las partes del ordenador, el teclado y los archivos', 'Qué es internet, cómo buscar y aprender por tu cuenta', 'Seguridad básica para que no te engañen', 'Las profesiones de la tecnología y un test para elegir tu camino'].map(t => el('li', {}, '✓ ' + t))),
+      el('div', { class: 'card' }, el('ul', { class: 'plain-list' }, ['Las partes de la computadora, el teclado y los archivos', 'Qué es internet, cómo buscar y aprender por tu cuenta', 'Seguridad básica para evitar fraudes y engaños', 'Las profesiones de la tecnología y un test para elegir tu camino'].map(t => el('li', {}, '✓ ' + t))),
         el('div', { class: 'hero-cta' }, el('a', { class: 'btn btn-primary', href: 'curso.html?area=base' }, '🚀 Empezar desde cero'), el('button', { type: 'button', class: 'btn btn-ghost', onclick: inicio }, '‹ Volver'))));
     return;
   }
@@ -57,7 +57,7 @@ function explicar(area) {
       el('ul', { class: 'plain-list' },
         el('li', {}, `✓ Cada bloque que superes (${MINIMO_BLOQUE} de ${POR_BLOQUE}) convalida ese escalón: sus lecciones quedan abiertas para repasar y pasas directamente al siguiente.`),
         el('li', {}, '✓ En cuanto falles un bloque, la prueba termina: ese es tu punto de partida.'),
-        el('li', {}, '✓ Sin tiempo límite. Si no sabes algo, pulsa «No lo sé».'),
+        el('li', {}, '✓ Sin tiempo límite. Si no sabes algo, presiona «No lo sé».'),
         el('li', {}, '✓ Lo que ya tengas aprobado no se pierde nunca.')),
       previo ? el('p', { class: 'small muted' }, `La última vez (${new Date(previo.fecha).toLocaleDateString('es')}) superaste ${previo.superados} de ${esc.length} bloques.`) : null,
       el('div', { class: 'hero-cta' }, el('button', { type: 'button', class: 'btn btn-primary', onclick: () => prueba(area) }, 'Empezar la prueba'), el('button', { type: 'button', class: 'btn btn-ghost', onclick: inicio }, '‹ Volver'))));
@@ -131,7 +131,7 @@ function resultado(area, bloques, superados, respuestas, fallo) {
   const texto = area === 'base' && superados >= bloques.length
     ? 'Dominas lo básico: no necesitas el área «Empieza aquí». Haz su examen final si quieres el certificado, o elige ya tu camino.'
     : p.todo ? `Has superado todos los bloques de ${AREAS[area]}. Si apruebas el examen final, consigues el certificado del área.`
-      : pro ? `🎓 ¡Dominas todo el temario del CCNA! Has convalidado los escalones 1 a ${superados}. Te llevamos al Nivel profesional: el día a día del trabajo en redes, con laboratorios de varias averías a la vez, cambios en producción, OSPF multiárea, BGP y automatización.`
+      : pro ? `Dominas el temario completo del CCNA: has convalidado los escalones 1 a ${superados}. Te llevamos al Nivel profesional: el día a día del trabajo en redes, con laboratorios de varias averías a la vez, cambios en producción, OSPF multiárea, BGP y automatización.`
       : superados ? `Has convalidado ${superados === 1 ? 'el escalón 1' : `los escalones 1 a ${superados}`}. Tu punto de partida es el escalón ${p.n}.`
         : `Te conviene empezar ${AREAS[area]} desde el principio: así no te faltará ninguna base.`;
   raiz.replaceChildren(...[cabecera(`Tu resultado en ${AREAS[area]}`, texto),

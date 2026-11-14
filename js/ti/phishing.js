@@ -19,7 +19,7 @@ export const CORREOS = [
     senales: ['remitente', 'enlace', 'urgencia', 'datos', 'generico'], explicacion: 'El dominio real de la empresa es laceiba.example; este es laceiba-soporte.example. El texto del enlace dice una dirección y el enlace lleva a otra. Y TI nunca pide tu contraseña por correo.' },
   { id: 'director', phishing: true, de: 'Ramón Herrera (Director General)', correo: 'rherrera.director@correo-personal.example', asunto: '¿Estás disponible? Favor urgente y confidencial', fecha: 'Hoy, 9:15',
     cuerpo: ['Hola, estoy en una reunión y no puedo hablar por teléfono.', 'Necesito que compres 10 tarjetas regalo de RD$5.000 para unos clientes. Es urgente y confidencial, no lo comentes con nadie todavía. Rasca el código de cada una y envíame una foto por este correo.', 'Te lo reembolso hoy mismo. Gracias.'],
-    enlaces: [], firma: 'Ramón Herrera — Enviado desde mi móvil',
+    enlaces: [], firma: 'Ramón Herrera — Enviado desde mi celular',
     senales: ['remitente', 'urgencia', 'proceso'], explicacion: 'Es el «fraude del director»: usa un correo personal, pide secreto y prisa, y un pago fuera del procedimiento (tarjetas regalo). Siempre se confirma por otro canal (llamando al número de la agenda interna).' },
   { id: 'factura-zip', phishing: true, de: 'Facturación Distribuidora Norte', correo: 'facturas@distribuidoranorte-facturas.example', asunto: 'Factura pendiente de pago - evite recargos', fecha: 'Ayer, 18:03',
     cuerpo: ['Estimado cliente:', 'Adjuntamos la factura pendiente correspondiente al mes de noviembre. Le rogamos que la revise hoy para evitar recargos por mora del 15 %.', 'Para ver la factura, descomprima el archivo y ábralo.'],

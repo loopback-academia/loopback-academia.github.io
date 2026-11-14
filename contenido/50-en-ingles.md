@@ -11,7 +11,7 @@ descripcion: El inglés que se necesita para trabajar en tecnología: vocabulari
 En tecnología casi todo está en inglés: los mensajes de error, la documentación de los fabricantes, los comandos, los foros donde se buscan soluciones y muchas certificaciones. Además, muchas empresas atienden a clientes de otros países (centros de soporte, *call centers* técnicos, empresas extranjeras) y pagan mejor a quien se comunica en inglés.
 
 ::: nota
-¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico del ordenador, internet y las profesiones de la tecnología.
+¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico de la computadora, internet y las profesiones de la tecnología.
 :::
 
 ## Qué nivel hace falta
@@ -24,10 +24,10 @@ No necesitas hablar como un nativo. Para empezar en soporte basta con:
 
 ## Cómo practicar cada día
 
-1. Pon el sistema operativo y tu móvil **en inglés**: aprenderás el vocabulario sin darte cuenta.
+1. Pon el sistema operativo y tu celular **en inglés**: aprenderás el vocabulario sin darte cuenta.
 2. Cuando aparezca un error, **léelo en inglés** antes de buscarlo traducido.
 3. Busca soluciones en **inglés**: hay muchas más respuestas.
-4. Escucha vídeos técnicos con subtítulos en inglés.
+4. Escucha videos técnicos con subtítulos en inglés.
 5. Aprende **frases completas**, no palabras sueltas: «Could you please restart your computer?».
 
 ::: nota
@@ -56,9 +56,9 @@ En este área cada palabra y frase en inglés tiene un botón 🔊 para escuchar
 :::
 
 ::: banco
-? ¿Qué truco te hace aprender vocabulario técnico sin esfuerzo?
-+ Poner el sistema operativo y el móvil en inglés
-- Apagar el ordenador
+? ¿Qué hábito te ayuda a aprender vocabulario técnico sin esfuerzo?
++ Poner el sistema operativo y el celular en inglés
+- Apagar la computadora
 - Usar solo traductores automáticos
 = Ves los mismos menús cada día y los aprendes sin darte cuenta.
 
@@ -67,9 +67,9 @@ En este área cada palabra y frase en inglés tiene un botón 🔊 para escuchar
 - Ninguna
 - Solo las universidades
 = El inglés abre puestos mejor pagados en soporte y centros de contacto técnicos.
-? ¿Qué significa poner el móvil «in English»?
-+ Configurar el idioma del móvil en inglés
-- Comprar un móvil en Inglaterra
+? ¿Qué significa poner el celular «in English»?
++ Configurar el idioma del celular en inglés
+- Comprar un celular en Inglaterra
 - Instalar un traductor
 = Cambiar el idioma del sistema es una forma diaria de practicar.
 
@@ -115,7 +115,7 @@ Muchas palabras técnicas se usan igual en español (*router*, *switch*, *softwa
 ? ¿Qué significa «power supply»?
 + Fuente de alimentación
 - Corte de luz
-- Batería del portátil
+- Batería de la laptop
 - Enchufe
 = La pieza que da corriente al equipo.
 
@@ -439,7 +439,7 @@ Muchas empresas hacen una parte de la entrevista en inglés para comprobar tu ni
 - *What does a typical day look like in this role?* — ¿Cómo es un día normal en este puesto?
 
 ::: practica
-Graba tus respuestas con el móvil y escúchalas. Corrige lo que no se entienda y repite. En una semana notarás la diferencia.
+Graba tus respuestas con el celular y escúchalas. Corrige lo que no se entienda y repite. En una semana notarás la diferencia.
 :::
 
 [[frases:entrevista]]

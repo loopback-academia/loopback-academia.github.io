@@ -209,7 +209,7 @@ FROM dispositivos GROUP BY sitio_id;
 ## NULL: COALESCE y NULLIF
 
 - `COALESCE(a, b, c)` devuelve el primer valor que no sea NULL.
-- `NULLIF(a, b)` devuelve NULL si `a = b`. Truco útil para evitar dividir por cero: `x / NULLIF(y, 0)`.
+- `NULLIF(a, b)` devuelve NULL si `a = b`. Es útil para evitar divisiones por cero: `x / NULLIF(y, 0)`.
 
 [[sql:funciones]]
 

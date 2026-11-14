@@ -16,13 +16,13 @@ descripcion: Qué es internet y cómo llega a tu casa, el navegador y las direcc
 2. En casa tienes un **router**: la cajita con luces. Conecta tu red con internet.
 3. Tus aparatos se conectan al router por **cable** o por **Wi-Fi** (sin cables).
 
-Cuando abres una web, tu ordenador envía una petición que viaja por el router, por la red de tu proveedor y por muchas otras redes hasta el **servidor** donde está la web. La respuesta hace el camino de vuelta en milisegundos.
+Cuando abres una web, tu computadora envía una petición que viaja por el router, por la red de tu proveedor y por muchas otras redes hasta el **servidor** donde está la web. La respuesta hace el camino de vuelta en milisegundos.
 
 ## Palabras que oirás mucho
 
 | Palabra | Qué es |
 |---|---|
-| **Servidor** | Un ordenador que da un servicio a otros (una web, el correo…) |
+| **Servidor** | Una computadora que da un servicio a otros (una web, el correo…) |
 | **Dirección IP** | El «número de teléfono» de cada aparato en la red, como 192.168.1.10 |
 | **Wi-Fi** | Conexión sin cables entre tus aparatos y el router |
 | **Nube** | Servicios y archivos que están en servidores de internet, no en tu equipo |
@@ -68,7 +68,7 @@ Si quieres aprender cómo funcionan las redes por dentro, el área de **Redes** 
 
 ::: banco
 ? ¿Qué es un servidor?
-+ Un ordenador que da un servicio a otros, como una web o el correo
++ Una computadora que da un servicio a otros, como una web o el correo
 - Un cable de red
 - Un tipo de pantalla
 = Las webs viven en servidores.
@@ -109,9 +109,9 @@ En tecnología nadie lo sabe todo. Los buenos profesionales no se lo saben todo 
 - Desconfía de lo que te pide **descargar programas raros** o **dar datos personales**.
 - Si varias fuentes serias dicen lo mismo, probablemente es cierto.
 
-## Vídeos, foros e inteligencia artificial
+## Videos, foros e inteligencia artificial
 
-- Los **vídeos** van muy bien para ver cómo se hace algo paso a paso.
+- Los **videos** son muy útiles para ver cómo se hace algo paso a paso.
 - En los **foros** (como Stack Overflow) otras personas cuentan cómo resolvieron el mismo problema.
 - Los **asistentes de inteligencia artificial** ayudan a entender conceptos, pero **a veces se equivocan** con mucha seguridad. Comprueba siempre lo importante y no pegues en ellos contraseñas ni datos de clientes.
 
@@ -128,7 +128,7 @@ En Loopback tienes un **buscador** (arriba, «Buscar») que te lleva a la lecci�
 ::: quiz
 ? Te sale un error con un código. ¿Qué buscas?
 + El mensaje o el código exacto, entre comillas, con el nombre del programa
-- «mi ordenador no va»
+- «mi computadora no funciona»
 - Nada, reinstalo todo
 = Cuanto más concreta la búsqueda, mejor el resultado.
 
@@ -172,7 +172,7 @@ En Loopback tienes un **buscador** (arriba, «Buscar») que te lleva a la lecci�
 :::
 
 === i2-nube | Correo, nube y trabajo en equipo | 12 | 2
-En casi cualquier trabajo con ordenador usarás tres cosas cada día: el **correo**, la **nube** y las herramientas para **trabajar en equipo**.
+En casi cualquier trabajo con computadora usarás tres herramientas a diario: el **correo**, la **nube** y las herramientas para **trabajar en equipo**.
 
 ## El correo electrónico
 
@@ -188,7 +188,7 @@ Una dirección como `ana.garcia@empresa.com` tiene dos partes: el **usuario** (`
 Guardar en la **nube** significa guardar tus archivos en servidores de internet (Google Drive, OneDrive, Dropbox…):
 
 - Los tienes en **cualquier dispositivo**.
-- Si se rompe tu ordenador, **no los pierdes**.
+- Si se rompe tu computadora, **no los pierdes**.
 - Puedes **compartirlos** con un enlace y elegir si la otra persona puede solo verlos o también editarlos.
 
 ::: cuidado
@@ -210,14 +210,14 @@ En las empresas, el conjunto más habitual es **Microsoft 365** (Outlook, Teams,
 - Lo envía más rápido
 = Útil para enviar a muchas personas sin mostrar todas las direcciones.
 
-? Tienes que enviar un vídeo de 2 GB. ¿Qué haces?
+? Tienes que enviar un video de 2 GB. ¿Qué haces?
 + Lo subo a la nube y envío un enlace
 - Lo adjunto al correo
 - Lo imprimo
 = Los correos tienen un límite de tamaño para los adjuntos.
 
 ? ¿Qué ventaja tiene guardar tus archivos en la nube?
-+ Los tienes en cualquier dispositivo y no los pierdes si se rompe el ordenador
++ Los tienes en cualquier dispositivo y no los pierdes si se rompe la computadora
 - Ocupan menos en la pantalla
 - Nadie más puede verlos nunca
 = Aun así, revisa bien con quién los compartes.
@@ -249,7 +249,7 @@ En las empresas, el conjunto más habitual es **Microsoft 365** (Outlook, Teams,
 = También Google Drive o Dropbox.
 :::
 
-=== i2-seguridad | Seguridad básica: que no te engañen | 14 | 2
+=== i2-seguridad | Seguridad básica: cómo evitar fraudes y engaños | 14 | 2
 No hace falta ser experto para protegerte. La mayoría de los problemas se evitan con unos pocos hábitos.
 
 ## Contraseñas
@@ -257,22 +257,22 @@ No hace falta ser experto para protegerte. La mayoría de los problemas se evita
 - **Larga** mejor que rara: una frase como `tren-nube-limon-faro` es fuerte y fácil de recordar.
 - **Una distinta** para cada servicio. Si roban una, no pueden entrar en todo lo demás.
 - Usa un **gestor de contraseñas** (por ejemplo, el del navegador o Bitwarden) para recordarlas por ti.
-- Activa la **verificación en dos pasos**: además de la contraseña, te piden un código del móvil. Así, aunque alguien sepa tu contraseña, no puede entrar.
+- Activa la **verificación en dos pasos**: además de la contraseña, te piden un código del celular. Así, aunque alguien sepa tu contraseña, no puede entrar.
 
 ## Las estafas más comunes
 
 - Correos o mensajes que meten **prisa** o **miedo**: «tu cuenta será bloqueada hoy», «tienes un paquete retenido».
 - Piden **contraseñas, códigos o datos bancarios**. Un banco o una empresa seria nunca te pide la contraseña por correo ni por teléfono.
-- Llamadas del «**soporte técnico de Microsoft**» que dicen que tu ordenador tiene virus y piden acceso remoto. Es siempre un engaño.
+- Llamadas del «**soporte técnico de Microsoft**» que dicen que tu computadora tiene virus y piden acceso remoto. Es siempre un engaño.
 - **Premios** o **chollos** demasiado buenos para ser verdad.
 
-**Regla de oro:** si dudas, no pulses el enlace. Entra tú escribiendo la dirección de la web, o llama al número oficial que ya conoces.
+**Regla de oro:** si tienes dudas, no hagas clic en el enlace. Entra tú escribiendo la dirección de la web, o llama al número oficial que ya conoces.
 
 ## Hábitos que te protegen
 
 - Acepta las **actualizaciones**.
 - Instala programas solo de **sitios oficiales**.
-- **Bloquea** el ordenador al levantarte (Windows + L) y el móvil con un PIN.
+- **Bloquea** la computadora al levantarte (Windows + L) y el celular con un PIN.
 - Haz **copias de seguridad** de lo importante.
 - Cuidado con las **redes Wi-Fi públicas**: no hagas operaciones del banco en ellas.
 
@@ -285,7 +285,7 @@ No hace falta ser experto para protegerte. La mayoría de los problemas se evita
 - 123456
 = La longitud y no seguir patrones conocidos es lo que más protege.
 
-? Te llama alguien «de Microsoft» diciendo que tu ordenador tiene virus y pide conectarse. ¿Qué haces?
+? Te llama alguien «de Microsoft» diciendo que tu computadora tiene virus y pide conectarse. ¿Qué haces?
 + Cuelgo: es una estafa
 - Le doy acceso para que lo arregle
 - Le doy mi contraseña
@@ -299,7 +299,7 @@ No hace falta ser experto para protegerte. La mayoría de los problemas se evita
 :::
 
 ::: banco
-? Un mensaje dice «tu cuenta del banco se bloqueará hoy, pulsa aquí». ¿Qué haces?
+? Un mensaje dice «tu cuenta del banco se bloqueará hoy, haz clic aquí». ¿Qué haces?
 + No pulso; entro yo en la web del banco o llamo al número oficial
 - Pulso rápido para que no la bloqueen
 - Respondo con mi contraseña
@@ -308,11 +308,11 @@ No hace falta ser experto para protegerte. La mayoría de los problemas se evita
 ? ¿Por qué usar una contraseña distinta en cada sitio?
 + Si roban una, no pueden entrar en las demás cuentas
 - Porque es obligatorio por ley
-- Para que el ordenador vaya más rápido
+- Para que la computadora vaya más rápido
 = Reutilizar contraseñas es muy peligroso.
 
 ? ¿Qué es un gestor de contraseñas?
-+ Un programa que guarda tus contraseñas de forma segura y las rellena por ti
++ Un programa que guarda tus contraseñas de forma segura y las completa por ti
 - Un virus
 - Una lista en un papel pegado a la pantalla
 = Solo tienes que recordar una contraseña maestra.
@@ -321,7 +321,7 @@ No hace falta ser experto para protegerte. La mayoría de los problemas se evita
 + Operaciones del banco y datos sensibles
 - Leer noticias
 - Mirar el tiempo
-= Mejor usar los datos del móvil para lo importante.
+= Mejor usar los datos del celular para lo importante.
 
 ? ¿Te puede pedir tu banco la contraseña por correo?
 + No, nunca
@@ -330,8 +330,8 @@ No hace falta ser experto para protegerte. La mayoría de los problemas se evita
 = Si alguien te la pide, es una estafa.
 :::
 
-=== i2-unidades | Bits, bytes, megas y gigas | 14 | 2
-Cuando compras un móvil, contratas internet o descargas un archivo, aparecen números como **128 GB** o **300 Mbps**. Vamos a entenderlos sin miedo a las matemáticas.
+=== i2-unidades | Bits, bytes y unidades de medida | 14 | 2
+Cuando compras un celular, contratas internet o descargas un archivo, aparecen números como **128 GB** o **300 Mbps**. Aquí aprenderás a interpretarlos sin necesidad de matemáticas avanzadas.
 
 ## El bit y el byte
 
@@ -343,17 +343,17 @@ Cuando compras un móvil, contratas internet o descargas un archivo, aparecen n�
 | Unidad | Aproximadamente | Ejemplo |
 |---|---|---|
 | **KB** (kilobyte) | 1000 bytes | Un mensaje de texto |
-| **MB** (megabyte) | 1000 KB | Una foto del móvil (3-5 MB) |
+| **MB** (megabyte) | 1000 KB | Una foto del celular (3-5 MB) |
 | **GB** (gigabyte) | 1000 MB | Una película (1-4 GB) |
 | **TB** (terabyte) | 1000 GB | Un disco grande de copias de seguridad |
 
 De menor a mayor: **bit < byte < KB < MB < GB < TB**.
 
 ::: nota
-Verás que a veces se dice que 1 KB son 1024 bytes y otras veces 1000. Las dos cosas se usan (Windows cuenta con 1024; los fabricantes de discos, con 1000). Por eso un disco de «1 TB» aparece en Windows como unos 931 GB. Para hacer cálculos aproximados, 1000 es suficiente.
+Verás que a veces se dice que 1 KB son 1024 bytes y otras veces 1000. Ambos criterios se utilizan (Windows cuenta con 1024; los fabricantes de discos, con 1000). Por eso un disco de «1 TB» aparece en Windows como unos 931 GB. Para hacer cálculos aproximados, 1000 es suficiente.
 :::
 
-## La velocidad de internet: ¡ojo con la b!
+## La velocidad de internet: atención a la «b»
 
 - Los **tamaños** de archivo se miden en **bytes**: MB, con **B mayúscula**.
 - La **velocidad** de internet se mide en **bits por segundo**: Mbps (megabits por segundo), con **b minúscula**.
@@ -363,11 +363,11 @@ Como 1 byte = 8 bits, para saber cuántos megabytes descargas por segundo **divi
 - Una conexión de **80 Mbps** descarga como máximo **10 MB por segundo**.
 - Un archivo de **100 MB** con esa conexión tarda unos **10 segundos**.
 
-## Cuánto ocupa cada cosa (aproximadamente)
+## Tamaño aproximado de los archivos más comunes
 
 - Un documento de texto: unos KB.
 - Una canción: 3-10 MB.
-- Una hora de vídeo en buena calidad: 1-3 GB.
+- Una hora de video en buena calidad: 1-3 GB.
 - Un juego moderno: 50-150 GB.
 
 [[inicio:unidades]]
@@ -399,7 +399,7 @@ Como 1 byte = 8 bits, para saber cuántos megabytes descargas por segundo **divi
 - La memoria RAM
 = La b minúscula es de bits.
 
-? ¿Cuánto ocupa aproximadamente una foto hecha con el móvil?
+? ¿Cuánto ocupa aproximadamente una foto hecha con el celular?
 + Unos pocos MB
 - Unos pocos TB
 - Unos pocos bits

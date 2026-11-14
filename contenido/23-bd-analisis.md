@@ -52,7 +52,7 @@ Un **KPI** es una cifra que resume cómo va algo importante. Ejemplos en una tie
 
 ? ¿Qué herramienta es la base del trabajo de un analista en una empresa?
 + SQL, porque los datos están en bases de datos
-- Un editor de vídeo
+- Un editor de video
 - El correo electrónico
 = Saber SQL es el requisito más pedido en ofertas de analista junior.
 :::
@@ -207,7 +207,7 @@ En PostgreSQL o MySQL, en lugar de `strftime('%Y-%m', fecha)` se usa `to_char(fe
 = WHERE filtra filas antes de agrupar; HAVING, grupos.
 :::
 
-=== b4-paneles | Del SQL al panel: gráficos que se entienden | 14 | 2
+=== b4-paneles | Del SQL al panel: gráficos claros y útiles | 14 | 2
 Un buen análisis mal presentado no sirve. La regla: **una pregunta, un gráfico, una conclusión**.
 
 ## Qué gráfico usar

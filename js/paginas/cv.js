@@ -69,7 +69,7 @@ function formulario() {
 
 raiz.replaceChildren(...[
   el('div', { class: 'page-head cv-head' }, el('span', { class: 'eyebrow' }, 'Empleo'), el('h1', {}, 'Tu CV técnico'),
-    el('p', {}, 'Rellena tus datos y el CV se completa solo con lo que has hecho en Loopback: laboratorios, módulos y certificados. Pon solo lo que sabes hacer y puedes demostrar en una entrevista.')),
+    el('p', {}, 'Completa tus datos y el CV se genera automáticamente con lo que has hecho en Loopback: laboratorios, módulos y certificados. Pon solo lo que sabes hacer y puedes demostrar en una entrevista.')),
   datos.lecciones ? null : el('p', { class: 'alert alert-info' }, el('span', {}, 'Todavía no has completado lecciones. Puedes crear tu CV igualmente; se irá llenando a medida que avances.')),
   el('div', { class: 'cv-layout' }, formulario(), el('div', { class: 'cv-marco' }, hoja))].filter(Boolean));
 pintarHoja();

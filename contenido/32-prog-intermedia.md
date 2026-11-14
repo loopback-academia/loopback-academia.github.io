@@ -43,7 +43,7 @@ git pull                          # trae los cambios de los demás
 
 ## Las tres zonas
 
-1. **Directorio de trabajo:** tus ficheros tal como los editas.
+1. **Directorio de trabajo:** tus archivos tal como los editas.
 2. **Área de preparación (staging):** lo que has marcado con `git add` para el próximo commit.
 3. **Repositorio:** los commits guardados.
 
@@ -51,7 +51,7 @@ git pull                          # trae los cambios de los demás
 
 - Commits **pequeños** y con mensajes claros en presente: "Corrige el cálculo del broadcast", no "cambios".
 - Una rama por tarea; la rama principal (`main`) siempre debe funcionar.
-- Un fichero **`.gitignore`** para no subir lo que no toca: entornos virtuales, `node_modules`, ficheros temporales y, sobre todo, **contraseñas y claves**.
+- Un archivo **`.gitignore`** para no subir lo que no toca: entornos virtuales, `node_modules`, archivos temporales y, sobre todo, **contraseñas y claves**.
 
 ::: cuidado
 Si subes una contraseña o una clave de API a GitHub, **considérala comprometida** aunque borres el commit: queda en la historia y hay robots que rastrean repositorios públicos en minutos. Cámbiala inmediatamente.
@@ -69,7 +69,7 @@ timeout = 60
 >>>>>>> rama-ana
 ```
 
-Se edita el fichero dejando la versión correcta, se quitan las marcas y se hace commit.
+Se edita el archivo dejando la versión correcta, se quitan las marcas y se hace commit.
 
 ## GitHub es tu portafolio
 
@@ -102,11 +102,11 @@ Cada comando redibuja el gráfico de commits y ramas, para que veas lo que pasa 
 
 ? Subiste por error una contraseña a un repositorio público. ¿Qué haces?
 + Cambiar la contraseña inmediatamente (y después limpiar el historial)
-- Borrar el fichero en un commit nuevo y olvidarlo
+- Borrar el archivo en un commit nuevo y olvidarlo
 - Nada, nadie lo verá
 = Una vez publicada, hay que darla por comprometida.
 
-? ¿Qué fichero indica a Git qué no debe guardar?
+? ¿Qué archivo indica a Git qué no debe guardar?
 + .gitignore
 - README.md
 - .gitconfig del sistema
@@ -220,7 +220,7 @@ La herencia crea dependencias fuertes. A menudo es mejor la **composición**: un
 :::
 
 === p3-errores | Errores y excepciones | 14 | 2
-Los programas se encuentran con situaciones inesperadas: un fichero que no existe, una red que no responde, un dato mal escrito. Un buen programa **no se cae**: detecta el problema, lo gestiona y avisa con un mensaje claro.
+Los programas se encuentran con situaciones inesperadas: un archivo que no existe, una red que no responde, un dato mal escrito. Un buen programa **no se cae**: detecta el problema, lo gestiona y avisa con un mensaje claro.
 
 ## Excepciones
 
@@ -243,7 +243,7 @@ def leer_puerto(texto):
 | `try` | El código que puede fallar |
 | `except TipoDeError` | Si ocurre ese error concreto |
 | `else` | Si no hubo ningún error |
-| `finally` | Siempre, haya error o no (cerrar ficheros o conexiones) |
+| `finally` | Siempre, haya error o no (cerrar archivos o conexiones) |
 | `raise` | Lanzar tú mismo un error |
 
 ## Errores frecuentes en Python
@@ -255,7 +255,7 @@ def leer_puerto(texto):
 | `ValueError` | Valor no válido: `int("abc")` |
 | `KeyError` | Clave que no está en el diccionario |
 | `IndexError` | Posición fuera de la lista |
-| `FileNotFoundError` | El fichero no existe |
+| `FileNotFoundError` | El archivo no existe |
 | `ZeroDivisionError` | Dividir por cero |
 | `TimeoutError` / `ConnectionError` | La red no responde |
 
@@ -280,7 +280,7 @@ async function estadoEquipo(ip) {
 
 - Captura errores **concretos** (`except ValueError`), no todos a ciegas (`except:` vacío esconde fallos reales).
 - Falla pronto y con un mensaje útil: "Puerto fuera de rango: 70000" mejor que "error".
-- Libera recursos siempre: en Python, `with open(...) as f:` cierra el fichero aunque haya un error.
+- Libera recursos siempre: en Python, `with open(...) as f:` cierra el archivo aunque haya un error.
 - En automatización de redes, prevé los fallos habituales: tiempo de espera agotado, credenciales incorrectas, equipo inaccesible… y sigue con el resto de equipos.
 - **Registra** (*logging*) los errores con fecha y contexto en lugar de solo imprimirlos.
 
@@ -295,7 +295,7 @@ logging.warning("SW-02 no responde, se reintentará")
 - except
 - else
 + finally
-= finally sirve para cerrar ficheros, conexiones, etc.
+= finally sirve para cerrar archivos, conexiones, etc.
 
 ? ¿Qué excepción lanza int("abc") en Python?
 + ValueError
@@ -421,10 +421,10 @@ Cada ejercicio trae código que **casi** funciona. Lee el enunciado, ejecuta, mi
 === p3-datos | Archivos y formatos de datos: TXT, CSV, JSON y YAML | 16 | 2
 Los programas leen y escriben datos constantemente: inventarios, configuraciones, informes, respuestas de APIs. Conocer los formatos más comunes es imprescindible.
 
-## Leer y escribir ficheros de texto
+## Leer y escribir archivos de texto
 
 ```python
-# Leer línea a línea (por ejemplo, un fichero de configuración)
+# Leer línea a línea (por ejemplo, un archivo de configuración)
 with open("running-config.txt", encoding="utf-8") as f:
     for linea in f:
         if linea.startswith("hostname"):
@@ -435,7 +435,7 @@ with open("informe.txt", "w", encoding="utf-8") as f:
     f.write("Equipos caídos: SW-02\n")
 ```
 
-`with` cierra el fichero automáticamente, incluso si hay un error. Indica siempre la **codificación** (`utf-8`) para que las tildes y la ñ no se rompan.
+`with` cierra el archivo automáticamente, incluso si hay un error. Indica siempre la **codificación** (`utf-8`) para que las tildes y la ñ no se rompan.
 
 ## CSV: tablas en texto
 
@@ -487,7 +487,7 @@ vlans:
     nombre: SOPORTE
 ```
 
-En Python se lee con la biblioteca externa PyYAML: `yaml.safe_load(texto)` (usa siempre `safe_load`, nunca `load`, con ficheros que no son tuyos).
+En Python se lee con la biblioteca externa PyYAML: `yaml.safe_load(texto)` (usa siempre `safe_load`, nunca `load`, con archivos que no son tuyos).
 
 ## Comparativa
 
@@ -495,16 +495,16 @@ En Python se lee con la biblioteca externa PyYAML: `yaml.safe_load(texto)` (usa 
 |---|---|---|
 | TXT | Simple | Registros (logs), configuraciones de equipos |
 | CSV | Tablas, abre en Excel | Inventarios, exportaciones |
-| JSON | Estructuras anidadas, universal | APIs, ficheros de datos |
+| JSON | Estructuras anidadas, universal | APIs, archivos de datos |
 | YAML | Muy legible para personas | Configuración de herramientas (Ansible, Kubernetes) |
 | XML | Esquemas estrictos | NETCONF, sistemas antiguos, documentos |
 
 ::: quiz
 ? ¿Para qué sirve with open(...) en Python?
-+ Para abrir un fichero y cerrarlo automáticamente al terminar
++ Para abrir un archivo y cerrarlo automáticamente al terminar
 - Para abrir una conexión de red
-- Para crear un fichero vacío siempre
-= with garantiza que el fichero se cierra aunque haya un error.
+- Para crear un archivo vacío siempre
+= with garantiza que el archivo se cierra aunque haya un error.
 
 ? ¿Qué función convierte un texto JSON en diccionarios y listas de Python?
 + json.loads

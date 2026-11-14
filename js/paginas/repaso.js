@@ -45,12 +45,12 @@ function pintarResumen() {
 
   if (!r.total && !temas.length) {
     raiz.replaceChildren(el('div', { class: 'card empty-state' },
-      el('h2', {}, '¡Nada que repasar por ahora!'),
+      el('h2', {}, 'No tienes preguntas pendientes de repaso.'),
       el('p', { class: 'muted' }, 'Cuando falles una pregunta en el cuestionario de una lección o en un simulacro, aparecerá aquí con su explicación para que la repases hasta dominarla.'),
       el('div', { class: 'hero-cta' }, el('a', { class: 'btn btn-primary', href: 'curso.html' + (area ? '?area=' + area : '') }, 'Seguir con el curso'), el('a', { class: 'btn btn-ghost', href: 'examen.html' + (area ? '?area=' + area : '') }, 'Hacer un simulacro'))));
     return;
   }
-  const btnHoy = el('button', { type: 'button', class: 'btn btn-primary btn-lg', disabled: !r.hoy }, r.hoy ? `Repasar hoy (${plural(Math.min(r.hoy, 10), 'pregunta', 'preguntas')})` : 'Hoy no te toca repasar nada');
+  const btnHoy = el('button', { type: 'button', class: 'btn btn-primary btn-lg', disabled: !r.hoy }, r.hoy ? `Repasar hoy (${plural(Math.min(r.hoy, 10), 'pregunta', 'preguntas')})` : 'Hoy no tienes preguntas pendientes');
   btnHoy.addEventListener('click', () => empezar(construirSesion({ modo: 'hoy' }), 'Repaso de hoy'));
   const top = temas.slice(0, 3).map(t => t.leccion.id);
   const btnRefuerzo = el('button', { type: 'button', class: 'btn btn-ghost btn-lg', disabled: !top.length }, 'Refuerzo de mis temas débiles');
@@ -60,9 +60,9 @@ function pintarResumen() {
     el('div', { class: 'card mb' },
       el('div', { class: 'grid-4 review-stats' }, stat(r.hoy, 'para repasar hoy'), stat(r.enRepaso, 'en repaso'), stat(r.dominadas, 'dominadas'), stat(temas.length, plural(temas.length, 'tema a reforzar', 'temas a reforzar').replace(/^\d+ /, ''))),
       el('div', { class: 'hero-cta' }, btnHoy, btnRefuerzo),
-      r.total && !r.hoy ? el('p', { class: 'small muted' }, 'Las preguntas vuelven cuando les toca según su caja. Mientras tanto, refuerza los temas débiles o sigue con el curso.') : null),
+      r.total && !r.hoy ? el('p', { class: 'small muted' }, 'Cada pregunta vuelve en la fecha que le corresponde según su caja. Mientras tanto, refuerza los temas débiles o sigue con el curso.') : null),
     el('h2', {}, 'Temas a reforzar'),
-    temas.length ? el('div', { class: 'review-topics' }, temas.map(tarjetaTema)) : el('p', { class: 'muted' }, 'No tienes temas débiles en esta área. ¡Buen trabajo!'));
+    temas.length ? el('div', { class: 'review-topics' }, temas.map(tarjetaTema)) : el('p', { class: 'muted' }, 'No tienes temas débiles en esta área.'));
 }
 
 function tarjetaTema(t) {
@@ -132,7 +132,7 @@ function empezar(sesion, titulo) {
       resultados.push({ q, ok, l, dominadaAhora: !!despues?.dominada && !antes?.dominada, nueva: !antes && !ok });
       explicacion.hidden = false;
       explicacion.replaceChildren(el('strong', {}, ok ? '✓ Correcto. ' : '✗ Incorrecto. '), q.explain,
-        despues ? el('span', { class: 'small muted' }, ok ? (despues.dominada ? ' · ¡Dominada! Volverá dentro de ' + plural(Math.round((despues.proxima - Date.now()) / 86400000), 'día', 'días') + '.' : ` · Sube a la caja ${despues.caja}.`) : ' · Vuelve a la caja 0: la repetirás pronto.') : null,
+        despues ? el('span', { class: 'small muted' }, ok ? (despues.dominada ? ' · Pregunta dominada. Volverá dentro de ' + plural(Math.round((despues.proxima - Date.now()) / 86400000), 'día', 'días') + '.' : ` · Sube a la caja ${despues.caja}.`) : ' · Vuelve a la caja 0: la repetirás pronto.') : null,
         l ? el('p', { class: 'small' }, el('a', { href: 'leccion.html?id=' + l.id }, 'Repasar la lección «' + l.titulo + '»')) : null);
       comprobar.textContent = i < sesion.length - 1 ? 'Siguiente' : 'Ver resultado';
       comprobar.disabled = false;
@@ -152,7 +152,7 @@ function empezar(sesion, titulo) {
     raiz.replaceChildren(el('div', { class: 'card' },
       el('span', { class: 'eyebrow' }, 'Resultado del repaso'),
       el('h2', {}, `${aciertos} de ${resultados.length} correctas`),
-      el('p', {}, dominadas ? `${plural(dominadas, 'pregunta pasa', 'preguntas pasan')} a dominadas. ` : '', aciertos === resultados.length ? '¡Sesión perfecta!' : 'Las falladas volverán pronto para que las afiances.'),
+      el('p', {}, dominadas ? `${plural(dominadas, 'pregunta pasa', 'preguntas pasan')} a dominadas. ` : '', aciertos === resultados.length ? 'Sesión sin errores.' : 'Las falladas volverán pronto para que las afiances.'),
       flojas.length ? el('div', {}, el('h3', {}, 'Para afianzar'), el('ul', { class: 'plain-list' }, flojas.map(l => el('li', {}, el('a', { href: 'leccion.html?id=' + l.id }, l.titulo), ...labsDeLeccion(l).slice(0, 2).flatMap(x => [' · ', el('a', { href: 'laboratorio.html?l=' + x.clave }, 'practicar: ' + x.titulo)]))))) : null,
       el('div', { class: 'hero-cta' }, otra, el('a', { class: 'btn btn-ghost', href: 'curso.html' }, 'Seguir con el curso'))));
     scrollTo({ top: 0 });

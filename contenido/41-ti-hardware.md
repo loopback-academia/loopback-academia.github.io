@@ -221,7 +221,7 @@ Para elegir, actualizar o reparar un equipo hay que saber qué hace cada pieza y
 | **Placa base** | Conecta todas las piezas | Zócalo del procesador, **tipo de memoria** (DDR4 o DDR5), tamaño (ATX, micro-ATX, mini-ITX) y ranuras M.2 |
 | **Memoria RAM** | Guarda lo que se está usando ahora | Capacidad (8, 16, 32 GB) y tipo: DDR4 y DDR5 **no son intercambiables** |
 | **Almacenamiento** | Guarda los datos aunque se apague | **SSD NVMe** (muy rápido, ranura M.2), SSD SATA o disco duro HDD (barato y lento) |
-| **Tarjeta gráfica (GPU)** | Genera la imagen; acelera 3D y vídeo | Solo hace falta si el procesador no tiene gráficos o para diseño y juegos |
+| **Tarjeta gráfica (GPU)** | Genera la imagen; acelera 3D y video | Solo hace falta si el procesador no tiene gráficos o para diseño y juegos |
 | **Fuente de alimentación** | Da corriente a todo | Potencia en vatios con margen (un 40 % más que el consumo) y certificación 80 PLUS |
 | **Caja** | Lo contiene y lo ventila | Que admita el tamaño de la placa |
 
@@ -294,7 +294,7 @@ Montar o actualizar un equipo es sencillo si se sigue un orden y se toman precau
 
 ## Seguridad antes de abrir
 
-- **Apaga y desenchufa** el equipo; en un portátil, desconecta también la batería si se puede.
+- **Apaga y desenchufa** el equipo; en una laptop, desconecta también la batería si se puede.
 - **Descarga la electricidad estática** (pulsera antiestática o tocando una parte metálica de la caja). Una descarga puede dañar la memoria o la placa sin que lo notes.
 - Trabaja sobre una superficie limpia y guarda los tornillos ordenados.
 
@@ -348,11 +348,11 @@ Montar o actualizar un equipo es sencillo si se sigue un orden y se toman precau
 - Para aislar la electricidad
 = Rellena las imperfecciones entre procesador y disipador.
 
-? Antes de comprar más RAM para un portátil, ¿qué miras?
+? Antes de comprar más RAM para una laptop, ¿qué miras?
 + El modelo exacto y su manual: tipo de memoria, máximo y ranuras libres
-- Solo el color del portátil
+- Solo el color de la laptop
 - El sistema operativo
-= Muchos portátiles tienen la memoria soldada o un máximo bajo.
+= Muchas laptops tienen la memoria soldada o un máximo bajo.
 
 ? ¿Dónde se anota qué pieza cambiaste en un equipo de la empresa?
 + En el inventario y en el ticket
@@ -369,7 +369,7 @@ Preparar un equipo nuevo para alguien es una de las tareas más habituales de so
 1. **Crear el USB de instalación** con la herramienta oficial de Microsoft.
 2. **Arrancar desde el USB**: en la UEFI/BIOS, pon el USB primero en el orden de arranque (o usa el menú de arranque con F12, F11 o Esc, según el fabricante).
 3. **Instalar Windows** en el SSD. En un equipo reutilizado, borra las particiones antiguas.
-4. **Controladores** del fabricante: chipset, red, vídeo, audio.
+4. **Controladores** del fabricante: chipset, red, video, audio.
 5. **Windows Update** hasta que no queden actualizaciones.
 6. **Unir al dominio** y mover el equipo a su OU para que reciba las directivas.
 7. **Antivirus corporativo y programas** del puesto.
@@ -398,7 +398,7 @@ En empresas grandes no se hace a mano: se usa una **imagen** preparada o herrami
 + Los controladores del fabricante
 - Los juegos del usuario
 - Nada más
-= Sin controladores, la red, el vídeo o el audio pueden no funcionar bien.
+= Sin controladores, la red, el video o el audio pueden no funcionar bien.
 :::
 
 ::: banco
@@ -426,7 +426,7 @@ Con el hardware, el método es el mismo que con el software: **de lo simple a lo
 | Enciende, pitidos y sin imagen | El **código de pitidos** del manual de la placa: suele ser la RAM. Recoloca los módulos |
 | Se apaga solo, mucho calor | Temperatura y polvo en ventiladores y rejillas |
 | Lento, se congela, errores de disco | Estado **SMART** del disco y **copia de seguridad** ya |
-| Portátil sin imagen pero arranca | Monitor externo: separa pantalla de gráfica |
+| Laptop sin imagen pero arranca | Monitor externo: separa pantalla de gráfica |
 | Pantallazo azul | Anota el código de error; prueba la memoria (Diagnóstico de memoria de Windows) |
 
 ::: cuidado
@@ -443,7 +443,7 @@ Si un disco da señales de fallo, **lo primero es salvar los datos**, no intenta
 [[hw:averias]]
 
 ::: quiz
-? Un PC no hace nada al pulsar el botón. ¿Qué miras primero?
+? Un PC no hace nada al presionar el botón. ¿Qué miras primero?
 + La alimentación: cable, enchufe e interruptor de la fuente
 - La placa base
 - La versión de Windows
@@ -455,7 +455,7 @@ Si un disco da señales de fallo, **lo primero es salvar los datos**, no intenta
 - Esperar a ver si mejora
 = Un disco que falla puede morir en cualquier momento.
 
-? Un portátil arranca pero no da imagen. ¿Qué prueba separa el problema?
+? Una laptop arranca pero no da imagen. ¿Qué prueba separa el problema?
 + Conectar un monitor externo
 - Cambiar la batería
 - Reinstalar el antivirus

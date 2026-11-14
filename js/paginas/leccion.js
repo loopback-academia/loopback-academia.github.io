@@ -86,8 +86,8 @@ if (!r) {
         const falladas = detalle.filter(d => !d.ok).length;
         if (falladas) quizBox.querySelector('.quiz-result')?.append(' ', el('a', { href: 'repaso.html?leccion=' + leccion.id }, `${falladas === 1 ? 'La que has fallado se ha añadido' : `Las ${falladas} que has fallado se han añadido`} a tu repaso →`));
         await guardarQuiz(leccion.id, aciertos, total);
-        if (aprueba(aciertos, total) && !hecha()) { await completarLeccion(leccion.id); pintarBoton(); toast('¡Aprobado! Lección completada.'); }
-        if (aprueba(aciertos, total)) quizBox.querySelector('.quiz-result')?.after(el('div', { class: 'next-step' }, el('span', {}, el('strong', {}, '¡Bien hecho! '), 'Siguiente paso:'),
+        if (aprueba(aciertos, total) && !hecha()) { await completarLeccion(leccion.id); pintarBoton(); toast('Aprobado. Lección completada.'); }
+        if (aprueba(aciertos, total)) quizBox.querySelector('.quiz-result')?.after(el('div', { class: 'next-step' }, el('span', {}, el('strong', {}, 'Lección superada. '), 'Siguiente paso:'),
           siguiente ? el('a', { class: 'btn btn-primary', href: 'leccion.html?id=' + siguiente.id }, siguiente.titulo + ' →') : el('a', { class: 'btn btn-primary', href: urlExamen(despues.escalon) }, `Examen del escalón ${despues.escalon.n} →`)));
       },
     });

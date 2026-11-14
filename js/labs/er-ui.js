@@ -80,8 +80,8 @@ export async function montarEr(holder, id) {
   const comprobar = el('button', { type: 'button', class: 'btn btn-primary' }, 'Comprobar el diseño');
   comprobar.addEventListener('click', () => {
     const r = evaluarReto(id, d);
-    if (r.ok && !labHecho('er-' + id)) { guardarLab('er-' + id); toast('¡Diseño correcto!'); }
-    resultado.replaceChildren(el('div', { class: 'alert ' + (r.ok ? 'alert-ok' : 'alert-warn') }, r.ok ? el('p', {}, el('strong', {}, '¡Diseño correcto! '), 'Cada dato está en su sitio y las relaciones son las adecuadas.') : el('div', {}, el('p', {}, el('strong', {}, 'Revisa esto:')), el('ul', {}, r.problemas.map(x => el('li', {}, x))))));
+    if (r.ok && !labHecho('er-' + id)) { guardarLab('er-' + id); toast('Diseño correcto.'); }
+    resultado.replaceChildren(el('div', { class: 'alert ' + (r.ok ? 'alert-ok' : 'alert-warn') }, r.ok ? el('p', {}, el('strong', {}, 'Diseño correcto. '), 'Cada dato está en su sitio y las relaciones son las adecuadas.') : el('div', {}, el('p', {}, el('strong', {}, 'Revisa esto:')), el('ul', {}, r.problemas.map(x => el('li', {}, x))))));
   });
   const reiniciar = el('button', { type: 'button', class: 'btn btn-quiet btn-sm' }, 'Empezar de cero');
   reiniciar.addEventListener('click', () => { if (!confirm('¿Borrar el diseño y empezar de cero?')) return; d = { tablas: [] }; guardar(); pintarEditor(); resultado.replaceChildren(); });
@@ -105,7 +105,7 @@ export async function montarFormas(holder) {
       const b = el('button', { type: 'button', class: 'btn btn-ghost btn-sm' }, o === 'ninguna' ? 'Está bien normalizada' : 'Rompe la ' + o);
       b.addEventListener('click', () => {
         const ok = o === f.respuesta;
-        fb.className = 'small feedback ' + (ok ? 'ok' : 'bad'); fb.textContent = (ok ? '¡Correcto! ' : 'No. ') + f.explicacion;
+        fb.className = 'small feedback ' + (ok ? 'ok' : 'bad'); fb.textContent = (ok ? 'Correcto. ' : 'No. ') + f.explicacion;
         if (ok) bien.add(k); else bien.delete(k);
         contar();
       });

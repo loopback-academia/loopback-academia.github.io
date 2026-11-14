@@ -8,7 +8,7 @@ descripcion: Para quien ya domina el CCNA: el día a día de un ingeniero de red
 ---
 
 === m9-dia | Un día de trabajo de un ingeniero de redes | 14 | 4
-Saber configurar VLAN y OSPF es la base. Lo que distingue a un profesional es **cómo trabaja**: con método, con documentación y sin romper lo que funciona. Este módulo es para quien ya domina el temario del CCNA (si llegaste aquí desde el examen de entrada, ¡enhorabuena!).
+Saber configurar VLAN y OSPF es la base. Lo que distingue a un profesional es **cómo trabaja**: con método, con documentación y sin romper lo que funciona. Este módulo es para quien ya domina el temario del CCNA (si llegaste desde el examen de entrada, felicitaciones por tu resultado).
 
 ::: nota
 **Cómo está hecho este módulo:** menos teoría de libro y más situaciones reales. Los laboratorios tienen **varias averías a la vez**, sin modo guiado, como en una guardia de verdad.
@@ -231,8 +231,8 @@ El laboratorio de abajo tiene **cuatro averías a la vez** en el router de una s
 = Sin evidencias no hay análisis de causa raíz fiable.
 :::
 
-=== m9-cambios | Cambios en producción sin tumbar la red | 18 | 4
-En una empresa, **ningún cambio se hace «en caliente» y a ojo**. Se planifica, se aprueba, se ejecuta en una ventana y siempre hay un plan de vuelta atrás.
+=== m9-cambios | Cambios en producción sin interrumpir el servicio | 18 | 4
+En una empresa, **ningún cambio se hace «en caliente» ni sin planificación**. Se planifica, se aprueba, se ejecuta en una ventana y siempre hay un plan de vuelta atrás.
 
 ## El ciclo de un cambio
 
@@ -717,7 +717,7 @@ Con AAA cada técnico entra con **su usuario**, se controla **qué puede hacer**
 Repasa siempre con `show running-config` (busca `password` en claro, `transport input all`, `telnet`) y con `show ip ssh`, `show users` y `show logging`.
 
 ::: practica
-Te toca una auditoría de verdad: el switch del laboratorio tiene **siete hallazgos**. Corrígelos todos sin cortar a los usuarios que están conectados. No hay guía: usa el informe (las tareas) y tu cuaderno.
+Ahora realizarás una auditoría real: el switch del laboratorio tiene **siete hallazgos**. Corrígelos todos sin cortar a los usuarios que están conectados. No hay guía: usa el informe (las tareas) y tu cuaderno.
 :::
 
 [[cli:auditoria]]
@@ -895,7 +895,7 @@ Ansible es **idempotente**: si el equipo ya tiene la configuración, no cambia n
 :::
 
 === m9-caso | Caso real: el incidente de la sucursal, de principio a fin | 18 | 4
-Vamos a vivir un incidente completo como lo vive un ingeniero de guardia. Léelo despacio: la forma de trabajar es lo que se evalúa en las entrevistas de nivel medio.
+A continuación se presenta un incidente completo tal como lo vive un ingeniero de guardia. Léelo despacio: la forma de trabajar es lo que se evalúa en las entrevistas de nivel medio.
 
 ## 08:05 · Llega el ticket
 

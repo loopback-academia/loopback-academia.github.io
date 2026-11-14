@@ -22,9 +22,9 @@ export async function montarReto(caja, { curso, leccionHecha, area }) {
     const insignias = insigniasDe(racha);
     const proxima = INSIGNIAS.find(([n]) => racha < n);
     const cab = el('div', { class: 'reto-cab' },
-      el('div', {}, el('span', { class: 'eyebrow' }, 'Reto del día'), el('h2', {}, hecho ? (hecho.hecho ? '¡Acertaste el reto de hoy!' : 'Reto de hoy respondido') : 'Una pregunta, un minuto')),
+      el('div', {}, el('span', { class: 'eyebrow' }, 'Reto del día'), el('h2', {}, hecho ? (hecho.hecho ? 'Respuesta correcta: reto del día completado.' : 'Reto de hoy respondido') : 'Una pregunta, un minuto')),
       el('div', { class: 'reto-racha', title: 'Días seguidos respondiendo el reto' }, el('strong', {}, String(racha)), el('span', { class: 'small' }, racha === 1 ? 'día seguido' : 'días seguidos')));
-    const pie = el('p', { class: 'small muted' }, insignias.length ? 'Insignias: ' + insignias.map(([, i, t]) => `${i} ${t}`).join(' · ') + '. ' : '', proxima ? `Próxima insignia: ${proxima[1]} ${proxima[2]}.` : '¡Tienes todas las insignias!');
+    const pie = el('p', { class: 'small muted' }, insignias.length ? 'Insignias: ' + insignias.map(([, i, t]) => `${i} ${t}`).join(' · ') + '. ' : '', proxima ? `Próxima insignia: ${proxima[1]} ${proxima[2]}.` : 'Tienes todas las insignias!');
     if (hecho) {
       caja.replaceChildren(cab, el('p', {}, q.q), el('p', { class: 'small' }, el('strong', {}, 'Respuesta: '), q.correct.map(i => q.options[i]).join(' · ')), el('p', { class: 'small muted' }, q.explain || ''), el('p', { class: 'small' }, 'Vuelve mañana para mantener la racha.'), pie);
       return;

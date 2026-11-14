@@ -1,4 +1,4 @@
-// Fichas y juegos para aprender los comandos de Cisco IOS desde cero:
+// Fichas y ejercicios para aprender los comandos de Cisco IOS desde cero:
 //  [[apuntes:<lab>]]  ficha para copiar en el cuaderno (o imprimir) con los comandos de un laboratorio.
 //  [[ordena:<lab>]]   ordenar los comandos de ese laboratorio pensando en qué modo va cada uno.
 //  [[modos:ios]]      «¿En qué modo estoy?»: reconocer el modo por el prompt y saber dónde se escribe cada comando.
@@ -16,8 +16,8 @@ export async function montarApuntes(holder, id) {
   const filas = fichaComandos(lab);
   const imprimir = el('button', { type: 'button', class: 'btn btn-ghost btn-sm' }, '🖨️ Imprimir la ficha');
   const caja = el('section', { class: 'ficha', 'aria-label': 'Ficha de comandos para tu cuaderno' },
-    el('div', { class: 'ficha-cab' }, el('h3', {}, '📝 Apunta en tu cuaderno'), imprimir),
-    el('p', { class: 'muted' }, `Los comandos de «${lab.titulo}» en orden. Cópialos a mano: escribirlos te ayuda a memorizarlos. Después practícalos en el simulador de abajo.`),
+    el('div', { class: 'ficha-cab' }, el('h3', {}, '📝 Anota en tu cuaderno'), imprimir),
+    el('p', { class: 'muted' }, `Los comandos de «${lab.titulo}» en orden. Cópialos a mano: escribirlos ayuda a memorizarlos. Después practícalos en el simulador de abajo.`),
     el('div', { class: 'ficha-tabla' },
       el('table', {},
         el('thead', {}, el('tr', {}, el('th', { scope: 'col' }, 'Comando'), el('th', { scope: 'col' }, 'Dónde se escribe'), el('th', { scope: 'col' }, 'Para qué sirve'))),
@@ -25,7 +25,7 @@ export async function montarApuntes(holder, id) {
           el('td', {}, el('code', {}, p.linea)),
           el('td', {}, el('code', { class: 'ficha-prompt' }, p.sufijo), el('br'), el('span', { class: 'small muted' }, NOMBRE_MODO[p.modo])),
           el('td', {}, p.que)))))),
-    el('p', { class: 'small muted' }, 'Truco: casi todos los comandos se pueden abreviar (conf t, int g0/1, sh run) y la tecla Tab los completa.'));
+    el('p', { class: 'small muted' }, 'Consejo: casi todos los comandos se pueden abreviar (conf t, int g0/1, sh run) y la tecla Tab los completa.'));
   imprimir.addEventListener('click', () => {
     caja.classList.add('ficha-activa');
     document.body.classList.add('imprimir-ficha');
@@ -49,14 +49,14 @@ export async function montarOrdena(holder, id) {
   function pintar(msg) {
     const consola = el('div', { class: 'terminal juego-consola', 'aria-live': 'polite' },
       ...colocados.map(p => el('div', { class: 'in' }, p.prompt + p.linea)),
-      restantes.length ? el('div', { class: 'juego-cursor' }, restantes[0].prompt + ' ▌') : el('div', { class: 'ok' }, seq[seq.length - 1].promptDespues + '  ✓ ¡Secuencia correcta!'));
+      restantes.length ? el('div', { class: 'juego-cursor' }, restantes[0].prompt + ' ▌') : el('div', { class: 'ok' }, seq[seq.length - 1].promptDespues + '  ✓ Secuencia correcta'));
     const botones = restantes.length ? el('div', { class: 'juego-ops' }, ...mezclar(restantes).map(p => {
       const b = el('button', { type: 'button', class: 'juego-op' }, p.linea);
       b.addEventListener('click', () => elegir(p, b));
       return b;
     })) : null;
-    const fin = !restantes.length ? fallos === 0 ? '🏆 ¡Perfecto, sin ningún fallo!' : fallos === 1 ? '¡Superado con un solo fallo! ¿Te atreves a hacerlo sin ninguno?' : `Terminado con ${fallos} fallos. Repítelo hasta hacerlo con uno o ninguno para superarlo.` : null;
-    const otra = el('button', { type: 'button', class: 'btn btn-ghost btn-sm' }, restantes.length ? 'Empezar de nuevo' : 'Jugar otra vez');
+    const fin = !restantes.length ? fallos === 0 ? 'Secuencia completada sin errores.' : fallos === 1 ? 'Ejercicio superado con un error. Repítelo para completarlo sin errores.' : `Terminado con ${fallos} errores. Repítelo hasta cometer uno o ninguno para superarlo.` : null;
+    const otra = el('button', { type: 'button', class: 'btn btn-ghost btn-sm' }, restantes.length ? 'Empezar de nuevo' : 'Repetir ejercicio');
     otra.addEventListener('click', reiniciar);
     caja.replaceChildren(...[
       el('div', { class: 'ficha-cab' }, el('h3', {}, '🧩 Ordena los comandos'), labHecho(clave) ? el('span', { class: 'badge badge-ok' }, '✓ Superado') : null),
@@ -72,14 +72,14 @@ export async function montarOrdena(holder, id) {
     if (puedeIr(restantes, p)) {
       colocados.push(p);
       restantes = restantes.filter(x => x !== p);
-      if (!restantes.length && fallos <= 1 && !labHecho(clave)) { guardarLab(clave); toast('¡Juego superado: ordena los comandos!'); }
+      if (!restantes.length && fallos <= 1 && !labHecho(clave)) { guardarLab(clave); toast('Ejercicio superado: Ordena los comandos.'); }
       pintar({ tipo: 'ok', texto: '✓ ' + p.que });
     } else {
       fallos++;
       boton.classList.add('mal');
       const ahora = restantes[0];
       const texto = p.modo !== ahora.modo
-        ? `Todavía no: ahora estás en ${NOMBRE_MODO[ahora.modo]} (${ahora.prompt}) y «${p.linea}» se escribe en ${NOMBRE_MODO[p.modo]} (${SUFIJO[p.modo]}).`
+        ? `Aún no corresponde: ahora estás en ${NOMBRE_MODO[ahora.modo]} (${ahora.prompt}) y «${p.linea}» se escribe en ${NOMBRE_MODO[p.modo]} (${SUFIJO[p.modo]}).`
         : `Ese va más adelante. Piensa qué hay que hacer antes.`;
       const m = caja.querySelector('.juego-msg');
       const nuevo = el('p', { class: 'juego-msg warn', role: 'status' }, '✗ ' + texto);
@@ -101,11 +101,11 @@ export async function montarModos(holder) {
   function pintar(resp) {
     if (i >= rondas.length) {
       const ok = aciertos >= rondas.length - 1;
-      if (ok && !labHecho(clave)) { guardarLab(clave); toast('¡Juego superado: los modos de IOS!'); }
-      const otra = el('button', { type: 'button', class: 'btn btn-primary btn-sm' }, 'Jugar otra vez');
+      if (ok && !labHecho(clave)) { guardarLab(clave); toast('Ejercicio superado: Modos de Cisco IOS.'); }
+      const otra = el('button', { type: 'button', class: 'btn btn-primary btn-sm' }, 'Repetir ejercicio');
       otra.addEventListener('click', reiniciar);
       caja.replaceChildren(el('h3', {}, '🧭 ¿En qué modo estoy?'),
-        el('p', { class: 'juego-msg ' + (ok ? 'ok' : 'warn') }, `${aciertos} de ${rondas.length}. ` + (ok ? '¡Ya te mueves por el IOS como un técnico!' : 'Repasa la tabla de modos de la lección y vuelve a intentarlo.')),
+        el('p', { class: 'juego-msg ' + (ok ? 'ok' : 'warn') }, `${aciertos} de ${rondas.length}. ` + (ok ? 'Reconoces los modos de IOS con soltura.' : 'Repasa la tabla de modos de la lección y vuelve a intentarlo.')),
         el('div', { class: 'hero-cta' }, otra));
       return;
     }
@@ -124,7 +124,7 @@ export async function montarModos(holder) {
       const sig = el('button', { type: 'button', class: 'btn btn-primary btn-sm' }, i + 1 < rondas.length ? 'Siguiente' : 'Ver resultado');
       sig.addEventListener('click', () => { i++; pintar(null); });
       pie = [el('p', { class: 'juego-msg ' + (resp === r.correcta ? 'ok' : 'warn'), role: 'status' },
-        (resp === r.correcta ? '✓ ¡Correcto! ' : `✗ Era ${NOMBRE_MODO[r.correcta]} (${SUFIJO[r.correcta]}). `) + (r.tipo === 'comando' ? r.paso.que : '')), el('div', { class: 'hero-cta' }, sig)];
+        (resp === r.correcta ? '✓ Correcto. ' : `✗ Era ${NOMBRE_MODO[r.correcta]} (${SUFIJO[r.correcta]}). `) + (r.tipo === 'comando' ? r.paso.que : '')), el('div', { class: 'hero-cta' }, sig)];
     }
     caja.replaceChildren(...[
       el('div', { class: 'ficha-cab' }, el('h3', {}, '🧭 ¿En qué modo estoy?'), el('span', { class: 'badge' }, `${i + 1} / ${rondas.length}`), labHecho(clave) ? el('span', { class: 'badge badge-ok' }, '✓ Superado') : null),

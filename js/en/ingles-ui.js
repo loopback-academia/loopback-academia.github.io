@@ -23,7 +23,7 @@ const altavoz = texto => {
 
 function finalizar(caja, bien, total, progreso, repetir) {
   const ok = bien / total >= APROBADO;
-  if (ok && !labHecho(progreso)) { guardarLab(progreso); toast('¡Actividad de inglés completada!'); }
+  if (ok && !labHecho(progreso)) { guardarLab(progreso); toast('Actividad de inglés completada.'); }
   caja.replaceChildren(el('div', { class: 'alert ' + (ok ? 'alert-ok' : 'alert-warn') }, el('p', {}, el('strong', {}, `${bien} de ${total} (${Math.round((bien / total) * 100)} %). `), ok ? 'Great job!' : `Necesitas un ${APROBADO * 100} %. Try again!`),
     el('button', { type: 'button', class: 'btn btn-primary btn-sm', onclick: repetir }, 'Repetir')));
 }

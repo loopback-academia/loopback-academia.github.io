@@ -615,7 +615,7 @@ Un método ordenado ahorra horas. Cisco recomienda trabajar **por capas**, de ab
 :::
 
 === m3-averias | Práctica: averías de IP y enrutamiento | 25 | 2
-Ya conoces el método por capas. Ahora toca aplicarlo a los problemas de **capa 3**, los más frecuentes cuando "no hay Internet" o "no llego al servidor".
+Ya conoces el método por capas. Ahora lo aplicarás a los problemas de **capa 3**, los más frecuentes cuando "no hay Internet" o "no llego al servidor".
 
 ## Las preguntas, en orden
 

@@ -86,7 +86,7 @@ export async function montarPaso(holder, id) {
   await cargar();
   const progreso = 'paso-' + id;
   const marcador = el('span', { class: 'badge badge-accent' });
-  const zona = el('div', {}, el('p', { class: 'muted small' }, 'Pulsa «Ejecutar paso a paso». La primera vez se descarga Python en tu navegador (unos segundos).'));
+  const zona = el('div', {}, el('p', { class: 'muted small' }, 'Presiona «Ejecutar paso a paso». La primera vez se descarga Python en tu navegador (unos segundos).'));
   const btn = el('button', { type: 'button', class: 'btn btn-primary' }, '▶ Ejecutar paso a paso');
   const estado = el('span', { class: 'small muted', role: 'status' });
   let resueltas = 0;
@@ -99,7 +99,7 @@ export async function montarPaso(holder, id) {
       if (ok && !hecha) {
         hecha = true; resueltas++;
         marcador.textContent = `${resueltas}/${ej.preguntas.length} preguntas`;
-        if (resueltas === ej.preguntas.length && !labHecho(progreso)) { guardarLab(progreso); toast('¡Completado: ' + ej.titulo + '!'); }
+        if (resueltas === ej.preguntas.length && !labHecho(progreso)) { guardarLab(progreso); toast('Completado: ' + ej.titulo + '.'); }
       }
     };
     let control;

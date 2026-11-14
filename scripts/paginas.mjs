@@ -30,7 +30,7 @@ const ICON = {
   tema: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>',
 };
 const NAV = [['curso.html', 'Curso', 'curso'], ['practica.html', 'Práctica', 'practica'], ['comandos.html', 'Comandos', 'comandos'], ['examen.html', 'Examen', 'examen'], ['repaso.html', 'Repaso', 'repaso'], ['rutas.html', 'Rutas', 'rutas'], ['tutor.html', 'Buscar', 'buscar']];
-// Qué hay en cada sección (se muestra al pasar el ratón): así nadie tiene que adivinar.
+// Qué hay en cada sección (se muestra al pasar el mouse): así nadie tiene que adivinar.
 const DESCRIPCION = {
   'curso.html': 'Tus lecciones por niveles y tu progreso',
   'practica.html': 'Laboratorios y ejercicios que se corrigen solos',

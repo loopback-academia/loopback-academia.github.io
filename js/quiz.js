@@ -64,7 +64,7 @@ export function montarQuiz(contenedor, preguntas, { titulo = 'Comprueba lo que h
       ex.prepend(el('strong', {}, ok ? '✓ Correcto. ' : '✗ Incorrecto. '));
     }
     form.querySelector('.quiz-result').textContent = aprobado
-      ? `Has acertado ${aciertos} de ${total}. ¡Aprobado!`
+      ? `Has acertado ${aciertos} de ${total}. Aprobado.`
       : `Has acertado ${aciertos} de ${total}; necesitas ${minimoPara(total)} (80 %). No te mostramos las respuestas para que no las memorices: vuelve a leer la lección e inténtalo otra vez (las preguntas cambiarán de orden).`;
     form.querySelector('button[type=submit]').textContent = aprobado ? 'Repetir con otro orden' : 'Intentar de nuevo';
     form.dataset.corregido = '1';

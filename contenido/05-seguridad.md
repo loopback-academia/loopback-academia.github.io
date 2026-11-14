@@ -137,7 +137,7 @@ El CCNA pide **describir** los elementos de un programa de seguridad: conciencia
 Combina **dos o más factores de tipo distinto**:
 
 - **Algo que sabes:** contraseña, PIN.
-- **Algo que tienes:** el móvil con una app de códigos (TOTP), una llave de seguridad, una tarjeta.
+- **Algo que tienes:** el celular con una app de códigos (TOTP), una llave de seguridad, una tarjeta.
 - **Algo que eres:** huella, rostro, iris (**biometría**).
 
 Dos contraseñas **no** son MFA: son el mismo factor.
@@ -170,9 +170,9 @@ R1(config-line)# exec-timeout 5 0
 ::: quiz
 ? ¿Cuál de estas combinaciones es MFA?
 - Contraseña y PIN
-+ Contraseña y código de una app en el móvil
++ Contraseña y código de una app en el celular
 - Dos contraseñas distintas
-= Contraseña (algo que sabes) + móvil (algo que tienes) son dos factores distintos.
+= Contraseña (algo que sabes) + celular (algo que tienes) son dos factores distintos.
 
 ? ¿Qué tipo de hash de contraseña de Cisco es el más seguro?
 - Tipo 7
@@ -568,7 +568,7 @@ Una **VPN** (red privada virtual) crea un túnel seguro a través de una red no 
 ## Tipos
 
 - **Site-to-site (sede a sede):** une dos redes de forma permanente. Los equipos de usuario no saben que existe: los routers o firewalls de cada extremo cifran y descifran. Se usa **IPsec**.
-- **Acceso remoto:** un usuario se conecta desde su portátil a la red de la empresa con un **cliente VPN** (Cisco Secure Client / AnyConnect). Se usa **TLS/SSL** o IPsec.
+- **Acceso remoto:** un usuario se conecta desde su laptop a la red de la empresa con un **cliente VPN** (Cisco Secure Client / AnyConnect). Se usa **TLS/SSL** o IPsec.
 
 ## IPsec
 

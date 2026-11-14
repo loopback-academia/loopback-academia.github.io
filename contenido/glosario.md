@@ -109,7 +109,7 @@ Las otras formas son plurales, siglas o variantes que también se marcan en las 
 | ITIL | | ti | Marco de buenas prácticas para gestionar servicios de TI: incidentes, problemas, cambios, peticiones. |
 | Malware | | ti | Programa malicioso: virus, troyanos, ransomware, spyware. |
 | Mesa de ayuda | help desk | ti | Punto de contacto donde los usuarios reportan problemas y piden servicios de TI. |
-| MFA | autenticación multifactor | ti | Verificación con dos o más factores: algo que sabes (contraseña), algo que tienes (móvil) o algo que eres (huella). |
+| MFA | autenticación multifactor | ti | Verificación con dos o más factores: algo que sabes (contraseña), algo que tienes (celular) o algo que eres (huella). |
 | Phishing | | ti | Engaño por correo o mensaje que suplanta a alguien de confianza para robar contraseñas, dinero o instalar malware. |
 | Ransomware | | ti | Malware que cifra los archivos y pide un rescate para devolverlos. |
 | SLA | | ti | Acuerdo de nivel de servicio: tiempos máximos comprometidos para responder y resolver. |
@@ -137,7 +137,7 @@ Las otras formas son plurales, siglas o variantes que también se marcan en las 
 | Día cero | zero-day, vulnerabilidad de día cero | sec | Vulnerabilidad que se explota antes de que exista un parche. |
 | Hardware | | base | Las piezas físicas de un equipo, las que se pueden tocar: procesador, memoria, disco, pantalla, teclado… |
 | Software | | base | Los programas: instrucciones que le dicen al hardware qué hacer. El sistema operativo y las aplicaciones son software. |
-| Procesador | CPU, procesadores | base | La pieza que ejecuta las instrucciones de los programas: el «cerebro» del ordenador. |
+| Procesador | CPU, procesadores | base | La pieza que ejecuta las instrucciones de los programas: el «cerebro» de la computadora. |
 | Memoria RAM | RAM | base | Memoria rápida donde está lo que se usa en este momento. Se borra al apagar el equipo. |
 | SSD | disco SSD, disco duro, HDD | base | El disco guarda los archivos aunque se apague el equipo. Un SSD es mucho más rápido que un disco duro tradicional (HDD). |
 | Sistema operativo | sistemas operativos | base | El programa principal que hace funcionar el equipo y organiza los demás: Windows, macOS, Linux, Android o iOS. |
@@ -147,6 +147,6 @@ Las otras formas son plurales, siglas o variantes que también se marcan en las 
 | Byte | bytes | base | Grupo de 8 bits. Los tamaños de archivo se miden en bytes: KB, MB, GB y TB. |
 | Mbps | megabits por segundo | base | Unidad de velocidad de una conexión. Para pasar a megabytes por segundo se divide entre 8. |
 | Almacenamiento en la nube | la nube, en la nube | base | Guardar archivos en servidores de internet (Google Drive, OneDrive, Dropbox) para tenerlos en cualquier dispositivo. |
-| Servidor | servidores | base | Ordenador que da un servicio a otros, como una página web, el correo o los archivos compartidos. |
+| Servidor | servidores | base | Computadora que da un servicio a otros, como una página web, el correo o los archivos compartidos. |
 | URL | dirección web, direcciones web | base | La dirección de una página web, por ejemplo https://www.ejemplo.com/contacto. |
-| Gestor de contraseñas | gestores de contraseñas | base | Programa que guarda tus contraseñas cifradas y las rellena por ti; solo hay que recordar una contraseña maestra. |
+| Gestor de contraseñas | gestores de contraseñas | base | Programa que guarda tus contraseñas cifradas y las completa por ti; solo hay que recordar una contraseña maestra. |

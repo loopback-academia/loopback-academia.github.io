@@ -11,7 +11,7 @@ descripcion: El trabajo de soporte desde cero: método de diagnóstico, computad
 Esta área te prepara para **puestos de entrada en tecnología** en empresas grandes: cadenas de supermercados y tiendas, centros de distribución, bancos, aseguradoras, telecomunicaciones o cualquier empresa con oficinas y sucursales. Aquí no se estudia teoría por estudiarla: cada módulo trabaja lo que se hace en un turno real.
 
 ::: nota
-¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico del ordenador, internet y las profesiones de la tecnología.
+¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico de la computadora, internet y las profesiones de la tecnología.
 :::
 
 ## Las rutas
@@ -89,7 +89,7 @@ Un buen primer nivel **resuelve lo que puede** y **escala bien** lo que no: con 
 **Ejercicio guiado.** Clasifica estos cinco avisos en N1, N2 o N3. Pista: piensa si se resuelve con un procedimiento documentado (N1), si necesita ir al sitio o conocimiento técnico más profundo (N2) o si es de infraestructura o de un proveedor (N3).
 
 1. «Olvidé mi contraseña».
-2. «La pantalla de mi portátil está rota».
+2. «La pantalla de mi laptop está rota».
 3. «Todas las tiendas del norte están sin sistema».
 4. «Necesito acceso a la carpeta de Compras».
 5. «El sistema de ventas da un error al cerrar la caja en todas las tiendas».
@@ -511,7 +511,7 @@ La mayoría de los ataques a empresas no empiezan con un virus sofisticado: empi
 ## Las señales que delatan un phishing
 
 1. **El remitente**: el nombre puede decir «Soporte TI», pero mira la **dirección real**. `laceiba-soporte.example` o `1aceiba.example` (con un uno) no son `laceiba.example`.
-2. **Los enlaces**: el texto puede decir una dirección y llevar a otra. Pasa el ratón por encima (o mantén pulsado en el móvil) **sin hacer clic** y lee el destino real.
+2. **Los enlaces**: el texto puede decir una dirección y llevar a otra. Pasa el mouse por encima (o mantén presionado en el celular) **sin hacer clic** y lee el destino real.
 3. **La prisa o la amenaza**: «en 24 horas», «su cuenta será cerrada», «es confidencial, no lo comentes».
 4. **Lo que pide**: contraseñas, códigos de verificación, PIN o datos de tarjeta. **TI y los bancos nunca los piden por correo.**
 5. **Adjuntos inesperados**: `.zip`, `.exe`, documentos que piden «habilitar macros».
@@ -551,7 +551,7 @@ La mayoría de los ataques a empresas no empiezan con un virus sofisticado: empi
 = Es el fraude del director: prisa, secreto y un pago fuera del procedimiento. Se confirma por otro canal.
 
 ? ¿Cómo compruebas a dónde lleva un enlace sin abrirlo?
-+ Pasando el ratón por encima (o manteniéndolo pulsado en el móvil) y leyendo el destino
++ Pasando el mouse por encima (o manteniéndolo presionado en el celular) y leyendo el destino
 - Haciendo clic rápido y cerrando la página
 - Copiándolo en el buscador
 = El destino real aparece en la barra de estado o en la vista previa del enlace.
@@ -638,7 +638,7 @@ Un **ticket** es el registro de cada incidencia o solicitud. Permite seguirla, m
 Cada prioridad tiene un **SLA** (acuerdo de nivel de servicio): tiempo máximo de respuesta y de solución. Por ejemplo: P1, respuesta en 15 min y solución en 4 h; P4, respuesta en un día y solución planificada.
 
 ::: nota
-La prioridad no la decide quién grita más ni el cargo de quien llama: la deciden el **impacto** y la **urgencia**. Un gerente con el ratón roto (y otro de repuesto) es P4; una cajera sin poder cobrar con la tienda llena puede ser P2.
+La prioridad no la decide quién grita más ni el cargo de quien llama: la deciden el **impacto** y la **urgencia**. Un gerente con el mouse roto (y otro de repuesto) es P4; una cajera sin poder cobrar con la tienda llena puede ser P2.
 :::
 
 ## Escalamiento
@@ -669,7 +669,7 @@ Escalamiento jerárquico a tu supervisor antes de incumplir el SLA: «P1 · Tien
 :::
 
 ::: quiz
-? Un gerente tiene el ratón roto pero hay otro de repuesto en la tienda. ¿Qué prioridad tiene?
+? Un gerente tiene el mouse roto pero hay otro de repuesto en la tienda. ¿Qué prioridad tiene?
 + P4: impacto bajo y con alternativa
 - P1, porque es gerente
 - P2, porque es una tienda
@@ -791,7 +791,7 @@ Es el momento de demostrar lo aprendido. Cada caso es un ticket de *Comercial La
 Para aprobar un caso necesitas **80 puntos** de media, al menos **50 en cada parte** y **ninguna acción de riesgo**. Puedes repetirlos tantas veces como quieras: cada intento te muestra qué faltó y una nota de referencia.
 
 ::: practica
-Consejo: antes de pulsar cualquier acción, pregúntate qué hipótesis compruebas con ella. Las acciones inútiles restan poco; las de riesgo te suspenden el caso, como en la vida real.
+Consejo: antes de presionar cualquier acción, pregúntate qué hipótesis compruebas con ella. Las acciones inútiles restan poco; las de riesgo te suspenden el caso, como en la vida real.
 :::
 
 ## Caso 1 · Un empleado no puede iniciar sesión (tienda)
@@ -898,7 +898,7 @@ Mientras no hay solución definitiva, documenta la **solución temporal** en la 
 :::
 
 ::: solucion
-¿Por qué se bloquean? Dispositivos con la contraseña antigua (correo del móvil). ¿Por qué no la actualizan? No saben que deben hacerlo. ¿Por qué no lo saben? El aviso de caducidad no lo menciona. Acciones: añadir al aviso de cambio de contraseña los pasos para actualizar el móvil, publicar un artículo de autoayuda y, si la política lo permite, avisar con varios días de antelación. Medir: tickets de bloqueo del mes siguiente.
+¿Por qué se bloquean? Dispositivos con la contraseña antigua (correo del celular). ¿Por qué no la actualizan? No saben que deben hacerlo. ¿Por qué no lo saben? El aviso de caducidad no lo menciona. Acciones: añadir al aviso de cambio de contraseña los pasos para actualizar el celular, publicar un artículo de autoayuda y, si la política lo permite, avisar con varios días de antelación. Medir: tickets de bloqueo del mes siguiente.
 :::
 
 ::: quiz

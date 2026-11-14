@@ -79,7 +79,7 @@ export const TICKETS = [
   { id: 'T-5106', prioridad: 'P3', de: 'Ana Batista (Recepción)', texto: 'Mi jefa aprobó que trabaje desde casa los viernes. Necesito la VPN. (Aprobación adjunta.)',
     ok: s => tiene(s, 'abatista', 'GG_VPN'), error: () => 'Añádela al grupo GG_VPN.' },
   { id: 'T-5107', prioridad: 'P4', de: 'Rosa Valdez (Contabilidad)', texto: 'Hazme administradora del dominio, así instalo yo los programas y no os molesto.', rechazar: true,
-    ok: s => s.rechazados.has('T-5107') && !tiene(s, 'rvaldez', 'Admins. del dominio'), error: s => (tiene(s, 'rvaldez', 'Admins. del dominio') ? '¡Le diste control total del dominio! Quítala de Admins. del dominio.' : 'Este ticket no se resuelve dando permisos: recházalo y ofrece instalarle el programa.') },
+    ok: s => s.rechazados.has('T-5107') && !tiene(s, 'rvaldez', 'Admins. del dominio'), error: s => (tiene(s, 'rvaldez', 'Admins. del dominio') ? 'Esa acción concede control total del dominio. Retira la cuenta del grupo Admins. del dominio.' : 'Este ticket no se resuelve dando permisos: recházalo y ofrece instalarle el programa.') },
 ];
 
 export function cerrarTicket(s, id) {

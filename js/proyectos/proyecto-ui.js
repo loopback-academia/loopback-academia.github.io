@@ -113,8 +113,8 @@ export async function montarProyecto(holder, id) {
     if (puntos > 0) guardarLab(p.progreso, puntos, total);
     if (ev.completo && !completado) {
       completado = true;
-      escribir(activo, '\n*** ¡Proyecto completado! Todos los requisitos y pruebas están en verde. Descarga el informe para tu portafolio. ***', 'ok');
-      toast('¡Proyecto completado!');
+      escribir(activo, '\n*** Proyecto completado: todos los requisitos y pruebas están en verde. Descarga el informe para tu portafolio. ***', 'ok');
+      toast('Proyecto completado.');
     }
     return ev;
   }
@@ -125,7 +125,7 @@ export async function montarProyecto(holder, id) {
     resultadoPrueba.replaceChildren(el('h5', {}, (t.ok ? '✓ ' : '✗ ') + pasos.texto),
       el('ol', { class: 'trace' }, t.pasos.map((s, k) => el('li', { class: s.ok ? 'ok' : 'bad' }, el('span', { class: 'check' + (s.ok ? ' on' : ' bad'), 'aria-hidden': 'true' }, s.ok ? '✓' : '✗'),
         el('span', {}, s.texto, !s.ok && s.detalle ? el('small', { class: 'req-help' }, s.detalle) : null)))),
-      fallo >= 0 ? el('p', { class: 'small muted' }, 'El recorrido se detiene en el primer fallo. Arréglalo y vuelve a probar.') : el('p', { class: 'small' }, '¡Funciona de extremo a extremo!'));
+      fallo >= 0 ? el('p', { class: 'small muted' }, 'El recorrido se detiene en el primer fallo. Arréglalo y vuelve a probar.') : el('p', { class: 'small' }, 'Funciona de extremo a extremo.'));
   }
 
   // ---------------------------------------------------------------- acciones

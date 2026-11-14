@@ -16,7 +16,7 @@ const HABILIDAD_GRUPO = {
   vocab: 'Inglés técnico: vocabulario de TI',
   lectura: 'Inglés técnico: lectura de errores y documentación',
   frases: 'Inglés técnico: tickets, llamadas y entrevistas',
-  inicio: 'Uso del ordenador: atajos de teclado, archivos y unidades',
+  inicio: 'Uso de la computadora: atajos de teclado, archivos y unidades',
   paso: 'Lectura y seguimiento de código paso a paso (variables, pila de llamadas)',
   topologias: 'Diseño y diagnóstico de topologías de red (VLAN, troncales, enrutamiento y DHCP)',
   contrasenas: 'Contraseñas seguras, hashes y sal',

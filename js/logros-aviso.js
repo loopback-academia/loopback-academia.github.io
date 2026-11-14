@@ -20,9 +20,9 @@ export function avisarLogros(estado, racha, { semilla = false } = {}) {
   local.set(VISTOS, [...new Set([...vistos, ...conseguidos.map(l => l.id)])]);
   if (sube) local.set(NIVEL, nivel.n);
   const partes = [];
-  if (nuevos.length === 1) partes.push(`${nuevos[0].icono} ¡Insignia nueva: «${nuevos[0].titulo}»!`);
-  else if (nuevos.length > 1) partes.push(`🏅 ¡${nuevos.length} insignias nuevas! (${nuevos.map(l => l.icono).join(' ')})`);
-  if (sube) partes.push(`⬆️ ¡Subes al nivel ${nivel.n}: ${nivel.nombre}!`);
+  if (nuevos.length === 1) partes.push(`${nuevos[0].icono} Nueva insignia: «${nuevos[0].titulo}».`);
+  else if (nuevos.length > 1) partes.push(`🏅 ${nuevos.length} insignias nuevas (${nuevos.map(l => l.icono).join(' ')}).`);
+  if (sube) partes.push(`Has subido al nivel ${nivel.n}: ${nivel.nombre}.`);
   // Un momento después del aviso de la propia actividad («Laboratorio completado»…), para que se lean los dos.
   if (typeof document !== 'undefined') {
     clearTimeout(temporizador);

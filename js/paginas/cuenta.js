@@ -161,7 +161,7 @@ async function seccionMfa() {
         caja.replaceChildren(form);
       } catch (e) { toast(auth.mensajeError(e)); }
     });
-    caja.replaceChildren(el('p', { class: 'small muted' }, 'Protege tu cuenta con un código de tu móvil además de la contraseña.'), activar);
+    caja.replaceChildren(el('p', { class: 'small muted' }, 'Protege tu cuenta con un código de tu celular además de la contraseña.'), activar);
   };
   await pintar();
   return caja;
@@ -214,7 +214,7 @@ else {
     else if (params.has('recuperar')) nuevaContrasena();
     else {
       await cargar();
-      if (params.has('confirmado')) toast('¡Cuenta confirmada! Bienvenido.');
+      if (params.has('confirmado')) toast('Cuenta confirmada. Te damos la bienvenida.');
       if (params.has('siguiente')) location.replace(siguiente);
       else panel(u);
     }

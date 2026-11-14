@@ -51,7 +51,7 @@ export async function montarCaptura(holder, id) {
       if (v == null || v === '') return;
       const ok = corregirPregunta(q, v);
       fb.className = 'small feedback ' + (ok ? 'ok' : 'bad');
-      fb.textContent = ok ? '¡Correcto! ' + q.explicacion : 'No es eso. Usa los filtros y mira el detalle de los paquetes.';
+      fb.textContent = ok ? 'Correcto. ' + q.explicacion : 'No es eso. Usa los filtros y mira el detalle de los paquetes.';
       if (ok) { bien.add(k); pintar(); if (bien.size === cap.preguntas.length && !labHecho('cap-' + id)) { guardarLab('cap-' + id); toast('Captura analizada: laboratorio completado.'); } }
     });
     return el('li', {}, el('p', {}, q.texto), control, el('div', { class: 'hero-cta' }, btn), fb);

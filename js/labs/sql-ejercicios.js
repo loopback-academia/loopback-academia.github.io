@@ -84,7 +84,7 @@ export const CONJUNTOS = {
   analisis: {
     base: 'ventas',
     titulo: 'Análisis de ventas: KPI e informes',
-    intro: 'Eres analista junior de la tienda en línea. Gerencia quiere un informe de ventas de junio a noviembre de 2026. Ojo: los datos tienen problemas de calidad, como en la vida real. Las consultas con gráfico lo dibujan al acertar.',
+    intro: 'Eres analista junior de la tienda en línea. Gerencia quiere un informe de ventas de junio a noviembre de 2026. Atención: los datos tienen problemas de calidad, como en la vida real. Las consultas con gráfico lo dibujan al acertar.',
     final: 'Informe listo. Ya sabes calcular ingresos por período, rankings, medias, crecimiento y detectar datos sucios: es el trabajo diario de un analista. El siguiente paso es llevar estas consultas a un panel (Power BI, Looker Studio o Metabase) que se actualice solo.',
   },
   detective: {

@@ -45,7 +45,7 @@ export const CONVERSACIONES = {
         ] },
       { msg: 'Veo una ventanita de Windows, una carpeta amarilla y un dibujo de un sobre.',
         opciones: [
-          O('Muy bien. Pulse la tecla con el dibujo de Windows del teclado y escriba «Chrome», así, despacio. ¿Le aparece un círculo de colores?', { empatia: 1, claridad: 2, solucion: 2 }, 'Pasos cortos, de uno en uno, describiendo lo que va a ver.', 1),
+          O('Muy bien. Presione la tecla con el dibujo de Windows del teclado y escriba «Chrome», así, despacio. ¿Le aparece un círculo de colores?', { empatia: 1, claridad: 2, solucion: 2 }, 'Pasos cortos, de uno en uno, describiendo lo que va a ver.', 1),
           O('Busque Chrome en el menú Inicio, ancle el acceso directo a la barra de tareas y ábralo.', { empatia: 0, claridad: 0, solucion: 1 }, 'Tres instrucciones con jerga de golpe: es fácil que se pierda.', -1),
           O('Le mando un manual en PDF.', { empatia: 0, claridad: 1, solucion: 0 }, 'Para alguien con poca soltura, un manual largo no resuelve en el momento.', 0),
         ] },

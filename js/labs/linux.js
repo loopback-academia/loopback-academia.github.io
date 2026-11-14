@@ -269,7 +269,7 @@ C.journalctl = (s, a) => {
   return L.join('\n');
 };
 C.apt = (s, a, o) => {
-  if (!o.sudo) return err('E: No se pudo abrir el fichero de bloqueo /var/lib/dpkg/lock-frontend - open (13: Permiso denegado)\n¿Es usted root? (usa sudo)');
+  if (!o.sudo) return err('E: No se pudo abrir el archivo de bloqueo /var/lib/dpkg/lock-frontend - open (13: Permiso denegado)\n¿Es usted root? (usa sudo)');
   if (a[0] === 'update') { s.aptUpdate = true; return 'Obj:1 http://archive.ubuntu.com/ubuntu noble InRelease\nLeyendo lista de paquetes... Hecho'; }
   if (a[0] === 'install') { const p = a.filter(x => !x.startsWith('-')).slice(1); for (const x of p) s.paquetes.add(x); return `Leyendo lista de paquetes... Hecho\nSe instalarán los siguientes paquetes NUEVOS:\n  ${p.join(' ')}\nConfigurando ${p.join(', ')} ...`; }
   return err('Uso: sudo apt update | sudo apt install paquete');

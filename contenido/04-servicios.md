@@ -387,7 +387,7 @@ Formato de un mensaje: `*Mar 1 10:15:02.123: %LINEPROTO-5-UPDOWN: Line protocol 
 :::
 
 === m4-qos | Calidad de servicio (QoS) | 18 | 3
-Cuando un enlace se satura, los paquetes se acumulan en colas. **QoS** decide **qué tráfico va primero** para que la voz y el vídeo funcionen aunque haya congestión.
+Cuando un enlace se satura, los paquetes se acumulan en colas. **QoS** decide **qué tráfico va primero** para que la voz y el video funcionen aunque haya congestión.
 
 ## Características que hay que controlar
 
@@ -414,7 +414,7 @@ Cuando un enlace se satura, los paquetes se acumulan en colas. **QoS** decide **
 | Tráfico | DSCP | Valor |
 |---|---|---|
 | Voz | **EF** (Expedited Forwarding) | 46 |
-| Vídeo interactivo | AF41 | 34 |
+| Video interactivo | AF41 | 34 |
 | Señalización de voz | CS3 | 24 |
 | Datos críticos | AF21–AF31 | 18–26 |
 | Normal | Default / BE | 0 |

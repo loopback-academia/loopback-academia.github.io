@@ -45,7 +45,7 @@ export const RETOS = {
       }),
       T('Haz ping de PC1 a PC3 y comprueba que responde.', (t, h) => pingHecho(t, h, 'PC1', 'PC3')),
     ],
-    pistas: ['Pulsa «Cable», toca PC1 y luego SW1. Repite con los otros dos.', 'Selecciona cada PC y escribe, por ejemplo, 192.168.1.10, .11 y .12 con la máscara 255.255.255.0.', 'En «Probar con ping», elige PC1 como origen y PC3 como destino.'],
+    pistas: ['Presiona «Cable», toca PC1 y luego SW1. Repite con los otros dos.', 'Selecciona cada PC y escribe, por ejemplo, 192.168.1.10, .11 y .12 con la máscara 255.255.255.0.', 'En «Probar con ping», elige PC1 como origen y PC3 como destino.'],
   },
   gateway: {
     titulo: 'Dos redes unidas por un router', nivel: 'principiante',
@@ -112,7 +112,7 @@ export const RETOS = {
       T('Enciende Gi0/0 de R1: las subinterfaces dependen de ella.', t => equipo(t, 'R1').ifs['Gi0/0'].on),
       T('Haz ping de PC1 (Ventas) a PC4 (Soporte): ahora pasa por el router.', (t, h) => pingHecho(t, h, 'PC1', 'PC4')),
     ],
-    pistas: ['Selecciona R1 y pulsa «+ Subinterfaz» en Gi0/0.', 'Cada subinterfaz necesita su VLAN, su IP y su máscara; la interfaz física se queda sin IP.', 'La IP de cada subinterfaz es la puerta de enlace que ya tienen los PC de esa VLAN.'],
+    pistas: ['Selecciona R1 y presiona «+ Subinterfaz» en Gi0/0.', 'Cada subinterfaz necesita su VLAN, su IP y su máscara; la interfaz física se queda sin IP.', 'La IP de cada subinterfaz es la puerta de enlace que ya tienen los PC de esa VLAN.'],
   },
   estaticas: {
     titulo: 'Rutas estáticas entre dos sedes', nivel: 'intermedio',
@@ -145,7 +145,7 @@ export const RETOS = {
       T('Haz que PC1, PC2 y PC3 obtengan su IP por DHCP (botón «Pedir IP»).', t => LAN_PCS.every(p => { const e = equipo(t, p); return e.dhcp && e.concedida && enRed(e.ifs.Fa0.ip, '192.168.1.0', '255.255.255.0'); })),
       T('Haz ping de PC1 al servidor SRV1.', (t, h) => pingHecho(t, h, 'PC1', 'SRV1')),
     ],
-    pistas: ['Selecciona SRV1 y rellena «Servicio DHCP»: primera IP, cantidad, máscara y puerta de enlace.', 'El rango no debe incluir IP ya usadas: el router es la .1 y el servidor la .5.', 'Después selecciona cada PC y pulsa «Pedir IP».'],
+    pistas: ['Selecciona SRV1 y completa «Servicio DHCP»: primera IP, cantidad, máscara y puerta de enlace.', 'El rango no debe incluir IP ya usadas: el router es la .1 y el servidor la .5.', 'Después selecciona cada PC y presiona «Pedir IP».'],
   },
   averias: {
     titulo: 'La red que no funciona', nivel: 'avanzado',

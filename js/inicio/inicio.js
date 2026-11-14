@@ -1,12 +1,12 @@
 // Área «Empieza aquí»: prácticas para quien empieza de cero (sin DOM: las pruebas y la interfaz usan estos datos).
-// [[inicio:atajos]] atajos de teclado · [[inicio:archivos]] tipos de archivo · [[inicio:partes]] piezas del ordenador ·
+// [[inicio:atajos]] atajos de teclado · [[inicio:archivos]] tipos de archivo · [[inicio:partes]] piezas de la computadora ·
 // [[inicio:unidades]] bits, bytes y velocidad · [[inicio:orientacion]] test para elegir área.
 
 export const APROBADO = 0.8;
 export const POR_RONDA = 10;
 
 // ------------------------------------------------------------------ atajos de teclado
-// tecla: combinación que se puede pulsar en el navegador (las que el navegador o el sistema no dejan capturar no la llevan).
+// tecla: combinación que se puede presionar en el navegador (las que el navegador o el sistema no dejan capturar no la llevan).
 export const ATAJOS = [
   { accion: 'Copiar lo que tienes seleccionado', combo: 'Ctrl + C', mac: 'Cmd + C', tecla: { ctrl: true, key: 'c' }, e: 'Copia sin quitar el original. Después lo pegas donde quieras.' },
   { accion: 'Pegar lo que copiaste', combo: 'Ctrl + V', mac: 'Cmd + V', tecla: { ctrl: true, key: 'v' }, e: 'Pega lo último que copiaste o cortaste.' },
@@ -16,9 +16,9 @@ export const ATAJOS = [
   { accion: 'Guardar el documento', combo: 'Ctrl + S', mac: 'Cmd + S', tecla: { ctrl: true, key: 's' }, e: 'Guarda a menudo: si se va la luz, no pierdes el trabajo.' },
   { accion: 'Buscar una palabra en la página o el documento', combo: 'Ctrl + F', mac: 'Cmd + F', tecla: { ctrl: true, key: 'f' }, e: 'Funciona en el navegador, en Word, en PDF… La F es de «find» (buscar).' },
   { accion: 'Imprimir', combo: 'Ctrl + P', mac: 'Cmd + P', tecla: { ctrl: true, key: 'p' }, e: 'También sirve para «imprimir» a PDF y guardar una copia.' },
-  { accion: 'Cambiar el nombre de un archivo seleccionado', combo: 'F2', mac: 'Intro', tecla: { key: 'F2' }, e: 'En Windows, F2; en Mac, se selecciona el archivo y se pulsa Intro.' },
-  { accion: 'Cambiar entre las ventanas abiertas', combo: 'Alt + Tab', mac: 'Cmd + Tab', e: 'Mantén Alt y pulsa Tab varias veces para elegir la ventana.' },
-  { accion: 'Bloquear el ordenador al levantarte', combo: 'Windows + L', mac: 'Ctrl + Cmd + Q', e: 'Así nadie usa tu sesión mientras no estás. Es un hábito básico de seguridad.' },
+  { accion: 'Cambiar el nombre de un archivo seleccionado', combo: 'F2', mac: 'Enter', tecla: { key: 'F2' }, e: 'En Windows, F2; en Mac, se selecciona el archivo y se presiona Enter.' },
+  { accion: 'Cambiar entre las ventanas abiertas', combo: 'Alt + Tab', mac: 'Cmd + Tab', e: 'Mantén Alt y presiona Tab varias veces para elegir la ventana.' },
+  { accion: 'Bloquear la computadora al levantarte', combo: 'Windows + L', mac: 'Ctrl + Cmd + Q', e: 'Así nadie usa tu sesión mientras no estás. Es un hábito básico de seguridad.' },
   { accion: 'Abrir el Explorador de archivos', combo: 'Windows + E', mac: 'Cmd + Espacio y escribir «Finder»', e: 'Abre tus carpetas directamente.' },
   { accion: 'Abrir el Administrador de tareas (ver qué programa se ha colgado)', combo: 'Ctrl + Shift + Esc', mac: 'Cmd + Opción + Esc', e: 'Permite cerrar un programa que no responde.' },
   { accion: 'Abrir una pestaña nueva en el navegador', combo: 'Ctrl + T', mac: 'Cmd + T', e: 'La T es de «tab» (pestaña).' },
@@ -37,7 +37,7 @@ export function coincideTecla(atajo, ev) {
 // ------------------------------------------------------------------ tipos de archivo
 export const TIPOS = {
   texto: 'Documento de texto', hoja: 'Hoja de cálculo', presentacion: 'Presentación', pdf: 'Documento PDF', imagen: 'Imagen', audio: 'Audio',
-  video: 'Vídeo', comprimido: 'Archivo comprimido', programa: 'Programa (se ejecuta)', web: 'Página web',
+  video: 'Video', comprimido: 'Archivo comprimido', programa: 'Programa (se ejecuta)', web: 'Página web',
 };
 export const ARCHIVOS = [
   { nombre: 'informe.docx', t: 'texto', e: '.docx es un documento de Word (o compatible, como LibreOffice Writer).' },
@@ -49,17 +49,17 @@ export const ARCHIVOS = [
   { nombre: 'vacaciones.jpg', t: 'imagen', e: '.jpg (o .jpeg) es el formato típico de las fotos.' },
   { nombre: 'captura.png', t: 'imagen', e: '.png es una imagen sin pérdida de calidad: muy usado en capturas de pantalla.' },
   { nombre: 'cancion.mp3', t: 'audio', e: '.mp3 es audio comprimido: música, notas de voz…' },
-  { nombre: 'tutorial.mp4', t: 'video', e: '.mp4 es el formato de vídeo más común.' },
+  { nombre: 'tutorial.mp4', t: 'video', e: '.mp4 es el formato de video más común.' },
   { nombre: 'fotos-boda.zip', t: 'comprimido', e: 'Un .zip junta varios archivos en uno y ocupa menos. Hay que «extraerlo» para usarlos.' },
   { nombre: 'instalar-programa.exe', t: 'programa', e: '.exe es un programa de Windows: al abrirlo se EJECUTA. Ábrelo solo si viene de una fuente de confianza.' },
-  { nombre: 'factura.pdf.exe', t: 'programa', e: '¡Trampa! La extensión real es la última: .exe. Es un programa disfrazado de PDF, típico de virus.' },
+  { nombre: 'factura.pdf.exe', t: 'programa', e: 'Atención: la extensión real es la última: .exe. Es un programa disfrazado de PDF, típico de virus.' },
   { nombre: 'index.html', t: 'web', e: '.html es una página web: se abre con el navegador.' },
   { nombre: 'copia.rar', t: 'comprimido', e: '.rar es otro formato comprimido, como .zip o .7z.' },
   { nombre: 'logo.svg', t: 'imagen', e: '.svg es una imagen hecha con formas (vectorial): se amplía sin perder calidad.' },
 ];
 export const extension = nombre => (nombre.includes('.') ? nombre.slice(nombre.lastIndexOf('.')).toLowerCase() : '');
 
-// ------------------------------------------------------------------ piezas del ordenador
+// ------------------------------------------------------------------ piezas de la computadora
 export const PIEZAS = {
   cpu: 'Procesador (CPU)', ram: 'Memoria RAM', disco: 'Disco (SSD o HDD)', placa: 'Placa base', fuente: 'Fuente de alimentación', grafica: 'Tarjeta gráfica',
   monitor: 'Monitor', teclado: 'Teclado', usb: 'Puerto USB', red: 'Tarjeta de red (Wi-Fi o Ethernet)', ventilador: 'Ventilador y disipador', bateria: 'Batería',
@@ -70,13 +70,13 @@ export const PREGUNTAS_PIEZAS = [
   { q: 'Guarda tus archivos y programas aunque apagues el equipo.', r: 'disco', e: 'El disco es el «armario». Un SSD es mucho más rápido que un disco duro tradicional (HDD).' },
   { q: 'La placa grande donde se conectan todas las demás piezas.', r: 'placa', e: 'La placa base comunica el procesador, la memoria, los discos y los puertos.' },
   { q: 'Convierte la corriente del enchufe en la que necesitan las piezas.', r: 'fuente', e: 'Si una torre no enciende nada de nada, la fuente es de lo primero que se revisa.' },
-  { q: 'Dibuja la imagen en pantalla y acelera los juegos y el vídeo.', r: 'grafica', e: 'Puede venir dentro del procesador (integrada) o ser una tarjeta aparte (dedicada).' },
-  { q: 'Por aquí se conectan memorias, ratones, impresoras y móviles.', r: 'usb', e: 'USB es el conector universal. Los más nuevos son de tipo C (reversibles).' },
+  { q: 'Dibuja la imagen en pantalla y acelera los juegos y el video.', r: 'grafica', e: 'Puede venir dentro del procesador (integrada) o ser una tarjeta aparte (dedicada).' },
+  { q: 'Por aquí se conectan memorias, mouse, impresoras y celulares.', r: 'usb', e: 'USB es el conector universal. Los más nuevos son de tipo C (reversibles).' },
   { q: 'Permite conectarse a internet por cable o por Wi-Fi.', r: 'red', e: 'Cada tarjeta de red tiene una dirección única llamada MAC.' },
   { q: 'Saca el calor del procesador para que no se queme.', r: 'ventilador', e: 'Si el equipo se apaga solo o hace mucho ruido, puede estar sucio por dentro.' },
   { q: 'Muestra la imagen: es un dispositivo de SALIDA.', r: 'monitor', e: 'Los dispositivos de salida muestran información (monitor, altavoz, impresora).' },
-  { q: 'Sirve para escribir: es un dispositivo de ENTRADA.', r: 'teclado', e: 'Los dispositivos de entrada meten información (teclado, ratón, micrófono, cámara).' },
-  { q: 'Da energía a un portátil cuando no está enchufado y se desgasta con los años.', r: 'bateria', e: 'Si un portátil solo funciona enchufado, normalmente toca cambiar la batería.' },
+  { q: 'Sirve para escribir: es un dispositivo de ENTRADA.', r: 'teclado', e: 'Los dispositivos de entrada meten información (teclado, mouse, micrófono, cámara).' },
+  { q: 'Da energía a una laptop cuando no está enchufada y se desgasta con los años.', r: 'bateria', e: 'Si una laptop solo funciona enchufada, normalmente hay que cambiar la batería.' },
 ];
 
 // ------------------------------------------------------------------ unidades (preguntas generadas)
@@ -131,7 +131,7 @@ export const PREGUNTAS_ORIENTACION = [
   { q: '¿Qué te gustaría construir o lograr?', o: [['Una aplicación o una página web', { prog: 2 }], ['Una red que conecte varias oficinas', { redes: 2 }], ['Un informe que explique por qué bajan las ventas', { bd: 2 }], ['Que nadie pueda robar los datos de una empresa', { sec: 2 }]] },
   { q: '¿Con qué disfrutas más?', o: [['Hablando con gente y ayudando', { ti: 2 }], ['Resolviendo acertijos y retos de lógica', { prog: 1, sec: 1 }], ['Con números, tablas y gráficos', { bd: 2 }], ['Montando y desmontando aparatos', { redes: 1, ti: 1 }]] },
   { q: 'Te llega un correo raro que pide tu contraseña. ¿Qué piensas?', o: [['Me da curiosidad saber cómo funciona ese engaño', { sec: 2 }], ['Lo borro y sigo con lo mío', {}], ['Aviso a los demás para que no caigan', { ti: 1, sec: 1 }]] },
-  { q: '¿Cómo te gustaría trabajar?', o: [['Delante del ordenador, concentrado en algo mío', { prog: 1, bd: 1 }], ['Moviéndome, visitando oficinas y tiendas', { redes: 1, ti: 1 }], ['En equipo, atento a alertas y a lo que pasa', { sec: 2 }], ['Atendiendo a usuarios por teléfono o chat', { ti: 2 }]] },
+  { q: '¿Cómo te gustaría trabajar?', o: [['Delante de la computadora, concentrado en algo mío', { prog: 1, bd: 1 }], ['Moviéndome, visitando oficinas y tiendas', { redes: 1, ti: 1 }], ['En equipo, atento a alertas y a lo que pasa', { sec: 2 }], ['Atendiendo a usuarios por teléfono o chat', { ti: 2 }]] },
   { q: '¿Qué asignatura se te daba mejor (o te gustaba más)?', o: [['Matemáticas', { bd: 1, prog: 1 }], ['Tecnología o física', { redes: 2 }], ['Lengua o idiomas', { ti: 1 }], ['Ninguna en especial, aprendo haciendo', { ti: 1, prog: 1 }]] },
   { q: '¿Qué prefieres?', o: [['Encontrar trabajo cuanto antes', { ti: 2 }], ['Una especialidad muy demandada, aunque cueste más', { sec: 1, redes: 1 }], ['Algo creativo', { prog: 2 }], ['Entender un negocio con sus datos', { bd: 2 }]] },
   { q: 'Cuando algo no funciona…', o: [['Pruebo cosas hasta dar con la causa', { redes: 1, ti: 1 }], ['Leo y busco información con calma', { sec: 1, bd: 1 }], ['Me pongo a escribir una solución', { prog: 2 }], ['Pregunto a quien sepa más', { ti: 1 }]] },

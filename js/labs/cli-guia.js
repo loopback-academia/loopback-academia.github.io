@@ -1,4 +1,4 @@
-// Modo «Te acompaño» del simulador de IOS (sin DOM). A partir de la solución de un laboratorio guiado construye los
+// Modo guiado del simulador de IOS (sin DOM). A partir de la solución de un laboratorio guiado construye los
 // pasos: qué escribir, qué hace cada comando explicado para principiantes, en qué modo se escribe y cómo llegar a él.
 // Un paso se da por hecho cuando el alumno escribe un comando equivalente (abreviado o con el nombre completo de la
 // interfaz cuenta igual) porque se compara lo que entendió el intérprete, no el texto.
@@ -25,7 +25,7 @@ export const EXPLICA = [
   [/^login local$/, 'Al entrar en remoto se pedirá usuario y contraseña de la lista de usuarios locales del equipo (los creados con username).'],
   [/^exec-timeout /, 'Cierra la sesión si nadie escribe nada durante ese tiempo (minutos y segundos). Evita dejar el equipo abierto si te vas.'],
   [/^transport input ssh$/, 'Solo se permite entrar en remoto por SSH, que va cifrado. Telnet queda bloqueado porque envía todo, contraseñas incluidas, sin cifrar.'],
-  [/^end$/, 'Sale de la configuración y vuelve directo al modo privilegiado (#). Equivale a pulsar Ctrl+Z.'],
+  [/^end$/, 'Sale de la configuración y vuelve directo al modo privilegiado (#). Equivale a presionar Ctrl+Z.'],
   [/^exit$/, 'Sube un nivel: por ejemplo, de la configuración de una interfaz a la configuración global.'],
   [/^copy running-config startup-config$/, 'Guarda la configuración. La que estás usando vive en la RAM y se borra al apagar; este comando la copia a la NVRAM para que sobreviva a un reinicio.'],
   [/^vlan \d+$/, 'Crea la VLAN con ese número (o entra en ella si ya existe). Una VLAN es una red separada dentro del mismo switch.'],
@@ -34,7 +34,7 @@ export const EXPLICA = [
   [/^interface vlan /, 'Entra en la interfaz virtual (SVI) de esa VLAN: es la «IP del switch» para poder administrarlo por red.'],
   [/^interface \S+\.\d+$/, 'Crea una subinterfaz: una interfaz lógica dentro de la física. Se usa una por cada VLAN cuando un solo cable lleva varias VLAN al router.'],
   [/^interface /, 'Entra a configurar ese puerto concreto. g0/1 es GigabitEthernet0/1 y fa0/5 es FastEthernet0/5.'],
-  [/^switchport mode access$/, 'Convierte el puerto en puerto de acceso: el que se usa para conectar un ordenador, una impresora o un teléfono. Pertenece a una sola VLAN.'],
+  [/^switchport mode access$/, 'Convierte el puerto en puerto de acceso: el que se usa para conectar una computadora, una impresora o un teléfono. Pertenece a una sola VLAN.'],
   [/^switchport access vlan /, 'Mete el puerto en esa VLAN. El equipo conectado ahí formará parte de esa red.'],
   [/^switchport mode trunk$/, 'Convierte el puerto en trunk (troncal): un enlace entre switches que transporta varias VLAN a la vez, cada trama con su etiqueta.'],
   [/^switchport trunk native vlan /, 'Cambia la VLAN nativa: la que viaja sin etiqueta por el trunk. Por seguridad se usa una VLAN que no tenga usuarios.'],
@@ -148,7 +148,7 @@ export function consejoModo(guia, i, actual) {
   const paso = guia[i];
   if (!paso || paso.modo === actual) return null;
   const objetivo = paso.modo;
-  if (objetivo === 'priv') return actual === 'user' ? 'Escribe primero enable para pasar al modo privilegiado (#).' : 'Escribe end (o pulsa Ctrl+Z) para volver al modo privilegiado (#).';
+  if (objetivo === 'priv') return actual === 'user' ? 'Escribe primero enable para pasar al modo privilegiado (#).' : 'Escribe end (o presiona Ctrl+Z) para volver al modo privilegiado (#).';
   if (objetivo === 'config') {
     if (actual === 'user') return 'Escribe primero enable y después configure terminal.';
     if (actual === 'priv') return 'Escribe primero configure terminal para entrar en la configuración global.';
@@ -181,7 +181,7 @@ export function fichaComandos(lab) {
   return out;
 }
 
-// «Ordena los comandos»: la secuencia del juego (pasos seguidos de la guía, sin repetir el mismo comando).
+// «Ordena los comandos»: la secuencia del ejercicio (pasos seguidos de la guía, sin repetir el mismo comando).
 export function secuenciaOrdenar(lab, max = 7) {
   const out = [], vistos = new Set();
   for (const p of construirGuia(lab)) {

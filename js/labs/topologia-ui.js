@@ -386,7 +386,7 @@ export async function montarTopologia(holder, id) {
     if (n === reto.tareas.length && !completado) {
       completado = true;
       guardarLab(progreso);
-      toast('¡Reto completado: ' + reto.titulo + '!');
+      toast('Reto completado: ' + reto.titulo + '.');
     }
   }
   function todo() { pintarModo(); dibujar(); pintarPanel(); revisar(); }

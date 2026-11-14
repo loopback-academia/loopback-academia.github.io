@@ -1,32 +1,32 @@
 ---
 area: base
 id: i1
-titulo: Tu ordenador desde cero
+titulo: Tu computadora desde cero
 dominio: Primeros pasos
 peso: 0
-descripcion: Para quien empieza de cero. Cómo funciona Loopback, las partes de un ordenador explicadas con ejemplos de la vida diaria, el teclado y los atajos que más se usan, archivos y carpetas, y qué es el sistema operativo.
+descripcion: Para quien empieza de cero. Cómo funciona Loopback, las partes de una computadora explicadas con ejemplos de la vida diaria, el teclado y los atajos que más se usan, archivos y carpetas, y qué es el sistema operativo.
 ---
 
 === i1-bienvenida | Empieza aquí: bienvenida | 8 | 1
-¡Hola! Si nunca has estudiado tecnología, **estás en el sitio correcto**. No necesitas saber nada antes: aquí empezamos desde lo más básico, sin palabras raras y paso a paso.
+Si nunca has estudiado tecnología, **este es el lugar indicado**. No se requieren conocimientos previos: comenzamos por lo más básico, con un lenguaje claro y paso a paso.
 
 ## Qué es la tecnología de la información
 
-La **tecnología de la información** (en inglés *IT*, en español también **TI**) es todo lo que tiene que ver con usar ordenadores, redes y programas para guardar, enviar y trabajar con información. Está en todas partes: en el banco, en el supermercado, en el hospital y en tu móvil. Por eso las empresas necesitan muchas personas que sepan de tecnología.
+La **tecnología de la información** (en inglés *IT*, en español también **TI**) es todo lo que tiene que ver con usar computadoras, redes y programas para guardar, enviar y trabajar con información. Está en todas partes: en el banco, en el supermercado, en el hospital y en tu celular. Por eso las empresas necesitan muchas personas que sepan de tecnología.
 
 ## Qué vas a encontrar en Loopback
 
 - **Lecciones** cortas, de 10 a 15 minutos. Léelas con calma.
 - Al final de cada lección, un **cuestionario** de 3 preguntas. Si aciertas, la lección queda completada.
-- **Prácticas** donde haces cosas, no solo lees: ejercicios, simuladores y retos que se corrigen solos.
+- **Prácticas** para aplicar lo aprendido: ejercicios, simuladores y retos con corrección automática.
 - Una **escalera**: las lecciones se abren una detrás de otra y cada tramo termina con un examen. Así nunca te saltas algo que necesitas.
 - Un **certificado** de Loopback cuando terminas un área.
 
 ## Las áreas del curso
 
-1. **🚀 Empieza aquí** (esta): lo básico que todo el mundo necesita.
-2. **Empleo TI**: soporte técnico, el trabajo más fácil para empezar.
-3. **Redes**: cómo se conectan los ordenadores e internet.
+1. **🚀 Empieza aquí** (esta): los conocimientos básicos que cualquier persona necesita.
+2. **Empleo TI**: soporte técnico, el puesto de entrada más habitual en el sector.
+3. **Redes**: cómo se conectan las computadoras e internet.
 4. **Programación**: crear programas y webs.
 5. **Bases de datos**: guardar y analizar información.
 6. **Ciberseguridad**: proteger sistemas y personas.
@@ -36,9 +36,9 @@ Al final de esta área hay un test que te ayuda a elegir por cuál seguir.
 
 ## Qué necesitas
 
-- Un ordenador, o al menos un móvil con navegador. Para las prácticas es más cómodo un ordenador.
-- Unos **30 minutos al día**. Es mejor poco cada día que mucho un solo día.
-- Ganas de aprender. Equivocarse es parte del camino: en las prácticas puedes repetir todas las veces que quieras.
+- Una computadora, o al menos un celular con navegador. Para las prácticas resulta más cómoda una computadora.
+- Unos **30 minutos al día**. Estudiar un poco cada día es más eficaz que estudiar mucho un solo día.
+- Disposición para aprender. Equivocarse forma parte del proceso: puedes repetir las prácticas todas las veces que necesites.
 
 ::: nota
 Tu progreso se guarda en este navegador. Si creas una cuenta gratuita (botón «Entrar», arriba a la derecha), se guarda en tu cuenta y puedes seguir desde cualquier dispositivo.
@@ -90,10 +90,10 @@ Tu progreso se guarda en este navegador. Si creas una cuenta gratuita (botón «
 = Sin cuenta también puedes estudiar; el progreso se queda en ese navegador.
 :::
 
-=== i1-partes | Las partes de un ordenador | 14 | 1
-Un ordenador parece complicado, pero sus partes se entienden muy bien si lo comparamos con una **cocina**.
+=== i1-partes | Las partes de una computadora | 14 | 1
+Una computadora parece complicada, pero sus partes se entienden con facilidad si la comparamos con una **cocina**.
 
-## La cocina del ordenador
+## La cocina de la computadora
 
 | Pieza | Qué hace | En la cocina sería… |
 |---|---|---|
@@ -104,12 +104,12 @@ Un ordenador parece complicado, pero sus partes se entienden muy bien si lo comp
 | **Fuente de alimentación** | Da electricidad a todo | La toma de luz y gas |
 
 - Si el **cocinero** es rápido (buen procesador), los platos salen antes.
-- Si la **mesa** es pequeña (poca RAM), el cocinero tiene que guardar y sacar cosas todo el rato y todo va lento. Por eso, con muchos programas abiertos, un ordenador con poca RAM se vuelve lento.
+- Si la **mesa** es pequeña (poca RAM), el cocinero tiene que guardar y sacar cosas constantemente y todo se vuelve lento. Por eso, con muchos programas abiertos, una computadora con poca RAM se vuelve lento.
 - En la **despensa** (el disco) se guarda todo para otro día. Al apagar, la mesa se limpia (la RAM se borra), pero la despensa se queda como estaba.
 
 ## Entrada y salida
 
-- **Dispositivos de entrada**: meten información en el ordenador. Teclado, ratón, micrófono, cámara.
+- **Dispositivos de entrada**: meten información en la computadora. Teclado, mouse, micrófono, cámara.
 - **Dispositivos de salida**: muestran o sacan información. Monitor, altavoces, impresora.
 - Algunos hacen las dos cosas, como una **pantalla táctil**.
 
@@ -127,13 +127,13 @@ Un ordenador parece complicado, pero sus partes se entienden muy bien si lo comp
 [[inicio:partes]]
 
 ::: quiz
-? ¿Qué pieza guarda tus archivos aunque apagues el ordenador?
+? ¿Qué pieza guarda tus archivos aunque apagues la computadora?
 + El disco (SSD o disco duro)
 - La memoria RAM
 - El procesador
 = La RAM se borra al apagar; el disco no.
 
-? El ordenador va lento cuando tienes muchos programas abiertos. ¿Qué le suele faltar?
+? La computadora funciona lenta cuando tienes muchos programas abiertos. ¿Qué le suele faltar?
 + Memoria RAM
 - Un monitor más grande
 - Un teclado nuevo
@@ -143,7 +143,7 @@ Un ordenador parece complicado, pero sus partes se entienden muy bien si lo comp
 + El micrófono
 - Los altavoces
 - La impresora
-= Mete información (tu voz) en el ordenador.
+= Mete información (tu voz) en la computadora.
 :::
 
 ::: banco
@@ -156,7 +156,7 @@ Un ordenador parece complicado, pero sus partes se entienden muy bien si lo comp
 ? ¿Qué pieza es el «cerebro» que hace los cálculos?
 + El procesador (CPU)
 - La fuente de alimentación
-- El ratón
+- El mouse
 = Ejecuta las instrucciones de los programas.
 
 ? ¿Qué es más rápido?
@@ -178,15 +178,15 @@ Un ordenador parece complicado, pero sus partes se entienden muy bien si lo comp
 = Es la «cocina» donde se enchufa todo.
 :::
 
-=== i1-teclado | El teclado, el ratón y los atajos | 14 | 1
-Usar bien el teclado y el ratón te hace mucho más rápido. Los profesionales casi no usan el ratón para las tareas que repiten mucho: usan **atajos**.
+=== i1-teclado | El teclado, el mouse y los atajos | 14 | 1
+Usar bien el teclado y el mouse te hace mucho más rápido. Los profesionales casi no usan el mouse para las tareas que repiten mucho: usan **atajos**.
 
-## El ratón
+## El mouse
 
-- **Clic** (botón izquierdo): seleccionar o pulsar.
+- **Clic** (botón izquierdo): seleccionar o presionar.
 - **Doble clic**: abrir un archivo o una carpeta.
 - **Clic derecho**: abre un menú con opciones (copiar, cambiar nombre, eliminar…). Cuando no sepas cómo hacer algo, prueba el clic derecho.
-- **Arrastrar**: mantener pulsado el botón y mover. Sirve para mover archivos o seleccionar texto.
+- **Arrastrar**: mantener presionado el botón y mover. Sirve para mover archivos o seleccionar texto.
 - La **rueda** sube y baja por la página.
 
 ## Teclas especiales
@@ -194,11 +194,11 @@ Usar bien el teclado y el ratón te hace mucho más rápido. Los profesionales c
 | Tecla | Para qué sirve |
 |---|---|
 | **Mayús** (Shift, ⇧) | Escribir una mayúscula o el símbolo de arriba de una tecla |
-| **Bloq Mayús** | Escribir todo en mayúsculas (¡cuidado con las contraseñas!) |
+| **Bloq Mayús** | Escribir todo en mayúsculas (atención al escribir contraseñas) |
 | **Ctrl** (Control) | Se combina con otras teclas para hacer atajos |
 | **Alt** y **Alt Gr** | Otros atajos; Alt Gr escribe símbolos como @ o # |
 | **Tab** | Saltar al siguiente campo de un formulario |
-| **Intro** (Enter) | Confirmar o hacer un salto de línea |
+| **Enter** | Confirmar o hacer un salto de línea |
 | **Retroceso** y **Supr** | Borrar a la izquierda y a la derecha del cursor |
 | **Esc** | Cancelar o cerrar un menú |
 | **Windows** (⊞) | Abrir el menú Inicio |
@@ -211,9 +211,9 @@ En un Mac, la tecla **Cmd** (⌘) hace casi siempre lo que Ctrl en Windows.
 - **Ctrl + Z** deshacer: tu mejor amigo cuando te equivocas.
 - **Ctrl + A** seleccionar todo, **Ctrl + S** guardar, **Ctrl + F** buscar.
 - **Alt + Tab** cambiar de ventana.
-- **Windows + L** bloquear el ordenador al levantarte.
+- **Windows + L** bloquear la computadora al levantarte.
 
-«Ctrl + C» significa: mantén pulsada Ctrl y, sin soltarla, pulsa C.
+«Ctrl + C» significa: mantén presionada Ctrl y, sin soltarla, presiona C.
 
 [[inicio:atajos]]
 
@@ -226,13 +226,13 @@ En un Mac, la tecla **Cmd** (⌘) hace casi siempre lo que Ctrl en Windows.
 
 ? ¿Qué hace el clic derecho?
 + Abre un menú con opciones sobre lo que señalas
-- Apaga el ordenador
+- Apaga la computadora
 - Siempre borra el archivo
 = Es la forma más rápida de descubrir qué puedes hacer con algo.
 
-? ¿Cómo se pulsa «Ctrl + V»?
-+ Mantienes Ctrl pulsada y, sin soltarla, pulsas V
-- Pulsas Ctrl, la sueltas y después pulsas V
+? ¿Cómo se presiona «Ctrl + V»?
++ Mantienes Ctrl presionada y, sin soltarla, presionas V
+- Presionas Ctrl, la sueltas y después presionas V
 - Escribes la palabra «Ctrl»
 = Los atajos se hacen manteniendo la primera tecla.
 :::
@@ -244,11 +244,11 @@ En un Mac, la tecla **Cmd** (⌘) hace casi siempre lo que Ctrl en Windows.
 - Ctrl + X
 = Ctrl + P es imprimir.
 
-? ¿Qué tecla escribe todo en mayúsculas hasta que la vuelvas a pulsar?
+? ¿Qué tecla escribe todo en mayúsculas hasta que la vuelvas a presionar?
 + Bloq Mayús
 - Tab
 - Esc
-= Ojo: con Bloq Mayús activado, las contraseñas fallan.
+= Atención: con Bloq Mayús activado, las contraseñas fallan.
 
 ? En un Mac, ¿qué tecla hace casi siempre lo que Ctrl en Windows?
 + Cmd (⌘)
@@ -264,13 +264,13 @@ En un Mac, la tecla **Cmd** (⌘) hace casi siempre lo que Ctrl en Windows.
 
 ? ¿Para qué sirve Alt + Tab?
 + Para cambiar entre las ventanas abiertas
-- Para cerrar el ordenador
+- Para cerrar la computadora
 - Para escribir una arroba
-= Mantén Alt y pulsa Tab varias veces para elegir.
+= Mantén Alt y presiona Tab varias veces para elegir.
 :::
 
 === i1-archivos | Archivos y carpetas | 14 | 1
-Todo lo que guardas en un ordenador es un **archivo**: un documento, una foto, una canción, un programa. Para no perderte, los archivos se ordenan en **carpetas**, igual que los papeles en un archivador.
+Todo lo que guardas en una computadora es un **archivo**: un documento, una foto, una canción, un programa. Para no perderte, los archivos se ordenan en **carpetas**, igual que los papeles en un archivador.
 
 ## Nombre y extensión
 
@@ -282,7 +282,7 @@ Un archivo se llama, por ejemplo, `presupuesto-2026.xlsx`:
 Windows a veces esconde las extensiones. Conviene mostrarlas: en el Explorador de archivos, menú **Vista → Mostrar → Extensiones de nombre de archivo**.
 
 ::: cuidado
-Un archivo llamado `factura.pdf.exe` NO es un PDF: la extensión real es la última, `.exe`, y es un programa. Es un truco muy usado para colar virus. Si una «factura» o un «documento» termina en `.exe`, no lo abras.
+Un archivo llamado `factura.pdf.exe` NO es un PDF: la extensión real es la última, `.exe`, y es un programa. Es una técnica muy usada para distribuir virus. Si una «factura» o un «documento» termina en `.exe`, no lo abras.
 :::
 
 ## Carpetas y rutas
@@ -363,16 +363,16 @@ Se lee así: en el disco C, dentro de Usuarios, dentro de Ana… hasta llegar al
 :::
 
 === i1-sistema | El sistema operativo y los programas | 12 | 1
-Cuando enciendes un ordenador, lo primero que se pone en marcha es el **sistema operativo**. Es el programa principal: organiza todo lo demás y te deja usar el equipo con ventanas, iconos y menús.
+Cuando enciendes una computadora, lo primero que se pone en marcha es el **sistema operativo**. Es el programa principal: organiza todo lo demás y te deja usar el equipo con ventanas, iconos y menús.
 
 ## Los sistemas operativos más usados
 
 | Sistema | Dónde se usa |
 |---|---|
-| **Windows** | La mayoría de ordenadores de casa y de oficina |
-| **macOS** | Los ordenadores Mac de Apple |
+| **Windows** | La mayoría de computadoras de casa y de oficina |
+| **macOS** | Las computadoras Mac de Apple |
 | **Linux** | Servidores, equipos de programadores y muchos dispositivos |
-| **Android** | La mayoría de móviles |
+| **Android** | La mayoría de celulares |
 | **iOS** | Los iPhone |
 
 En las empresas lo más habitual es **Windows** en los puestos de trabajo y **Linux** en los servidores. Por eso en Loopback practicarás los dos.
@@ -398,7 +398,7 @@ Antes de llamar a nadie, prueba lo más sencillo, por este orden:
 
 1. ¿Está **enchufado** y **encendido**?
 2. **Cierra el programa** y vuelve a abrirlo.
-3. **Reinicia** el ordenador. Arregla más problemas de los que crees.
+3. **Reinicia** la computadora. Arregla más problemas de los que crees.
 4. Fíjate en el **mensaje de error** exacto y haz una captura (Windows + Shift + S).
 
 Esto mismo es lo que hace un técnico de soporte: lo verás a fondo en el área de Empleo TI.
@@ -418,7 +418,7 @@ Esto mismo es lo que hace un técnico de soporte: lo verás a fondo en el área 
 
 ? Un programa no responde. ¿Qué pruebas primero?
 + Cerrarlo y volver a abrirlo; si sigue, reiniciar el equipo
-- Comprar otro ordenador
+- Comprar otra computadora
 - Desinstalar Windows
 = Empieza siempre por lo más sencillo.
 :::
@@ -442,7 +442,7 @@ Esto mismo es lo que hace un técnico de soporte: lo verás a fondo en el área 
 - Navegar por internet
 = Por seguridad, en el día a día se usa una cuenta estándar.
 
-? ¿Cuál de estos es un sistema operativo de móvil?
+? ¿Cuál de estos es un sistema operativo de celular?
 + Android
 - Excel
 - Chrome

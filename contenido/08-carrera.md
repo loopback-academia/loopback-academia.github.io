@@ -108,7 +108,7 @@ Monta estas topologías en Packet Tracer y documéntalas (captura del diagrama +
 | Técnico de soporte / Help desk | Atiende incidencias de usuarios, primer nivel | Comunicación, Windows, redes básicas |
 | Técnico de NOC | Monitoriza la red 24/7 y escala incidencias | Monitorización, CCNA, turnos |
 | Técnico de redes (junior) | Instala y configura switches, AP, cableado | CCNA, Packet Tracer, cableado estructurado |
-| Técnico de campo / instalador | Despliegues en sedes de clientes | Carnet de conducir, cableado, fibra |
+| Técnico de campo / instalador | Despliegues en sedes de clientes | Licencia de conducir, cableado, fibra |
 | Administrador de sistemas junior | Servidores, usuarios, red de la oficina | Windows Server, Linux, redes |
 
 El salto habitual: **soporte o NOC → técnico de redes → administrador o ingeniero de redes** (CCNP) → especialización (seguridad, centros de datos, nube, inalámbrico).

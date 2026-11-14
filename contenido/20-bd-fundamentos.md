@@ -11,7 +11,7 @@ descripcion: Qué es una base de datos, tipos (relacionales y NoSQL), el modelo 
 Una **base de datos** guarda información de forma organizada para consultarla y modificarla con eficacia. En redes las encontrarás en todas partes: el inventario de equipos, las direcciones IP asignadas (IPAM), los usuarios de RADIUS, los registros de un SIEM, la configuración de Catalyst Center.
 
 ::: nota
-¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico del ordenador, internet y las profesiones de la tecnología.
+¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico de la computadora, internet y las profesiones de la tecnología.
 :::
 
 ## El modelo relacional
@@ -96,7 +96,7 @@ Las series temporales te interesan especialmente si vienes de redes: herramienta
 - **Almacén de datos (data warehouse):** base de datos optimizada para analizar grandes volúmenes históricos (BigQuery, Snowflake, Amazon Redshift).
 - **Base de datos en memoria:** guarda todo en RAM para responder en microsegundos (Redis, SAP HANA).
 - **Bases de datos vectoriales:** guardan "embeddings" para búsquedas por similitud, muy usadas en aplicaciones de inteligencia artificial (pgvector, Pinecone, Milvus).
-- **Base de datos embebida:** va dentro de la propia aplicación, sin servidor aparte. **SQLite** está en cada móvil y cada navegador; es la que usa nuestro laboratorio.
+- **Base de datos embebida:** va dentro de la propia aplicación, sin servidor aparte. **SQLite** está en cada celular y cada navegador; es la que usa nuestro laboratorio.
 
 ## ¿Cuál elijo?
 
@@ -116,7 +116,7 @@ Las series temporales te interesan especialmente si vienes de redes: herramienta
 ? Una empresa necesita que una transferencia bancaria se haga entera o no se haga. ¿Qué tipo de base de datos encaja mejor?
 + Relacional con transacciones ACID
 - Clave-valor sin transacciones
-- Un fichero de texto
+- Un archivo de texto
 = La atomicidad y la consistencia de las transacciones ACID son la especialidad de las bases de datos relacionales.
 
 ? ¿Qué tipo de base de datos usarías para guardar la latencia de cada enlace cada minuto durante un año?
@@ -281,7 +281,7 @@ Un **SGBD** (sistema gestor de bases de datos, en inglés DBMS) es el programa q
 | **MySQL** / **MariaDB** | Relacional | Libre (MySQL con licencia dual de Oracle) | Webs y aplicaciones (WordPress, tiendas online) |
 | **Microsoft SQL Server** | Relacional | Comercial (edición Express gratuita) | Empresas con tecnología Microsoft, ERP |
 | **Oracle Database** | Relacional | Comercial | Banca, telecomunicaciones, grandes corporaciones |
-| **SQLite** | Relacional embebida | Dominio público | Móviles, navegadores, aplicaciones de escritorio, IoT |
+| **SQLite** | Relacional embebida | Dominio público | Celulares, navegadores, aplicaciones de escritorio, IoT |
 | **MongoDB** | Documental | Licencia SSPL / servicio Atlas | Aplicaciones web y móviles con datos flexibles |
 | **Redis** | Clave-valor en memoria | Licencias propias (y la bifurcación libre Valkey) | Caché, sesiones, colas |
 | **Elasticsearch** / **OpenSearch** | Motor de búsqueda | Licencias propias / libre | Búsqueda de texto, análisis de registros (logs) |

@@ -51,7 +51,7 @@ export const CASOS = {
     preguntaCausa: '¿Cuál es la causa?',
     causas: [
       { texto: 'El teléfono, con la contraseña antigua guardada, bloqueó la cuenta tras varios intentos fallidos', ok: true },
-      { texto: 'Carla olvidó la contraseña nueva', porque: 'El registro muestra intentos desde el móvil y Carla escribe la nueva; su contraseña era correcta.' },
+      { texto: 'Carla olvidó la contraseña nueva', porque: 'El registro muestra intentos desde el celular y Carla escribe la nueva; su contraseña era correcta.' },
       { texto: 'La computadora perdió la relación de confianza con el dominio', porque: 'Ese error tiene otro mensaje y afectaría a cualquiera que use ese equipo.' },
       { texto: 'Hay una falla de red en la tienda', porque: 'El resto del personal trabaja con normalidad y el servidor responde.' },
     ],
@@ -217,10 +217,10 @@ export const CASOS = {
     acciones: [
       { id: 'aprobacion', tipo: 'clave', texto: 'Verificar que la solicitud está aprobada por el jefe de Compras', resultado: 'Aprobada por Roberto Lima, jefe de Compras, el martes.' },
       { id: 'llamar', tipo: 'inutil', texto: 'Llamar a Daniel para preguntarle qué permisos quiere', resultado: 'Daniel todavía no trabaja aquí y no sabe qué necesita: los accesos los define el perfil del puesto y los aprueba su jefe.' },
-      { id: 'duplicado', tipo: 'clave', texto: 'Comprobar si ya existe un usuario con ese nombre', resultado: 'Ya existe dcastillo (Diana Castillo, almacén). Según la convención, toca dacastillo, que está libre.' },
+      { id: 'duplicado', tipo: 'clave', texto: 'Comprobar si ya existe un usuario con ese nombre', resultado: 'Ya existe dcastillo (Diana Castillo, almacén). Según la convención, corresponde dacastillo, que está disponible.' },
       { id: 'perfil', tipo: 'clave', texto: 'Consultar el perfil de accesos del puesto «Analista de Compras»', resultado: 'Perfil: grupos GG-Compras-Lectura y GG-Compras-Analistas, licencia de correo estándar y rol «Compras-Consulta» en el sistema de compras. Sin permisos de administrador.' },
       { id: 'copiar', tipo: 'riesgo', texto: 'Copiar los permisos de otro analista de Compras con más antigüedad', resultado: 'Arriesgado: ese usuario acumuló permisos de puestos anteriores (aprobar órdenes, carpeta de Finanzas). Copiar usuarios hereda privilegios que el nuevo empleado no necesita: va contra el mínimo privilegio.' },
-      { id: 'inventario', tipo: 'util', texto: 'Revisar el inventario de equipos disponibles', resultado: 'Hay un portátil PT-0457 preparado con la imagen corporativa.' },
+      { id: 'inventario', tipo: 'util', texto: 'Revisar el inventario de equipos disponibles', resultado: 'Hay una laptop PT-0457 preparada con la imagen corporativa.' },
       { id: 'admin', tipo: 'riesgo', texto: 'Hacerlo administrador de su equipo para que instale lo que necesite', resultado: 'Arriesgado: con permisos de administrador cualquier programa malicioso que abra controla el equipo. El software se instala desde el catálogo aprobado.' },
     ],
     preguntaCausa: '¿Qué nombre de usuario le corresponde a Daniel?',
@@ -234,7 +234,7 @@ export const CASOS = {
       { texto: 'Crear la cuenta dacastillo con una contraseña temporal que debe cambiar en el primer inicio', ok: true },
       { texto: 'Añadirla solo a los grupos del perfil del puesto', ok: true },
       { texto: 'Asignar la licencia de correo y exigir el registro de la verificación en dos pasos (MFA)', ok: true },
-      { texto: 'Asignar el portátil PT-0457 a Daniel en el inventario y probar con la cuenta nueva la carpeta y el sistema de compras', ok: true },
+      { texto: 'Asignar la laptop PT-0457 a Daniel en el inventario y probar con la cuenta nueva la carpeta y el sistema de compras', ok: true },
       { texto: 'Entregar la contraseña temporal en persona el lunes (o a través de su jefe), nunca por correo', ok: true },
       { texto: 'Enviar usuario y contraseña al correo personal de Daniel para que lo tenga listo', porque: 'Las credenciales por correo pueden ser leídas por terceros; el correo personal no está bajo control de la empresa.' },
       { texto: 'Añadirlo al grupo de administradores del dominio «por si acaso»', porque: 'Viola el mínimo privilegio: es el permiso más peligroso de toda la red.' },
@@ -249,11 +249,11 @@ export const CASOS = {
       'Solicitud: REQ-3110, ingreso de Daniel Castillo (Analista de Compras) para el lunes 8:00; aprobada por Roberto Lima (jefe de Compras).',
       'Accesos: usuario dacastillo (dcastillo ya existía); grupos GG-Compras-Lectura y GG-Compras-Analistas; licencia de correo estándar; rol Compras-Consulta en el sistema de compras.',
       'Seguridad: contraseña temporal de un solo uso con cambio obligatorio; MFA obligatorio en el primer inicio; sin permisos de administrador (perfil del puesto, mínimo privilegio).',
-      'Entrega: portátil PT-0457 asignado en el inventario; accesos probados el jueves. Lunes 8:00: entrega presencial de credenciales y registro del MFA con el usuario.',
+      'Entrega: laptop PT-0457 asignada en el inventario; accesos probados el jueves. Lunes 8:00: entrega presencial de credenciales y registro del MFA con el usuario.',
     ],
     comunicacion: [
       { para: 'Respuesta a Recursos Humanos y al jefe de Compras', opciones: [
-        { texto: 'Hola, Patricia y Roberto: los accesos de Daniel Castillo están listos para el lunes: usuario dacastillo, correo, carpeta de Compras, sistema de compras (consulta) y el portátil PT-0457. El lunes a las 8:00 le entrego la contraseña temporal en persona y lo ayudo a configurar la verificación en dos pasos (unos 15 minutos). Si necesita otro acceso, el jefe del área debe aprobarlo en una nueva solicitud.', ok: true },
+        { texto: 'Hola, Patricia y Roberto: los accesos de Daniel Castillo están listos para el lunes: usuario dacastillo, correo, carpeta de Compras, sistema de compras (consulta) y la laptop PT-0457. El lunes a las 8:00 le entrego la contraseña temporal en persona y lo ayudo a configurar la verificación en dos pasos (unos 15 minutos). Si necesita otro acceso, el jefe del área debe aprobarlo en una nueva solicitud.', ok: true },
         { texto: 'Listo. Usuario: dcastillo · Contraseña: Bienvenido2026', porque: 'Envía la contraseña por correo y además con el usuario equivocado.' },
         { texto: 'Le di los mismos permisos que a Pedro para que no le falte nada.', porque: 'Copiar permisos de otra persona viola el mínimo privilegio y no informa qué se entregó.' },
       ] },
@@ -267,7 +267,7 @@ export const CASOS = {
     resumen: 'Una asistente de contabilidad dice que su equipo está lentísimo. Mide antes de actuar, encuentra la causa real y resuélvela sin perder datos.',
     ticket: { numero: 'INC-20519', de: 'Rosa Peña', puesto: 'Asistente de Contabilidad', sede: 'Oficina central', canal: 'Correo', hora: '11:20',
       texto: 'Mi computadora está lentísima desde hace dos días, tarda mucho en abrir Excel y a veces se congela.' },
-    contexto: 'Portátil con 8 GB de RAM y disco SSD de 256 GB. Nadie más ha reportado lentitud.',
+    contexto: 'Laptop con 8 GB de RAM y disco SSD de 256 GB. Nadie más ha reportado lentitud.',
     prioridad: { impacto: 'bajo', urgencia: 'media', porque: 'Una persona que puede seguir trabajando, aunque más lenta (impacto bajo); hay que resolverlo pronto, pero no hay un daño inmediato (urgencia media) → P4.' },
     acciones: [
       { id: 'cambios', tipo: 'util', texto: 'Preguntar desde cuándo ocurre y qué cambió', resultado: 'Hace dos días descargó los videos de una capacitación y marcó en OneDrive «Mantener siempre en este dispositivo».' },
@@ -301,7 +301,7 @@ export const CASOS = {
       { campo: 'Verificación y prevención', ayuda: 'Cómo comprobaste el resultado y cómo evitar que vuelva', claves: ['libre', 'excel', 'verific', 'confirm', 'rapid', '%'] },
     ],
     modelo: [
-      'Síntoma: lentitud general y bloqueos desde hace 2 días en el portátil de rpena; Excel tarda en abrir.',
+      'Síntoma: lentitud general y bloqueos desde hace 2 días en la laptop de rpena; Excel tarda en abrir.',
       'Causa: disco con 1,8 GB libres de 237 GB (Descargas 96 GB y 41 GB de OneDrive sin conexión); disco al 100 % en el Administrador de tareas.',
       'Solución: con la usuaria, se borraron copias duplicadas y videos ya vistos; OneDrive configurado con «Liberar espacio»; Sensor de almacenamiento activado.',
       'Verificación: 112 GB libres (47 %); Excel abre en 3 s. Prevención: Sensor de almacenamiento activo; se explicó cómo usar los archivos a petición.',

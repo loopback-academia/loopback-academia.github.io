@@ -180,10 +180,10 @@ function jugar({ titulo, clave, preguntas, alAprobar, area, minutos }) {
     raiz.replaceChildren(...[
       el('div', { class: 'page-head exam-result ' + (ok ? 'ok' : 'bad') }, el('span', { class: 'eyebrow' }, titulo), el('h1', {}, `${nota} %`),
         el('p', {}, `${puntos} de ${total} correctas (mínimo ${minimoPara(total)}) en ${plural(Math.max(1, Math.round(segundos / 60)), 'minuto', 'minutos')}. `,
-          el('strong', {}, ok ? '¡Aprobado!' : 'No aprobado todavía.')),
+          el('strong', {}, ok ? 'Aprobado.' : 'No aprobado todavía.')),
         porSalidas ? el('p', { class: 'alert alert-warn' }, el('span', {}, `El examen se entregó solo porque saliste de la pantalla ${MAX_SALIDAS} veces. Las preguntas sin responder cuentan como incorrectas.`)) : modo.salidas ? el('p', { class: 'small muted' }, `Salidas de la pantalla durante el examen: ${modo.salidas}.`) : null),
       ok
-        ? el('div', { class: 'card' }, el('h2', {}, '¡Lo lograste!'), el('p', {}, despues?.texto || 'Has demostrado que dominas este tramo.'),
+        ? el('div', { class: 'card' }, el('h2', {}, 'Escalón superado'), el('p', {}, despues?.texto || 'Has demostrado que dominas este tramo.'),
             despues ? el('a', { class: 'btn btn-primary', href: despues.href }, despues.boton) : null)
         : null,
       ok && area === 'base' && clave === 'final-base' ? siguienteCamino() : null,
@@ -244,6 +244,6 @@ if (escId && AREAS[escId.split('-')[0]] && escaleraDe(curso, escId.split('-')[0]
         const prev = intentos('final-' + area);
         return conGeneradas(area, Object.entries(cupo).flatMap(([id, k]) => elegirPreguntas(porModulo[id], k, prev)), generadas);
       },
-      alAprobar: () => ({ texto: '¡Has completado la escalera entera de esta área! Ya puedes obtener tu certificado de Loopback.', href: 'certificado.html?area=' + area, boton: '🎓 Obtener mi certificado →' }) });
+      alAprobar: () => ({ texto: 'Has completado toda la escalera de esta área. Ya puedes obtener tu certificado de Loopback.', href: 'certificado.html?area=' + area, boton: '🎓 Obtener mi certificado →' }) });
   }
 } else centro();

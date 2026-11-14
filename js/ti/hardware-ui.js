@@ -25,8 +25,8 @@ export async function montarPc(holder, id) {
   const comprobar = el('button', { type: 'button', class: 'btn btn-primary' }, 'Comprobar el equipo');
   comprobar.addEventListener('click', () => {
     const v = validarPc(sel, encargo);
-    if (v.ok && !labHecho('pc-' + id)) { guardarLab('pc-' + id); toast('¡Equipo compatible y dentro del encargo!'); }
-    resultado.replaceChildren(el('div', { class: 'alert ' + (v.ok ? 'alert-ok' : 'alert-warn') }, v.ok ? el('p', {}, el('strong', {}, '¡Equipo listo! '), `Todo es compatible, cumple el encargo y cuesta ${dinero(v.total)}.`) : el('div', {}, el('p', {}, el('strong', {}, 'Todavía hay problemas:')), el('ul', {}, v.problemas.map(p => el('li', {}, p))))));
+    if (v.ok && !labHecho('pc-' + id)) { guardarLab('pc-' + id); toast('Equipo compatible y dentro del presupuesto.'); }
+    resultado.replaceChildren(el('div', { class: 'alert ' + (v.ok ? 'alert-ok' : 'alert-warn') }, v.ok ? el('p', {}, el('strong', {}, 'Equipo listo. '), `Todo es compatible, cumple el encargo y cuesta ${dinero(v.total)}.`) : el('div', {}, el('p', {}, el('strong', {}, 'Todavía hay problemas:')), el('ul', {}, v.problemas.map(p => el('li', {}, p))))));
   });
   holder.append(el('section', { class: 'lab', 'aria-label': 'Armar un PC' },
     el('div', { class: 'lab-head' }, el('h3', {}, 'Armar un PC: ' + encargo.titulo)),
@@ -82,8 +82,8 @@ export async function montarOrden(holder, id) {
   const comprobar = el('button', { type: 'button', class: 'btn btn-primary' }, 'Comprobar el orden');
   comprobar.addEventListener('click', () => {
     const r = evaluarOrden(id, orden);
-    if (r.ok && !labHecho('orden-' + id)) { guardarLab('orden-' + id); toast('¡Procedimiento en el orden correcto!'); }
-    fb.replaceChildren(el('p', { class: 'feedback ' + (r.ok ? 'ok' : 'bad') }, r.ok ? '¡Correcto! Ese es el orden profesional.' : `${r.bien} de ${r.total} pasos están en su sitio. Piensa qué necesita cada paso para poder hacerse.`));
+    if (r.ok && !labHecho('orden-' + id)) { guardarLab('orden-' + id); toast('Procedimiento en el orden correcto.'); }
+    fb.replaceChildren(el('p', { class: 'feedback ' + (r.ok ? 'ok' : 'bad') }, r.ok ? 'Correcto: ese es el orden profesional.' : `${r.bien} de ${r.total} pasos están en su sitio. Piensa qué necesita cada paso para poder hacerse.`));
   });
   holder.append(el('section', { class: 'lab', 'aria-label': o.titulo }, el('div', { class: 'lab-head' }, el('h3', {}, 'Ordena los pasos: ' + o.titulo)),
     el('p', { class: 'small muted' }, 'Usa las flechas para poner los pasos en el orden en que los harías.'), lista, el('div', { class: 'hero-cta' }, comprobar), fb));

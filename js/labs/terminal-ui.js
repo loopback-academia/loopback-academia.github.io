@@ -37,7 +37,7 @@ export async function montarTerminal(holder, { lab, motor, progreso, nombre, bie
     if (n === lab.tareas.length && !completado) {
       completado = true;
       guardarLab(progreso);
-      escribir('\n*** ¡Caso resuelto! Todas las tareas están hechas. ***', 'ok');
+      escribir('\n*** Caso resuelto: todas las tareas están hechas. ***', 'ok');
       toast('Laboratorio completado: ' + lab.titulo);
     }
   }

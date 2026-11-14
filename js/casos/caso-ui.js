@@ -209,7 +209,7 @@ export async function montarTurno(holder, id = 'soporte') {
     const fin = hechos.length === TURNO.casos.length;
     if (fin) {
       const completo = aprobados.length === TURNO.casos.length && ok >= 4;
-      if (completo && !labHecho(TURNO.progreso)) { guardarLab(TURNO.progreso, 1, 1); toast('¡Turno completado! Descarga el informe para tu portafolio.'); }
+      if (completo && !labHecho(TURNO.progreso)) { guardarLab(TURNO.progreso, 1, 1); toast('Turno completado. Descarga el informe para tu portafolio.'); }
     }
     const filas = orden().map((cid, k) => {
       const c = CASOS[cid];

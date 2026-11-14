@@ -44,7 +44,7 @@ Cada elemento apunta al siguiente. Insertar o borrar al principio es muy rápido
 
 ## Árbol
 
-Estructura jerárquica: un nodo raíz con hijos, que a su vez tienen hijos. Ejemplos: el sistema de ficheros, el DOM de una página web, las jerarquías de una empresa.
+Estructura jerárquica: un nodo raíz con hijos, que a su vez tienen hijos. Ejemplos: el sistema de archivos, el DOM de una página web, las jerarquías de una empresa.
 - **Árbol binario de búsqueda:** a la izquierda los menores, a la derecha los mayores; búsqueda rápida si está equilibrado.
 - **Árbol B:** el que usan los **índices** de las bases de datos.
 - **Trie:** árbol de prefijos; los routers buscan la ruta más específica (*longest prefix match*) con estructuras de este tipo.
@@ -200,7 +200,7 @@ Un programador profesional no "prueba a mano a ver si funciona": escribe **prueb
 |---|---|---|
 | **Unitarias** | Una función o clase aislada | Muchas, rapidísimas |
 | **De integración** | Varias piezas juntas (código + base de datos, + API) | Unas cuantas |
-| **De extremo a extremo (E2E)** | La aplicación completa como un usuario (abrir el navegador, pulsar botones) | Pocas, las más lentas |
+| **De extremo a extremo (E2E)** | La aplicación completa como un usuario (abrir el navegador, presionar botones) | Pocas, las más lentas |
 
 Es la **pirámide de pruebas**: muchas unitarias en la base y pocas E2E en la cima.
 
@@ -317,7 +317,7 @@ subprocess.run(["ping", "-c", "1", ip], check=False)
 
 ## Principios generales
 
-- **No confíes nunca en la entrada:** valida tipo, longitud y formato de todo lo que llega del usuario, de ficheros o de la red. Mejor una lista de lo permitido que de lo prohibido.
+- **No confíes nunca en la entrada:** valida tipo, longitud y formato de todo lo que llega del usuario, de archivos o de la red. Mejor una lista de lo permitido que de lo prohibido.
 - **Mínimo privilegio:** el programa y su usuario de base de datos solo pueden hacer lo imprescindible.
 - **Defensa en profundidad:** varias capas (validación + consultas parametrizadas + permisos + cortafuegos).
 - **Falla de forma segura:** ante un error, deniega el acceso; no lo concedas por defecto.
@@ -353,7 +353,7 @@ Esta misma plataforma aplica estas reglas: política CSP estricta, sin `innerHTM
 = Así es imposible encadenar otros comandos.
 :::
 
-=== p4-web | Cómo funciona una aplicación web de verdad | 16 | 2
+=== p4-web | Cómo funciona una aplicación web real | 16 | 2
 Casi todo el software actual es una aplicación web o se comunica con una. Entender la arquitectura completa te sitúa, sea cual sea tu especialidad.
 
 ## Las piezas
@@ -383,7 +383,7 @@ Un desarrollador **full stack** trabaja en frontend y backend.
 
 Cada paso es materia de tu curso de redes: DNS, TCP, puertos, TLS, NAT, cortafuegos y balanceo.
 
-## Despliegue: de tu ordenador a internet
+## Despliegue: de tu computadora a internet
 
 - **Contenedores (Docker):** empaquetan la aplicación con todo lo que necesita, para que funcione igual en cualquier sitio.
 
@@ -430,7 +430,7 @@ def estado(hostname: str):
 + Para empaquetar una aplicación con todo lo que necesita y ejecutarla igual en cualquier sitio
 - Para diseñar páginas web
 - Para sustituir a la base de datos
-= Los contenedores eliminan el "en mi ordenador funciona".
+= Los contenedores eliminan el "en mi computadora funciona".
 :::
 
 === p4-redes | Automatizar redes con Python | 20 | 3

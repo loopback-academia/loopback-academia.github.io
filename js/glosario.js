@@ -1,5 +1,5 @@
 // Glosario emergente: marca la primera aparición de cada término en una lección y muestra su definición
-// al pasar el ratón, al tocarlo o al enfocarlo con el teclado. Los términos están en contenido/glosario.md.
+// al pasar el mouse, al tocarlo o al enfocarlo con el teclado. Los términos están en contenido/glosario.md.
 import { el } from './core.js';
 
 let datos = null;

@@ -11,7 +11,7 @@ descripcion: Qué protege la ciberseguridad y de quién, contraseñas y verifica
 La ciberseguridad protege la **información** y los **sistemas** que la manejan frente a accesos, cambios o caídas no autorizados. No es solo cosa de expertos: la mayoría de los incidentes empieza por un descuido de alguien que no trabaja en seguridad.
 
 ::: nota
-¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico del ordenador, internet y las profesiones de la tecnología.
+¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico de la computadora, internet y las profesiones de la tecnología.
 :::
 
 ## La tríada CIA
@@ -121,7 +121,7 @@ Nadie puede recordar cien contraseñas únicas. Un **gestor de contraseñas** la
 La **autenticación multifactor** pide algo más que la contraseña:
 
 - Algo que **sabes**: contraseña o PIN.
-- Algo que **tienes**: el móvil (app de autenticación), una llave de seguridad física.
+- Algo que **tienes**: el celular (app de autenticación), una llave de seguridad física.
 - Algo que **eres**: huella, cara.
 
 Con MFA, una contraseña robada **no basta** para entrar. Las apps de autenticación y las llaves físicas son más seguras que los SMS. Y cuidado con la «fatiga de MFA»: si te llegan avisos de aprobación que no has pedido, **no los aceptes**: alguien tiene tu contraseña.
@@ -172,12 +172,12 @@ Con MFA, una contraseña robada **no basta** para entrar. Las apps de autenticac
 + Genera contraseñas únicas y solo autocompleta en la web correcta
 - Hace innecesaria la contraseña maestra
 - Desactiva el antivirus
-= Si la web es falsa, el gestor no rellena nada: una pista de phishing.
+= Si la web es falsa, el gestor no completa nada: una pista de phishing.
 
 ? ¿Qué es el *credential stuffing*?
 + Probar en muchos servicios usuarios y contraseñas filtrados de otro
 - Adivinar contraseñas letra a letra
-- Robar el móvil para recibir los códigos
+- Robar el celular para recibir los códigos
 = Funciona porque mucha gente reutiliza contraseñas.
 :::
 
@@ -289,7 +289,7 @@ La **ingeniería social** ataca a las personas en lugar de a las máquinas: enga
 ## Cómo detectar un correo falso
 
 1. El **remitente real** (no el nombre que se muestra): dominios parecidos como `micros0ft-soporte.com`.
-2. **Pasa el ratón** por el enlace antes de pulsar: ¿adónde lleva de verdad?
+2. **Pasa el mouse** por el enlace antes de hacer clic: ¿adónde lleva de verdad?
 3. **Adjuntos** inesperados, sobre todo `.zip`, `.html`, macros de Office o `.exe`.
 4. Peticiones de **contraseñas, códigos o pagos**: ningún servicio legítimo te pide la contraseña por correo.
 5. Ante la duda, **verifica por otro canal**: llama al número que ya conoces, no al del correo.
@@ -311,7 +311,7 @@ Y si caes: **avisa enseguida** a TI. Cuanto antes se cambie la contraseña y se 
 - Un antivirus para el correo
 = Es más creíble porque usa información real de la víctima.
 
-? Has pulsado un enlace y escrito tu contraseña en una web que ahora te parece falsa. ¿Qué haces?
+? Hiciste clic en un enlace y escrito tu contraseña en una web que ahora te parece falsa. ¿Qué haces?
 + Aviso a TI enseguida y cambio la contraseña
 - No digo nada para que no me regañen
 - Espero a ver si pasa algo
@@ -321,12 +321,12 @@ Y si caes: **avisa enseguida** a TI. Cuanto antes se cambie la contraseña y se 
 ::: banco
 ? ¿Qué es el vishing?
 + Ingeniería social por teléfono
-- Phishing con vídeo
+- Phishing con video
 - Un virus de Windows
 = Por ejemplo, el falso técnico de soporte que pide acceso remoto.
 
 ? ¿Cuál es la mejor comprobación de un enlace sospechoso en un correo?
-+ Pasar el ratón por encima para ver la dirección real sin pulsar
++ Pasar el mouse por encima para ver la dirección real sin hacer clic
 - Pulsarlo para ver qué pasa
 - Fiarse del texto del enlace
 = El texto del enlace puede decir una cosa y llevar a otra.
@@ -382,7 +382,7 @@ Y si caes: **avisa enseguida** a TI. Cuanto antes se cambie la contraseña y se 
 ::: quiz
 ? ¿Qué diferencia a un gusano de un virus?
 + El gusano se propaga solo por la red, sin que nadie ejecute nada
-- El gusano solo afecta a móviles
+- El gusano solo afecta a celulares
 - No hay diferencia
 = Por eso los gusanos pueden infectar miles de equipos en horas.
 
@@ -436,7 +436,7 @@ La mayoría de los incidentes no requiere atacantes geniales: aprovechan descuid
 4. **Mínimo privilegio**: cada persona y cada programa, solo los permisos que necesita.
 5. **Copias de seguridad 3-2-1**: 3 copias, en 2 soportes distintos, 1 fuera de la oficina (y desconectada o inmutable). Y **probar** que se restauran.
 6. **Bloquear la pantalla** al levantarse (Windows + L).
-7. **Cifrar** portátiles y móviles: si se pierden, los datos no se leen.
+7. **Cifrar** laptops y celulares: si se pierden, los datos no se leen.
 8. **Wi-Fi**: WPA2/WPA3 con buena clave y una red aparte para invitados.
 
 ## En el trabajo diario
@@ -489,7 +489,7 @@ Revisa hoy tus cuentas personales: ¿tienen MFA el correo y la banca? ¿Usas la 
 - Para ahorrar electricidad
 = Es segmentación aplicada al Wi-Fi.
 
-? ¿Por qué cifrar el disco de un portátil?
+? ¿Por qué cifrar el disco de una laptop?
 + Si se pierde o lo roban, no se pueden leer los datos
 - Para que arranque más rápido
 - Para no necesitar contraseña

@@ -62,7 +62,7 @@ function subnetting(holder) {
     if (ok) {
       buenos++; aciertosSeguidos++;
       feedback.className = 'feedback ok';
-      feedback.textContent = `¡Correcto en ${segundos} s!` + (segundos <= 20 ? ' Ritmo de examen.' : '');
+      feedback.textContent = `Correcto (${segundos} s).` + (segundos <= 20 ? ' Ritmo de examen.' : '');
       if (aciertosSeguidos >= 10 && !guardado) { guardado = true; guardarLab('subnetting'); toast('10 aciertos seguidos: entrenador de subnetting completado.'); }
     } else {
       aciertosSeguidos = 0;
@@ -143,7 +143,7 @@ function binario(holder) {
     if (dado === objetivo) {
       seguidos++;
       feedback.className = 'feedback ok';
-      feedback.textContent = `¡Correcto! ${objetivo} = ${aBinario(objetivo)}. Racha: ${seguidos}.`;
+      feedback.textContent = `Correcto: ${objetivo} = ${aBinario(objetivo)}. Racha: ${seguidos}.`;
       if (seguidos >= 8 && !guardado) { guardado = true; guardarLab('binario'); toast('8 seguidos: entrenador de binario completado.'); }
       setTimeout(nuevo, 1100);
     } else {
@@ -195,7 +195,7 @@ function vlsm(holder) {
       if (errores[i]) fallos++;
     });
     feedback.className = 'feedback ' + (fallos ? 'bad' : 'ok');
-    feedback.textContent = fallos ? `Revisa ${fallos === 1 ? '1 subred' : fallos + ' subredes'}.` : '¡Diseño correcto! Sin solapes y sin desperdicio.';
+    feedback.textContent = fallos ? `Revisa ${fallos === 1 ? '1 subred' : fallos + ' subredes'}.` : 'Diseño correcto: sin solapamientos ni direcciones desperdiciadas.';
     if (!fallos) guardarLab('vlsm');
   });
   btnSol.addEventListener('click', () => {
@@ -240,7 +240,7 @@ function ipv6(holder) {
     const ok = corregirIpv6(ej, valor);
     pasos.replaceChildren(...explicarIpv6(ej).map(t => el('li', {}, t)));
     pasos.hidden = false;
-    if (ok) { aciertos[modo]++; feedback.className = 'feedback ok'; feedback.textContent = '¡Correcto!'; contar(); }
+    if (ok) { aciertos[modo]++; feedback.className = 'feedback ok'; feedback.textContent = 'Correcto.'; contar(); }
     else { feedback.className = 'feedback bad'; feedback.textContent = 'No es correcto. Mira los pasos y prueba con otro.'; }
   }
   function nuevo() {

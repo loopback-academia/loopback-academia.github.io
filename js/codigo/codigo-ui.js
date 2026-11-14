@@ -37,7 +37,7 @@ export async function montarCodigo(holder, id) {
   const set = EJERCICIOS[id];
   if (!set) throw new Error('Ejercicios de código desconocidos: ' + id);
   await cargar();
-  const lista = set.libre ? [{ enunciado: 'Escribe lo que quieras y pulsa Ejecutar. Aquí no hay corrección: es para experimentar.', inicial: set.inicial, tests: [] }] : set.ejercicios;
+  const lista = set.libre ? [{ enunciado: 'Escribe lo que quieras y presiona Ejecutar. Aquí no hay corrección: es para experimentar.', inicial: set.inicial, tests: [] }] : set.ejercicios;
   let n = 0, ejecutando = false;
   const borradorClave = i => `aula:codigo:${id}:${i}`;
   const hechos = new Set(local.get(`aula:codigo:${id}:hechos`, []));
@@ -66,7 +66,7 @@ export async function montarCodigo(holder, id) {
     titulo.textContent = set.libre ? set.titulo : `Ejercicio ${n + 1} de ${lista.length}`;
     enunciado.textContent = ej.enunciado;
     ed.value = local.get(borradorClave(n), null) ?? ej.inicial;
-    salida.replaceChildren(el('span', { class: 'muted' }, set.lang === 'python' ? 'Pulsa Ejecutar para ver la salida. La primera vez se descarga Python en tu navegador (unos segundos).' : 'Pulsa Ejecutar para ver la salida de console.log.'));
+    salida.replaceChildren(el('span', { class: 'muted' }, set.lang === 'python' ? 'Presiona Ejecutar para ver la salida. La primera vez se descarga Python en tu navegador (unos segundos).' : 'Presiona Ejecutar para ver la salida de console.log.'));
     pruebas.replaceChildren(...(ej.tests || []).map(t => el('li', {}, el('span', { class: 'check', 'aria-hidden': 'true' }, '✓'), el('span', {}, t.desc))));
     pista.hidden = true; pista.textContent = ej.pista ? 'Pista: ' + ej.pista : '';
     marcador.textContent = set.libre ? NOMBRE[set.lang] : `${[...hechos].filter(i => i < lista.length).length}/${lista.length} resueltos`;
@@ -95,7 +95,7 @@ export async function montarCodigo(holder, id) {
         const res = r.results || [];
         [...pruebas.children].forEach((li, i) => { li.firstChild.className = 'check' + (res[i] ? ' on' : ' bad'); li.firstChild.textContent = res[i] ? '✓' : '✗'; });
         const todo = r.ok && res.length === ej.tests.length && res.every(Boolean);
-        estado.textContent = todo ? '¡Correcto! Todas las pruebas pasan.' : `${res.filter(Boolean).length} de ${ej.tests.length} pruebas superadas.`;
+        estado.textContent = todo ? 'Correcto: todas las pruebas pasan.' : `${res.filter(Boolean).length} de ${ej.tests.length} pruebas superadas.`;
         if (todo) {
           hechos.add(n);
           local.set(`aula:codigo:${id}:hechos`, [...hechos]);
@@ -137,7 +137,7 @@ export async function montarCodigo(holder, id) {
     el('div', { class: 'lab-tags' }, el('span', { class: 'badge level-' + set.nivel }, NIVEL[set.nivel]), el('span', { class: 'badge lang-' + set.lang }, NOMBRE[set.lang])),
     titulo, enunciado,
     el('div', { class: 'code-layout' },
-      el('div', {}, ed, el('p', { class: 'hint' }, 'Ctrl + Intro para ' + (set.libre ? 'ejecutar' : 'comprobar') + '. Tab sangra el código. Tu borrador se guarda en este navegador.'),
+      el('div', {}, ed, el('p', { class: 'hint' }, 'Ctrl + Enter para ' + (set.libre ? 'ejecutar' : 'comprobar') + '. Tab sangra el código. Tu borrador se guarda en este navegador.'),
         el('div', { class: 'hero-cta' }, btnRun, btnCheck, btnPaso, estado)),
       el('div', {}, el('h5', { class: 'small muted' }, 'SALIDA'), salida, set.libre ? null : el('h5', { class: 'small muted' }, 'PRUEBAS'), pruebas)),
     zonaPaso, pista,

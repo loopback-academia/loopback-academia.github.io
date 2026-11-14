@@ -13,9 +13,9 @@ function cajaPacketTracer(lab) {
     el('summary', {}, '📦 Hazlo también en tu Packet Tracer'),
     el('ol', {},
       el('li', {}, 'Abre Cisco Packet Tracer. ¿Aún no lo tienes? ', el('a', { href: 'leccion.html?id=m0-packet-tracer' }, 'Instálalo paso a paso'), '.'),
-      el('li', {}, sw ? 'Abajo a la izquierda pulsa «Network Devices» → «Switches» y arrastra un switch 2960 al área de trabajo.' : 'Abajo a la izquierda pulsa «Network Devices» → «Routers» y arrastra un router 2911 al área de trabajo (tiene los puertos Gi0/0, Gi0/1 y Gi0/2, como aquí).'),
+      el('li', {}, sw ? 'Abajo a la izquierda presiona «Network Devices» → «Switches» y arrastra un switch 2960 al área de trabajo.' : 'Abajo a la izquierda presiona «Network Devices» → «Routers» y arrastra un router 2911 al área de trabajo (tiene los puertos Gi0/0, Gi0/1 y Gi0/2, como aquí).'),
       el('li', {}, 'Haz clic sobre el equipo y abre la pestaña «CLI».'),
-      el('li', {}, sw ? 'Pulsa Intro hasta ver Switch>.' : 'Si pregunta «Would you like to enter the initial configuration dialog?», escribe no y pulsa Intro. Después pulsa Intro hasta ver Router>.'),
+      el('li', {}, sw ? 'Presiona Enter hasta ver Switch>.' : 'Si pregunta «Would you like to enter the initial configuration dialog?», escribe no y presiona Enter. Después presiona Enter hasta ver Router>.'),
       el('li', {}, 'Escribe los mismos comandos que en este laboratorio y comprueba el resultado con los comandos show.'),
       el('li', {}, 'Guarda el archivo (File → Save As) para enseñarlo en tu portafolio.')));
 }
@@ -37,15 +37,15 @@ export async function montarCli(holder, id) {
   const NIVEL = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
   const pistas = lab.pistas || [];
   let pistasVistas = 0;
-  // Modo «Te acompaño»: solo en laboratorios guiados (en las averías hay que pensar, no copiar).
+  // Modo guiado: solo en laboratorios guiados (en las averías hay que pensar, no copiar).
   const guiable = lab.tipo !== 'averia';
   const guia = guiable ? construirGuia(lab) : [];
   let paso = 0, acompanar = guiable && lab.nivel === 'principiante', fb = null;
-  const cajaGuia = el('section', { class: 'guia', 'aria-label': 'Te acompaño: qué escribir en cada paso' });
+  const cajaGuia = el('section', { class: 'guia', 'aria-label': 'Modo guiado: qué escribir en cada paso' });
   function pintarGuia() {
     if (!guiable) return;
     if (!acompanar) {
-      const on = el('button', { type: 'button', class: 'btn btn-ghost btn-sm' }, '🧭 Activar «Te acompaño»: te digo qué escribir y por qué');
+      const on = el('button', { type: 'button', class: 'btn btn-ghost btn-sm' }, '🧭 Activar el modo guiado: qué escribir en cada paso y por qué');
       on.addEventListener('click', () => { acompanar = true; pintarGuia(); input.focus(); });
       cajaGuia.className = 'guia guia-off';
       cajaGuia.replaceChildren(on);
@@ -54,12 +54,12 @@ export async function montarCli(holder, id) {
     cajaGuia.className = 'guia';
     const off = el('button', { type: 'button', class: 'btn btn-quiet btn-sm' }, 'Ocultar guía');
     off.addEventListener('click', () => { acompanar = false; pintarGuia(); });
-    const cab = el('div', { class: 'guia-cab' }, el('strong', {}, '🧭 Te acompaño'), el('span', { class: 'badge' }, paso < guia.length ? `Paso ${paso + 1} de ${guia.length}` : '¡Terminado!'), off);
+    const cab = el('div', { class: 'guia-cab' }, el('strong', {}, '🧭 Modo guiado'), el('span', { class: 'badge' }, paso < guia.length ? `Paso ${paso + 1} de ${guia.length}` : 'Terminado'), off);
     const barra = el('div', { class: 'guia-barra', 'aria-hidden': 'true' }, el('span'));
     barra.firstChild.style.setProperty('--p', String(paso / guia.length));
     const feedback = fb ? el('p', { class: 'guia-fb ' + (fb.ok ? 'ok' : 'warn'), role: 'status' }, fb.texto) : null;
     if (paso >= guia.length) {
-      cajaGuia.replaceChildren(...[cab, barra, feedback, el('p', {}, '🎉 Has escrito todos los comandos del laboratorio. Mira la lista de tareas: si alguna no está marcada, revisa lo que escribiste con show running-config.')].filter(Boolean));
+      cajaGuia.replaceChildren(...[cab, barra, feedback, el('p', {}, 'Has escrito todos los comandos del laboratorio. Mira la lista de tareas: si alguna no está marcada, revisa lo que escribiste con show running-config.')].filter(Boolean));
       return;
     }
     const p = guia[paso];
@@ -68,7 +68,7 @@ export async function montarCli(holder, id) {
     saltar.addEventListener('click', () => { paso++; fb = null; pintarGuia(); input.focus(); });
     cajaGuia.replaceChildren(...[cab, barra, feedback,
       el('p', { class: 'guia-escribe' }, el('span', {}, 'Escribe:'), el('code', {}, p.linea)),
-      p.libre ? el('p', { class: 'small muted' }, 'La contraseña o el texto puedes inventarlo; en una empresa usa una contraseña larga y difícil de adivinar.') : null,
+      p.libre ? el('p', { class: 'small muted' }, 'Puedes elegir tu propia contraseña o texto. En un entorno real, usa una contraseña larga y difícil de adivinar.') : null,
       el('p', {}, el('strong', {}, '¿Qué hace? '), p.que || ''),
       el('p', { class: 'guia-modo ' + (consejo ? 'warn' : 'ok') }, consejo
         ? ['⚠ Ahora estás en ', el('strong', {}, NOMBRE_MODO[eq.modo]), '. Este comando se escribe en ', el('strong', {}, NOMBRE_MODO[p.modo]), ` (el prompt termina en ${p.sufijo}). `, consejo]
@@ -83,9 +83,9 @@ export async function montarCli(holder, id) {
     if (nuevo > paso) {
       paso = nuevo;
       const cambio = r.prompt !== antes ? ` Fíjate en el prompt: ahora es ${r.prompt}, es decir, estás en ${NOMBRE_MODO[eq.modo]}.` : '';
-      fb = { ok: true, texto: '✓ ¡Bien hecho!' + cambio };
+      fb = { ok: true, texto: '✓ Correcto.' + cambio };
     } else if (err) fb = { ok: false, texto: 'Ese comando no ha funcionado. ' + err };
-    else if (eq.ultimo) fb = { ok: false, texto: 'Ese comando es válido, pero no es el que toca ahora. Escribe el que te indica la guía (o pulsa «Saltar este paso» si ya lo hiciste a tu manera).' };
+    else if (eq.ultimo) fb = { ok: false, texto: 'Ese comando es válido, pero no corresponde a este paso. Escribe el que te indica la guía (o presiona «Saltar este paso» si ya lo hiciste a tu manera).' };
     pintarGuia();
   }
   const listaPistas = el('ol', { class: 'hints' });
@@ -110,7 +110,7 @@ export async function montarCli(holder, id) {
     if (n === lab.tareas.length && !completado) {
       completado = true;
       guardarLab('cli-' + id);
-      escribir('\n*** ¡Laboratorio completado! Todas las tareas están hechas. ***', 'ok');
+      escribir('\n*** Laboratorio completado: todas las tareas están hechas. ***', 'ok');
       toast('Laboratorio completado: ' + lab.titulo);
     }
   }

@@ -13,7 +13,7 @@ test('la experiencia suma lecciones, laboratorios, exámenes y días de estudio'
 });
 
 test('los niveles suben con la experiencia y dicen cuánto falta', () => {
-  assert.equal(nivelDe(0).actual.nombre, 'Novato');
+  assert.equal(nivelDe(0).actual.nombre, 'Iniciado');
   assert.equal(nivelDe(99).faltan, 1);
   assert.equal(nivelDe(100).actual.n, 2);
   const max = nivelDe(999999);
