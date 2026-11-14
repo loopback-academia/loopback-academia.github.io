@@ -46,6 +46,7 @@ export function mensajeError(err) {
   if (/email not confirmed/i.test(m)) return 'Todavía no has confirmado tu correo. Abre el enlace que te enviamos (revisa también spam).';
   if (/user already registered/i.test(m)) return 'Ya existe una cuenta con ese correo. Inicia sesión.';
   if (/password should be at least|weak password|pwned|known to be weak/i.test(m)) return 'La contraseña es demasiado débil o aparece en filtraciones conocidas. Elige otra más larga.';
+  if (/error sending .*email|smtp/i.test(m)) return 'No pudimos enviarte el correo en este momento. Inténtalo de nuevo en unos minutos. Mientras tanto puedes seguir estudiando sin cuenta: tu progreso se guarda en este navegador.';
   if (/rate limit|too many/i.test(m)) return 'Demasiados intentos. Espera unos minutos y vuelve a probar.';
   if (/invalid totp|invalid code|code.*expired/i.test(m)) return 'El código no es válido o ha caducado. Prueba con el siguiente.';
   if (/reauthenticat/i.test(m)) return 'Por seguridad, cierra sesión y vuelve a entrar antes de cambiar la contraseña.';
