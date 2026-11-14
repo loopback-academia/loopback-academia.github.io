@@ -4,6 +4,21 @@ import { el, toast } from '../core.js';
 import { guardarLab, labHecho, cargar } from '../progreso.js';
 import { nuevoEquipo, ejecutar, prompt, runningConfig, completar } from './ios.js';
 import { LABS } from './ios-labs.js';
+import { construirGuia, avanzar, consejoModo, traducirError, NOMBRE_MODO } from './cli-guia.js';
+
+// Cómo repetir el laboratorio en Packet Tracer (modelos con los mismos nombres de interfaz que el simulador).
+function cajaPacketTracer(lab) {
+  const sw = lab.equipo.tipo === 'switch';
+  return el('details', { class: 'pt-box' },
+    el('summary', {}, '📦 Hazlo también en tu Packet Tracer'),
+    el('ol', {},
+      el('li', {}, 'Abre Cisco Packet Tracer. ¿Aún no lo tienes? ', el('a', { href: 'leccion.html?id=m0-packet-tracer' }, 'Instálalo paso a paso'), '.'),
+      el('li', {}, sw ? 'Abajo a la izquierda pulsa «Network Devices» → «Switches» y arrastra un switch 2960 al área de trabajo.' : 'Abajo a la izquierda pulsa «Network Devices» → «Routers» y arrastra un router 2911 al área de trabajo (tiene los puertos Gi0/0, Gi0/1 y Gi0/2, como aquí).'),
+      el('li', {}, 'Haz clic sobre el equipo y abre la pestaña «CLI».'),
+      el('li', {}, sw ? 'Pulsa Intro hasta ver Switch>.' : 'Si pregunta «Would you like to enter the initial configuration dialog?», escribe no y pulsa Intro. Después pulsa Intro hasta ver Router>.'),
+      el('li', {}, 'Escribe los mismos comandos que en este laboratorio y comprueba el resultado con los comandos show.'),
+      el('li', {}, 'Guarda el archivo (File → Save As) para enseñarlo en tu portafolio.')));
+}
 
 export async function montarCli(holder, id) {
   const lab = LABS[id];
@@ -22,6 +37,57 @@ export async function montarCli(holder, id) {
   const NIVEL = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
   const pistas = lab.pistas || [];
   let pistasVistas = 0;
+  // Modo «Te acompaño»: solo en laboratorios guiados (en las averías hay que pensar, no copiar).
+  const guiable = lab.tipo !== 'averia';
+  const guia = guiable ? construirGuia(lab) : [];
+  let paso = 0, acompanar = guiable && lab.nivel === 'principiante', fb = null;
+  const cajaGuia = el('section', { class: 'guia', 'aria-label': 'Te acompaño: qué escribir en cada paso' });
+  function pintarGuia() {
+    if (!guiable) return;
+    if (!acompanar) {
+      const on = el('button', { type: 'button', class: 'btn btn-ghost btn-sm' }, '🧭 Activar «Te acompaño»: te digo qué escribir y por qué');
+      on.addEventListener('click', () => { acompanar = true; pintarGuia(); input.focus(); });
+      cajaGuia.className = 'guia guia-off';
+      cajaGuia.replaceChildren(on);
+      return;
+    }
+    cajaGuia.className = 'guia';
+    const off = el('button', { type: 'button', class: 'btn btn-quiet btn-sm' }, 'Ocultar guía');
+    off.addEventListener('click', () => { acompanar = false; pintarGuia(); });
+    const cab = el('div', { class: 'guia-cab' }, el('strong', {}, '🧭 Te acompaño'), el('span', { class: 'badge' }, paso < guia.length ? `Paso ${paso + 1} de ${guia.length}` : '¡Terminado!'), off);
+    const barra = el('div', { class: 'guia-barra', 'aria-hidden': 'true' }, el('span'));
+    barra.firstChild.style.setProperty('--p', String(paso / guia.length));
+    const feedback = fb ? el('p', { class: 'guia-fb ' + (fb.ok ? 'ok' : 'warn'), role: 'status' }, fb.texto) : null;
+    if (paso >= guia.length) {
+      cajaGuia.replaceChildren(...[cab, barra, feedback, el('p', {}, '🎉 Has escrito todos los comandos del laboratorio. Mira la lista de tareas: si alguna no está marcada, revisa lo que escribiste con show running-config.')].filter(Boolean));
+      return;
+    }
+    const p = guia[paso];
+    const consejo = consejoModo(guia, paso, eq.modo);
+    const saltar = el('button', { type: 'button', class: 'btn btn-quiet btn-sm' }, 'Saltar este paso');
+    saltar.addEventListener('click', () => { paso++; fb = null; pintarGuia(); input.focus(); });
+    cajaGuia.replaceChildren(...[cab, barra, feedback,
+      el('p', { class: 'guia-escribe' }, el('span', {}, 'Escribe:'), el('code', {}, p.linea)),
+      p.libre ? el('p', { class: 'small muted' }, 'La contraseña o el texto puedes inventarlo; en una empresa usa una contraseña larga y difícil de adivinar.') : null,
+      el('p', {}, el('strong', {}, '¿Qué hace? '), p.que || ''),
+      el('p', { class: 'guia-modo ' + (consejo ? 'warn' : 'ok') }, consejo
+        ? ['⚠ Ahora estás en ', el('strong', {}, NOMBRE_MODO[eq.modo]), '. Este comando se escribe en ', el('strong', {}, NOMBRE_MODO[p.modo]), ` (el prompt termina en ${p.sufijo}). `, consejo]
+        : ['✓ Estás en el sitio correcto: ', el('strong', {}, NOMBRE_MODO[p.modo]), ` (el prompt termina en ${p.sufijo}).`]),
+      el('div', { class: 'guia-acciones' }, saltar)].filter(Boolean));
+  }
+  function guiar(r, antes) {
+    if (!guiable) return;
+    const err = traducirError(r.salida);
+    if (err && acompanar) escribir('💡 ' + err, 'hint');
+    const nuevo = avanzar(guia, paso, eq);
+    if (nuevo > paso) {
+      paso = nuevo;
+      const cambio = r.prompt !== antes ? ` Fíjate en el prompt: ahora es ${r.prompt}, es decir, estás en ${NOMBRE_MODO[eq.modo]}.` : '';
+      fb = { ok: true, texto: '✓ ¡Bien hecho!' + cambio };
+    } else if (err) fb = { ok: false, texto: 'Ese comando no ha funcionado. ' + err };
+    else if (eq.ultimo) fb = { ok: false, texto: 'Ese comando es válido, pero no es el que toca ahora. Escribe el que te indica la guía (o pulsa «Saltar este paso» si ya lo hiciste a tu manera).' };
+    pintarGuia();
+  }
   const listaPistas = el('ol', { class: 'hints' });
   const btnPista = el('button', { type: 'button', class: 'btn btn-ghost btn-sm' }, 'Dame una pista');
   btnPista.addEventListener('click', () => {
@@ -53,8 +119,9 @@ export async function montarCli(holder, id) {
     salida.replaceChildren();
     escribir(`Simulador de Cisco IOS · ${lab.titulo}\nEscribe "?" para ver los comandos de cada modo. Puedes abreviar (conf t, sh run, int g0/1) y completar con Tab.\n`);
     promptTxt.textContent = prompt(eq);
-    hist = []; pos = 0;
+    hist = []; pos = 0; paso = 0; fb = null;
     revisar();
+    pintarGuia();
   }
 
   input.addEventListener('keydown', e => {
@@ -62,12 +129,14 @@ export async function montarCli(holder, id) {
       e.preventDefault();
       const linea = input.value;
       input.value = '';
-      escribir(prompt(eq) + linea, 'in');
+      const antes = prompt(eq);
+      escribir(antes + linea, 'in');
       if (linea.trim()) { hist.push(linea); pos = hist.length; }
       const r = ejecutar(eq, linea);
       escribir(r.salida, /^\s*\^|^% /m.test(r.salida) ? 'err' : null);
       promptTxt.textContent = r.prompt;
       revisar();
+      if (linea.trim()) guiar(r, antes);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (pos > 0) { pos--; input.value = hist[pos]; }
@@ -77,9 +146,11 @@ export async function montarCli(holder, id) {
     } else if ((e.ctrlKey && (e.key === 'z' || e.key === 'Z')) || (e.ctrlKey && e.key === 'c')) {
       e.preventDefault();
       escribir(prompt(eq) + '^Z', 'in');
+      const antes = prompt(eq);
       const r = ejecutar(eq, eq.modo === 'user' || eq.modo === 'priv' ? '' : 'end');
       promptTxt.textContent = r.prompt;
       revisar();
+      if (antes !== r.prompt) guiar(r, antes);
     } else if (e.key === 'Tab') {
       e.preventDefault();
       const c = completar(eq, input.value);
@@ -96,12 +167,14 @@ export async function montarCli(holder, id) {
 
   holder.append(el('section', { class: 'lab', 'aria-label': 'Laboratorio: ' + lab.titulo },
     el('div', { class: 'lab-head' }, el('h3', {}, (lab.tipo === 'averia' ? 'Avería: ' : 'Laboratorio: ') + lab.titulo.replace(/^Avería:\s*/, '')), progreso),
-    el('div', { class: 'lab-tags' }, lab.nivel ? el('span', { class: 'badge level-' + lab.nivel }, NIVEL[lab.nivel]) : null, lab.tipo === 'averia' ? el('span', { class: 'badge badge-warn' }, '🔧 Resolución de problemas') : null),
+    el('div', { class: 'lab-tags' }, lab.nivel && !lab.profesional ? el('span', { class: 'badge level-' + lab.nivel }, NIVEL[lab.nivel]) : null, lab.tipo === 'averia' ? el('span', { class: 'badge badge-warn' }, '🔧 Resolución de problemas') : null, lab.profesional ? el('span', { class: 'badge level-profesional' }, '🎓 Nivel profesional') : null),
     el('p', { class: 'muted' }, lab.intro),
     lab.topologia ? el('pre', { class: 'topology', 'aria-label': 'Topología de red' }, lab.topologia) : null,
     lab.tipo === 'averia' ? el('p', { class: 'small' }, el('strong', {}, 'Método: '), 'primero diagnostica con comandos show (no cambies nada a ciegas), luego arregla y al final verifica.') : null,
+    guiable ? cajaGuia : null,
     el('div', { class: 'cli-layout' },
       el('div', {}, salida, el('div', { class: 'term-input' }, promptTxt, input)),
-      el('div', {}, el('h4', {}, 'Tareas'), lista, pistas.length ? el('div', { class: 'hints-box' }, btnPista, listaPistas) : null, el('div', { class: 'hero-cta' }, btnReset, btnSol), solucion))));
+      el('div', {}, el('h4', {}, 'Tareas'), lista, pistas.length ? el('div', { class: 'hints-box' }, btnPista, listaPistas) : null, el('div', { class: 'hero-cta' }, btnReset, btnSol), solucion)),
+    guiable ? cajaPacketTracer(lab) : null));
   reiniciar();
 }

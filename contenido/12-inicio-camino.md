@@ -23,7 +23,7 @@ La tecnología no es un solo trabajo: hay muchos caminos. Todos empiezan desde l
 ## ¿Por dónde empezar?
 
 - Si quieres **trabajar cuanto antes**: **soporte técnico**. Es el puesto de entrada más común y te da la base para todo lo demás.
-- Si te gusta **montar y conectar** cosas: **redes**.
+- Si te gusta **montar y conectar** cosas: **redes**. Para practicar en casa te hará falta Cisco Packet Tracer (gratuito): tienes la guía de instalación en la lección [Instala Cisco Packet Tracer paso a paso](./leccion.html?id=m0-packet-tracer).
 - Si te gusta **crear** y resolver acertijos de lógica: **programación**.
 - Si te gustan los **números** y entender un negocio: **bases de datos**.
 - Si te atrae **proteger** y la investigación: **ciberseguridad**. Normalmente se llega a ella después de soporte, redes o sistemas.

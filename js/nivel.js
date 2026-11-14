@@ -32,5 +32,5 @@ export function puntoDePartida(bloques, superados) {
 export const PERFILES = [
   { id: 'cero', icono: '🌱', titulo: 'No sé nada de tecnología', texto: 'Nunca he estudiado nada de esto y quiero empezar por lo más básico.' },
   { id: 'usuario', icono: '💻', titulo: 'Uso el ordenador, pero no he estudiado tecnología', texto: 'Me manejo con el ordenador e internet. Quiero comprobar si me salto lo básico.' },
-  { id: 'experiencia', icono: '🎯', titulo: 'Ya sé de un área', texto: 'Tengo conocimientos de redes, programación, bases de datos u otra área y quiero empezar en mi nivel.' },
+  { id: 'experiencia', icono: '🎯', titulo: 'Ya sé de un área', texto: 'Tengo conocimientos de redes, programación, bases de datos u otra área y quiero empezar en mi nivel. Si dominas el CCNA, llegarás al Nivel profesional.' },
 ];

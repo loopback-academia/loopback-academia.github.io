@@ -476,6 +476,66 @@ export const LABS = {
     pistas: ['Dúplex distinto en cada extremo = colisiones tardías y CRC: funciona, pero muy lento.', 'duplex auto y speed auto, dentro de la interfaz.'],
     solucion: ['show interfaces status', 'show interfaces g0/2', 'configure terminal', 'interface g0/2', 'duplex auto', 'speed auto', 'end', 'show interfaces g0/2'],
   },
+
+  // ================================================================ nivel profesional: varias averías a la vez
+  'averia-sucursal': {
+    nivel: 'avanzado', tipo: 'averia', profesional: true,
+    titulo: 'Avería profesional: la sucursal está caída',
+    intro: 'Ticket P1 de las 08:05: «En la sucursal de Santiago nadie tiene red». R-SUC une la LAN de la sucursal (Gi0/0, 192.168.50.1/24, con DHCP para los PC) con la central por Gi0/1 (10.0.50.2/30; la central es 10.0.50.1, RID 10.255.0.1, y anuncia por OSPF área 0 la red 10.10.0.0/16 de los servidores). Anoche un técnico hizo «cambios menores». Hay varias averías a la vez: encuéntralas todas.',
+    topologia: 'PCs (DHCP) ── Gi0/0 [R-SUC] Gi0/1 ── 10.0.50.0/30 ── [CENTRAL 10.255.0.1] ── Servidores 10.10.0.0/16',
+    equipo: {
+      tipo: 'router', hostname: 'R-SUC',
+      interfaces: [{ nombre: 'GigabitEthernet0/0', ip: '192.168.50.1', mask: '255.255.255.0', shutdown: true }, { nombre: 'GigabitEthernet0/1', ip: '10.0.50.2', mask: '255.255.255.252', shutdown: false }],
+      vecinos: [{ rid: '10.255.0.1', ip: '10.0.50.1', interfaz: 'GigabitEthernet0/1', area: 0, redes: [{ net: '10.10.0.0', mask: '255.255.0.0', coste: 2 }] }],
+      hosts: [{ ip: '10.0.50.1' }, { ip: '10.10.0.10', remoto: true }, { ip: '0.0.0.1', dhcp: 'GigabitEthernet0/0', mac: '0050.56b2.3201' }, { ip: '0.0.0.2', dhcp: 'GigabitEthernet0/0', mac: '0050.56b2.3202' }],
+      estadoInicial: s => {
+        s.modo = 'priv';
+        s.ospf = { pid: 1, rid: '5.5.5.5', redes: [{ net: '192.168.50.0', wc: '0.0.0.255', area: 0 }, { net: '10.0.50.4', wc: '0.0.0.3', area: 0 }], pasivas: new Set(['GigabitEthernet0/0', 'GigabitEthernet0/1']), pasivasDefault: false, defaultOriginate: false };
+        s.dhcp.excluidas.push(['192.168.50.1', '192.168.50.10']);
+        s.dhcp.pools.SUCURSAL = { net: '192.168.50.0', mask: '255.255.255.0', gw: '192.168.50.254', dns: ['10.10.0.53'], dominio: null };
+      },
+    },
+    tareas: [
+      { texto: 'Diagnostica antes de tocar nada: show ip interface brief, show ip ospf neighbor y show ip protocols.', ok: s => ['show ip interface brief', 'show ip ospf neighbor', 'show ip protocols'].every(p => s.patrones.has(p)) },
+      { texto: 'Avería de capa 1/2: la interfaz de la LAN no está operativa. Déjala up/up.', ok: s => interfazUp(s, 'GigabitEthernet0/0') },
+      { texto: 'Avería de OSPF: R-SUC debe formar vecindad FULL con la central (revisa redes anunciadas e interfaces pasivas), sin dejar de tener la LAN como pasiva.', ok: s => vecinosOspf(s).length === 1 && (s.ospf.pasivas.has('GigabitEthernet0/0') || (s.ospf.pasivasDefault && !s.ospf.noPasivas?.has('GigabitEthernet0/0'))) },
+      { texto: 'La red de servidores 10.10.0.0/16 debe aprenderse por OSPF (ruta O).', ok: s => buscarRuta(s, '10.10.0.10')?.cod === 'O' },
+      { texto: 'Avería de DHCP: los PC reciben una puerta de enlace que no existe. Corrígela en el pool SUCURSAL.', ok: s => s.dhcp.pools.SUCURSAL?.gw === '192.168.50.1' },
+      { texto: 'Verifica de extremo a extremo (ping 10.10.0.10 y show ip dhcp binding) y guarda la configuración.', ok: (s, run) => s.historial.some(h => /^ping\s+10\.10\.0\.10$/i.test(h)) && s.patrones.has('show ip dhcp binding') && concesiones(s).length === 2 && buscarRuta(s, '10.10.0.10')?.cod === 'O' && s.guardada === run(s) },
+    ],
+    pistas: ['Método: capa 1 → capa 3 → servicios. Un show ip interface brief te enseña la primera avería en segundos.', 'Compara la red del comando network con la IP real de Gi0/1: ¿encaja con la wildcard?', 'Una interfaz pasiva nunca forma vecindad. ¿Cuál debe ser pasiva y cuál no?', 'show ip dhcp pool (o show running-config) te enseña el default-router del pool.'],
+    solucion: ['show ip interface brief', 'show ip ospf neighbor', 'show ip protocols', 'configure terminal', 'interface g0/0', 'no shutdown', 'exit', 'router ospf 1', 'no network 10.0.50.4 0.0.0.3 area 0', 'network 10.0.50.0 0.0.0.3 area 0', 'no passive-interface g0/1', 'exit', 'ip dhcp pool SUCURSAL', 'default-router 192.168.50.1', 'end', 'show ip ospf neighbor', 'show ip route', 'ping 10.10.0.10', 'show ip dhcp binding', 'copy running-config startup-config'],
+  },
+
+  auditoria: {
+    nivel: 'avanzado', tipo: 'averia', profesional: true,
+    titulo: 'Auditoría de seguridad: endurece un switch de producción',
+    intro: 'La auditoría externa ha suspendido a SW-ACC3 (switch de acceso de la planta 3). Tienes una ventana de mantenimiento esta noche para corregir todos los hallazgos del informe sin cortar el servicio: los usuarios están en Fa0/1 a Fa0/9 (VLAN 10) y el enlace con distribución es el trunk Gi0/1. La VLAN 99 ya existe y es la de gestión.',
+    topologia: 'Usuarios Fa0/1-9 (VLAN 10) ── [SW-ACC3] Gi0/1 ══trunk══ Distribución',
+    equipo: {
+      tipo: 'switch', hostname: 'SW-ACC3', interfaces: puertosSwitch(),
+      estadoInicial: s => {
+        s.modo = 'priv'; s.vlans[10] = 'USUARIOS'; s.vlans[99] = 'GESTION';
+        s.enablePassword = 'cisco';
+        Object.assign(s.lines.con, { password: 'cisco', login: true, timeout: [0, 0] });
+        Object.assign(s.lines.vty, { password: 'cisco', login: true, local: false, transport: 'all' });
+        for (let n = 1; n <= 9; n++) Object.assign(s.ifs['FastEthernet0/' + n], { mode: 'access', accessVlan: 10 });
+        Object.assign(s.ifs['GigabitEthernet0/1'], { mode: 'trunk', nativeVlan: 1 });
+      },
+    },
+    tareas: [
+      { texto: 'Hallazgo 1: el modo privilegiado usa enable password (texto plano). Usa enable secret y elimina enable password.', ok: s => !!s.enableSecret && !s.enablePassword },
+      { texto: 'Hallazgo 2: las contraseñas de línea se ven en claro en la configuración (service password-encryption).', ok: s => s.spe },
+      { texto: 'Hallazgo 3: la consola nunca cierra la sesión (exec-timeout 0 0). Ponla en 10 minutos o menos.', ok: s => !!s.lines.con.timeout && (s.lines.con.timeout[0] > 0 || s.lines.con.timeout[1] > 0) && s.lines.con.timeout[0] * 60 + s.lines.con.timeout[1] <= 600 },
+      { texto: 'Hallazgo 4: el acceso remoto acepta Telnet con una contraseña compartida. Deja solo SSH v2 con usuarios locales (crea el usuario netadmin con privilegio 15 y secret).', ok: s => s.rsa >= 2048 && s.sshVersion === 2 && s.lines.vty.transport === 'ssh' && s.lines.vty.local && s.users.netadmin?.secret && s.users.netadmin.privilege === 15 },
+      { texto: 'Hallazgo 5: los puertos libres (Fa0/10 a Fa0/24) están encendidos. Apágalos.', ok: s => Array.from({ length: 15 }, (_, i) => ifc(s, 'FastEthernet0/' + (i + 10))).every(i => i.shutdown) },
+      { texto: 'Hallazgo 6: el trunk usa la VLAN nativa 1. Cámbiala a la 99 y desactiva DTP en Gi0/1.', ok: s => ifc(s, 'GigabitEthernet0/1').nativeVlan === 99 && ifc(s, 'GigabitEthernet0/1').nonegotiate },
+      { texto: 'Hallazgo 7: no hay aviso legal. Configura un banner MOTD.', ok: s => !!s.banner && s.banner.length >= 5 },
+      { texto: 'Sin cortar a los usuarios: Fa0/1 a Fa0/9 siguen encendidos en la VLAN 10. Al final, guarda la configuración.', ok: (s, run) => Array.from({ length: 9 }, (_, i) => ifc(s, 'FastEthernet0/' + (i + 1))).every(i => !i.shutdown && i.accessVlan === 10) && !!s.enableSecret && s.guardada === run(s) },
+    ],
+    pistas: ['Empieza con show running-config: casi todos los hallazgos se ven ahí.', 'SSH necesita: hostname, ip domain-name, crypto key generate rsa modulus 2048, ip ssh version 2.', 'no enable password borra la contraseña en claro; enable secret crea la cifrada.', 'Cuidado con interface range: fa0/10 - 24, no fa0/1 - 24.'],
+    solucion: ['show running-config', 'configure terminal', 'enable secret Aud1t0r-2026!', 'no enable password', 'service password-encryption', 'banner motd # Acceso solo para personal autorizado #', 'line console 0', 'exec-timeout 10 0', 'exit', 'ip domain-name empresa.local', 'crypto key generate rsa modulus 2048', 'ip ssh version 2', 'username netadmin privilege 15 secret N3t-Adm1n!', 'line vty 0 15', 'login local', 'transport input ssh', 'exit', 'interface range fa0/10 - 24', 'shutdown', 'exit', 'interface g0/1', 'switchport trunk native vlan 99', 'switchport nonegotiate', 'end', 'copy running-config startup-config'],
+  },
 };
 
 function covers(red, ip) {

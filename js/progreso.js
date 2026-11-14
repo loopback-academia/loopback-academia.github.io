@@ -4,6 +4,7 @@
 // Al iniciar sesión por primera vez en un navegador, el progreso hecho como invitado se suma a la cuenta.
 import { supabase, usuarioActual } from './auth.js';
 import { local } from './core.js';
+import { avisarLogros } from './logros-aviso.js';
 
 const VACIO = () => ({ v: 1, items: {}, examenes: [], dias: [] });
 let estado = VACIO();
@@ -15,7 +16,10 @@ const clave = id => 'aula:progreso:' + (id || 'invitado');
 // Fecha local (no UTC): el día de estudio es el del reloj del alumno.
 const fecha = d => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 const hoy = () => fecha(new Date());
-const notificar = () => oyentes.forEach(fn => { try { fn(estado); } catch (e) { console.error(e); } });
+const notificar = () => {
+  oyentes.forEach(fn => { try { fn(estado); } catch (e) { console.error(e); } });
+  try { avisarLogros(estado, racha()); } catch (e) { console.error(e); }
+};
 export const alCambiar = fn => { oyentes.add(fn); return () => oyentes.delete(fn); };
 
 // El mejor de dos registros del mismo elemento: completado gana; después, la mejor nota; después, el más reciente.
@@ -91,6 +95,7 @@ export function cargar() {
         if (combinado.dias.length !== remoto.dias.length) await subirDias();
       } catch (err) { console.warn('Progreso sin sincronizar (se usa la copia local):', err.message || err); }
     }
+    try { avisarLogros(estado, racha(), { semilla: true }); } catch { /* sin avisos */ }
     return estado;
   })());
 }

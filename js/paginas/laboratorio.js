@@ -14,6 +14,10 @@ const box = $('#lab');
 const MONTAR = {
   lab: () => import('../labs/numeros.js').then(m => m.montarLab),
   cli: () => import('../labs/cli-ui.js').then(m => m.montarCli),
+  apuntes: () => import('../labs/cli-juegos.js').then(m => m.montarApuntes),
+  ordena: () => import('../labs/cli-juegos.js').then(m => m.montarOrdena),
+  modos: () => import('../labs/cli-juegos.js').then(m => m.montarModos),
+  lista: () => import('../labs/checklist.js').then(m => m.montarLista),
   sql: () => import('../labs/sql-lab.js').then(m => m.montarSql),
   code: () => import('../codigo/codigo-ui.js').then(m => m.montarCodigo),
   proyecto: () => import('../proyectos/proyecto-ui.js').then(m => m.montarProyecto),

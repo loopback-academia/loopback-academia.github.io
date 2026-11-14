@@ -296,6 +296,8 @@ Solo puede haber **una ACL por interfaz, por sentido y por protocolo** (una IPv4
 
 [[anim:acl]]
 
+[[apuntes:acl]]
+
 [[cli:acl]]
 
 ::: quiz
@@ -518,9 +520,13 @@ SW1(config-if)# ip arp inspection trust
 - No usar la VLAN 1 ni dejarla como nativa; desactivar DTP (`switchport nonegotiate`).
 - PortFast + BPDU Guard en los puertos de acceso.
 
+[[apuntes:portsecurity]]
+
 [[cli:portsecurity]]
 
 ## Laboratorio
+
+[[apuntes:capa2]]
 
 [[cli:capa2]]
 

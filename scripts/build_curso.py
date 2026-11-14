@@ -14,7 +14,7 @@ Formato de cada módulo:
     peso: 20
     descripcion: ...
     ---
-    === m1-redes | ¿Qué es una red? | 12 | 1      (el último número es el nivel: 1 principiante, 2 intermedio, 3 avanzado)
+    === m1-redes | ¿Qué es una red? | 12 | 1      (el último número es el nivel: 1 principiante, 2 intermedio, 3 avanzado, 4 profesional)
     Texto en Markdown (párrafos, listas, **negrita**, *cursiva*, `código`, [enlaces](https://...), tablas,
     bloques ``` con lenguaje), avisos (::: nota / ::: examen / ::: cuidado ... :::), elementos interactivos
     ([[anim:arp]], [[lab:subnetting]], [[cli:vlan]], [[sql:select]]) y un cuestionario:
@@ -42,9 +42,13 @@ OUT = ROOT / "data"
 KNOWN = {
     "anim": {"encapsulacion", "switch", "arp", "tcp", "dhcp", "dns", "vlan", "stp", "enrutamiento", "nat", "acl", "ospf"},
     "lab": {"subnetting", "binario", "vlsm", "ipv6"},
-    "cli": {"basico", "vlan", "trunk", "estatica", "ospf", "acl", "ssh", "portsecurity", "router", "intervlan", "dhcp", "nat",
+    "cli": {"averia-sucursal", "auditoria", "basico", "vlan", "trunk", "estatica", "ospf", "acl", "ssh", "portsecurity", "router", "intervlan", "dhcp", "nat",
             "ipv6", "capa2", "averia-puerto", "averia-trunk", "averia-gestion", "averia-ruta", "averia-ospf", "averia-ssh", "averia-acl", "averia-duplex"},
     "proyecto": {"oficina"},
+    "apuntes": {"basico", "vlan", "trunk", "estatica", "ospf", "acl", "ssh", "portsecurity", "router", "intervlan", "dhcp", "nat", "ipv6", "capa2"},
+    "ordena": {"basico", "vlan", "trunk", "estatica", "ospf", "acl", "ssh", "portsecurity", "router", "intervlan", "dhcp", "nat", "ipv6", "capa2"},
+    "modos": {"ios"},
+    "lista": {"pt-instalar"},
     "topo": {"lan", "gateway", "vlan", "troncal", "intervlan", "estaticas", "dhcp", "averias", "libre"},
     "caso": {"login", "impresora-etiquetas", "sucursal", "nuevo-empleado", "lento"},
     "turno": {"soporte"},
@@ -81,7 +85,7 @@ KNOWN = {
 }
 CALLOUTS = {"nota", "examen", "cuidado", "practica", "comando", "reto", "solucion", "externo"}
 AREAS = ("base", "redes", "bd", "prog", "ti", "en", "sec")
-LESSON_RE = re.compile(r"^===\s*([a-z0-9-]+)\s*\|\s*(.+?)\s*\|\s*(\d+)\s*\|\s*([123])\s*$")
+LESSON_RE = re.compile(r"^===\s*([a-z0-9-]+)\s*\|\s*(.+?)\s*\|\s*(\d+)\s*\|\s*([1234])\s*$")
 INLINE_RE = re.compile(r"(\*\*.+?\*\*|`[^`]+`|\[[^\]]+\]\((?:https://|\./|#)[^)\s]+\)|(?<![\w*])\*[^*\s][^*]*?\*(?!\w))")
 
 
@@ -303,7 +307,7 @@ def parse_module(path: Path) -> dict:
                 raise ContentError(f"{path.name}: la lección {lid} debe empezar por '{meta['id']}-'")
             cur, buf = {"id": lid, "titulo": title, "minutos": int(minutes), "nivel": int(level)}, []
         elif line.startswith("=== "):
-            raise ContentError(f"{path.name}: cabecera de lección mal formada (=== id | título | minutos | nivel 1-3): {line!r}")
+            raise ContentError(f"{path.name}: cabecera de lección mal formada (=== id | título | minutos | nivel 1-4): {line!r}")
         elif cur is None:
             if line.strip():
                 raise ContentError(f"{path.name}: texto antes de la primera lección: {line!r}")

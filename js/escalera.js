@@ -53,6 +53,10 @@ export function construirEscalera(curso, area) {
   });
 }
 
+// Lecciones de consulta que se pueden abrir siempre, aunque el paso de la escalera aún no haya llegado (por ejemplo,
+// la guía para instalar Packet Tracer, a la que se enlaza desde otras áreas).
+export const SIEMPRE_ABIERTAS = new Set(['m0-packet-tracer']);
+
 // Estado de cada paso. leccionHecha(id) y examenAprobado(clave) vienen del progreso del alumno.
 export function estadoEscalera(escalera, { leccionHecha, examenAprobado }) {
   let libre = true;
@@ -85,7 +89,7 @@ export function estadoEscalera(escalera, { leccionHecha, examenAprobado }) {
   return {
     escalones, final, siguiente,
     estadoLeccion: id => lecciones.get(id) || 'bloqueada',
-    accesible: id => ['hecha', 'actual', 'convalidada'].includes(lecciones.get(id)),
+    accesible: id => SIEMPRE_ABIERTAS.has(id) || ['hecha', 'actual', 'convalidada'].includes(lecciones.get(id)),
   };
 }
 

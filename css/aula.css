@@ -364,6 +364,7 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
 .level-principiante { background: var(--ok-soft); color: var(--ok); }
 .level-intermedio { background: var(--accent-soft); color: var(--accent); }
 .level-avanzado { background: var(--violet-soft); color: var(--violet); }
+.level-profesional { background: var(--ink); color: var(--surface); }
 .topology { background: var(--surface-2); border: 1px dashed var(--line-2); border-radius: var(--radius-sm); padding: 10px 14px; font: .82rem/1.5 var(--mono); white-space: pre-wrap; margin: 0 0 12px; overflow-x: auto; }
 .hints-box { margin: 12px 0; }
 .hints { margin: 8px 0 0; padding-left: 1.2em; font-size: .88rem; color: var(--ink-2); }
@@ -1288,3 +1289,78 @@ a.goal, a.goal strong, a.goal span { text-decoration: none; }
   .btn:active, .bit:active { transform: none; }
 }
 @media print { .site-header, .mobile-nav, .tutor-fab, .tutor-panel, .lesson-nav-wrap { display: none !important; } }
+
+/* Modo «Te acompaño» del simulador de IOS */
+.guia { border: 1px solid var(--accent); background: var(--accent-soft); border-radius: var(--radius-sm); padding: 12px 14px; margin: 0 0 12px; }
+.guia.guia-off { border-style: dashed; background: transparent; }
+.guia p { margin: 6px 0; }
+.guia-cab { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.guia-cab .btn { margin-left: auto; }
+.guia-barra { height: 6px; border-radius: 3px; background: var(--surface); overflow: hidden; margin: 8px 0; }
+.guia-barra span { display: block; height: 100%; background: var(--accent); transform-origin: left; transform: scaleX(var(--p, 0)); transition: transform 240ms var(--ease-out); }
+.guia-escribe { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 1.05rem; }
+.guia .guia-escribe code, .prose .guia .guia-escribe code { background: var(--code-bg); color: #fff; padding: 6px 12px; border-radius: 6px; font: 600 1rem var(--mono); overflow-wrap: anywhere; }
+.guia-modo.ok { color: var(--ok); }
+.guia-modo.warn { color: var(--warn); }
+.guia-fb { font-weight: 600; padding: 6px 10px; border-radius: 6px; background: var(--surface); }
+.guia-fb.ok { color: var(--ok); }
+.guia-fb.warn { color: var(--warn); }
+.guia-acciones { display: flex; gap: 8px; }
+.terminal .hint { color: #fde68a; }
+.pt-box { margin-top: 14px; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px 14px; background: var(--surface); }
+.pt-box summary { cursor: pointer; font-weight: 700; }
+.pt-box ol { margin: 10px 0 4px; padding-left: 22px; }
+.pt-box li { margin: 4px 0; }
+@media (prefers-reduced-motion: reduce) { .guia-barra span { transition: none; } }
+
+/* Ficha de comandos y juegos de IOS */
+.ficha, .juego { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 16px; margin: 18px 0; box-shadow: var(--shadow); }
+.ficha-cab { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ficha-cab h3 { margin: 0; }
+.ficha-cab .btn { margin-left: auto; }
+.ficha-tabla { overflow-x: auto; }
+.ficha table { width: 100%; border-collapse: collapse; font-size: .95rem; table-layout: fixed; }
+.ficha th:nth-child(1) { width: 36%; } .ficha th:nth-child(2) { width: 20%; }
+.ficha th, .ficha td { text-align: left; vertical-align: top; padding: 8px; border-bottom: 1px solid var(--line); }
+.ficha td code { font-weight: 700; overflow-wrap: anywhere; }
+.ficha-prompt { font-weight: 400 !important; }
+.juego-consola { height: auto; min-height: 120px; max-height: 260px; }
+.juego-cursor { color: #fff; }
+.juego-ops { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); margin: 12px 0; }
+.juego-ops.dos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.juego-op { font: 600 .92rem var(--mono); text-align: left; padding: 10px 12px; border: 1px solid var(--line-2); border-radius: var(--radius-sm); background: var(--surface-2); color: var(--ink); cursor: pointer; overflow-wrap: anywhere; transition: transform 140ms var(--ease-out), border-color 140ms ease; }
+.juego-ops.dos .juego-op { font-family: var(--sans); }
+.juego-op:active { transform: scale(0.97); }
+.juego-op.mal { border-color: var(--danger); background: var(--danger-soft); }
+.juego-op.bien { border-color: var(--ok); background: var(--ok-soft); }
+.juego-msg { font-weight: 600; margin: 10px 0; }
+.juego-msg.ok { color: var(--ok); }
+.juego-msg.warn { color: var(--warn); }
+.juego-prompt code { display: inline-block; background: var(--code-bg); color: #fff; padding: 8px 14px; border-radius: 6px; font: 600 1.1rem var(--mono); overflow-wrap: anywhere; }
+@media (hover: hover) and (pointer: fine) { .juego-op:hover { border-color: var(--accent); } }
+@media (max-width: 560px) { .juego-ops.dos { grid-template-columns: minmax(0, 1fr); } .ficha table, .ficha thead, .ficha tbody, .ficha tr, .ficha td, .ficha th { display: block; } .ficha thead { display: none; } .ficha tr { border-bottom: 1px solid var(--line); padding: 6px 0; } .ficha td { border: 0; padding: 4px 0; } }
+@media (prefers-reduced-motion: reduce) { .juego-op { transition: none; } }
+@media print {
+  body.imprimir-ficha { visibility: hidden; }
+  body.imprimir-ficha .ficha-activa, body.imprimir-ficha .ficha-activa * { visibility: visible; }
+  body.imprimir-ficha .ficha-activa { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; border: 0; }
+  body.imprimir-ficha .ficha-activa .btn { display: none; }
+}
+
+.lista-ol { list-style: none; padding: 0; margin: 12px 0; display: grid; gap: 8px; }
+.lista-ol li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-2); }
+.lista-ol li.hecho { border-color: var(--ok); background: var(--ok-soft); }
+.lista-ol label { display: flex; gap: 10px; align-items: flex-start; flex: 1 1 260px; cursor: pointer; }
+.lista-ol input { width: 20px; height: 20px; margin-top: 2px; flex: none; }
+
+/* Nivel e insignias */
+.nivel-cab { display: flex; align-items: center; gap: 12px; margin: 6px 0 10px; }
+.nivel-cab strong { display: block; font-size: 1.15rem; }
+.nivel-num { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-weight: 800; font-size: 1.2rem; flex: none; }
+.insignias { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 8px; }
+.insignias.mini { display: flex; flex-wrap: wrap; gap: 6px; font-size: 1.4rem; }
+.insignia { display: flex; gap: 10px; align-items: flex-start; padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--line); opacity: .6; }
+.insignia.on { opacity: 1; border-color: var(--ok); background: var(--ok-soft); }
+.insignia strong, .insignia .small { display: block; }
+.insignia-ico { font-size: 1.4rem; line-height: 1; }
+.insignias-todas summary { cursor: pointer; margin-top: 10px; color: var(--accent); }

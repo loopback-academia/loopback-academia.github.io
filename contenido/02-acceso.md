@@ -9,6 +9,42 @@ descripcion: Cisco IOS, VLAN, trunks, enrutamiento entre VLAN, CDP/LLDP, EtherCh
 === m2-ios | Primeros pasos con Cisco IOS | 18 | 1
 **IOS** es el sistema operativo de los routers y switches Cisco. Se maneja por línea de comandos (CLI) y en el examen tendrás que leer y escribir configuraciones.
 
+::: nota
+**¿Nunca has usado una consola?** No pasa nada. Lee esta lección con un cuaderno al lado: cada comando viene explicado y en la práctica del final el modo **🧭 Te acompaño** te dice qué escribir en cada paso, en qué modo estás y qué ha pasado después de cada comando.
+:::
+
+## Cómo se lee la consola (para quien empieza de cero)
+
+Un switch o un router Cisco no tiene pantalla ni ratón: se configura **escribiendo órdenes** (comandos) en una ventana de texto llamada **consola** o **CLI**. Lo primero que ves es el **prompt**, la «línea de espera»:
+
+```ios
+Switch>
+```
+
+- **`Switch`** es el **nombre del equipo**. Si lo cambias a `SW-OFICINA`, el prompt pasa a ser `SW-OFICINA>`.
+- **El símbolo del final** (`>`, `#`, `(config)#`…) te dice **en qué modo estás**, es decir, qué comandos puedes escribir ahí. Es como las habitaciones de una casa: cada comando se hace en su habitación.
+- Escribes el comando y pulsas **Intro** para ejecutarlo.
+- Si te equivocas, IOS responde con `% Invalid input detected` y una marca `^` debajo de donde está el fallo. No se rompe nada: vuelve a escribirlo.
+- Los comandos **no distinguen mayúsculas**, pero los **nombres y contraseñas sí** (`SW-Oficina` no es lo mismo que `SW-OFICINA`).
+
+## Ejemplo completo: cambiarle el nombre a un switch
+
+Es la primera tarea que hace cualquier técnico con un equipo nuevo. Fíjate en cómo **cambia el prompt** en cada paso:
+
+| Paso | Escribes | El prompt queda así | Qué ha pasado |
+|---|---|---|---|
+| 1 | `enable` | `Switch#` | Entras en el modo privilegiado (el `>` cambia a `#`) |
+| 2 | `configure terminal` | `Switch(config)#` | Entras en la configuración global: ya puedes cambiar cosas |
+| 3 | `hostname SW-OFICINA` | `SW-OFICINA(config)#` | El equipo ya se llama SW-OFICINA |
+| 4 | `end` | `SW-OFICINA#` | Sales de la configuración |
+| 5 | `copy running-config startup-config` | `SW-OFICINA#` | Guardas el cambio para que no se pierda al apagar |
+
+Si intentas escribir `hostname SW-OFICINA` directamente en `Switch>`, IOS dará error: **ese comando solo existe en la configuración global**. Por eso lo más importante al empezar es **mirar siempre el prompt**.
+
+::: practica
+Copia esta tabla en tu cuaderno. Después, en la práctica del final de la lección, repite estos cinco pasos tú mismo en el simulador.
+:::
+
 ## Los modos de la CLI
 
 | Modo | Indicador | Cómo se entra | Para qué |
@@ -23,6 +59,10 @@ descripcion: Cisco IOS, VLAN, trunks, enrutamiento entre VLAN, CDP/LLDP, EtherCh
 - `?` muestra la ayuda en cualquier punto; **Tab** completa el comando.
 - Los comandos se pueden abreviar mientras no sean ambiguos: `conf t`, `sh run`, `int g0/1`.
 - Desde el modo de configuración se pueden ejecutar comandos `show` anteponiendo `do`: `do show ip interface brief`.
+
+Comprueba que ya reconoces los modos con este juego (toca la respuesta correcta):
+
+[[modos:ios]]
 
 ## Configuración básica de un equipo
 
@@ -56,6 +96,10 @@ Guarda siempre con `copy running-config startup-config` (o `write memory`). `sho
 | Flash | La imagen de IOS |
 | NVRAM | startup-config |
 | RAM | running-config, tablas (MAC, rutas, ARP), IOS en ejecución |
+
+[[apuntes:basico]]
+
+[[ordena:basico]]
 
 [[cli:basico]]
 
@@ -196,6 +240,10 @@ Y al final, **guardar**: `copy running-config startup-config`. Lo que no guardas
 Configura tú mismo el router de esta oficina en el laboratorio de abajo. Después, en la sección **Práctica**, tienes los laboratorios de DHCP y NAT.
 :::
 
+[[apuntes:router]]
+
+[[ordena:router]]
+
 [[cli:router]]
 
 ::: quiz
@@ -272,6 +320,10 @@ SW1(config-if)# switchport voice vlan 50
 ```
 
 [[anim:vlan]]
+
+[[apuntes:vlan]]
+
+[[ordena:vlan]]
 
 [[cli:vlan]]
 
@@ -361,6 +413,10 @@ Dos puertos en **dynamic auto** no forman trunk. Lo recomendable es configurar l
 
 El **VLAN Trunking Protocol** propaga la lista de VLAN entre switches (modos servidor, cliente y transparente). Es arriesgado: un switch con un número de revisión mayor puede borrar las VLAN de toda la red. Muchas redes usan **modo transparente** o VTPv3.
 
+[[apuntes:trunk]]
+
+[[ordena:trunk]]
+
 [[cli:trunk]]
 
 En el simulador, el enlace entre los dos switches es de acceso y solo lleva la VLAN 1. Conviértelo en troncal.
@@ -445,6 +501,8 @@ También se puede convertir un puerto de un switch de capa 3 en **puerto enrutad
 ::: examen
 Si un switch de capa 3 no enruta entre VLAN, revisa que tenga `ip routing`. Sin ese comando las SVI funcionan como interfaces de gestión, pero no se enruta.
 :::
+
+[[apuntes:intervlan]]
 
 [[cli:intervlan]]
 

@@ -22,7 +22,7 @@ const DESCR = {
   en: 'Inglés técnico: vocabulario, lectura de errores y documentación, tickets y entrevistas.',
   base: 'Lo básico del ordenador, internet, archivos, seguridad y unidades.',
 };
-const NIVEL = ['', 'Principiante', 'Intermedio', 'Avanzado'];
+const NIVEL = ['', 'Principiante', 'Intermedio', 'Avanzado', 'Profesional'];
 const resumenEsc = e => `${NIVEL[Math.min(...e.niveles)] || ''} · ${e.modulos.slice(0, 2).join(', ')}${e.modulos.length > 2 ? '…' : ''}`;
 const cabecera = (titulo, texto) => el('div', { class: 'page-head' }, el('span', { class: 'eyebrow' }, 'Examen de entrada'), el('h1', {}, titulo), texto ? el('p', {}, texto) : null);
 
@@ -121,14 +121,17 @@ function resultado(area, bloques, superados, respuestas, fallo) {
   registrarRespuestas(respuestas, 'nivel');
   local.set('aula:nivel:' + area, { fecha: Date.now(), superados });
   const p = puntoDePartida(bloques, superados);
+  // Quien supera todo el temario del CCNA empieza en el Nivel profesional (lecciones de nivel 4).
+  const pro = !p.todo && p.leccion?.nivel === 4;
   const lista = el('ol', { class: 'nivel-escalones' }, bloques.map((bl, k) => el('li', { class: k < superados ? 'ok' : k === superados ? 'aqui' : null },
     el('span', {}, el('strong', {}, `Escalón ${bl.n}`), el('span', { class: 'small muted' }, ' · ' + resumenEsc(bl.escalon))), el('span', { class: 'small nivel-estado' }, k < superados ? 'convalidado ✓' : k === superados ? '← empiezas aquí' : ''))));
   const acciones = p.todo
     ? [el('a', { class: 'btn btn-primary', href: 'examen.html?final=' + area }, '🎓 Hacer el examen final del área'), el('a', { class: 'btn btn-ghost', href: 'curso.html?area=' + area }, 'Ver la escalera')]
-    : [el('a', { class: 'btn btn-primary', href: 'leccion.html?id=' + p.leccion.id }, `Empezar: ${p.leccion.titulo} ›`), el('a', { class: 'btn btn-ghost', href: 'curso.html?area=' + area }, 'Ver la escalera')];
+    : [el('a', { class: 'btn btn-primary', href: 'leccion.html?id=' + p.leccion.id }, pro ? '🎓 Entrar al Nivel profesional ›' : `Empezar: ${p.leccion.titulo} ›`), el('a', { class: 'btn btn-ghost', href: 'curso.html?area=' + area }, 'Ver la escalera')];
   const texto = area === 'base' && superados >= bloques.length
     ? 'Dominas lo básico: no necesitas el área «Empieza aquí». Haz su examen final si quieres el certificado, o elige ya tu camino.'
     : p.todo ? `Has superado todos los bloques de ${AREAS[area]}. Si apruebas el examen final, consigues el certificado del área.`
+      : pro ? `🎓 ¡Dominas todo el temario del CCNA! Has convalidado los escalones 1 a ${superados}. Te llevamos al Nivel profesional: el día a día del trabajo en redes, con laboratorios de varias averías a la vez, cambios en producción, OSPF multiárea, BGP y automatización.`
       : superados ? `Has convalidado ${superados === 1 ? 'el escalón 1' : `los escalones 1 a ${superados}`}. Tu punto de partida es el escalón ${p.n}.`
         : `Te conviene empezar ${AREAS[area]} desde el principio: así no te faltará ninguna base.`;
   raiz.replaceChildren(...[cabecera(`Tu resultado en ${AREAS[area]}`, texto),

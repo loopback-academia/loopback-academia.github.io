@@ -70,7 +70,7 @@ if (!r) {
     el('header', { class: 'lesson-head' },
       el('div', { class: 'crumbs' }, `Módulo ${numeroModulo(leccion.modulo)} · ${leccion.modulo.titulo}`),
       el('h1', {}, leccion.titulo),
-      el('div', { class: 'meta' }, el('span', { class: 'badge level-' + ['principiante', 'intermedio', 'avanzado'][leccion.nivel - 1] }, 'Nivel ' + leccion.nivel + ' · ' + ['Principiante', 'Intermedio', 'Avanzado'][leccion.nivel - 1]), el('span', { class: 'badge' }, leccion.minutos + ' min'), leccion.modulo.peso ? el('span', { class: 'badge badge-accent' }, 'CCNA ' + leccion.modulo.dominio.split(' ')[0]) : null, hecha() ? el('span', { class: 'badge badge-ok' }, 'Completada') : null)),
+      el('div', { class: 'meta' }, el('span', { class: 'badge level-' + ['principiante', 'intermedio', 'avanzado', 'profesional'][leccion.nivel - 1] }, 'Nivel ' + leccion.nivel + ' · ' + ['Principiante', 'Intermedio', 'Avanzado', 'Profesional'][leccion.nivel - 1]), el('span', { class: 'badge' }, leccion.minutos + ' min'), leccion.modulo.peso ? el('span', { class: 'badge badge-accent' }, 'CCNA ' + leccion.modulo.dominio.split(' ')[0]) : null, hecha() ? el('span', { class: 'badge badge-ok' }, 'Completada') : null)),
     hecha() ? null : el('p', { class: 'lesson-hint' }, el('span', { 'aria-hidden': 'true' }, '💡 '), 'Lee la lección con calma y responde el ', el('strong', {}, 'cuestionario del final'), ': con un 80 % o más la lección queda completada y se abre la siguiente.'),
     prose, quizBox,
     el('nav', { class: 'lesson-actions', 'aria-label': 'Lecciones' },

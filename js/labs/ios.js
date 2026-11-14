@@ -1045,6 +1045,7 @@ function interpretar(s, linea, anidado = false) {
   }
   const elegido = mejores[0];
   s.patrones.add(elegido.c.p);
+  s.ultimo = { p: elegido.c.p, args: elegido.args };
   return elegido.c.f(s, elegido.args) ?? '';
 }
 
@@ -1053,6 +1054,7 @@ export function ejecutar(s, linea) {
   const limpia = linea.replace(/\t/g, ' ');
   if (!limpia.trim()) return { salida: '', prompt: prompt(s) };
   if (limpia.trim() === '?') return { salida: ayuda(s), prompt: prompt(s) };
+  s.ultimo = null;
   s.historial.push(limpia.trim());
   const salida = interpretar(s, limpia);
   return { salida, prompt: prompt(s) };

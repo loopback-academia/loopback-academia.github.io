@@ -57,6 +57,8 @@ R1# clear ip nat translation *
 Errores típicos en los ejercicios de NAT: las interfaces `ip nat inside` / `ip nat outside` al revés, la ACL que no incluye la red interna, o falta la palabra **overload** (sin ella, solo un equipo podría salir a la vez con la IP de la interfaz).
 :::
 
+[[apuntes:nat]]
+
 [[cli:nat]]
 
 ::: quiz
@@ -139,6 +141,8 @@ R1(config-if)# ip address dhcp
 ```
 
 Típico en la interfaz que da al proveedor de internet.
+
+[[apuntes:dhcp]]
 
 [[cli:dhcp]]
 
@@ -484,6 +488,8 @@ SW1# show ssh
 5. En las líneas **VTY**: `login local` (usar los usuarios locales) y `transport input ssh` (rechazar Telnet).
 
 Para limitar desde dónde se puede administrar, aplica una ACL a las VTY: `access-class 10 in`.
+
+[[apuntes:ssh]]
 
 [[cli:ssh]]
 

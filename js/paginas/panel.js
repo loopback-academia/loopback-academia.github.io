@@ -9,6 +9,7 @@ import { labAccesible, leccionDeLab, minimoPara } from '../escalera.js';
 import { estadoArea, pasoSiguiente, urlExamen, urlFinal } from '../escalera-alumno.js';
 import { cargar, alCambiar, leccionHecha, notaQuiz, labHecho, examenes, racha, exportar } from '../progreso.js';
 import { montarReto } from '../reto-ui.js';
+import { logrosDe, xpDe, nivelDe } from '../logros.js';
 
 const usuario = await iniciarPagina();
 const curso = await cargarCurso().catch(() => null);
@@ -16,7 +17,7 @@ const abiertos = new Set();
 let vista = local.get('aula:panel:vista', 'niveles');
 const pedida = new URLSearchParams(location.search).get('area');
 let area = ['base', 'redes', 'bd', 'prog', 'ti', 'en', 'sec'].includes(pedida) ? pedida : local.get('aula:panel:area', 'base');
-const NIVEL_INFO = [1, 2, 3].map(n => ({ n, clave: ['principiante', 'intermedio', 'avanzado'][n - 1], titulo: ['Nivel 1 · Principiante', 'Nivel 2 · Intermedio', 'Nivel 3 · Avanzado'][n - 1] }));
+const NIVEL_INFO = [1, 2, 3, 4].map(n => ({ n, clave: ['principiante', 'intermedio', 'avanzado', 'profesional'][n - 1], titulo: ['Nivel 1 · Principiante', 'Nivel 2 · Intermedio', 'Nivel 3 · Avanzado', 'Nivel 4 · Profesional'][n - 1] }));
 // Orden de la ruta: primero todo el nivel 1, luego el 2 y luego el 3 (dentro de cada nivel, en el orden del temario).
 const delArea = () => curso.lecciones.filter(l => l.modulo.area === area);
 const ruta = () => [...delArea()].sort((a, b) => a.nivel - b.nivel);
@@ -104,6 +105,32 @@ function bloque(clave, cabecera, desc, lecciones, extra, abrirPorDefecto) {
   return det;
 }
 
+// Nivel (XP) e insignias: una meta cercana en cada visita.
+function pintarNivel() {
+  const caja = $('#nivelCard');
+  if (!caja) return;
+  const st = exportar(), r = racha();
+  const xp = xpDe(st), nv = nivelDe(xp);
+  const logros = logrosDe(st, r);
+  const conseguidos = logros.filter(l => l.conseguido), pendientes = logros.filter(l => !l.conseguido);
+  const barra = el('div', { class: 'meter' }, el('span'));
+  setMeter(barra, nv.progreso);
+  const insignia = l => el('li', { class: 'insignia' + (l.conseguido ? ' on' : ''), title: l.texto },
+    el('span', { class: 'insignia-ico', 'aria-hidden': 'true' }, l.conseguido ? l.icono : '🔒'),
+    el('span', {}, el('strong', {}, l.titulo), el('span', { class: 'small muted' }, l.texto)));
+  const todas = el('details', { class: 'insignias-todas' }, el('summary', { class: 'small' }, `Ver todas las insignias (${conseguidos.length} de ${logros.length})`),
+    el('ul', { class: 'insignias' }, ...logros.map(insignia)));
+  caja.replaceChildren(...[
+    el('h2', { class: 'small muted' }, 'TU NIVEL'),
+    el('div', { class: 'nivel-cab' }, el('span', { class: 'nivel-num' }, String(nv.actual.n)), el('div', {}, el('strong', {}, nv.actual.nombre), el('span', { class: 'small muted' }, `${xp} XP`))),
+    barra,
+    el('p', { class: 'small muted' }, nv.siguiente ? `Te faltan ${nv.faltan} XP para «${nv.siguiente.nombre}». Cada lección suma 20 XP y cada laboratorio 30.` : '¡Has llegado al nivel máximo!'),
+    pendientes.length ? el('p', { class: 'small' }, el('strong', {}, 'Próxima insignia: '), `${pendientes[0].icono} ${pendientes[0].titulo}: ${pendientes[0].texto.toLowerCase()}`) : null,
+    conseguidos.length ? el('ul', { class: 'insignias mini', 'aria-label': 'Tus insignias' }, ...conseguidos.slice(-6).map(l => el('li', { title: l.titulo + ': ' + l.texto }, l.icono))) : null,
+    todas,
+  ].filter(Boolean));
+}
+
 function pintar() {
   if (!curso) { $('#modulos').replaceChildren(el('div', { class: 'alert alert-warn' }, el('p', {}, 'No se pudo cargar el temario. Recarga la página.'))); return; }
   const todas = delArea();
@@ -111,6 +138,7 @@ function pintar() {
   const labsArea = CATALOGO.filter(l => l.area === area && !l.libre);
   $('#stLecciones').textContent = `${hechas}/${todas.length}`;
   $('#stRacha').textContent = racha();
+  pintarNivel();
   $('#stLabs').textContent = `${labsArea.filter(l => labHecho(l.progreso)).length}/${labsArea.length}`;
   $$('#areas button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.area === area)));
   $('#progresoTitulo').textContent = 'TU PROGRESO EN ' + { base: 'EMPIEZA AQUÍ', redes: 'REDES', bd: 'BASES DE DATOS', prog: 'PROGRAMACIÓN', ti: 'EMPLEO TI', en: 'INGLÉS TÉCNICO', sec: 'CIBERSEGURIDAD' }[area];

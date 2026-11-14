@@ -192,6 +192,8 @@ R1(config)# ip route 192.168.30.0 255.255.255.0 g0/1 10.0.12.2
 
 Recuerda que el tráfico es de **ida y vuelta**: si R1 tiene ruta a la LAN de R2, R2 necesita ruta de vuelta a la LAN de R1.
 
+[[apuntes:estatica]]
+
 [[cli:estatica]]
 
 Cada router solo conoce sus redes conectadas. Añade las rutas de ida y de vuelta y observa qué pasa si falta una.
@@ -250,6 +252,8 @@ Si el siguiente salto es una dirección **link-local** (FE80::), es **obligatori
 ## Laboratorio
 
 Configura un router con IPv6 de principio a fin: direcciones globales, link-local, EUI-64, rutas estáticas, ruta por defecto y verificación.
+
+[[apuntes:ipv6]]
 
 [[cli:ipv6]]
 
@@ -431,6 +435,8 @@ R1# show ip route ospf
 ```
 
 [[anim:ospf]]
+
+[[apuntes:ospf]]
 
 [[cli:ospf]]
 
