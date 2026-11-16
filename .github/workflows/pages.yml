@@ -61,7 +61,7 @@ jobs:
       - name: Preparar solo los archivos públicos
         run: |
           mkdir _site
-          cp -r *.html manifest.webmanifest css js data img vendor _site/
+          cp -r *.html manifest.webmanifest css js data img vendor sw.js .well-known _site/
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

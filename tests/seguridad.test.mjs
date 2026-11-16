@@ -87,3 +87,22 @@ test('el código de los alumnos se ejecuta aislado del resto de la web', async (
   assert.doesNotMatch(runner, /allow-same-origin/, 'nunca allow-same-origin');
   assert.match(runner, /ev\.source !== frame\.contentWindow/, 'solo escucha a su iframe');
 });
+
+test('la publicación incluye todo lo que la web necesita', async () => {
+  const flujo = await leer('.github/workflows/pages.yml');
+  const copia = flujo.match(/cp -r ([^\n]+) _site\//)?.[1].split(/\s+/) || [];
+  for (const f of ['*.html', 'manifest.webmanifest', 'sw.js', 'css', 'js', 'data', 'img', 'vendor', '.well-known'])
+    assert.ok(copia.includes(f), `falta publicar ${f}`);
+  // Todo lo que precarga el service worker debe existir en el repositorio (y por tanto publicarse).
+  const sw = await leer('sw.js');
+  for (const f of JSON.parse(sw.match(/const PRECARGA = (\[.*?\]);/)[1]).filter(f => f !== './'))
+    await readFile(new URL(f.slice(2), raiz));
+});
+
+test('security.txt es válido y no ha caducado', async () => {
+  const txt = await leer('.well-known/security.txt');
+  assert.match(txt, /^Contact: https:\/\//m);
+  const caduca = new Date(txt.match(/^Expires: (.+)$/m)[1]);
+  assert.ok(caduca > new Date(), 'security.txt caducado: renueva la fecha Expires');
+  assert.ok(caduca - new Date() < 366 * 864e5, 'Expires no debe superar un año');
+});

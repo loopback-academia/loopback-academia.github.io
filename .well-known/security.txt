@@ -1,0 +1,6 @@
+# Política para informar de fallos de seguridad en Loopback (RFC 9116).
+# Informa en privado; no abras un issue público con los detalles.
+Contact: https://github.com/loopback-academia/loopback-academia.github.io/security/advisories/new
+Expires: 2027-11-15T23:59:59.000Z
+Preferred-Languages: es, en
+Canonical: https://loopback-academia.github.io/.well-known/security.txt

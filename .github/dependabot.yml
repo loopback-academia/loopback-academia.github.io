@@ -1,0 +1,15 @@
+# Avisa (con un pull request) cuando hay versiones nuevas o parches de seguridad en las acciones de GitHub y en las
+# dependencias de desarrollo. Nada se publica solo: cada propuesta pasa por las pruebas y hay que aceptarla.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      acciones:
+        patterns: ["*"]
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly

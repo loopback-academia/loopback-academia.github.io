@@ -1,0 +1,6 @@
+# Las bibliotecas minificadas de vendor/ son de terceros (Supabase, sql.js, Pyodide) y no las escribimos nosotros;
+# las páginas .html se generan desde src/ y scripts/.
+paths-ignore:
+  - vendor
+  - node_modules
+  - "*.html"
