@@ -85,6 +85,7 @@ begin
   if v_uid is null then raise exception 'Sin sesión'; end if;
   if not public.sesion_segura() then raise exception 'Verifica tu segundo factor'; end if;
   if char_length(btrim(coalesce(p_nombre, ''))) not between 1 and 80 then raise exception 'El nombre debe tener entre 1 y 80 caracteres'; end if;
+  perform pg_advisory_xact_lock(hashtextextended('clases:' || v_uid::text, 0));  -- evita superar el límite con peticiones simultáneas
   if (select count(*) from public.clases where profesor = v_uid) >= 20 then raise exception 'Límite de 20 clases alcanzado'; end if;
   loop
     -- 10 bytes aleatorios de un UUID v4 (se saltan los bytes 6 y 8, que llevan la versión y la variante)
@@ -113,6 +114,9 @@ begin
   select * into v_clase from public.clases c where c.codigo = upper(regexp_replace(coalesce(p_codigo, ''), '[^A-Za-z0-9]', '', 'g'));
   if v_clase.id is null then raise exception 'No hay ninguna clase con ese código'; end if;
   if v_clase.profesor = v_uid then raise exception 'Eres el profesor de esta clase'; end if;
+  -- Bloqueos (siempre en este orden: alumno y luego clase) para que las uniones simultáneas no superen los límites.
+  perform pg_advisory_xact_lock(hashtextextended('miembro:' || v_uid::text, 0));
+  perform pg_advisory_xact_lock(hashtextextended('clase:' || v_clase.id::text, 0));
   if not exists (select 1 from public.clase_miembros m where m.clase_id = v_clase.id and m.user_id = v_uid) then
     if (select count(*) from public.clase_miembros m where m.clase_id = v_clase.id) >= 300 then raise exception 'La clase está llena'; end if;
     if (select count(*) from public.clase_miembros m where m.user_id = v_uid) >= 20 then raise exception 'Límite de 20 clases alcanzado'; end if;

@@ -72,6 +72,7 @@ test('RLS y permisos de la base de datos', { skip: !PGlite && 'falta @electric-s
     assert.equal((await filas('select public.tutor_consumir(3) as n'))[0].n, 2);
     await filas('select public.tutor_consumir(3)'); await filas('select public.tutor_consumir(3)');
     assert.equal((await filas('select public.tutor_consumir(3) as n'))[0].n, -1);
+    await falla('select public.tutor_consumir(500)', /Límite no válido/);  // el alumno no puede subirse el límite
     await falla(`update public.tutor_uso set mensajes = 0`, /permission denied/);
     await falla(`select public.tutor_devolver('${A}')`, /permission denied/);
     await como('service_role', null);

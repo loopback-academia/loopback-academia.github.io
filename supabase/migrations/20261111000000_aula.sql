@@ -80,6 +80,9 @@ grant select on public.tutor_uso to authenticated;
 create or replace function public.limitar_examenes() returns trigger
 language plpgsql security definer set search_path = '' as $$
 begin
+  -- Bloqueo por usuario hasta el final de la transacción: varias inserciones simultáneas del mismo alumno se
+  -- atienden de una en una, así no pueden contar a la vez y superar el límite.
+  perform pg_advisory_xact_lock(hashtextextended('examenes:' || new.user_id::text, 0));
   if (select count(*) from public.examenes where user_id = new.user_id) >= 200 then
     raise exception 'Límite de simulacros guardados alcanzado';
   end if;
@@ -92,6 +95,9 @@ create trigger limitar_examenes before insert on public.examenes for each row ex
 create or replace function public.limitar_progreso() returns trigger
 language plpgsql security definer set search_path = '' as $$
 begin
+  -- Bloqueo por usuario hasta el final de la transacción: varias inserciones simultáneas del mismo alumno se
+  -- atienden de una en una, así no pueden contar a la vez y superar el límite.
+  perform pg_advisory_xact_lock(hashtextextended('progreso:' || new.user_id::text, 0));
   if (select count(*) from public.progreso where user_id = new.user_id) >= 1000 then
     raise exception 'Límite de elementos de progreso alcanzado';
   end if;
@@ -111,7 +117,8 @@ declare
   v_n   integer;
 begin
   if v_uid is null then raise exception 'Sin sesión'; end if;
-  if p_limite < 1 or p_limite > 500 then raise exception 'Límite no válido'; end if;
+  -- El límite lo fija el servidor; el cliente solo puede pedir uno igual o más bajo que el máximo (40).
+  if p_limite < 1 or p_limite > 40 then raise exception 'Límite no válido'; end if;
   if not public.sesion_segura() then
     raise exception 'Verifica tu segundo factor';
   end if;
