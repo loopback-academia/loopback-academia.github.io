@@ -10,6 +10,9 @@ import { aprueba, minimoPara, elegirPreguntas, bancoDe } from '../escalera.js';
 import { generarPreguntas, comprobar } from '../examen/generadas.js';
 import { activarModoExamen, pedirPantallaCompleta, textoInvisible } from '../examen/integridad.js';
 import { escaleraDe, estadoArea, urlExamen, urlFinal, pasoSiguiente } from '../escalera-alumno.js';
+import { supabase, cuentasActivas } from '../auth.js';
+import { prepararPregunta as prepararDelServidor, respuestasParaServidor, temasOrdenados, finLocal, mensajeFinal, MINIMO, INTENTOS_DIA } from '../finales.js';
+import { faltaMigracion } from '../profesor.js';
 
 const usuario = await iniciarPagina();
 const raiz = $('#examen');
@@ -203,6 +206,178 @@ function jugar({ titulo, clave, preguntas, alAprobar, area, minutos }) {
   pregunta();
 }
 
+// ---------------------------------------------------------------- examen final oficial (corregido en el servidor)
+// Preguntas exclusivas que solo existen en el servidor; la nota la calcula y guarda el servidor; al terminar solo se ve
+// la nota y el resultado por tema. Es el que da el certificado verificable.
+const MINUTOS_OFICIAL = 40;
+const PREGUNTAS_OFICIAL = 25;
+
+async function finalOficial(area) {
+  const titulo = `Examen final oficial · ${AREAS[area]}`;
+  const sb = supabase();
+  const desde = new Date(Date.now() - 864e5).toISOString();
+  const { data: previos, error } = await sb.from('intentos_final').select('iniciado, entregado, puntos, total, aprobado').eq('area', area).order('iniciado', { ascending: false }).limit(50);
+  if (error && faltaMigracion(error)) { examenLocal(area, false); return; } // instalación sin exámenes verificados
+  const hoy = (previos || []).filter(i => i.iniciado > desde).length;
+  const mejor = (previos || []).filter(i => i.entregado && i.total).sort((a, b) => b.puntos / b.total - a.puntos / a.total)[0];
+  const aprobado = (previos || []).some(i => i.aprobado);
+  const btn = el('button', { type: 'button', class: 'btn btn-primary btn-lg' }, 'Empezar el examen oficial');
+  const msg = el('p', { class: 'alert alert-warn', role: 'alert', hidden: true });
+  btn.addEventListener('click', async () => {
+    btn.disabled = true; btn.textContent = 'Preparando tu examen…';
+    const r = await sb.rpc('final_iniciar', { p_area: area });
+    if (r.error) { msg.hidden = false; msg.textContent = mensajeFinal(r.error); btn.disabled = false; btn.textContent = 'Empezar el examen oficial'; return; }
+    pedirPantallaCompleta();
+    jugarOficial({ titulo, area, datos: r.data });
+  });
+  const practicar = el('a', { class: 'btn btn-ghost', href: `examen.html?final=${area}&practica=1` }, 'Hacer antes un simulacro de práctica');
+  raiz.replaceChildren(cabecera('Examen final del área', titulo, 'Es el examen que da el certificado verificable de Loopback. Sus preguntas son exclusivas: no aparecen en las lecciones ni en los simulacros.'),
+    el('div', { class: 'card' },
+      aprobado ? el('p', { class: 'alert alert-ok mb' }, el('span', {}, `✓ Ya lo aprobaste${mejor ? ` (mejor nota ${pct(mejor.puntos, mejor.total)} %)` : ''}. `, el('a', { href: 'certificado.html?area=' + area }, 'Ver mi certificado'), '.'))
+        : mejor ? el('p', { class: 'alert alert-info mb' }, el('span', {}, `Tu mejor nota hasta ahora: ${pct(mejor.puntos, mejor.total)} %. Necesitas un ${MINIMO} %.`)) : null,
+      el('ul', { class: 'exam-rules' },
+        el('li', {}, `${PREGUNTAS_OFICIAL} preguntas y ${MINUTOS_OFICIAL} minutos. El tiempo lo controla el servidor: si recargas la página, el examen continúa donde estaba.`),
+        el('li', {}, `Apruebas con un ${MINIMO} % o más. El servidor corrige y guarda la nota: nadie puede cambiarla.`),
+        el('li', {}, `Máximo ${INTENTOS_DIA} intentos cada 24 horas. Llevas ${hoy} de ${INTENTOS_DIA}.`),
+        el('li', {}, `Modo examen: no se puede copiar, imprimir ni salir de la pantalla. Si sales ${MAX_SALIDAS} veces, se entrega solo.`),
+        el('li', {}, 'Al terminar verás tu nota y tu resultado por tema, pero no las respuestas: así el examen sigue midiendo lo que sabes.')),
+      msg, el('div', { class: 'hero-cta' }, btn, practicar)));
+}
+
+function jugarOficial({ titulo, area, datos }) {
+  const clave = 'aula:oficial:' + datos.intento;
+  const guardado = local.get(clave, { r: {}, i: 0 });
+  const respuestas = Object.fromEntries(Object.entries(guardado.r).map(([k, v]) => [k, new Set(v)]));
+  const preguntas = datos.preguntas.map(p => prepararDelServidor(p));
+  const finExamen = finLocal(datos);
+  let i = Math.min(guardado.i || 0, preguntas.length - 1), terminado = false, porSalidas = false;
+  const persistir = () => local.set(clave, { r: Object.fromEntries(Object.entries(respuestas).map(([k, v]) => [k, [...v]])), i });
+  const marca = `${usuario?.nombre || usuario?.email || ''} · ${new Date().toLocaleString('es')} · ${datos.intento.slice(0, 8)} · Loopback`;
+  const timer = el('span', { class: 'timer', 'aria-label': 'Tiempo restante' });
+  const meter = el('div', { class: 'meter' }, el('span'));
+  const contador = el('span', { class: 'small muted' });
+  const caja = el('div', { class: 'card' });
+  const aviso = el('p', { class: 'exam-aviso', role: 'alert', hidden: true });
+  const salirAviso = e => { e.preventDefault(); e.returnValue = ''; };
+  addEventListener('beforeunload', salirAviso);
+  raiz.replaceChildren(el('p', { class: 'small muted' }, titulo), el('div', { class: 'exam-bar' }, contador, meter, timer), aviso, caja);
+  const modo = activarModoExamen({ contenedor: caja, marca, maxSalidas: MAX_SALIDAS, toast,
+    alSalir: n => { aviso.hidden = false; aviso.textContent = n < MAX_SALIDAS ? `⚠ Saliste de la pantalla del examen (${n} de ${MAX_SALIDAS}). Si llegas a ${MAX_SALIDAS}, el examen se entrega con lo que lleves.` : 'Has salido de la pantalla demasiadas veces: el examen se ha entregado.'; },
+    alAgotar: () => { porSalidas = true; entregar(); } });
+  const reloj = setInterval(tic, 1000);
+  function tic() {
+    const quedan = Math.max(0, Math.ceil((finExamen - Date.now()) / 1000));
+    timer.textContent = `${Math.floor(quedan / 60)}:${String(quedan % 60).padStart(2, '0')}`;
+    timer.classList.toggle('low', quedan < 120);
+    if (!quedan) entregar();
+  }
+  tic();
+
+  function pregunta() {
+    const q = preguntas[i];
+    contador.textContent = `Pregunta ${i + 1} de ${preguntas.length}`;
+    setMeter(meter, i / preguntas.length);
+    const siguiente = el('button', { type: 'submit', class: 'btn btn-primary', disabled: !respuestas[q.id]?.size }, i === preguntas.length - 1 ? 'Terminar y entregar' : 'Siguiente');
+    const mitad = Math.max(1, q.texto.indexOf(' ', Math.floor(q.texto.length / 2)));
+    const multiple = q.elige > 1;
+    const enunciado = el('legend', { class: 'exam-enunciado' }, q.texto.slice(0, mitad), textoInvisible(el), q.texto.slice(mitad) + (multiple && !/\(elige \d\)/.test(q.texto) ? ` (elige ${q.elige})` : ''));
+    const form = el('form', { class: 'question exam-q', autocomplete: 'off' }, el('fieldset', {}, enunciado,
+      q.opciones.map(o => el('label', { class: 'option' }, el('input', { type: multiple ? 'checkbox' : 'radio', name: 'r', value: String(o.i), checked: respuestas[q.id]?.has(o.i) }), el('span', {}, o.texto)))),
+      el('div', { class: 'quiz-head' }, el('span', { class: 'small muted' }, q.dominio), siguiente));
+    form.addEventListener('change', () => {
+      respuestas[q.id] = new Set([...form.querySelectorAll('input:checked')].map(x => Number(x.value)));
+      siguiente.disabled = !respuestas[q.id].size;
+      persistir();
+    });
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      i++;
+      persistir();
+      if (i < preguntas.length) pregunta(); else entregar();
+    });
+    caja.replaceChildren(form);
+    form.querySelector('input').focus({ preventScroll: true });
+  }
+
+  async function entregar() {
+    if (terminado) return;
+    terminado = true;
+    clearInterval(reloj);
+    modo.desactivar();
+    caja.replaceChildren(el('p', { class: 'muted' }, 'Entregando y corrigiendo tu examen…'));
+    const r = await supabase().rpc('final_entregar', { p_intento: datos.intento, p_respuestas: respuestasParaServidor(respuestas) });
+    if (r.error && !/ya se entregó/i.test(r.error.message || '')) {
+      // Sin conexión u otro fallo: las respuestas siguen guardadas; se puede reintentar (el servidor da 2 minutos de margen).
+      terminado = false;
+      const otra = el('button', { type: 'button', class: 'btn btn-primary' }, 'Reintentar la entrega');
+      otra.addEventListener('click', entregar);
+      caja.replaceChildren(el('p', { class: 'alert alert-warn' }, mensajeFinal(r.error)), otra);
+      return;
+    }
+    removeEventListener('beforeunload', salirAviso);
+    local.del(clave);
+    if (r.error) { location.reload(); return; }
+    resultadoOficial({ titulo, area, nota: r.data, porSalidas, salidas: modo.salidas });
+  }
+  pregunta();
+}
+
+async function resultadoOficial({ titulo, area, nota, porSalidas, salidas }) {
+  const ok = nota.aprobado;
+  if (ok) await guardarQuiz('final-' + area, nota.puntos, nota.total); // la escalera del área queda completada
+  const temas = temasOrdenados(nota.temas);
+  raiz.replaceChildren(...[
+    el('div', { class: 'page-head exam-result ' + (ok ? 'ok' : 'bad') }, el('span', { class: 'eyebrow' }, titulo), el('h1', {}, `${nota.nota} %`),
+      el('p', {}, `${nota.puntos} de ${nota.total} correctas (mínimo ${MINIMO} %). `, el('strong', {}, ok ? 'Aprobado.' : 'No aprobado todavía.')),
+      nota.tarde ? el('p', { class: 'alert alert-warn' }, el('span', {}, 'El examen se entregó después de la hora límite, así que no cuenta ninguna respuesta.')) : null,
+      porSalidas ? el('p', { class: 'alert alert-warn' }, el('span', {}, `El examen se entregó solo porque saliste de la pantalla ${MAX_SALIDAS} veces.`)) : salidas ? el('p', { class: 'small muted' }, `Salidas de la pantalla durante el examen: ${salidas}.`) : null),
+    ok ? el('div', { class: 'card' }, el('h2', {}, '🎓 Área completada'), el('p', {}, 'Tu nota está guardada en el servidor. Ya puedes obtener tu certificado verificable.'),
+      el('a', { class: 'btn btn-primary', href: 'certificado.html?area=' + area }, 'Obtener mi certificado →')) : null,
+    ok && area === 'base' ? siguienteCamino() : null,
+    el('div', { class: 'card mt' }, el('h2', {}, 'Tu resultado por tema'),
+      el('p', { class: 'small muted' }, ok ? 'Para que sigas mejorando.' : 'Repasa primero los temas con menos aciertos. No mostramos las preguntas ni las respuestas: el examen debe medir lo que sabes.'),
+      el('ul', { class: 'plain-list temas-final' }, temas.map(x => {
+        const m = el('div', { class: 'meter' }, el('span'));
+        setMeter(m, x.t ? x.p / x.t : 0);
+        return el('li', {}, el('div', { class: 'tema-cab' }, el('strong', {}, x.tema), el('span', { class: 'small muted' }, `${x.p} de ${x.t} · ${x.pct} %`)), m);
+      }))),
+    el('div', { class: 'hero-cta' },
+      ok ? null : el('a', { class: 'btn btn-primary', href: 'curso.html?area=' + area }, 'Repasar en la escalera'),
+      el('a', { class: 'btn btn-ghost', href: 'examen.html' }, 'Todos mis exámenes'))].filter(Boolean));
+  scrollTo({ top: 0 });
+}
+
+// Examen final con las preguntas públicas de las lecciones, corregido en el navegador: simulacro de práctica, o el
+// examen final de las instalaciones sin cuentas.
+function examenLocal(area, practica) {
+  const titulo = practica ? `Simulacro del examen final · ${AREAS[area]}` : `Examen final · ${AREAS[area]}`;
+  const pool = banco.filter(q => q.area === area && !q.dup);
+  const tope = Math.floor(pool.length / 2);
+  const tamanos = [...new Set([20, 50].filter(t => t <= tope).concat(tope < 50 ? [tope] : []))].sort((a, b) => a - b); // en una hora: hasta 50 preguntas
+  // Redes: reparto según el peso de cada dominio del CCNA. Otras áreas: todos los módulos por igual.
+  const pesos = Object.fromEntries(curso.modulos.filter(m => m.area === area && (area !== 'redes' || m.peso > 0)).map(m => [m.id, area === 'redes' ? m.peso : 1]));
+  const porModulo = {};
+  for (const q of pool) if (pesos[q.modulo]) (porModulo[q.modulo] ||= []).push(q);
+  inicio({ titulo, ceja: practica ? 'Simulacro de práctica' : 'Examen final del área', area, clave: (practica ? 'practica-final-' : 'final-') + area, minutos: MINUTOS_FINAL,
+    descripcion: (practica ? 'Simulacro con las preguntas de las lecciones: no da certificado ni cuenta para la escalera. ' : '') + (area === 'redes' ? 'Preguntas de todo el temario, repartidas con el peso de cada dominio del CCNA real.' : 'Preguntas de todos los módulos del área.'),
+    tamanos,
+    generar: n => {
+      const generadas = Math.min(6, Math.max(3, Math.round(n / 10)));
+      const cupo = repartir(n - generadas, pesos, Object.fromEntries(Object.entries(porModulo).map(([k, v]) => [k, v.length])));
+      const prev = intentos('final-' + area);
+      return conGeneradas(area, Object.entries(cupo).flatMap(([id, k]) => elegirPreguntas(porModulo[id], k, prev)), generadas);
+    },
+    alAprobar: () => practica
+      ? { texto: 'Simulacro aprobado: estás preparado para el examen final oficial.', href: urlFinal(area), boton: 'Ir al examen oficial →' }
+      : { texto: 'Has completado toda la escalera de esta área. Ya puedes obtener tu certificado de Loopback.', href: 'certificado.html?area=' + area, boton: '🎓 Obtener mi certificado →' } });
+}
+
+function sinCuenta(area) {
+  raiz.replaceChildren(cabecera('Examen final del área', `Examen final oficial · ${AREAS[area]}`, 'El examen final oficial se hace con tu cuenta gratuita: así la nota queda guardada en el servidor y tu certificado se puede verificar.'),
+    el('div', { class: 'card' }, el('p', {}, 'Entra o crea tu cuenta para hacerlo. Mientras tanto, puedes practicar con un simulacro.'),
+      el('div', { class: 'hero-cta' }, el('a', { class: 'btn btn-primary', href: 'cuenta.html' }, 'Entrar o crear cuenta'), el('a', { class: 'btn btn-ghost', href: `examen.html?final=${area}&practica=1` }, 'Hacer un simulacro de práctica'))));
+}
+
 // ---------------------------------------------------------------- modos
 const escId = params.get('escalon');
 const finalArea = params.get('final');
@@ -225,25 +400,9 @@ if (escId && AREAS[escId.split('-')[0]] && escaleraDe(curso, escId.split('-')[0]
   }
 } else if (finalArea && AREAS[finalArea]) {
   const area = finalArea;
-  const titulo = `Examen final · ${AREAS[area]}`;
-  if (estadoArea(curso, area).final === 'bloqueado') bloqueado(titulo, area);
-  else {
-    const pool = banco.filter(q => q.area === area && !q.dup);
-    const tope = Math.floor(pool.length / 2);
-    const tamanos = [...new Set([20, 50].filter(t => t <= tope).concat(tope < 50 ? [tope] : []))].sort((a, b) => a - b); // en una hora: hasta 50 preguntas
-    // Redes: reparto según el peso de cada dominio del CCNA. Otras áreas: todos los módulos por igual.
-    const pesos = Object.fromEntries(curso.modulos.filter(m => m.area === area && (area !== 'redes' || m.peso > 0)).map(m => [m.id, area === 'redes' ? m.peso : 1]));
-    const porModulo = {};
-    for (const q of pool) if (pesos[q.modulo]) (porModulo[q.modulo] ||= []).push(q);
-    inicio({ titulo, ceja: 'Examen final del área', area, clave: 'final-' + area, minutos: MINUTOS_FINAL,
-      descripcion: area === 'redes' ? 'Preguntas de todo el temario, repartidas con el peso de cada dominio del CCNA real.' : 'Preguntas de todos los módulos del área.',
-      tamanos,
-      generar: n => {
-        const generadas = Math.min(6, Math.max(3, Math.round(n / 10)));
-        const cupo = repartir(n - generadas, pesos, Object.fromEntries(Object.entries(porModulo).map(([k, v]) => [k, v.length])));
-        const prev = intentos('final-' + area);
-        return conGeneradas(area, Object.entries(cupo).flatMap(([id, k]) => elegirPreguntas(porModulo[id], k, prev)), generadas);
-      },
-      alAprobar: () => ({ texto: 'Has completado toda la escalera de esta área. Ya puedes obtener tu certificado de Loopback.', href: 'certificado.html?area=' + area, boton: '🎓 Obtener mi certificado →' }) });
-  }
+  if (estadoArea(curso, area).final === 'bloqueado') bloqueado(`Examen final · ${AREAS[area]}`, area);
+  else if (!cuentasActivas()) examenLocal(area, false);
+  else if (params.has('practica')) examenLocal(area, true);
+  else if (!usuario) sinCuenta(area);
+  else finalOficial(area);
 } else centro();

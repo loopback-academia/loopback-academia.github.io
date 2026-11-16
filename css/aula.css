@@ -1364,3 +1364,34 @@ a.goal, a.goal strong, a.goal span { text-decoration: none; }
 .insignia strong, .insignia .small { display: block; }
 .insignia-ico { font-size: 1.4rem; line-height: 1; }
 .insignias-todas summary { cursor: pointer; margin-top: 10px; color: var(--accent); }
+
+/* ---------------------------------------------------------------- examen final oficial, certificados verificables y administración */
+.temas-final li { display: grid; gap: 6px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.temas-final li:last-child { border-bottom: 0; }
+.tema-cab { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.cert-verificable { text-align: center; margin-top: 12px; }
+.verif-ok { border-color: color-mix(in srgb, #2f9e44 45%, var(--line)); }
+.verif-mal { border-color: color-mix(in srgb, #e8590c 45%, var(--line)); }
+.verif-datos { display: grid; grid-template-columns: max-content 1fr; gap: 8px 18px; margin: 14px 0; }
+.verif-datos dt { color: var(--muted); }
+.verif-datos dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+.admin-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; }
+.admin-tile { padding: 18px; }
+.admin-barras { display: flex; align-items: flex-end; gap: 6px; height: 180px; padding-top: 34px; overflow-x: auto; }
+.admin-col { flex: 1 0 34px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; height: 100%; }
+.admin-barra { position: relative; display: block; width: 70%; max-width: 40px; height: max(2px, calc(var(--h, 0) * 120px)); background: var(--accent); border-radius: 4px 4px 0 0; outline-offset: 3px; }
+.admin-barra::after { content: attr(data-valor); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: .76rem; padding: 4px 8px; border-radius: 6px; background: var(--ink); color: var(--bg); opacity: 0; pointer-events: none; transition: opacity 120ms ease; z-index: 2; }
+.admin-col:hover .admin-barra::after, .admin-barra:focus-visible::after { opacity: 1; }
+.admin-eje { font-size: .7rem; color: var(--muted); white-space: nowrap; }
+.admin-tabla { border-collapse: collapse; width: 100%; }
+.admin-tabla td, .admin-tabla th { padding: 9px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+.admin-tabla thead th { font-size: .8rem; color: var(--muted); font-weight: 600; min-width: 84px; }
+.admin-tabla tbody th { white-space: nowrap; }
+.admin-tabla tbody tr:last-child > * { border-bottom: 0; }
+.admin-col:first-child .admin-barra::after, .admin-col:nth-child(2) .admin-barra::after { left: 0; transform: none; }
+.admin-col:last-child .admin-barra::after, .admin-col:nth-last-child(2) .admin-barra::after { left: auto; right: 0; transform: none; }
+.admin-meter { height: 5px; margin-top: 4px; min-width: 80px; }
+.admin-falta { color: #c92a2a; font-weight: 700; }
+.admin-dificiles li { margin-bottom: 12px; }
+.admin-dificiles li p { margin: 0; }
+@media (prefers-reduced-motion: reduce) { .admin-barra::after { transition: none; } }

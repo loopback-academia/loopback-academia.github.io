@@ -4,3 +4,6 @@ node_modules/
 .env
 .env.*
 supabase/.temp/
+# Banco privado de preguntas del examen final: nunca al repositorio público
+banco_final_datos.sql
+privado/

@@ -38,6 +38,9 @@ Plataforma de aprendizaje **para empezar desde cero**: un área inicial, **Empie
 | **Buscador del curso** | Desde cualquier página, encuentra las lecciones y el fragmento que responden a una duda |
 | **Ejecución paso a paso** | Python ejecutado línea a línea: la línea actual, las variables de cada marco de la pila (con lo que cambia resaltado y el número de objeto de cada lista) y la salida. En 6 programas comentados con preguntas y en todos los ejercicios de Python |
 | **Panel del profesor** | El profesor crea una clase con un código, ve el progreso de cada alumno por área (lecciones, prácticas, escalones y examen final) y lo descarga en CSV. El alumno se une aceptando compartir su progreso con un alias, sin mostrar su correo, y puede salir cuando quiera |
+| **Exámenes finales oficiales** | Preguntas exclusivas que solo existen en el servidor (no en la web ni en el repositorio), corrección y nota guardadas por el servidor, tiempo controlado por el servidor, 2 intentos al día y resultado por tema sin revelar respuestas |
+| **Certificados verificables** | Se emiten con un examen final oficial aprobado, con nombre fijo y un código que cualquiera puede comprobar en `verificar.html` |
+| **Panel de administración** | Estadísticas agregadas (altas, actividad, áreas, aprobados, preguntas más falladas) solo para administradores con verificación en dos pasos |
 | **Cuentas** | Registro con confirmación por correo, verificación en dos pasos y progreso sincronizado |
 
 ## Lenguajes y tecnologías

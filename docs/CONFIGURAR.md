@@ -9,6 +9,14 @@ Se hace una sola vez. Necesitas una cuenta gratuita de [Supabase](https://supaba
 1. En supabase.com → **New project**. Elige una región cercana a tus alumnos y una contraseña fuerte para la base de datos.
 2. **SQL Editor → New query**: pega todo `supabase/migrations/20261111000000_aula.sql` y pulsa **Run**. Se puede repetir sin problemas.
 3. Para el **panel del profesor** (clases con código): en otra consulta, pega `supabase/migrations/20261112000000_profesor.sql` y pulsa **Run**. También se puede repetir. Hasta que lo hagas, la página Clases avisa de que no está activado y el resto de la web funciona igual.
+4. Para los **exámenes finales oficiales, los certificados verificables y el panel de administración**: en otra consulta, pega `supabase/migrations/20261116000000_finales.sql` y pulsa **Run** (después de las dos anteriores).
+5. Carga el **banco privado de preguntas** del examen final con el archivo `banco_final_datos.sql`. Ese archivo **no está en el repositorio a propósito**: si estuviera, cualquiera podría leer las respuestas. Guárdalo en un lugar privado. Se puede volver a ejecutar para actualizar las preguntas; cada examen usa 25, así que cada área necesita al menos 25 preguntas activas (el panel de administración avisa si faltan). También puedes añadir o desactivar preguntas en **Table Editor → banco_final**.
+6. Para darte acceso al **panel de administración** (`admin.html`), activa primero la verificación en dos pasos en tu cuenta de Loopback y ejecuta, con tu correo:
+   ```sql
+   insert into public.administradores (user_id)
+   select id from auth.users where email = 'TU_CORREO' on conflict do nothing;
+   ```
+   El panel solo muestra cifras agregadas y exige una sesión con el segundo factor verificado. Aparece un enlace en **Tu cuenta**.
 
 Las migraciones se prueban solas en la integración continua contra un PostgreSQL que imita Supabase (`scripts/probar-sql.sh` y `supabase/pruebas/`): permisos de cada usuario, verificación en dos pasos y que nadie lee el progreso de quien no se ha unido a su clase.
 

@@ -1,14 +1,17 @@
 <!--{"title": "Privacidad · Loopback", "description": "Qué datos guarda Loopback y cómo se protegen.", "script": "simple.js"}-->
 <article class="page legal"><div class="narrow">
   <h1>Política de privacidad</h1>
-  <p class="muted">Última actualización: 11 de noviembre de 2026</p>
+  <p class="muted">Última actualización: 16 de noviembre de 2026</p>
   <h2>Qué datos guardamos</h2>
   <ul>
     <li><strong>Cuenta:</strong> tu correo y, si lo indicas, tu nombre. La contraseña la gestiona Supabase Auth y se guarda cifrada con un hash; nadie puede leerla.</li>
     <li><strong>Progreso:</strong> lecciones completadas, notas de los cuestionarios, laboratorios terminados, resultados de los simulacros y los días en que estudiaste.</li>
+    <li><strong>Exámenes finales oficiales:</strong> la fecha y hora de cada intento, si acertaste o fallaste cada pregunta y tu nota. Los corrige y guarda el servidor para que la nota no se pueda falsificar.</li>
+    <li><strong>Certificados:</strong> el nombre que escribas al emitirlo, el área, la nota y la fecha. Cualquier persona que tenga el código de tu certificado puede comprobar esos cuatro datos en la página de verificación; nada más.</li>
+    <li><strong>Clases:</strong> si te unes a la clase de un profesor, el nombre que elijas para la clase. El profesor ve ese nombre y tu progreso, nunca tu correo, y puedes salir de la clase cuando quieras.</li>
   </ul>
   <h2>Para qué</h2>
-  <p>Solo para que puedas iniciar sesión y continuar tu curso en cualquier dispositivo. No hay publicidad, no se venden datos y no se usan herramientas de analítica de terceros.</p>
+  <p>Solo para que puedas iniciar sesión y continuar tu curso en cualquier dispositivo. No hay publicidad, no se venden datos y no se usan herramientas de analítica de terceros. La administración de Loopback solo ve cifras agregadas de toda la plataforma (por ejemplo, cuántos alumnos aprobaron un examen o qué preguntas se fallan más), nunca datos que te identifiquen.</p>
   <h2>Quién los trata</h2>
   <ul>
     <li><strong>Supabase</strong> (base de datos y autenticación).</li>
@@ -17,5 +20,5 @@
   <h2>Seguridad</h2>
   <p>Toda la comunicación va cifrada (HTTPS). Cada alumno solo puede acceder a sus propios datos gracias a la seguridad a nivel de fila (Row Level Security) de la base de datos. Puedes activar la verificación en dos pasos en tu cuenta.</p>
   <h2>Tus derechos</h2>
-  <p>Desde <a href="cuenta.html">tu cuenta</a> puedes descargar tus datos, borrar tu progreso o eliminar la cuenta por completo.</p>
+  <p>Desde <a href="cuenta.html">tu cuenta</a> puedes descargar tus datos, borrar tu progreso o eliminar la cuenta por completo. Al eliminar la cuenta se borran también tus exámenes oficiales y tus certificados, que dejan de poder verificarse.</p>
 </div></article>

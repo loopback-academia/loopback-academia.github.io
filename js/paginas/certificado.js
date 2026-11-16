@@ -4,7 +4,10 @@ import { iniciarPagina, el, $, local } from '../core.js';
 import { cargarCurso } from '../curso.js';
 import { cargar, notaQuiz } from '../progreso.js';
 import { escaleraDe, estadoArea, pasoSiguiente } from '../escalera-alumno.js';
-import { TITULO_AREA, FIRMA, CARGO_FIRMA, AVISO, datosCertificado, fechaLarga } from '../certificado.js';
+import { TITULO_AREA, FIRMA, CARGO_FIRMA, AVISO, datosCertificado, datosVerificado, fechaLarga } from '../certificado.js';
+import { supabase, cuentasActivas, mensajeError } from '../auth.js';
+import { faltaMigracion } from '../profesor.js';
+import { CONFIG } from '../config.js';
 
 const usuario = await iniciarPagina();
 const [curso] = await Promise.all([cargarCurso(), cargar()]);
@@ -48,6 +51,7 @@ function dibujar(d) {
     t(W - 300, 590, fechaLarga(d.fecha), { 'font-family': 'Georgia, serif', 'font-size': 22, fill: '#14213d' }),
     el('line', { x1: W - 430, y1: 606, x2: W - 170, y2: 606, stroke: '#14213d', 'stroke-width': 1.2 }),
     t(W - 300, 628, `Fecha · Código ${d.codigo}`, { 'font-family': 'Inter, system-ui, sans-serif', 'font-size': 14, fill: '#33405a' }),
+    d.verificar ? t(W - 300, 650, 'Compruébalo en ' + d.verificar.replace(/^https?:\/\//, '').replace(/\?.*$/, ''), { 'font-family': 'Inter, system-ui, sans-serif', 'font-size': 12.5, fill: '#5b6678' }) : null,
     // Aviso
     ...aviso.map((l, i) => t(W / 2, 688 + i * 17, l, { 'font-family': 'Inter, system-ui, sans-serif', 'font-size': 12.5, fill: '#6b7689' })));
 }
@@ -85,13 +89,15 @@ function certificado(d) {
   png.addEventListener('click', () => descargarPNG(svg, `certificado-loopback-${d.area}.png`));
   const pdf = el('button', { type: 'button', class: 'btn btn-ghost' }, '🖨 Imprimir o guardar como PDF');
   pdf.addEventListener('click', () => print());
-  const cambiar = usuario ? null : el('button', { type: 'button', class: 'btn btn-quiet' }, 'Cambiar el nombre');
+  const cambiar = usuario || d.verificar ? null : el('button', { type: 'button', class: 'btn btn-quiet' }, 'Cambiar el nombre');
   cambiar?.addEventListener('click', () => raiz.replaceChildren(pedirNombre(n => pintarArea(n))));
+  const comprobar = d.verificar ? el('a', { class: 'btn btn-quiet', href: d.verificar, target: '_blank', rel: 'noopener' }, '✓ Comprobar su validez') : null;
   raiz.replaceChildren(
     el('div', { class: 'page-head cert-head' }, el('span', { class: 'eyebrow' }, 'Tu certificado'), el('h1', {}, d.titulo),
       el('p', {}, 'Lo emite Loopback para reconocer tu esfuerzo. No es un título oficial ni está avalado por ninguna institución o empresa, y no influye en conseguir un empleo: lo que cuenta es lo que sabes hacer.')),
     el('div', { class: 'cert-marco' }, svg),
-    el('div', { class: 'hero-cta cert-acciones' }, png, pdf, cambiar, el('a', { class: 'btn btn-quiet', href: 'certificado.html' }, 'Todos mis certificados')));
+    d.verificar ? el('p', { class: 'small muted cert-verificable' }, `Certificado verificable · código ${d.codigo}. Cualquiera puede comprobarlo en la página de verificación de Loopback.`) : null,
+    el('div', { class: 'hero-cta cert-acciones' }, png, pdf, comprobar, cambiar, el('a', { class: 'btn btn-quiet', href: 'certificado.html' }, 'Todos mis certificados')));
 }
 
 function pintarArea(nombre) {
@@ -110,12 +116,80 @@ function lista() {
     })));
 }
 
-if (!area || !TITULO_AREA[area]) lista();
-else if (estadoArea(curso, area).final !== 'aprobado') {
-  const paso = pasoSiguiente(estadoArea(curso, area));
-  raiz.replaceChildren(el('div', { class: 'locked-screen' }, el('div', { class: 'locked-ico', 'aria-hidden': 'true' }, '🎓'), el('h1', {}, TITULO_AREA[area]),
-    el('p', {}, 'El certificado se obtiene al aprobar el examen final del área, después de completar todos los escalones.'),
+// ------------------------------------------------------------------ certificados verificables (con cuenta)
+const sb = cuentasActivas() ? supabase() : null;
+const bloqueadoArea = a => {
+  const paso = pasoSiguiente(estadoArea(curso, a));
+  return el('div', { class: 'locked-screen' }, el('div', { class: 'locked-ico', 'aria-hidden': 'true' }, '🎓'), el('h1', {}, TITULO_AREA[a]),
+    el('p', {}, 'El certificado se obtiene al aprobar el examen final oficial del área, después de completar todos los escalones.'),
     paso ? el('p', {}, el('strong', {}, 'Tu siguiente paso: '), paso.texto) : null,
-    el('div', { class: 'hero-cta' }, paso ? el('a', { class: 'btn btn-primary', href: paso.href }, 'Ir a mi siguiente paso →') : null, el('a', { class: 'btn btn-ghost', href: 'curso.html?area=' + area }, 'Ver la escalera'))));
-} else if (!nombreAlumno()) raiz.replaceChildren(pedirNombre(n => pintarArea(n)));
-else pintarArea(nombreAlumno());
+    el('div', { class: 'hero-cta' }, paso ? el('a', { class: 'btn btn-primary', href: paso.href }, 'Ir a mi siguiente paso →') : null, el('a', { class: 'btn btn-ghost', href: 'curso.html?area=' + a }, 'Ver la escalera')));
+};
+
+function pedirNombreOficial(alEmitir) {
+  const entrada = el('input', { type: 'text', maxlength: 80, placeholder: 'Nombre y apellidos', 'aria-label': 'Tu nombre completo', value: usuario?.nombre || '' });
+  const btn = el('button', { type: 'submit', class: 'btn btn-primary' }, 'Emitir mi certificado');
+  const msg = el('p', { class: 'alert alert-warn', role: 'alert', hidden: true });
+  const form = el('form', { class: 'card cert-nombre' }, el('h2', {}, '¿Qué nombre aparece en el certificado?'),
+    el('p', {}, 'Escribe tu nombre completo tal como quieres que aparezca. ', el('strong', {}, 'No se podrá cambiar después'), ': es el nombre que verá quien compruebe tu certificado.'),
+    el('div', { class: 'inline-form' }, entrada, btn), msg);
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const n = entrada.value.trim().replace(/\s+/g, ' ');
+    if (n.length < 3) { entrada.focus(); return; }
+    btn.disabled = true;
+    const r = await sb.rpc('certificado_emitir', { p_area: area, p_nombre: n });
+    btn.disabled = false;
+    if (r.error) { msg.hidden = false; msg.textContent = mensajeError(r.error).replace(/^No se pudo completar la operación: /, ''); return; }
+    alEmitir(r.data);
+  });
+  return form;
+}
+
+async function areaVerificada() {
+  const { data: cert, error } = await sb.from('certificados').select('codigo, area, nombre, nota, emitido').eq('area', area).maybeSingle();
+  if (error && faltaMigracion(error)) { areaLocal(); return; }
+  const mostrar = c => certificado(datosVerificado({ cert: c, escalera: escaleraDe(curso, area), url: CONFIG.url }));
+  if (cert) { mostrar(cert); return; }
+  const { data: aprobados } = await sb.from('intentos_final').select('id').eq('area', area).eq('aprobado', true).limit(1);
+  if (aprobados?.length) { raiz.replaceChildren(pedirNombreOficial(mostrar)); return; }
+  const estado = estadoArea(curso, area).final;
+  if (estado === 'bloqueado') { raiz.replaceChildren(bloqueadoArea(area)); return; }
+  raiz.replaceChildren(el('div', { class: 'locked-screen' }, el('div', { class: 'locked-ico', 'aria-hidden': 'true' }, '🎓'), el('h1', {}, TITULO_AREA[area]),
+    el('p', {}, estado === 'aprobado'
+      ? 'Ya completaste la escalera. Los certificados ahora son verificables: para obtener el tuyo, aprueba el examen final oficial, que corrige el servidor.'
+      : 'Te queda el examen final oficial del área. Al aprobarlo podrás emitir tu certificado verificable.'),
+    el('div', { class: 'hero-cta' }, el('a', { class: 'btn btn-primary', href: 'examen.html?final=' + area }, 'Ir al examen final oficial →'))));
+}
+
+async function listaVerificada() {
+  const { data, error } = await sb.from('certificados').select('area, codigo');
+  if (error && faltaMigracion(error)) { lista(); return; }
+  const emitidos = new Map((data || []).map(c => [c.area, c.codigo]));
+  raiz.replaceChildren(el('div', { class: 'page-head' }, el('h1', {}, 'Tus certificados'), el('p', {}, 'Obtienes el certificado verificable de un área al aprobar su examen final oficial, después de subir toda la escalera.')),
+    el('div', { class: 'grid-2' }, Object.entries(TITULO_AREA).map(([a, titulo]) => {
+      const codigo = emitidos.get(a);
+      const est = estadoArea(curso, a).final;
+      return el('article', { class: 'card cert-item' + (codigo ? ' ok' : '') }, el('h3', {}, (codigo ? '🎓 ' : est === 'bloqueado' ? '🔒 ' : '📝 ') + titulo),
+        el('p', { class: 'small muted' }, codigo ? `Certificado verificable · ${codigo}` : est === 'bloqueado' ? 'Te falta completar la escalera.' : 'Te queda el examen final oficial.'),
+        codigo ? el('a', { class: 'btn btn-primary btn-sm', href: 'certificado.html?area=' + a }, 'Ver mi certificado')
+          : est === 'bloqueado' ? el('a', { class: 'btn btn-ghost btn-sm', href: 'curso.html?area=' + a }, 'Ir a la escalera')
+            : el('a', { class: 'btn btn-primary btn-sm', href: 'examen.html?final=' + a }, 'Hacer el examen oficial'));
+    })));
+}
+
+// Sin cuentas (instalación propia sin Supabase): certificado generado en el navegador, como antes.
+function areaLocal() {
+  if (estadoArea(curso, area).final !== 'aprobado') raiz.replaceChildren(bloqueadoArea(area));
+  else if (!nombreAlumno()) raiz.replaceChildren(pedirNombre(n => pintarArea(n)));
+  else pintarArea(nombreAlumno());
+}
+
+if (sb && !usuario) {
+  raiz.replaceChildren(el('div', { class: 'page-head' }, el('h1', {}, area && TITULO_AREA[area] ? TITULO_AREA[area] : 'Tus certificados'),
+    el('p', {}, 'Los certificados de Loopback son verificables: se emiten con tu cuenta gratuita después de aprobar el examen final oficial del área.')),
+    el('div', { class: 'card' }, el('a', { class: 'btn btn-primary', href: 'cuenta.html' }, 'Entrar o crear cuenta')));
+} else if (!area || !TITULO_AREA[area]) {
+  if (sb) listaVerificada(); else lista();
+} else if (sb) areaVerificada();
+else areaLocal();

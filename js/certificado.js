@@ -37,3 +37,16 @@ export function datosCertificado({ area, nombre, escalera, final }) {
 }
 
 export const fechaLarga = iso => new Date(iso + 'T12:00:00').toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' });
+
+// Certificado verificable emitido por el servidor (tabla certificados). El código y la nota los pone el servidor.
+export function datosVerificado({ cert, escalera, url }) {
+  if (!cert?.codigo || !TITULO_AREA[cert.area]) return null;
+  const lecciones = escalera.reduce((n, e) => n + e.lecciones.length, 0);
+  return {
+    area: cert.area, nombre: cert.nombre, fecha: cert.emitido, nota: cert.nota, lecciones, escalones: escalera.length,
+    titulo: TITULO_AREA[cert.area],
+    detalle: `${lecciones} lecciones · ${escalera.length} exámenes de escalón · examen final oficial aprobado con ${cert.nota} %`,
+    codigo: cert.codigo,
+    verificar: `${url}/verificar.html?c=${cert.codigo}`,
+  };
+}

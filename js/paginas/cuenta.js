@@ -195,8 +195,11 @@ async function panel(u) {
     location.replace('./');
   });
 
+  // Acceso al panel de administración: solo si el servidor confirma que es administrador con aal2.
+  const esAdmin = await auth.supabase().rpc('es_admin').then(r => r.data === true, () => false);
   raiz.replaceChildren(el('div', { class: 'narrow stack' },
     el('div', { class: 'page-head' }, el('h1', {}, 'Tu cuenta'), el('p', {}, u.email)),
+    esAdmin ? el('section', { class: 'card' }, el('h2', {}, 'Administración'), el('p', { class: 'small muted' }, 'Estadísticas agregadas de toda la plataforma.'), el('a', { class: 'btn btn-primary btn-sm', href: 'admin.html' }, 'Abrir el panel de administración')) : null,
     el('section', { class: 'card' }, el('h2', {}, 'Perfil'), fNombre),
     el('section', { class: 'card' }, el('h2', {}, 'Seguridad'), await seccionMfa(), el('hr'), fPw, el('hr'), el('div', { class: 'hero-cta' }, salir, salirTodo)),
     el('section', { class: 'card' }, el('h2', {}, 'Tus datos'), el('p', { class: 'small muted' }, 'Descarga una copia de tu progreso o bórralo. Eliminar la cuenta borra también tus datos del servidor.'), datosLocales(), el('div', { class: 'hero-cta' }, eliminar))));
