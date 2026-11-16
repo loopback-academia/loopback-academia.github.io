@@ -77,6 +77,7 @@ select pg_temp.como(:'profe', 'aal1');
 select pg_temp.debe((select count(*) from public.clases) = 0, 'aal1 no ve sus clases');
 select pg_temp.falla(format($$select * from public.progreso_de_clase(%L)$$, :'clase'), 'aal1 no lee progreso');
 select pg_temp.falla($$select public.crear_clase('Otra')$$, 'aal1 no crea clases');
+select pg_temp.debe(not public.es_profesor_de(:'clase'), 'aal1 no confirma que es profesor de la clase');
 select pg_temp.como(:'profe', 'aal2');
 select pg_temp.debe((select count(*) from public.progreso_de_clase(:'clase')) >= 3, 'aal2 sí');
 

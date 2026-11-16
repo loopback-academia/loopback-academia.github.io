@@ -98,6 +98,11 @@ begin
   -- Bloqueo por usuario hasta el final de la transacción: varias inserciones simultáneas del mismo alumno se
   -- atienden de una en una, así no pueden contar a la vez y superar el límite.
   perform pg_advisory_xact_lock(hashtextextended('progreso:' || new.user_id::text, 0));
+  -- La web guarda con upsert (INSERT … ON CONFLICT DO UPDATE) y este trigger se ejecuta antes de resolver el conflicto:
+  -- actualizar un elemento que ya existe no añade filas, así que no cuenta para el límite.
+  if exists (select 1 from public.progreso where user_id = new.user_id and item_id = new.item_id) then
+    return new;
+  end if;
   if (select count(*) from public.progreso where user_id = new.user_id) >= 1000 then
     raise exception 'Límite de elementos de progreso alcanzado';
   end if;
@@ -118,7 +123,7 @@ declare
 begin
   if v_uid is null then raise exception 'Sin sesión'; end if;
   -- El límite lo fija el servidor; el cliente solo puede pedir uno igual o más bajo que el máximo (40).
-  if p_limite < 1 or p_limite > 40 then raise exception 'Límite no válido'; end if;
+  if p_limite is null or p_limite not between 1 and 40 then raise exception 'Límite no válido'; end if;
   if not public.sesion_segura() then
     raise exception 'Verifica tu segundo factor';
   end if;

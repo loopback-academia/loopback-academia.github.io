@@ -73,12 +73,25 @@ test('RLS y permisos de la base de datos', { skip: !PGlite && 'falta @electric-s
     await filas('select public.tutor_consumir(3)'); await filas('select public.tutor_consumir(3)');
     assert.equal((await filas('select public.tutor_consumir(3) as n'))[0].n, -1);
     await falla('select public.tutor_consumir(500)', /Límite no válido/);  // el alumno no puede subirse el límite
+    await falla('select public.tutor_consumir(null)', /Límite no válido/);
     await falla(`update public.tutor_uso set mensajes = 0`, /permission denied/);
     await falla(`select public.tutor_devolver('${A}')`, /permission denied/);
     await como('service_role', null);
     await db.query(`select public.tutor_devolver('${A}')`);
     await como('authenticated', A);
     assert.equal((await filas('select public.tutor_consumir(3) as n'))[0].n, 0);
+  });
+
+  await t.test('al llegar al límite de progreso se pueden seguir actualizando los elementos existentes', async () => {
+    await como('authenticated', A);
+    const n = Number((await filas('select count(*) as n from public.progreso'))[0].n);
+    await db.query(`insert into public.progreso (user_id, item_id, tipo) select '${A}', 'leccion:relleno-' || g, 'leccion' from generate_series(1, ${1000 - n}) g`);
+    await falla(`insert into public.progreso (user_id, item_id, tipo) values ('${A}', 'leccion:una-mas', 'leccion')`, /Límite de elementos/);
+    // Lo mismo que hace la web al guardar: upsert de un elemento que ya existe.
+    await db.query(`insert into public.progreso (user_id, item_id, tipo, hecho) values ('${A}', 'leccion:relleno-1', 'leccion', true)
+                    on conflict (user_id, item_id) do update set hecho = excluded.hecho`);
+    assert.equal((await filas(`select hecho from public.progreso where item_id = 'leccion:relleno-1'`))[0].hecho, true);
+    await db.query(`delete from public.progreso where item_id like 'leccion:relleno-%'`);
   });
 
   await t.test('con MFA activado hace falta una sesión aal2', async () => {

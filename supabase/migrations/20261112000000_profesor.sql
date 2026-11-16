@@ -41,14 +41,18 @@ grant update (nombre) on public.clases to authenticated;
 grant select, delete on public.clase_miembros to authenticated;
 grant update (alias) on public.clase_miembros to authenticated;
 
--- Comprobaciones sin recursión entre políticas (SECURITY DEFINER no aplica RLS dentro).
+-- Comprobaciones sin recursión entre políticas (el propietario de estas funciones, postgres, no está sujeto a RLS).
+-- Con la verificación en dos pasos activada y una sesión sin verificar (aal1) devuelven siempre false: se usan dentro
+-- de las políticas, así que no lanzan errores, simplemente no conceden nada.
 create or replace function public.es_profesor_de(p_clase uuid) returns boolean
 language sql stable security definer set search_path = '' as $$
-  select exists (select 1 from public.clases c where c.id = p_clase and c.profesor = auth.uid());
+  select public.sesion_segura()
+     and exists (select 1 from public.clases c where c.id = p_clase and c.profesor = auth.uid());
 $$;
 create or replace function public.es_miembro_de(p_clase uuid) returns boolean
 language sql stable security definer set search_path = '' as $$
-  select exists (select 1 from public.clase_miembros m where m.clase_id = p_clase and m.user_id = auth.uid());
+  select public.sesion_segura()
+     and exists (select 1 from public.clase_miembros m where m.clase_id = p_clase and m.user_id = auth.uid());
 $$;
 revoke all on function public.es_profesor_de(uuid), public.es_miembro_de(uuid) from public, anon;
 grant execute on function public.es_profesor_de(uuid), public.es_miembro_de(uuid) to authenticated;
