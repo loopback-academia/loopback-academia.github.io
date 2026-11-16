@@ -23,9 +23,9 @@ const t = (x, y, txt, attrs = {}) => el('text', { x, y, 'text-anchor': 'middle',
 function dibujar(d) {
   const LOGO = el('g', { transform: `translate(${W / 2 - 22} 62) scale(1.4)` },
     el('rect', { width: 32, height: 32, rx: 8, fill: '#0b7285' }),
-    el('path', { d: 'M22.5 10.5A8.5 8.5 0 1 1 9.5 10.5', fill: 'none', stroke: '#fff', 'stroke-width': 2.6, 'stroke-linecap': 'round' }),
-    el('path', { d: 'M12.6 6.9 12.1 12.9 6.9 8.6Z', fill: '#fff', stroke: '#fff', 'stroke-width': 1, 'stroke-linejoin': 'round' }),
-    el('circle', { cx: 16, cy: 16, r: 3.4, fill: '#fff' }));
+    el('g', { transform: 'translate(16 16) scale(1.14) translate(-16.4 -17.7)', fill: '#fff', stroke: '#fff', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' },
+      el('path', { d: 'M17.5 21.5H12A5.5 5.5 0 0 1 12 10.5H20A5.5 5.5 0 0 1 24.8 18.7', fill: 'none', 'stroke-width': 3 }),
+      el('path', { d: 'M17 17.2 23.4 21.5 17 25.8Z', 'stroke-width': 1.2 })));
   const aviso = lineas(AVISO, 150);
   return el('svg', { xmlns: 'http://www.w3.org/2000/svg', viewBox: `0 0 ${W} ${H}`, width: W, height: H, class: 'cert-svg', role: 'img', 'aria-label': `Certificado de ${d.titulo} para ${d.nombre}` },
     el('rect', { width: W, height: H, fill: '#fbfcfe' }),

@@ -15,7 +15,7 @@ function atobSafe(k) { try { return Buffer.from(k.split('.')[1] || '', 'base64')
 const connect = ["'self'", supa, supa && supa.replace('https://', 'wss://')].filter(Boolean).join(' ');
 const CSP = `default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src ${connect}; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests`;
 
-const LOGO = '<svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M22.5 10.5A8.5 8.5 0 1 1 9.5 10.5" fill="none" stroke="var(--accent-ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M12.6 6.9 12.1 12.9 6.9 8.6Z" fill="var(--accent-ink)" stroke="var(--accent-ink)" stroke-width="1" stroke-linejoin="round"/><circle cx="16" cy="16" r="3.4" fill="var(--accent-ink)"/></svg>';
+const LOGO = '<svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><g transform="translate(16 16) scale(1.14) translate(-16.4 -17.7)" fill="var(--accent-ink)" stroke="var(--accent-ink)" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 21.5H12A5.5 5.5 0 0 1 12 10.5H20A5.5 5.5 0 0 1 24.8 18.7" fill="none" stroke-width="3"/><path d="M17 17.2 23.4 21.5 17 25.8Z" stroke-width="1.2"/></g></svg>';
 const ICON = {
   cv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>',
   certificado: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 8 5-3 5 3-1.5-8"/></svg>',
@@ -103,6 +103,7 @@ ${meta.private ? '<meta name="robots" content="noindex">' : `<link rel="canonica
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0b7285">
 <link rel="icon" href="img/icono.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="img/icono-180.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="css/aula.css">
 ${scripts}
