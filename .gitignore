@@ -7,3 +7,5 @@ supabase/.temp/
 # Banco privado de preguntas del examen final: nunca al repositorio público
 banco_final_datos.sql
 privado/
+# Temario completo y contenido de pago: se generan al compilar y nunca van al repositorio
+_privado/

@@ -46,9 +46,26 @@ jobs:
           PGUSER: postgres
           PGPASSWORD: postgres
 
-  publicar:
+  # Sube a Supabase el contenido de pago (no está en la web publicada). Sin el secreto SUPABASE_DB_URL falla y no se publica.
+  contenido:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: comprobar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Subir el contenido de pago a Supabase
+        run: |
+          command -v psql >/dev/null || (sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client)
+          scripts/subir-premium.sh
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+
+  publicar:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: [comprobar, contenido]
     runs-on: ubuntu-latest
     permissions:
       pages: write

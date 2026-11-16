@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { resumenClase, csvClase, celdaCsv, totalesCurso, faltaMigracion } from '../js/profesor.js';
 import { CATALOGO } from '../js/labs/catalogo.js';
 
-const curso = JSON.parse(readFileSync(new URL('../data/curso.json', import.meta.url)));
+const curso = JSON.parse(readFileSync(new URL('../_privado/curso.json', import.meta.url)));
 const lec = a => curso.modulos.filter(m => m.area === a).flatMap(m => m.lecciones.map(l => l.id));
 const ana = '22222222-2222-2222-2222-222222222222', luis = '33333333-3333-3333-3333-333333333333';
 const fila = (user_id, alias, item_id, extra = {}) => ({ user_id, alias, unida: '2026-11-01T10:00:00Z', item_id, tipo: item_id?.split(':')[0] || null, puntos: null, total: null, hecho: true, datos: {}, actualizado: '2026-11-10T09:00:00Z', ...extra });

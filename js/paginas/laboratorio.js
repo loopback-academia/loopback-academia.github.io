@@ -3,8 +3,9 @@ import { iniciarPagina, el, $ } from '../core.js';
 import { CATALOGO } from '../labs/catalogo.js';
 import { cargarCurso } from '../curso.js';
 import { cargar } from '../progreso.js';
-import { labAccesible, leccionDeLab } from '../escalera.js';
+import { labAccesible, leccionDeLab, labDePago } from '../escalera.js';
 import { estadoArea } from '../escalera-alumno.js';
+import { estadoAcceso, pantallaPremium, motivoAcceso } from '../premium.js';
 
 iniciarPagina();
 const [curso] = await Promise.all([cargarCurso().catch(() => null), cargar()]);
@@ -50,6 +51,7 @@ const MONTAR = {
   phishing: () => import('../ti/phishing-ui.js').then(m => m.montarPhishing),
   entrevista: () => import('../ti/entrevista-ui.js').then(m => m.montarEntrevista),
 };
+let acceso = null;
 if (!info) {
   box.replaceChildren(el('h1', {}, 'Laboratorio no encontrado'), el('a', { class: 'btn btn-primary', href: 'practica.html' }, 'Ver los laboratorios'));
 } else if (curso && !labAccesible(info, curso, estadoArea(curso, info.area))) {
@@ -58,6 +60,10 @@ if (!info) {
   box.replaceChildren(el('div', { class: 'locked-screen' }, el('div', { class: 'locked-ico', 'aria-hidden': 'true' }, '🔒'), el('h1', {}, info.titulo),
     el('p', {}, lec ? `Esta práctica se abre cuando llegas a la lección «${lec.titulo}» en la escalera. Así practicas justo después de aprenderlo.` : 'Esta práctica se abre cuando llegas a su nivel en la escalera.'),
     el('div', { class: 'hero-cta' }, el('a', { class: 'btn btn-primary', href: 'curso.html?area=' + info.area }, 'Ver la escalera'), el('a', { class: 'btn btn-ghost', href: 'practica.html#area-' + info.area }, 'Prácticas abiertas'))));
+} else if (curso && labDePago(info, curso) && !(acceso = await estadoAcceso()).acceso) {
+  // Práctica de una lección de pago.
+  document.title = `${info.titulo} · Loopback`;
+  box.replaceChildren(pantallaPremium({ titulo: info.titulo, motivo: motivoAcceso(acceso), estado: acceso }));
 } else {
   document.title = `${info.titulo} · Loopback`;
   const [tipo, id] = clave.split(':');

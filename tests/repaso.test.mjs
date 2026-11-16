@@ -9,7 +9,7 @@ globalThis.localStorage = { getItem: k => almacen.get(k) ?? null, setItem: (k, v
 
 const P = await import('../js/progreso.js');
 const R = await import('../js/recomendaciones.js');
-const curso = JSON.parse(readFileSync(new URL('../data/curso.json', import.meta.url)));
+const curso = JSON.parse(readFileSync(new URL('../_privado/curso.json', import.meta.url)));
 const mods = new Map(curso.modulos.map(m => [m.id, m]));
 curso.lecciones = curso.modulos.flatMap(m => (m.lecciones || []).map(l => ({ ...l, modulo: mods.get(m.id) })));
 const DIA = 86400000;

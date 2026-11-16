@@ -25,7 +25,12 @@ Formato de cada módulo:
     = Explicación de la respuesta.
     :::
 
-Uso: python3 scripts/build_curso.py [--check]   (--check: no escribe, falla si data/ no está al día)
+Contenido gratis y de pago: los módulos de GRATIS se publican completos en data/. Del resto, data/ solo lleva la
+estructura (títulos, nivel, número de preguntas y los laboratorios que contiene), sin texto ni preguntas; su contenido
+va a _privado/premium.json, que se sube a Supabase (scripts/subir-premium.mjs) y solo se entrega a quien tiene acceso.
+_privado/ (no se sube al repositorio) guarda además el temario completo para las pruebas.
+
+Uso: python3 scripts/build_curso.py [--check]   (--check: no escribe data/, falla si no está al día)
 """
 from __future__ import annotations
 
@@ -37,6 +42,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "contenido"
 OUT = ROOT / "data"
+PRIV = ROOT / "_privado"
+
+# Módulos gratuitos: «Empieza aquí» completo y el primer módulo de cada área (en Redes, la bienvenida y los fundamentos).
+GRATIS = {"i1", "i2", "i3", "m0", "m1", "b1", "p1", "s1", "s11", "c1"}
 
 # Elementos interactivos que existen en la web (se comprueba que cada [[tipo:id]] apunta a uno real).
 KNOWN = {
@@ -357,7 +366,68 @@ def build() -> dict[str, str]:
             mod["lecciones"].append({**{k: l[k] for k in ("id", "titulo", "minutos", "nivel", "blocks", "quiz")}, "preguntas": propias})
         curso["modulos"].append(mod)
     dump = lambda o: json.dumps(o, ensure_ascii=False, separators=(",", ":")) + "\n"
-    return {"curso.json": dump(curso), "buscar.json": dump(buscar), "examen.json": dump(examen), "glosario.json": dump(glosario())}
+    faltan = GRATIS - {m["id"] for m in curso["modulos"]}
+    if faltan:
+        raise ContentError(f"GRATIS menciona módulos que no existen: {sorted(faltan)}")
+
+    # Versión pública: los módulos de pago sin texto ni preguntas.
+    gratis = lambda mod_id: mod_id in GRATIS
+    publico = {"modulos": []}
+    premium = {"lecciones": [], "preguntas": []}
+    for mod in curso["modulos"]:
+        if gratis(mod["id"]):
+            publico["modulos"].append(mod)
+            continue
+        lecciones = []
+        for l in mod["lecciones"]:
+            premium["lecciones"].append({"id": l["id"], "area": mod["area"], "modulo": mod["id"], "blocks": l["blocks"], "quiz": l["quiz"]})
+            # Se conservan solo los elementos interactivos (sin texto): sirven para saber en qué lección está cada laboratorio.
+            embeds = [b for b in l["blocks"] if b.get("t") == "embed"]
+            lecciones.append({**{k: l[k] for k in ("id", "titulo", "minutos", "nivel")}, "blocks": embeds, "quiz": [], "preguntas": l["preguntas"], "premium": True})
+        publico["modulos"].append({**mod, "lecciones": lecciones})
+    premium["preguntas"] = [q for q in examen if not gratis(q["modulo"])]
+    # Una pregunta de muestra por lección de pago (la primera con opciones y no repetida) se publica para que el examen
+    # de entrada, que es gratis, pueda medir el nivel en todo el temario.
+    muestra, con_muestra = set(), set()
+    for q in premium["preguntas"]:
+        leccion = q["id"].split("#")[0]
+        if leccion not in con_muestra and not q.get("dup") and len(q.get("options", [])) >= 2:
+            muestra.add(q["id"]); con_muestra.add(leccion)
+    examen_publico = [q if gratis(q["modulo"]) else {**q, "muestra": True} for q in examen if gratis(q["modulo"]) or q["id"] in muestra]
+    titulo_mod = {m["id"]: m["titulo"] for m in curso["modulos"]}
+    buscar_publico = [b if gratis(b["modulo"]) else {**b, "texto": titulo_mod[b["modulo"]], "premium": True} for b in buscar]
+
+    publicos = {"curso.json": dump(publico), "buscar.json": dump(buscar_publico), "examen.json": dump(examen_publico), "glosario.json": dump(glosario())}
+    privados = {"curso.json": dump(curso), "buscar.json": dump(buscar), "examen.json": dump(examen), "premium.json": dump(premium),
+                "premium.sql": premium_sql(premium)}
+    return publicos, privados
+
+
+def premium_sql(premium: dict) -> str:
+    """SQL que deja lecciones_premium y preguntas_premium exactamente iguales al temario (añade, cambia y borra)."""
+    marca = "$contenido_loopback$"
+    datos = json.dumps(premium, ensure_ascii=False, separators=(",", ":"))
+    if marca in datos:
+        raise ContentError("El temario contiene la marca reservada " + marca)
+    return f"""-- Generado por scripts/build_curso.py: contenido de pago de Loopback. PRIVADO: no subir al repositorio.
+-- Lo aplica la integración continua (scripts/subir-premium.sh). Se puede repetir: solo cambia lo que haya cambiado.
+begin;
+create temporary table premium_nuevo (d jsonb) on commit drop;
+insert into premium_nuevo values ({marca}{datos}{marca}::jsonb);
+insert into public.lecciones_premium (id, area, modulo, blocks, quiz)
+  select e->>'id', e->>'area', e->>'modulo', e->'blocks', e->'quiz' from premium_nuevo, jsonb_array_elements(d->'lecciones') e
+  on conflict (id) do update set area = excluded.area, modulo = excluded.modulo, blocks = excluded.blocks, quiz = excluded.quiz, actualizado = now()
+  where (lecciones_premium.area, lecciones_premium.modulo, lecciones_premium.blocks, lecciones_premium.quiz)
+        is distinct from (excluded.area, excluded.modulo, excluded.blocks, excluded.quiz);
+delete from public.lecciones_premium where id not in (select e->>'id' from premium_nuevo, jsonb_array_elements(d->'lecciones') e);
+insert into public.preguntas_premium (id, area, modulo, datos)
+  select e->>'id', e->>'area', e->>'modulo', e from premium_nuevo, jsonb_array_elements(d->'preguntas') e
+  on conflict (id) do update set area = excluded.area, modulo = excluded.modulo, datos = excluded.datos
+  where (preguntas_premium.area, preguntas_premium.modulo, preguntas_premium.datos) is distinct from (excluded.area, excluded.modulo, excluded.datos);
+delete from public.preguntas_premium where id not in (select e->>'id' from premium_nuevo, jsonb_array_elements(d->'preguntas') e);
+commit;
+select (select count(*) from public.lecciones_premium) as lecciones_de_pago, (select count(*) from public.preguntas_premium) as preguntas_de_pago;
+"""
 
 
 def glosario() -> list:
@@ -384,11 +454,15 @@ def glosario() -> list:
 def main() -> int:
     check = "--check" in sys.argv
     try:
-        files = build()
+        files, privados = build()
     except ContentError as e:
         print(f"Error en el temario: {e}", file=sys.stderr)
         return 1
     stale = []
+    # _privado/ se escribe siempre (también con --check): las pruebas leen de ahí el temario completo.
+    PRIV.mkdir(exist_ok=True)
+    for name, content in privados.items():
+        (PRIV / name).write_text(content, encoding="utf-8")
     OUT.mkdir(exist_ok=True)
     for name, content in files.items():
         target = OUT / name
@@ -397,14 +471,15 @@ def main() -> int:
                 stale.append(name)
         else:
             target.write_text(content, encoding="utf-8")
-    curso = json.loads(files["curso.json"])
+    curso = json.loads(privados["curso.json"])
     n_lessons = sum(len(m["lecciones"]) for m in curso["modulos"])
-    n_q = len(json.loads(files["examen.json"]))
+    n_q = len(json.loads(privados["examen.json"]))
+    n_pago = len(json.loads(privados["premium.json"])["lecciones"])
     if stale:
         print("data/ no está al día (ejecuta python3 scripts/build_curso.py): " + ", ".join(stale), file=sys.stderr)
         return 1
     n_g = len(json.loads(files["glosario.json"]))
-    print(f"Temario {'al día' if check else 'compilado'}: {len(curso['modulos'])} módulos, {n_lessons} lecciones, {n_q} preguntas, {n_g} términos del glosario.")
+    print(f"Temario {'al día' if check else 'compilado'}: {len(curso['modulos'])} módulos, {n_lessons} lecciones ({n_lessons - n_pago} gratis), {n_q} preguntas, {n_g} términos del glosario.")
     return 0
 
 

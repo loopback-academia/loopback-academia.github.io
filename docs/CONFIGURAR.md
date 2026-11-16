@@ -17,6 +17,10 @@ Se hace una sola vez. Necesitas una cuenta gratuita de [Supabase](https://supaba
    select id from auth.users where email = 'TU_CORREO' on conflict do nothing;
    ```
    El panel solo muestra cifras agregadas y exige una sesión con el segundo factor verificado. Aparece un enlace en **Tu cuenta**.
+7. Para el **contenido de pago**: pega `supabase/migrations/20261117000000_premium.sql` y pulsa **Run**. El contenido en sí lo sube la integración continua (paso «Subir el contenido de pago a Supabase»), que necesita el secreto **`SUPABASE_DB_URL`** en GitHub (**Settings → Secrets and variables → Actions → New repository secret**): la cadena de conexión de Supabase **Connect → Session pooler**, con la contraseña de la base de datos en lugar de `[YOUR-PASSWORD]`. Sin ese secreto, la publicación se detiene para no dejar las lecciones de pago vacías.
+   - Mientras no se cobre, el interruptor `acceso_abierto` está en `true`: cualquier cuenta gratuita ve el contenido de pago.
+   - Para empezar a cobrar: `update public.ajustes set valor = 'false' where clave = 'acceso_abierto';` (solo tendrán acceso quienes tengan una suscripción vigente en la tabla `suscripciones`).
+   - Qué es gratis lo decide la lista `GRATIS` de `scripts/build_curso.py`.
 
 Las migraciones se prueban solas en la integración continua contra un PostgreSQL que imita Supabase (`scripts/probar-sql.sh` y `supabase/pruebas/`): permisos de cada usuario, verificación en dos pasos y que nadie lee el progreso de quien no se ha unido a su clase.
 

@@ -11,4 +11,6 @@ trap 'psql -q -d postgres -c "drop database if exists $DB" >/dev/null' EXIT
 run() { psql -q -t -v ON_ERROR_STOP=1 -d "$DB" -f "$1" 2>&1 | { grep -v -E 'NOTICE|^ *$' || true; }; }
 run supabase/pruebas/simular-supabase.sql
 for m in supabase/migrations/*.sql; do run "$m"; run "$m"; done
+# Contenido de pago real (lo genera scripts/build_curso.py): dos veces, para comprobar que se puede repetir.
+if [ -f _privado/premium.sql ]; then run _privado/premium.sql >/dev/null; run _privado/premium.sql >/dev/null; fi
 for p in supabase/pruebas/*.sql; do [ "$(basename "$p")" = simular-supabase.sql ] || run "$p"; done

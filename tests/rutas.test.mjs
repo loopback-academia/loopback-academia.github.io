@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { RUTAS, MODULOS_TI, progresoRuta } from '../js/rutas.js';
 import { CATALOGO } from '../js/labs/catalogo.js';
 
-const curso = JSON.parse(readFileSync(new URL('../data/curso.json', import.meta.url)));
+const curso = JSON.parse(readFileSync(new URL('../_privado/curso.json', import.meta.url)));
 const ids = new Set(curso.modulos.map(m => m.id));
 const planificados = new Set(MODULOS_TI.map(m => m.id));
 

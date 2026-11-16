@@ -78,8 +78,12 @@ export async function entrar(email, password) {
   return nivelMfa();
 }
 
-export async function salir() { await supabase()?.auth.signOut({ scope: 'local' }); }
-export async function salirDeTodo() { await supabase()?.auth.signOut({ scope: 'global' }); }
+// Al cerrar sesión se borra del navegador el contenido de pago descargado (js/premium.js).
+function borrarContenidoDePago() {
+  try { for (const k of Object.keys(localStorage)) if (k.startsWith('aula:premium:')) localStorage.removeItem(k); } catch { /* sin almacenamiento */ }
+}
+export async function salir() { await supabase()?.auth.signOut({ scope: 'local' }); borrarContenidoDePago(); }
+export async function salirDeTodo() { await supabase()?.auth.signOut({ scope: 'global' }); borrarContenidoDePago(); }
 
 export async function recuperar(email) {
   const { error } = await supabase().auth.resetPasswordForEmail(email, { redirectTo: volverA('cuenta.html?recuperar=1') });

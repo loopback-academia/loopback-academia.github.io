@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { datosCertificado, codigo, TITULO_AREA, AVISO, FIRMA } from '../js/certificado.js';
 import { construirEscalera } from '../js/escalera.js';
 
-const curso = JSON.parse(readFileSync(new URL('../data/curso.json', import.meta.url)));
+const curso = JSON.parse(readFileSync(new URL('../_privado/curso.json', import.meta.url)));
 curso.lecciones = curso.modulos.flatMap(m => m.lecciones.map(l => ({ ...l, modulo: m })));
 
 test('hay un certificado por área, firmado por Gabriel PD', () => {
@@ -40,7 +40,7 @@ test('el certificado dice que no es oficial, que no está avalado y que no influ
 
 // ---------------------------------------------------------------- reto del día
 import { retoDelDia, rachaRetos, insigniasDe, fechaLocal } from '../js/reto.js';
-const banco = JSON.parse(readFileSync(new URL('../data/examen.json', import.meta.url)));
+const banco = JSON.parse(readFileSync(new URL('../_privado/examen.json', import.meta.url)));
 test('reto del día: estable durante el día, de los módulos empezados y con racha', () => {
   const a = retoDelDia(banco, '2026-11-12', new Set(['b1']), 'm0');
   assert.equal(a, retoDelDia(banco, '2026-11-12', new Set(['b1']), 'm0'));

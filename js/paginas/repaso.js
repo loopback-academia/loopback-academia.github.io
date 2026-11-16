@@ -1,4 +1,5 @@
 // Repaso de errores: resumen, temas a reforzar y sesiones de práctica con corrección inmediata y explicación.
+import { bancoCompleto } from '../premium.js';
 import { iniciarPagina, el, $, $$, setMeter, plural, local } from '../core.js';
 import { cargarCurso } from '../curso.js';
 import { barajar, prepararPregunta } from '../quiz.js';
@@ -9,7 +10,9 @@ iniciarPagina();
 const raiz = $('#repaso');
 const params = new URLSearchParams(location.search);
 const NOMBRE_AREA = { base: 'Empieza aquí', redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico', sec: 'Ciberseguridad' };
-const [banco, curso] = await Promise.all([fetch('data/examen.json').then(r => r.json()), cargarCurso(), cargar()]);
+const [publico, curso] = await Promise.all([fetch('data/examen.json').then(r => r.json()), cargarCurso(), cargar()]);
+// Con acceso al contenido de pago, el repaso incluye también sus preguntas.
+const banco = await bancoCompleto(publico);
 const porId = new Map(banco.map(q => [q.id, q]));
 const leccionDe = id => curso.lecciones.find(l => l.id === id.split('#')[0]);
 let area = local.get('aula:repaso:area', '');

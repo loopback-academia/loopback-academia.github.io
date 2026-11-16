@@ -46,7 +46,7 @@ test('entrevista: cada ruta da 6 preguntas distintas con puntos clave y respuest
 });
 
 test('CV: solo incluye lo completado', () => {
-  const curso = JSON.parse(readFileSync(new URL('../data/curso.json', import.meta.url)));
+  const curso = JSON.parse(readFileSync(new URL('../_privado/curso.json', import.meta.url)));
   const vacio = datosCv({ curso, catalogo: CATALOGO, leccionHecha: () => false, labHecho: () => false, finalAprobado: () => false });
   assert.deepEqual([vacio.modulos.length, vacio.practicas.length, vacio.certificados.length, vacio.lecciones], [0, 0, 0, 0]);
   assert.equal(resumenSugerido(vacio), '');

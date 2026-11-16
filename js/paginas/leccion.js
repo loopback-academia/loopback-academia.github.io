@@ -8,6 +8,7 @@ import { crearBuscador } from '../buscador.js';
 import { cargar, alCambiar, completarLeccion, guardarQuiz, leccionHecha, notaQuiz, registrarRespuestas } from '../progreso.js';
 import { aprueba } from '../escalera.js';
 import { estadoArea, pasoSiguiente, despuesDe, escalonDe, urlExamen, rutaArea } from '../escalera-alumno.js';
+import { leccionPremium, pantallaPremium } from '../premium.js';
 
 iniciarPagina();
 const box = $('#leccion');
@@ -46,8 +47,14 @@ if (!r) {
     el('p', {}, `Esta lección está en el escalón ${e.n} de la escalera y todavía está cerrada. En Loopback se avanza paso a paso: cada lección se abre al aprobar la anterior con un 80 %, y cada escalón al aprobar el examen del escalón anterior.`),
     paso ? el('p', {}, el('strong', {}, 'Tu siguiente paso: '), `${paso.tipo} · ${paso.texto}`) : null,
     el('div', { class: 'hero-cta' }, paso ? el('a', { class: 'btn btn-primary', href: paso.href }, 'Ir a mi siguiente paso →') : null, el('a', { class: 'btn btn-ghost', href: 'curso.html?area=' + r.leccion.modulo.area }, 'Ver la escalera'))));
+} else if (r.leccion.premium && !(r.pago = await leccionPremium(r.leccion.id)).ok) {
+  // Lección de pago sin acceso (o sin conexión y sin copia guardada).
+  nav();
+  document.title = `${r.leccion.titulo} · Loopback`;
+  box.replaceChildren(pantallaPremium({ titulo: r.leccion.titulo, motivo: r.pago.motivo, estado: r.pago.estado }));
 } else {
   const { leccion } = r;
+  if (r.pago) { leccion.blocks = r.pago.blocks; leccion.quiz = r.pago.quiz; }
   const ruta = rutaArea(curso, leccion.modulo.area);
   const anterior = ruta[ruta.findIndex(l => l.id === leccion.id) - 1] || null;
   // Lo siguiente en la escalera: la próxima lección del escalón o su examen.

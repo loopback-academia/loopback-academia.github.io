@@ -5,9 +5,9 @@ import { readFileSync } from 'node:fs';
 import { construirEscalera, estadoEscalera, elegirPreguntas, bancoDe, rutaArea, aprueba, minimoPara, labAccesible, POOL_MIN, APROBADO } from '../js/escalera.js';
 import { CATALOGO } from '../js/labs/catalogo.js';
 
-const curso = JSON.parse(readFileSync(new URL('../data/curso.json', import.meta.url)));
+const curso = JSON.parse(readFileSync(new URL('../_privado/curso.json', import.meta.url)));
 curso.lecciones = curso.modulos.flatMap(m => m.lecciones.map(l => ({ ...l, modulo: m })));
-const banco = JSON.parse(readFileSync(new URL('../data/examen.json', import.meta.url)));
+const banco = JSON.parse(readFileSync(new URL('../_privado/examen.json', import.meta.url)));
 const AREAS = ['base', 'redes', 'bd', 'prog', 'ti', 'en', 'sec'];
 
 test('el mínimo para aprobar es 80 %', () => {

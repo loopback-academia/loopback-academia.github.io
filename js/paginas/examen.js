@@ -13,10 +13,13 @@ import { escaleraDe, estadoArea, urlExamen, urlFinal, pasoSiguiente } from '../e
 import { supabase, cuentasActivas } from '../auth.js';
 import { prepararPregunta as prepararDelServidor, respuestasParaServidor, temasOrdenados, finLocal, mensajeFinal, MINIMO, INTENTOS_DIA } from '../finales.js';
 import { faltaMigracion } from '../profesor.js';
+import { bancoCompleto, estadoAcceso, requierePremium, pantallaPremium, motivoAcceso } from '../premium.js';
 
 const usuario = await iniciarPagina();
 const raiz = $('#examen');
-const [banco, curso] = await Promise.all([fetch('data/examen.json').then(r => r.json()), cargarCurso(), cargar()]);
+const [bancoPublico, curso] = await Promise.all([fetch('data/examen.json').then(r => r.json()), cargarCurso(), cargar()]);
+// Las preguntas de los módulos de pago se añaden solo cuando hacen falta (exámenes de escalón y simulacros).
+let banco = bancoPublico;
 const leccionDe = id => curso.lecciones.find(l => l.id === id.split('#')[0]);
 const AREAS = { base: 'Empieza aquí', redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico', sec: 'Ciberseguridad' };
 const ICONO = { base: '🚀', redes: '🌐', bd: '🗄️', prog: '💻', ti: '🏢', en: '🇬🇧', sec: '🛡️' };
@@ -217,7 +220,7 @@ async function finalOficial(area) {
   const sb = supabase();
   const desde = new Date(Date.now() - 864e5).toISOString();
   const { data: previos, error } = await sb.from('intentos_final').select('iniciado, entregado, puntos, total, aprobado').eq('area', area).order('iniciado', { ascending: false }).limit(50);
-  if (error && faltaMigracion(error)) { examenLocal(area, false); return; } // instalación sin exámenes verificados
+  if (error && faltaMigracion(error)) { banco = await bancoCompleto(bancoPublico); examenLocal(area, false); return; } // instalación sin exámenes verificados
   const hoy = (previos || []).filter(i => i.iniciado > desde).length;
   const mejor = (previos || []).filter(i => i.entregado && i.total).sort((a, b) => b.puntos / b.total - a.puntos / a.total)[0];
   const aprobado = (previos || []).some(i => i.aprobado);
@@ -386,8 +389,11 @@ if (escId && AREAS[escId.split('-')[0]] && escaleraDe(curso, escId.split('-')[0]
   const escalera = escaleraDe(curso, area);
   const esc = escalera.find(e => e.id === escId);
   const titulo = `Examen del escalón ${esc.n} · ${AREAS[area]}`;
+  const accesoPago = requierePremium(esc.lecciones) ? await estadoAcceso() : null;
   if (estadoArea(curso, area).escalones[esc.n - 1].estadoExamen === 'bloqueado') bloqueado(titulo, area);
+  else if (accesoPago && !accesoPago.acceso) raiz.replaceChildren(pantallaPremium({ titulo, motivo: motivoAcceso(accesoPago), estado: accesoPago }));
   else {
+    if (accesoPago) banco = await bancoCompleto(bancoPublico);
     const pool = bancoDe(banco, esc.lecciones);
     const siguiente = escalera[esc.n];
     inicio({ titulo, ceja: `Escalón ${esc.n} de ${escalera.length}`, area, clave: esc.examen, minutos: MINUTOS_NIVEL[Math.max(...esc.niveles)],
@@ -402,7 +408,7 @@ if (escId && AREAS[escId.split('-')[0]] && escaleraDe(curso, escId.split('-')[0]
   const area = finalArea;
   if (estadoArea(curso, area).final === 'bloqueado') bloqueado(`Examen final · ${AREAS[area]}`, area);
   else if (!cuentasActivas()) examenLocal(area, false);
-  else if (params.has('practica')) examenLocal(area, true);
+  else if (params.has('practica')) { banco = await bancoCompleto(bancoPublico); examenLocal(area, true); }
   else if (!usuario) sinCuenta(area);
   else finalOficial(area);
 } else centro();

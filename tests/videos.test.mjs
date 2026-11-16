@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { VIDEOS, VIDEO_EN } from '../js/video/videos.js';
 
-const curso = JSON.parse(readFileSync(new URL('../data/curso.json', import.meta.url)));
+const curso = JSON.parse(readFileSync(new URL('../_privado/curso.json', import.meta.url)));
 const lecciones = curso.modulos.flatMap(m => m.lecciones.map(l => ({ ...l, area: m.area })));
 const TIPOS = new Set(['titulo', 'caja', 'linea', 'tabla', 'codigo', 'nota', 'burbuja', 'quitar', 'viaje', 'enfoque']);
 

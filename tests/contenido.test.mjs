@@ -3,8 +3,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const curso = JSON.parse(await readFile(new URL('../data/curso.json', import.meta.url)));
-const examen = JSON.parse(await readFile(new URL('../data/examen.json', import.meta.url)));
+const curso = JSON.parse(await readFile(new URL('../_privado/curso.json', import.meta.url)));
+const examen = JSON.parse(await readFile(new URL('../_privado/examen.json', import.meta.url)));
 const lecciones = curso.modulos.flatMap(m => m.lecciones);
 
 test('ids de lección únicos y con formato seguro', () => {

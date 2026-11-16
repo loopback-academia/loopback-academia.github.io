@@ -102,6 +102,11 @@ export function labAccesible(lab, curso, estado) {
   const n = NIVEL_NUM[lab.nivel] || 1;
   return curso.lecciones.some(l => l.modulo.area === lab.area && l.nivel >= n && estado.accesible(l.id));
 }
+// Un laboratorio es de pago solo si todas las lecciones donde aparece son de pago.
+export function labDePago(lab, curso) {
+  const dentro = curso.lecciones.filter(l => l.modulo.area === lab.area && (l.blocks || []).some(b => b.t === 'embed' && `${b.kind}:${b.id}` === lab.clave));
+  return dentro.length > 0 && dentro.every(l => l.premium);
+}
 export function leccionDeLab(lab, curso) {
   return curso.lecciones.find(l => l.modulo.area === lab.area && (l.blocks || []).some(b => b.t === 'embed' && `${b.kind}:${b.id}` === lab.clave)) || null;
 }

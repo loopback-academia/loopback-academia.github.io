@@ -5,9 +5,9 @@ import { readFileSync } from 'node:fs';
 import { bloquesNivel, superaBloque, puntoDePartida, POR_BLOQUE, MINIMO_BLOQUE } from '../js/nivel.js';
 import { construirEscalera, estadoEscalera, aprueba } from '../js/escalera.js';
 
-const curso = JSON.parse(readFileSync(new URL('../data/curso.json', import.meta.url)));
+const curso = JSON.parse(readFileSync(new URL('../_privado/curso.json', import.meta.url)));
 curso.lecciones = curso.modulos.flatMap(m => m.lecciones.map(l => ({ ...l, modulo: m })));
-const banco = JSON.parse(readFileSync(new URL('../data/examen.json', import.meta.url)));
+const banco = JSON.parse(readFileSync(new URL('../_privado/examen.json', import.meta.url)));
 let s = 5; const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
 
 test('un bloque por escalón, con preguntas de las lecciones de ese escalón y sin repetir', () => {
