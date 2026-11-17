@@ -1438,3 +1438,21 @@ a.goal, a.goal strong, a.goal span { text-decoration: none; }
 .admin-tabla tr.anulado td { opacity: .5; }
 .ventas-nota-celda { white-space: normal !important; min-width: 160px; }
 @media (max-width: 720px) { .ventas-form { grid-template-columns: 1fr; } }
+
+/* ---------- Plan completo: avisos de pago */
+.alert-plan { background: linear-gradient(135deg, var(--accent-soft), var(--violet-soft)); border-color: color-mix(in srgb, var(--accent) 35%, transparent); color: var(--ink); flex-wrap: wrap; justify-content: space-between; }
+.alert-plan p { margin: 0; flex: 1 1 320px; }
+.alert-plan .hero-cta { margin: 0; }
+.premium-screen .badge { margin-top: 4px; }
+.premium-incluye { justify-content: center; margin: 6px 0 4px; }
+.btn-planes { white-space: nowrap; }
+@media (max-width: 560px) { .header-actions .btn-ghost[data-auth="out"] { display: none; } }
+.home-precios { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.home-precios .card { display: grid; gap: 4px; align-content: start; text-align: center; }
+.home-precios .precio { font-size: 1.6rem; font-weight: 800; color: var(--ink); }
+.home-precios .destacado { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+@media (max-width: 760px) { .home-precios { grid-template-columns: minmax(0, 1fr); } }
+.badge-plan { background: var(--violet-soft); color: var(--violet); }
+.centrado { text-align: center; }
+.home-precios a.card { text-decoration: none; color: inherit; }
+.home-precios .badge { justify-self: center; }

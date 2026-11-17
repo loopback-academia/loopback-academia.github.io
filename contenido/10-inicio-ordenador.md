@@ -41,7 +41,7 @@ Al final de esta área hay un test que te ayuda a elegir por cuál seguir.
 - Disposición para aprender. Equivocarse forma parte del proceso: puedes repetir las prácticas todas las veces que necesites.
 
 ::: nota
-Tu progreso se guarda en este navegador. Si creas una cuenta gratuita (botón «Entrar», arriba a la derecha), se guarda en tu cuenta y puedes seguir desde cualquier dispositivo.
+Tu progreso se guarda en este navegador. Si entras con tu cuenta (botón «Entrar», arriba a la derecha), se guarda en tu cuenta y puedes seguir desde cualquier dispositivo.
 :::
 
 ::: quiz

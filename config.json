@@ -6,12 +6,7 @@
   "_ayuda": "supabaseUrl y supabaseKey (clave publishable o anon, nunca la service_role) se rellenan al crear el proyecto de Supabase. Después ejecuta: node scripts/paginas.mjs",
   "pagos": {
     "whatsapp": "",
-    "hotmart": {
-      "mensual": "",
-      "trimestral": "",
-      "anual": "",
-      "fundador": ""
-    }
+    "paypal": ""
   },
-  "_ayuda_pagos": "whatsapp: número con código de país, solo dígitos (ej. 18095551234). hotmart: enlace de pago de cada plan (https://pay.hotmart.com/...). Vacío = el botón sale como «Disponible pronto»."
+  "_ayuda_pagos": "whatsapp: número con código de país, solo dígitos (ej. 18095551234). paypal: tu nombre de usuario de paypal.me (ej. LoopbackRD), sin «paypal.me/». Vacío = el botón sale como «Disponible pronto»."
 }

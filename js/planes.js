@@ -24,3 +24,10 @@ export function enlaceWhatsApp(numero, plan, correo = '') {
   if (!/^[1-9][0-9]{7,14}$/.test(String(numero || ''))) return null;
   return `https://wa.me/${numero}?text=${encodeURIComponent(mensajeWhatsApp(plan, correo))}`;
 }
+
+// Pago desde otro país con PayPal.me: el enlace ya lleva el importe en dólares del plan.
+export function enlacePayPal(usuario, plan) {
+  const p = PLANES[plan];
+  if (!p || !/^[A-Za-z0-9]{1,20}$/.test(String(usuario || ''))) return null;
+  return `https://www.paypal.com/paypalme/${usuario}/${p.usd}USD`;
+}

@@ -150,3 +150,8 @@ Las otras formas son plurales, siglas o variantes que también se marcan en las 
 | Servidor | servidores | base | Computadora que da un servicio a otros, como una página web, el correo o los archivos compartidos. |
 | URL | dirección web, direcciones web | base | La dirección de una página web, por ejemplo https://www.ejemplo.com/contacto. |
 | Gestor de contraseñas | gestores de contraseñas | base | Programa que guarda tus contraseñas cifradas y las completa por ti; solo hay que recordar una contraseña maestra. |
+| FortiGate | FortiGates | redes | Firewall de nueva generación de Fortinet, uno de los más instalados en empresas. Filtra, enruta, hace NAT, VPN y aplica perfiles de seguridad. |
+| FortiOS | | redes | Sistema operativo de los FortiGate. Se administra por una web o por una línea de comandos organizada en bloques config, edit, set y end. |
+| FortiGuard | | redes | Suscripción de Fortinet que mantiene al día las firmas de antivirus e IPS y las categorías del filtro web. |
+| VIP | IP virtual, IP virtuales | redes | En FortiGate, objeto que traduce una IP pública de destino a la IP privada de un servidor interno: la NAT estática para publicarlo. |
+| SD-WAN | | redes | Técnica para usar varias conexiones a Internet como un solo grupo, eligiendo el enlace de cada tráfico según su calidad medida (latencia, jitter y pérdida). |

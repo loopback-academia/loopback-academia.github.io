@@ -33,7 +33,7 @@ if (!cuentasActivas()) {
   raiz.replaceChildren(el('div', { class: 'page-head' }, el('h1', {}, 'Panel del profesor')), aviso('alert-info', 'Las cuentas no están activadas en esta instalación de Loopback, así que no se pueden crear clases.'));
 } else if (!usuario) {
   raiz.replaceChildren(el('div', { class: 'page-head' }, el('h1', {}, 'Panel del profesor'), el('p', {}, 'Crea una clase, comparte su código y sigue el progreso de tus alumnos: lecciones, prácticas y exámenes de cada área.')),
-    el('div', { class: 'card' }, el('p', {}, 'Para crear una clase o unirte a una necesitas una cuenta gratuita.'), el('a', { class: 'btn btn-primary', href: 'cuenta.html' }, 'Entrar o crear cuenta')));
+    el('div', { class: 'card' }, el('p', {}, 'Para crear una clase o unirte a una necesitas una cuenta.'), el('a', { class: 'btn btn-primary', href: 'cuenta.html' }, 'Entrar o crear cuenta')));
 } else {
   inicio();
 }

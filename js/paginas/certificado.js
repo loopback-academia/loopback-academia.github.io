@@ -187,7 +187,7 @@ function areaLocal() {
 
 if (sb && !usuario) {
   raiz.replaceChildren(el('div', { class: 'page-head' }, el('h1', {}, area && TITULO_AREA[area] ? TITULO_AREA[area] : 'Tus certificados'),
-    el('p', {}, 'Los certificados de Loopback son verificables: se emiten con tu cuenta gratuita después de aprobar el examen final oficial del área.')),
+    el('p', {}, 'Los certificados de Loopback son verificables: se emiten con tu cuenta después de aprobar el examen final oficial del área.')),
     el('div', { class: 'card' }, el('a', { class: 'btn btn-primary', href: 'cuenta.html' }, 'Entrar o crear cuenta')));
 } else if (!area || !TITULO_AREA[area]) {
   if (sb) listaVerificada(); else lista();

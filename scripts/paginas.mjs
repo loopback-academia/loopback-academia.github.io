@@ -7,18 +7,14 @@ import { createHash } from 'node:crypto';
 
 const check = process.argv.includes('--check');
 const config = JSON.parse(await readFile('config.json', 'utf8'));
-// Datos de pago públicos: número de WhatsApp (solo dígitos) y enlaces de pago de Hotmart (https). Se validan al compilar.
+// Datos de pago públicos: número de WhatsApp (solo dígitos) y usuario de PayPal.me (letras y números). Se validan al compilar.
 function pagos() {
   const p = config.pagos || {};
   const whatsapp = String(p.whatsapp || '');
   if (whatsapp && !/^[1-9][0-9]{7,14}$/.test(whatsapp)) throw new Error('config.json → pagos.whatsapp: solo dígitos, con el código de país (ej. 18095551234).');
-  const hotmart = {};
-  for (const plan of ['mensual', 'trimestral', 'anual', 'fundador']) {
-    const url = String(p.hotmart?.[plan] || '');
-    if (url && !/^https:\/\/(pay|go)\.hotmart\.com\/[A-Za-z0-9?=&_.\/-]+$/.test(url)) throw new Error(`config.json → pagos.hotmart.${plan}: debe ser un enlace https://pay.hotmart.com/…`);
-    hotmart[plan] = url;
-  }
-  return { whatsapp, hotmart };
+  const paypal = String(p.paypal || '');
+  if (paypal && !/^[A-Za-z0-9]{1,20}$/.test(paypal)) throw new Error('config.json → pagos.paypal: solo el nombre de usuario de paypal.me (letras y números, sin «paypal.me/»).');
+  return { whatsapp, paypal };
 }
 const supa = config.supabaseUrl ? new URL(config.supabaseUrl).origin : '';
 if (supa && !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(supa)) throw new Error('supabaseUrl no parece un proyecto de Supabase: ' + supa);
@@ -62,11 +58,13 @@ function header(active) {
   <div class="header-actions">
     <button type="button" class="btn btn-quiet theme-toggle luces-toggle" id="lucesToggle" aria-pressed="true" aria-label="Luces LED de la interfaz" title="Encender o apagar las luces LED">${ICON.luces}</button>
     <button type="button" class="btn btn-quiet theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro" title="Tema claro u oscuro">${ICON.tema}</button>
-    <a class="btn btn-ghost btn-sm" href="cuenta.html" data-auth="out" title="Entra o crea tu cuenta gratis para guardar tu progreso">Entrar</a>
+    <a class="btn btn-primary btn-sm btn-planes" href="precios.html"${active === 'precios.html' ? ' aria-current="page"' : ''} title="Planes y precios del curso completo">Planes</a>
+    <a class="btn btn-ghost btn-sm" href="cuenta.html" data-auth="out" title="Entra con tu cuenta o créala">Entrar</a>
     <div class="cuenta-menu" data-auth="in" hidden>
       <button type="button" class="avatar" id="menuCuenta" aria-haspopup="menu" aria-expanded="false" aria-controls="menuCuentaPop" title="Tu cuenta"><span data-user="initials">?</span><span class="sr-only">Abrir el menú de tu cuenta</span></button>
       <div class="menu-pop" id="menuCuentaPop" role="menu" hidden>
         <p class="menu-user"><strong data-user="name"></strong><span>Tu progreso se guarda en tu cuenta</span></p>
+        <a role="menuitem" href="cuenta.html#plan">${ICON.certificado}<span>Mi plan</span></a>
         <a role="menuitem" href="curso.html">${ICON.curso}<span>Mi progreso</span></a>
         <a role="menuitem" href="certificado.html">${ICON.certificado}<span>Mis certificados</span></a>
         <a role="menuitem" href="cv.html">${ICON.cv}<span>Mi CV técnico</span></a>
@@ -83,7 +81,7 @@ function mobileNav(active) {
 }
 const footer = `<footer class="site-footer"><div class="container">
   <span>Loopback · Redes, bases de datos, programación, ciberseguridad, empleo en TI e inglés técnico desde cero. El temario de redes sigue el Cisco CCNA 200-301; no es un curso oficial de Cisco.</span>
-  <span><a href="nivel.html">Examen de entrada</a> · <a href="glosario.html">Glosario</a> · <a href="cv.html">Mi CV</a> · <a href="profesor.html">Clases</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a></span>
+  <span><a href="precios.html">Planes y precios</a> · <a href="nivel.html">Examen de entrada gratis</a> · <a href="glosario.html">Glosario</a> · <a href="cv.html">Mi CV</a> · <a href="profesor.html">Clases</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a></span>
 </div></footer>`;
 
 function page(meta, body) {
@@ -121,7 +119,7 @@ ${meta.private ? '<meta name="robots" content="noindex">' : `<link rel="canonica
 <link rel="stylesheet" href="css/aula.css">
 ${scripts}
 </head>
-<body${meta.bodyClass ? ` class="${meta.bodyClass}"` : ''}>
+<body${meta.bodyClass ? ` class="${meta.bodyClass}"` : ''}${meta.plan ? ' data-plan' : ''}>
 <a class="skip" href="#main">Saltar al contenido</a>
 ${header(meta.file)}
 <main id="main">

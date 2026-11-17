@@ -6,10 +6,10 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://uwwvywmsolckebbuktpy.supabase.co wss://uwwvywmsolckebbuktpy.supabase.co; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Planes y precios · Loopback</title>
-<meta name="description" content="Empieza gratis y desbloquea el curso completo de Loopback: todas las áreas, laboratorios, exámenes oficiales y certificados verificables.">
+<meta name="description" content="Planes de Loopback desde RD$ 499 al mes (US$ 9): las 7 áreas, laboratorios, exámenes y certificado verificable, con pago único y sin renovaciones automáticas. El examen de entrada es gratis.">
 <link rel="canonical" href="https://loopback-academia.github.io/precios.html">
 <meta property="og:title" content="Planes y precios · Loopback">
-<meta property="og:description" content="Empieza gratis y desbloquea el curso completo de Loopback: todas las áreas, laboratorios, exámenes oficiales y certificados verificables.">
+<meta property="og:description" content="Planes de Loopback desde RD$ 499 al mes (US$ 9): las 7 áreas, laboratorios, exámenes y certificado verificable, con pago único y sin renovaciones automáticas. El examen de entrada es gratis.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://loopback-academia.github.io/precios.html">
 <meta property="og:site_name" content="Loopback">
@@ -36,11 +36,13 @@
   <div class="header-actions">
     <button type="button" class="btn btn-quiet theme-toggle luces-toggle" id="lucesToggle" aria-pressed="true" aria-label="Luces LED de la interfaz" title="Encender o apagar las luces LED"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg></button>
     <button type="button" class="btn btn-quiet theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro" title="Tema claro u oscuro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg></button>
-    <a class="btn btn-ghost btn-sm" href="cuenta.html" data-auth="out" title="Entra o crea tu cuenta gratis para guardar tu progreso">Entrar</a>
+    <a class="btn btn-primary btn-sm btn-planes" href="precios.html" aria-current="page" title="Planes y precios del curso completo">Planes</a>
+    <a class="btn btn-ghost btn-sm" href="cuenta.html" data-auth="out" title="Entra con tu cuenta o créala">Entrar</a>
     <div class="cuenta-menu" data-auth="in" hidden>
       <button type="button" class="avatar" id="menuCuenta" aria-haspopup="menu" aria-expanded="false" aria-controls="menuCuentaPop" title="Tu cuenta"><span data-user="initials">?</span><span class="sr-only">Abrir el menú de tu cuenta</span></button>
       <div class="menu-pop" id="menuCuentaPop" role="menu" hidden>
         <p class="menu-user"><strong data-user="name"></strong><span>Tu progreso se guarda en tu cuenta</span></p>
+        <a role="menuitem" href="cuenta.html#plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 8 5-3 5 3-1.5-8"/></svg><span>Mi plan</span></a>
         <a role="menuitem" href="curso.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2.5Z"/><path d="M8 7h7M8 11h5"/></svg><span>Mi progreso</span></a>
         <a role="menuitem" href="certificado.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 8 5-3 5 3-1.5-8"/></svg><span>Mis certificados</span></a>
         <a role="menuitem" href="cv.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg><span>Mi CV técnico</span></a>
@@ -55,26 +57,23 @@
 <section class="page"><div class="container">
   <div class="page-head precios-head">
     <span class="eyebrow">Planes y precios</span>
-    <h1>Empieza gratis. Llega hasta el final con el plan completo.</h1>
-    <p>Prueba cada área sin pagar nada. Cuando quieras seguir, elige el tiempo que necesitas: es un pago único, sin renovaciones automáticas ni sorpresas en tu tarjeta.</p>
+    <h1>Un plan, todo el curso: de cero hasta el nivel profesional.</h1>
+    <p>Las 7 áreas, los laboratorios, los exámenes y el certificado. Elige el tiempo que necesitas: es un pago único, sin renovaciones automáticas ni sorpresas en tu tarjeta. El examen de entrada es gratis para que sepas por dónde empezar.</p>
   </div>
 
-  <div id="avisoPrecios"></div>
   <div class="alert alert-ok precios-fundador"><p><strong>⭐ Precio de fundador:</strong> los primeros 100 alumnos obtienen el plan de 1 año por <strong>RD$ 2,499</strong> (US$ 45), para siempre mientras renueven.</p><div class="plan-pago" data-plan="fundador"></div></div>
 
   <div class="precios-grid">
-    <article class="card plan">
-      <h2>Gratis</h2>
-      <p class="plan-precio"><strong>RD$ 0</strong></p>
-      <p class="small muted">Para empezar desde cero y probar cada área.</p>
+    <article class="card plan plan-gratis">
+      <h2>Examen de entrada</h2>
+      <p class="plan-precio"><strong>Gratis</strong></p>
+      <p class="small muted">Antes de pagar, descubre tu nivel.</p>
       <ul class="plan-lista">
-        <li>«Empieza aquí» completo</li>
-        <li>El primer módulo de cada área</li>
-        <li>Inglés técnico completo</li>
-        <li>Examen de entrada y glosario</li>
-        <li>Progreso guardado en tu cuenta</li>
+        <li>Una prueba por área, por bloques</li>
+        <li>Te dice desde qué lección empezar</li>
+        <li>Sin tiempo límite</li>
       </ul>
-      <a class="btn btn-ghost" href="cuenta.html?modo=registro">Crear cuenta gratis</a>
+      <a class="btn btn-ghost" href="nivel.html">Hacer el examen de entrada</a>
     </article>
 
     <article class="card plan">
@@ -82,7 +81,8 @@
       <p class="plan-precio"><strong>RD$ 499</strong> <span class="small muted">o US$ 9</span></p>
       <p class="small muted">Para un repaso intensivo o probar el plan completo.</p>
       <ul class="plan-lista">
-        <li>Todo el curso: 7 áreas y 204 lecciones</li>
+        <li>Todo el curso: 7 áreas y 214 lecciones</li>
+        <li>Redes con el temario del CCNA y Fortinet FortiGate</li>
         <li>Todos los laboratorios y simuladores</li>
         <li>Exámenes de escalón y simulacros</li>
         <li>Examen final oficial y certificado verificable</li>
@@ -131,8 +131,8 @@
       <article class="card">
         <h3>🌎 Desde otro país</h3>
         <ol class="pasos-pago">
-          <li>Pulsa <strong>«Desde otro país»</strong>: el pago se hace en dólares, con tarjeta, en Hotmart, una plataforma segura de pagos para cursos.</li>
-          <li>Usa en Hotmart <strong>el mismo correo de tu cuenta de Loopback</strong>.</li>
+          <li>Pulsa <strong>«PayPal»</strong> en el plan que quieras: el pago se hace en dólares, con tu cuenta de PayPal o con tarjeta.</li>
+          <li>En la nota del pago, escribe <strong>el correo de tu cuenta de Loopback</strong>.</li>
           <li>Recibes tu <strong>código de acceso por correo</strong>, normalmente en menos de 24 horas.</li>
         </ol>
       </article>
@@ -143,22 +143,24 @@
   <section class="mt">
     <h2>Qué incluye cada opción</h2>
     <div class="table-wrap"><table class="tabla-planes">
-      <thead><tr><th scope="col"></th><th scope="col">Gratis</th><th scope="col">Plan completo</th></tr></thead>
+      <thead><tr><th scope="col"></th><th scope="col">Sin plan</th><th scope="col">Plan completo</th></tr></thead>
       <tbody>
-        <tr><th scope="row">«Empieza aquí»: la computadora, internet y seguridad</th><td>✓</td><td>✓</td></tr>
-        <tr><th scope="row">Primer módulo de cada área</th><td>✓</td><td>✓</td></tr>
-        <tr><th scope="row">Redes: temario del CCNA completo y nivel profesional</th><td>—</td><td>✓</td></tr>
-        <tr><th scope="row">Programación, Bases de datos, Empleo TI y Ciberseguridad completos</th><td>—</td><td>✓</td></tr>
-        <tr><th scope="row">Simulador de Cisco con modo guiado y laboratorios de averías</th><td>Básicos</td><td>✓ Todos</td></tr>
-        <tr><th scope="row">Exámenes de escalón, simulacros y repaso de errores</th><td>Del contenido gratis</td><td>✓ Todos</td></tr>
+        <tr><th scope="row">Examen de entrada para saber tu nivel</th><td>✓</td><td>✓</td></tr>
+        <tr><th scope="row">«Empieza aquí»: la computadora, internet y seguridad</th><td>—</td><td>✓</td></tr>
+        <tr><th scope="row">Redes: temario del CCNA, nivel profesional y Fortinet FortiGate</th><td>—</td><td>✓</td></tr>
+        <tr><th scope="row">Programación, Bases de datos, Empleo TI, Ciberseguridad e Inglés técnico</th><td>—</td><td>✓</td></tr>
+        <tr><th scope="row">Simulador de Cisco, laboratorios de averías, SQL y código en el navegador</th><td>—</td><td>✓</td></tr>
+        <tr><th scope="row">Exámenes de escalón, simulacros y repaso de errores</th><td>—</td><td>✓</td></tr>
         <tr><th scope="row">Examen final oficial y certificado verificable</th><td>—</td><td>✓</td></tr>
-        <tr><th scope="row">Estudiar sin conexión lo que ya abriste</th><td>✓</td><td>✓</td></tr>
+        <tr><th scope="row">Guía de comandos, glosario, videos y rutas de empleo</th><td>—</td><td>✓</td></tr>
+        <tr><th scope="row">Estudiar sin conexión lo que ya abriste</th><td>—</td><td>✓</td></tr>
       </tbody>
     </table></div>
   </section>
 
   <section class="mt preguntas-frecuentes">
     <h2>Preguntas frecuentes</h2>
+    <details><summary>¿Qué puedo hacer sin pagar?</summary><p>El examen de entrada: una prueba por área que te dice tu nivel y desde qué lección te conviene empezar. Las lecciones, los laboratorios, los exámenes y el certificado son del plan completo.</p></details>
     <details><summary>¿Se renueva solo?</summary><p>No. Cada plan es un pago único por el tiempo elegido. Cuando termine, decides si quieres otro. Tu progreso se conserva siempre.</p></details>
     <details><summary>¿Qué pasa con mi progreso si el plan termina?</summary><p>No se pierde nada: tus lecciones, notas y certificados siguen en tu cuenta. Solo dejas de abrir el contenido de pago hasta que actives otro plan.</p></details>
     <details><summary>¿Puedo pedir un reembolso?</summary><p>Sí, durante los primeros 7 días si no te convence, escribiéndonos por WhatsApp.</p></details>
@@ -169,7 +171,7 @@
 </main>
 <footer class="site-footer"><div class="container">
   <span>Loopback · Redes, bases de datos, programación, ciberseguridad, empleo en TI e inglés técnico desde cero. El temario de redes sigue el Cisco CCNA 200-301; no es un curso oficial de Cisco.</span>
-  <span><a href="nivel.html">Examen de entrada</a> · <a href="glosario.html">Glosario</a> · <a href="cv.html">Mi CV</a> · <a href="profesor.html">Clases</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a></span>
+  <span><a href="precios.html">Planes y precios</a> · <a href="nivel.html">Examen de entrada gratis</a> · <a href="glosario.html">Glosario</a> · <a href="cv.html">Mi CV</a> · <a href="profesor.html">Clases</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a></span>
 </div></footer>
 <nav class="mobile-nav" aria-label="Navegación móvil"><a href="curso.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2.5Z"/><path d="M8 7h7M8 11h5"/></svg><span>Curso</span></a><a href="practica.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="m7 9 3 2-3 2M12 14h5"/></svg><span>Práctica</span></a><a href="examen.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg><span>Examen</span></a><a href="tutor.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>Buscar</span></a><a href="cuenta.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Cuenta</span></a></nav>
 </body>

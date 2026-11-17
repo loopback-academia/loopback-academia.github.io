@@ -30,7 +30,7 @@ select pg_temp.como(:'jefe', 'aal1');
 select pg_temp.falla($$select public.admin_crear_codigo('anual', 'transferencia')$$, 'el administrador necesita aal2');
 select pg_temp.como(:'jefe', 'aal2');
 select public.admin_crear_codigo('trimestral', 'transferencia', 1199, 'DOP', 'Ana · WhatsApp') as cod1 \gset
-select public.admin_crear_codigo('mensual', 'hotmart', 9, 'USD', 'Venta Hotmart') as cod2 \gset
+select public.admin_crear_codigo('mensual', 'paypal', 9, 'USD', 'Venta PayPal') as cod2 \gset
 select public.admin_crear_codigo('anual', 'transferencia', 3499, 'DOP', 'Enviado por error') as cod3 \gset
 select pg_temp.debe(:'cod1' ~ '^LB-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$', 'formato del código');
 reset role;

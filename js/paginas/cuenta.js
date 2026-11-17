@@ -69,7 +69,7 @@ function acceso(pestana = 'entrar') {
       campo('Correo', { name: 'email', type: 'email', autocomplete: 'email', required: true }),
       pw,
       el('label', { class: 'option' }, el('input', { type: 'checkbox', name: 'acepto', required: true }), el('span', { class: 'small' }, 'Acepto los ', el('a', { href: 'terminos.html' }, 'términos'), ' y la ', el('a', { href: 'privacidad.html' }, 'política de privacidad'), '.')),
-      el('button', { type: 'submit', class: 'btn btn-primary btn-block' }, 'Crear cuenta gratis'), salida);
+      el('button', { type: 'submit', class: 'btn btn-primary btn-block' }, 'Crear mi cuenta'), salida);
     form.elements.password.addEventListener('input', () => {
       const p = auth.problemasContrasena(form.elements.password.value, valor(form, 'email'));
       pw.querySelector('.hint').textContent = p.length ? 'Falta: ' + p.join(', ') + '.' : '✓ Contraseña aceptable.';
@@ -172,7 +172,6 @@ async function seccionMfa() {
 async function seccionPlan() {
   const { data: acceso, error } = await auth.supabase().rpc('mi_acceso');
   if (error) return null; // instalación sin contenido de pago
-  if (acceso.abierto && !acceso.plan) return null; // mientras no se cobre, no hay nada que mostrar
   const fecha = acceso.hasta ? new Date(acceso.hasta).toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
   const salida = estado();
   const codigo = el('input', { type: 'text', name: 'codigo', maxlength: 20, placeholder: 'LB-XXXX-XXXX', autocomplete: 'off', autocapitalize: 'characters', spellcheck: 'false', 'aria-label': 'Código de acceso' });
@@ -187,10 +186,11 @@ async function seccionPlan() {
       setTimeout(() => location.reload(), 1500);
     });
   });
-  return el('section', { class: 'card plan-cuenta' }, el('h2', {}, 'Tu plan'),
+  return el('section', { class: 'card plan-cuenta', id: 'plan' }, el('h2', {}, 'Tu plan'),
     el('div', { class: 'plan-estado' },
       acceso.plan ? el('p', {}, el('span', { class: 'badge badge-ok' }, '✓ Activo'), ' ', el('strong', {}, NOMBRE_PLAN[acceso.plan] || 'Plan completo'), ` · hasta el ${fecha}`)
-        : el('p', {}, el('span', { class: 'badge' }, 'Gratis'), ' Tienes acceso a «Empieza aquí» y al primer módulo de cada área.'),
+        : acceso.abierto ? el('p', {}, el('span', { class: 'badge badge-warn' }, 'Acceso de lanzamiento'), ' Por tiempo limitado, tu cuenta abre el curso completo. Cuando empiecen los pagos necesitarás un plan.')
+          : el('p', {}, el('span', { class: 'badge' }, 'Sin plan'), ' Con tu cuenta puedes hacer el examen de entrada. Para abrir las lecciones, los laboratorios y los exámenes necesitas el plan completo.'),
       el('a', { class: 'btn btn-ghost btn-sm', href: 'precios.html' }, acceso.plan ? 'Ampliar mi plan' : 'Ver planes')),
     el('hr'),
     el('p', { class: 'small' }, el('strong', {}, '¿Ya pagaste? '), 'Escribe el código de acceso que te enviamos por WhatsApp:'),
@@ -235,6 +235,7 @@ async function panel(u) {
     el('section', { class: 'card' }, el('h2', {}, 'Perfil'), fNombre),
     el('section', { class: 'card' }, el('h2', {}, 'Seguridad'), await seccionMfa(), el('hr'), fPw, el('hr'), el('div', { class: 'hero-cta' }, salir, salirTodo)),
     el('section', { class: 'card' }, el('h2', {}, 'Tus datos'), el('p', { class: 'small muted' }, 'Descarga una copia de tu progreso o bórralo. Eliminar la cuenta borra también tus datos del servidor.'), datosLocales(), el('div', { class: 'hero-cta' }, eliminar))));
+  if (location.hash === '#plan') document.getElementById('plan')?.scrollIntoView();
 }
 
 // ---------------------------------------------------------------- arranque

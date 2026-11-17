@@ -100,9 +100,9 @@ async function cargar() {
 }
 
 // ---------------------------------------------------------------- ventas y códigos de acceso
-// Se genera un código por cada pago recibido (transferencia o Hotmart) y se le envía al alumno, que lo canjea en «Tu
+// Se genera un código por cada pago recibido (transferencia o PayPal) y se le envía al alumno, que lo canjea en «Tu
 // cuenta». El código solo se ve una vez: el servidor guarda su resumen, no el código.
-const METODOS = { transferencia: 'Transferencia (RD$)', hotmart: 'Hotmart (US$)', paypal: 'PayPal (US$)', cortesia: 'Cortesía (gratis)', otro: 'Otro' };
+const METODOS = { transferencia: 'Transferencia (RD$)', paypal: 'PayPal (US$)', cortesia: 'Cortesía (gratis)', otro: 'Otro' };
 const fechaCorta = iso => new Date(iso).toLocaleDateString('es', { day: 'numeric', month: 'short', year: 'numeric' });
 const importe = (monto, moneda) => (moneda === 'USD' ? dolares : pesos)(Number(monto));
 
@@ -121,7 +121,7 @@ async function pintarVentas(caja) {
   const dias = el('input', { id: 'vDias', type: 'number', min: 1, max: 400, value: 30 });
   const nota = el('input', { id: 'vNota', type: 'text', maxlength: 120, placeholder: 'Ej.: Ana Pérez · WhatsApp 809…', autocomplete: 'off' });
   const campoDias = el('div', { class: 'field', hidden: true }, el('label', { for: 'vDias' }, 'Días de acceso'), dias);
-  const moneda = () => (['hotmart', 'paypal'].includes(metodo.value) ? 'USD' : 'DOP');
+  const moneda = () => (metodo.value === 'paypal' ? 'USD' : 'DOP');
   const sugerir = () => {
     const p = PLANES[plan.value];
     if (plan.value === 'cortesia' || metodo.value === 'cortesia') { monto.value = 0; } else if (p) monto.value = moneda() === 'USD' ? p.usd : p.dop;
@@ -166,7 +166,7 @@ async function pintarVentas(caja) {
     const tot = d.totales || {};
     lista.replaceChildren(
       el('div', { class: 'admin-tiles mt' },
-        tile(pesos(Number(tot.DOP?.mes || 0)), 'ingresos este mes', `y ${dolares(Number(tot.USD?.mes || 0))} por Hotmart o PayPal`),
+        tile(pesos(Number(tot.DOP?.mes || 0)), 'ingresos este mes', `y ${dolares(Number(tot.USD?.mes || 0))} por PayPal`),
         tile((tot.DOP?.ventas || 0) + (tot.USD?.ventas || 0), 'ventas en total', `${pesos(Number(tot.DOP?.total || 0))} · ${dolares(Number(tot.USD?.total || 0))}`),
         tile(d.suscripciones_activas, 'planes activos'), tile(d.pendientes, 'códigos sin canjear')),
       d.codigos.length ? el('div', { class: 'table-wrap mt' }, el('table', { class: 'admin-tabla' },

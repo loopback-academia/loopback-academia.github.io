@@ -1,7 +1,7 @@
 // Planes de pago: precios coherentes y enlaces de WhatsApp bien formados.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { PLANES, NOMBRE_PLAN, mensajeWhatsApp, enlaceWhatsApp, pesos } from '../js/planes.js';
+import { PLANES, NOMBRE_PLAN, mensajeWhatsApp, enlaceWhatsApp, enlacePayPal, pesos } from '../js/planes.js';
 import { readFileSync } from 'node:fs';
 
 test('los planes más largos salen más baratos por mes y todos tienen nombre', () => {
@@ -28,4 +28,11 @@ test('el enlace de WhatsApp lleva el plan, el precio y el correo', () => {
   assert.equal(enlaceWhatsApp('', 'mensual'), null, 'sin número no hay enlace');
   assert.equal(enlaceWhatsApp('809-555-1234', 'mensual'), null, 'solo dígitos');
   assert.throws(() => mensajeWhatsApp('vitalicio'));
+});
+
+test('el enlace de PayPal lleva el precio en dólares del plan', () => {
+  assert.equal(enlacePayPal('LoopbackRD', 'anual'), 'https://www.paypal.com/paypalme/LoopbackRD/59USD');
+  assert.equal(enlacePayPal('', 'anual'), null, 'sin usuario no hay enlace');
+  assert.equal(enlacePayPal('paypal.me/x', 'anual'), null, 'solo el nombre de usuario');
+  assert.equal(enlacePayPal('LoopbackRD', 'vitalicio'), null);
 });

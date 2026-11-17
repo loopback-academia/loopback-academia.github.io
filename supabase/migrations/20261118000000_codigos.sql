@@ -2,7 +2,7 @@
 -- Pégalo entero en Supabase → SQL Editor → Run, después de 20261117000000_premium.sql. Se puede ejecutar más de una vez.
 --
 -- Cómo funciona:
---  * El alumno paga (transferencia en República Dominicana o Hotmart desde otros países) y el administrador genera en su
+--  * El alumno paga (transferencia en República Dominicana o PayPal desde otros países) y el administrador genera en su
 --    panel un código de un solo uso (LB-XXXX-XXXX) para ese plan. El alumno lo canjea en «Tu cuenta» y su suscripción se
 --    amplía al momento.
 --  * Solo se guarda el resumen SHA-256 del código, nunca el código en claro: si alguien leyera la tabla, no podría usarlo.

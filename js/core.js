@@ -128,5 +128,10 @@ export async function iniciarPagina() {
   pintarSesion(u);
   try { const aviso = sessionStorage.getItem('aula:aviso'); if (aviso) { sessionStorage.removeItem('aula:aviso'); toast(aviso); } } catch { /* nada */ }
   alCambiarSesion(pintarSesion);
+  // Páginas del plan completo: sin acceso, se muestra la pantalla de planes y el script de la página no sigue.
+  if (document.body.dataset.plan !== undefined) {
+    const { exigirPlan } = await import('./premium.js');
+    if (!(await exigirPlan())) return new Promise(() => {});
+  }
   return u;
 }

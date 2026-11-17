@@ -53,7 +53,7 @@ export function codeBlock(text, lang = 'texto') {
     try { await navigator.clipboard.writeText(text); copy.textContent = 'Copiado'; } catch { copy.textContent = 'No se pudo'; }
     setTimeout(() => { copy.textContent = 'Copiar'; }, 1500);
   });
-  const names = { ios: 'Cisco IOS', bash: 'Terminal', python: 'Python', sql: 'SQL', json: 'JSON', yaml: 'YAML', texto: 'Texto', javascript: 'JavaScript', typescript: 'TypeScript', java: 'Java', csharp: 'C#', c: 'C', cpp: 'C++', go: 'Go', rust: 'Rust', php: 'PHP', ruby: 'Ruby', kotlin: 'Kotlin', swift: 'Swift', powershell: 'PowerShell', html: 'HTML', css: 'CSS', r: 'R', dockerfile: 'Dockerfile' };
+  const names = { ios: 'Cisco IOS', fortios: 'FortiOS', bash: 'Terminal', python: 'Python', sql: 'SQL', json: 'JSON', yaml: 'YAML', texto: 'Texto', javascript: 'JavaScript', typescript: 'TypeScript', java: 'Java', csharp: 'C#', c: 'C', cpp: 'C++', go: 'Go', rust: 'Rust', php: 'PHP', ruby: 'Ruby', kotlin: 'Kotlin', swift: 'Swift', powershell: 'PowerShell', html: 'HTML', css: 'CSS', r: 'R', dockerfile: 'Dockerfile' };
   return el('pre', { class: 'code', tabindex: '0' }, el('span', { class: 'lang' }, names[lang] || lang), copy, code);
 }
 

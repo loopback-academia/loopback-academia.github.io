@@ -10,6 +10,7 @@ import { estadoArea, pasoSiguiente, urlExamen, urlFinal } from '../escalera-alum
 import { cargar, alCambiar, leccionHecha, notaQuiz, labHecho, examenes, racha, exportar } from '../progreso.js';
 import { montarReto } from '../reto-ui.js';
 import { logrosDe, xpDe, nivelDe } from '../logros.js';
+import { estadoAcceso, avisoPlan } from '../premium.js';
 
 const usuario = await iniciarPagina();
 const curso = await cargarCurso().catch(() => null);
@@ -225,11 +226,9 @@ $('#vistas').addEventListener('click', e => {
   pintar();
 });
 
-if (usuario) {
-  $('#saludo').textContent = `Hola, ${usuario.nombre || usuario.email.split('@')[0]}`;
-} else if (cuentasActivas()) {
-  $('#avisoCuenta').replaceChildren(el('div', { class: 'alert alert-info mb' }, el('p', {}, 'Estás como invitado: tu progreso se guarda solo en este navegador. Crea una cuenta gratuita para no perderlo y seguir en cualquier dispositivo.'), el('a', { class: 'btn btn-primary btn-sm', href: 'cuenta.html?siguiente=curso.html' }, 'Crear cuenta')));
-}
+if (usuario) $('#saludo').textContent = `Hola, ${usuario.nombre || usuario.email.split('@')[0]}`;
+// Sin plan: se ve el temario, con un aviso claro de que las lecciones son del plan completo.
+estadoAcceso().then(est => { const aviso = avisoPlan(est); if (aviso) $('#avisoCuenta').replaceChildren(aviso); });
 await cargar();
 pintar();
 alCambiar(pintar);
@@ -260,7 +259,7 @@ function pintarGuia() {
     { ok: hay('quiz:'), titulo: 'Responde un cuestionario', texto: 'Está al final de cada lección. Con un 80 % o más la lección se completa y se abre la siguiente.' },
     { ok: CATALOGO.some(l => labHecho(l.progreso)), titulo: 'Practica en un laboratorio', texto: 'Ejercicios con corrección automática: consola, SQL, código o casos de soporte.', accion: ['Ver las prácticas', 'practica.html#area-' + area] },
   ];
-  if (cuentasActivas()) pasos.push({ ok: !!usuario, titulo: 'Guarda tu progreso con una cuenta', texto: 'Es gratuita y te permite continuar desde el celular o la computadora.', accion: ['Crear mi cuenta', 'cuenta.html'] });
+  if (cuentasActivas()) pasos.push({ ok: !!usuario, titulo: 'Entra con tu cuenta', texto: 'Tu plan y tu progreso van con tu cuenta: sigue desde el celular o la computadora.', accion: ['Entrar', 'cuenta.html'] });
   const hechos = pasos.filter(p => p.ok).length;
   if (hechos === pasos.length) { caja.hidden = true; return; }
   const actual = pasos.findIndex(p => !p.ok);

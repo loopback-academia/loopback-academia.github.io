@@ -376,7 +376,7 @@ function examenLocal(area, practica) {
 }
 
 function sinCuenta(area) {
-  raiz.replaceChildren(cabecera('Examen final del área', `Examen final oficial · ${AREAS[area]}`, 'El examen final oficial se hace con tu cuenta gratuita: así la nota queda guardada en el servidor y tu certificado se puede verificar.'),
+  raiz.replaceChildren(cabecera('Examen final del área', `Examen final oficial · ${AREAS[area]}`, 'El examen final oficial se hace con tu cuenta: así la nota queda guardada en el servidor y tu certificado se puede verificar.'),
     el('div', { class: 'card' }, el('p', {}, 'Entra o crea tu cuenta para hacerlo. Mientras tanto, puedes practicar con un simulacro.'),
       el('div', { class: 'hero-cta' }, el('a', { class: 'btn btn-primary', href: 'cuenta.html' }, 'Entrar o crear cuenta'), el('a', { class: 'btn btn-ghost', href: `examen.html?final=${area}&practica=1` }, 'Hacer un simulacro de práctica'))));
 }

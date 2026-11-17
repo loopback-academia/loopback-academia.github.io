@@ -8,6 +8,7 @@ import { escaleraDe } from '../escalera-alumno.js';
 import { bloquesNivel, superaBloque, puntoDePartida, PERFILES, POR_BLOQUE, MINIMO_BLOQUE } from '../nivel.js';
 import { AREAS } from '../labs/catalogo.js';
 import { textoInvisible, protegerCopia } from '../examen/integridad.js';
+import { estadoAcceso } from '../premium.js';
 
 await iniciarPagina();
 const raiz = $('#nivel');
@@ -24,6 +25,15 @@ const DESCR = {
 };
 const NIVEL = ['', 'Principiante', 'Intermedio', 'Avanzado', 'Profesional'];
 const resumenEsc = e => `${NIVEL[Math.min(...e.niveles)] || ''} · ${e.modulos.slice(0, 2).join(', ')}${e.modulos.length > 2 ? '…' : ''}`;
+// Tras el examen de entrada (lo único gratis), quien no tiene plan ve claramente qué necesita para seguir.
+const acceso = estadoAcceso();
+async function ofertaPlan(texto) {
+  const est = await acceso;
+  if (est.acceso) return null;
+  return el('div', { class: 'alert alert-plan' }, el('p', {}, el('strong', {}, '⭐ Siguiente paso: el plan completo. '), texto, ' Desde RD$ 499 al mes (o US$ 9), con un pago único y sin renovaciones automáticas.'),
+    el('div', { class: 'hero-cta' }, el('a', { class: 'btn btn-primary btn-sm', href: 'precios.html' }, 'Ver planes y precios'),
+      est.sesion ? el('a', { class: 'btn btn-ghost btn-sm', href: 'cuenta.html#plan' }, 'Tengo un código') : null));
+}
 const cabecera = (titulo, texto) => el('div', { class: 'page-head' }, el('span', { class: 'eyebrow' }, 'Examen de entrada'), el('h1', {}, titulo), texto ? el('p', {}, texto) : null);
 
 // ------------------------------------------------------------------ 1. ¿Quién eres?
@@ -38,7 +48,8 @@ function elegirPerfil(id) {
   if (id === 'cero') {
     raiz.replaceChildren(cabecera('Empieza por «Empieza aquí»', 'Es la puerta de entrada para quien empieza de cero: 12 lecciones cortas, en lenguaje sencillo, con prácticas.'),
       el('div', { class: 'card' }, el('ul', { class: 'plain-list' }, ['Las partes de la computadora, el teclado y los archivos', 'Qué es internet, cómo buscar y aprender por tu cuenta', 'Seguridad básica para evitar fraudes y engaños', 'Las profesiones de la tecnología y un test para elegir tu camino'].map(t => el('li', {}, '✓ ' + t))),
-        el('div', { class: 'hero-cta' }, el('a', { class: 'btn btn-primary', href: 'curso.html?area=base' }, '🚀 Empezar desde cero'), el('button', { type: 'button', class: 'btn btn-ghost', onclick: inicio }, '‹ Volver'))));
+        el('div', { class: 'hero-cta' }, el('a', { class: 'btn btn-primary', href: 'curso.html?area=base' }, '🚀 Ver «Empieza aquí»'), el('button', { type: 'button', class: 'btn btn-ghost', onclick: inicio }, '‹ Volver'))));
+    ofertaPlan('«Empieza aquí» y todas las áreas forman parte del plan completo.').then(o => { if (o) raiz.append(o); });
     return;
   }
   if (id === 'usuario') return explicar('base');
@@ -134,11 +145,13 @@ function resultado(area, bloques, superados, respuestas, fallo) {
       : pro ? `Dominas el temario completo del CCNA: has convalidado los escalones 1 a ${superados}. Te llevamos al Nivel profesional: el día a día del trabajo en redes, con laboratorios de varias averías a la vez, cambios en producción, OSPF multiárea, BGP y automatización.`
       : superados ? `Has convalidado ${superados === 1 ? 'el escalón 1' : `los escalones 1 a ${superados}`}. Tu punto de partida es el escalón ${p.n}.`
         : `Te conviene empezar ${AREAS[area]} desde el principio: así no te faltará ninguna base.`;
+  ofertaPlan(p.todo ? 'Para hacer el examen final y conseguir el certificado necesitas el plan completo.' : 'Para seguir justo desde tu punto de partida, con lecciones, laboratorios y exámenes, necesitas el plan completo.')
+    .then(o => { if (o) raiz.querySelector('.card')?.before(o); });
   raiz.replaceChildren(...[cabecera(`Tu resultado en ${AREAS[area]}`, texto),
     fallo ? el('p', { class: 'small muted' }, `En el bloque ${fallo.n} acertaste ${fallo.aciertos} de ${fallo.total} (hacían falta ${MINIMO_BLOQUE}). Lo que fallaste pasa a tu repaso.`) : null,
     el('div', { class: 'card' }, lista, el('div', { class: 'hero-cta' }, ...acciones)),
     area === 'base' && superados >= bloques.length ? el('p', {}, el('a', { href: 'laboratorio.html?l=inicio:orientacion' }, 'Test de orientación: ¿por qué área sigo? →')) : null,
-    el('p', { class: 'small muted' }, 'Las lecciones convalidadas siguen abiertas para repasar cuando quieras. Puedes repetir esta prueba más adelante para avanzar más escalones.'),
+    el('p', { class: 'small muted' }, 'Los escalones convalidados quedan guardados en tu progreso. Puedes repetir esta prueba más adelante para avanzar más escalones.'),
     el('button', { type: 'button', class: 'btn btn-quiet', onclick: inicio }, 'Hacer la prueba de otra área')].filter(Boolean));
   if (superados) toast(`${superados} ${superados === 1 ? 'escalón convalidado' : 'escalones convalidados'}`);
 }

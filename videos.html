@@ -28,7 +28,7 @@
 <script src="vendor/supabase.js" defer></script>
 <script type="module" src="js/paginas/videos.js"></script>
 </head>
-<body>
+<body data-plan>
 <a class="skip" href="#main">Saltar al contenido</a>
 <header class="site-header"><div class="container">
   <a class="brand" href="./"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><g transform="translate(16 16) scale(1.14) translate(-16.4 -17.7)" fill="var(--accent-ink)" stroke="var(--accent-ink)" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 21.5H12A5.5 5.5 0 0 1 12 10.5H20A5.5 5.5 0 0 1 24.8 18.7" fill="none" stroke-width="3"/><path d="M17 17.2 23.4 21.5 17 25.8Z" stroke-width="1.2"/></g></svg><span>Loopback</span></a>
@@ -36,11 +36,13 @@
   <div class="header-actions">
     <button type="button" class="btn btn-quiet theme-toggle luces-toggle" id="lucesToggle" aria-pressed="true" aria-label="Luces LED de la interfaz" title="Encender o apagar las luces LED"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg></button>
     <button type="button" class="btn btn-quiet theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro" title="Tema claro u oscuro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg></button>
-    <a class="btn btn-ghost btn-sm" href="cuenta.html" data-auth="out" title="Entra o crea tu cuenta gratis para guardar tu progreso">Entrar</a>
+    <a class="btn btn-primary btn-sm btn-planes" href="precios.html" title="Planes y precios del curso completo">Planes</a>
+    <a class="btn btn-ghost btn-sm" href="cuenta.html" data-auth="out" title="Entra con tu cuenta o créala">Entrar</a>
     <div class="cuenta-menu" data-auth="in" hidden>
       <button type="button" class="avatar" id="menuCuenta" aria-haspopup="menu" aria-expanded="false" aria-controls="menuCuentaPop" title="Tu cuenta"><span data-user="initials">?</span><span class="sr-only">Abrir el menú de tu cuenta</span></button>
       <div class="menu-pop" id="menuCuentaPop" role="menu" hidden>
         <p class="menu-user"><strong data-user="name"></strong><span>Tu progreso se guarda en tu cuenta</span></p>
+        <a role="menuitem" href="cuenta.html#plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 8 5-3 5 3-1.5-8"/></svg><span>Mi plan</span></a>
         <a role="menuitem" href="curso.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2.5Z"/><path d="M8 7h7M8 11h5"/></svg><span>Mi progreso</span></a>
         <a role="menuitem" href="certificado.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 8 5-3 5 3-1.5-8"/></svg><span>Mis certificados</span></a>
         <a role="menuitem" href="cv.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg><span>Mi CV técnico</span></a>
@@ -67,7 +69,7 @@
 </main>
 <footer class="site-footer"><div class="container">
   <span>Loopback · Redes, bases de datos, programación, ciberseguridad, empleo en TI e inglés técnico desde cero. El temario de redes sigue el Cisco CCNA 200-301; no es un curso oficial de Cisco.</span>
-  <span><a href="nivel.html">Examen de entrada</a> · <a href="glosario.html">Glosario</a> · <a href="cv.html">Mi CV</a> · <a href="profesor.html">Clases</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a></span>
+  <span><a href="precios.html">Planes y precios</a> · <a href="nivel.html">Examen de entrada gratis</a> · <a href="glosario.html">Glosario</a> · <a href="cv.html">Mi CV</a> · <a href="profesor.html">Clases</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a></span>
 </div></footer>
 <nav class="mobile-nav" aria-label="Navegación móvil"><a href="curso.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2.5Z"/><path d="M8 7h7M8 11h5"/></svg><span>Curso</span></a><a href="practica.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="m7 9 3 2-3 2M12 14h5"/></svg><span>Práctica</span></a><a href="examen.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg><span>Examen</span></a><a href="tutor.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>Buscar</span></a><a href="cuenta.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Cuenta</span></a></nav>
 </body>

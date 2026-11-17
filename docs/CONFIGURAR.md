@@ -18,11 +18,11 @@ Se hace una sola vez. Necesitas una cuenta gratuita de [Supabase](https://supaba
    ```
    El panel solo muestra cifras agregadas y exige una sesión con el segundo factor verificado. Aparece un enlace en **Tu cuenta**.
 7. Para el **contenido de pago**: pega `supabase/migrations/20261117000000_premium.sql` y pulsa **Run**. El contenido en sí lo sube la integración continua (paso «Subir el contenido de pago a Supabase»), que necesita el secreto **`SUPABASE_DB_URL`** en GitHub (**Settings → Secrets and variables → Actions → New repository secret**): la cadena de conexión de Supabase **Connect → Session pooler**, con la contraseña de la base de datos en lugar de `[YOUR-PASSWORD]`. Sin ese secreto, la publicación se detiene para no dejar las lecciones de pago vacías.
-   - Mientras no se cobre, el interruptor `acceso_abierto` está en `true`: cualquier cuenta gratuita ve el contenido de pago.
+   - Mientras no se cobre, el interruptor `acceso_abierto` está en `true`: cualquier cuenta (aunque no tenga plan) ve el contenido de pago.
    - Para empezar a cobrar: `update public.ajustes set valor = 'false' where clave = 'acceso_abierto';` (solo tendrán acceso quienes tengan una suscripción vigente en la tabla `suscripciones`).
-   - Qué es gratis lo decide la lista `GRATIS` de `scripts/build_curso.py`.
+   - Hoy todo el temario es de pago y lo único gratis es el examen de entrada (usa unas pocas preguntas de muestra de cada lección). Si quisieras abrir algún módulo, se añade a la lista `GRATIS` de `scripts/build_curso.py`.
 8. Para **vender con códigos de acceso**: pega `supabase/migrations/20261118000000_codigos.sql` y pulsa **Run**. En el panel de administración aparece «Ventas y códigos»: al recibir un pago, genera el código del plan y envíaselo al alumno; lo canjea en **Tu cuenta → Tu plan**.
-   - En `config.json → pagos` pon tu número de WhatsApp (solo dígitos, con código de país) y los enlaces de pago de Hotmart de cada plan. Vacíos, los botones de la página de precios salen como «Disponible pronto».
+   - En `config.json → pagos` pon tu número de WhatsApp (solo dígitos, con código de país) y tu usuario de PayPal.me (el enlace de cada plan ya lleva su precio en dólares). Usa una cuenta PayPal **Business** para recibir pagos de ventas. Vacíos, los botones de la página de precios salen como «Disponible pronto».
    - Los precios están en `js/planes.js` y en `src/paginas/precios.html` (una prueba comprueba que coinciden).
 
 Las migraciones se prueban solas en la integración continua contra un PostgreSQL que imita Supabase (`scripts/probar-sql.sh` y `supabase/pruebas/`): permisos de cada usuario, verificación en dos pasos y que nadie lee el progreso de quien no se ha unido a su clase.

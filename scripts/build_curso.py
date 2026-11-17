@@ -44,8 +44,9 @@ SRC = ROOT / "contenido"
 OUT = ROOT / "data"
 PRIV = ROOT / "_privado"
 
-# Módulos gratuitos: «Empieza aquí» completo y el primer módulo de cada área (en Redes, la bienvenida y los fundamentos).
-GRATIS = {"i1", "i2", "i3", "m0", "m1", "b1", "p1", "s1", "s11", "c1"}
+# Módulos gratuitos (se publican completos). Vacío: todo el temario es del plan completo; lo único gratis es el examen
+# de entrada, que usa las preguntas de muestra de cada lección.
+GRATIS: set[str] = set()
 
 # Elementos interactivos que existen en la web (se comprueba que cada [[tipo:id]] apunta a uno real).
 KNOWN = {
@@ -386,13 +387,16 @@ def build() -> dict[str, str]:
             lecciones.append({**{k: l[k] for k in ("id", "titulo", "minutos", "nivel")}, "blocks": embeds, "quiz": [], "preguntas": l["preguntas"], "premium": True})
         publico["modulos"].append({**mod, "lecciones": lecciones})
     premium["preguntas"] = [q for q in examen if not gratis(q["modulo"])]
-    # Una pregunta de muestra por lección de pago (la primera con opciones y no repetida) se publica para que el examen
-    # de entrada, que es gratis, pueda medir el nivel en todo el temario.
-    muestra, con_muestra = set(), set()
+    # Unas pocas preguntas de muestra por lección de pago (las primeras con opciones y no repetidas) se publican para que
+    # el examen de entrada, que es gratis, pueda medir el nivel en todo el temario: 2 por lección, o 3 en los módulos de
+    # 6 lecciones o menos, para que cada bloque del examen de entrada tenga sus 6 preguntas.
+    lecciones_mod = {m["id"]: len(m["lecciones"]) for m in curso["modulos"]}
+    muestra, por_leccion = set(), {}
     for q in premium["preguntas"]:
         leccion = q["id"].split("#")[0]
-        if leccion not in con_muestra and not q.get("dup") and len(q.get("options", [])) >= 2:
-            muestra.add(q["id"]); con_muestra.add(leccion)
+        tope = 3 if lecciones_mod[q["modulo"]] <= 6 else 2
+        if por_leccion.get(leccion, 0) < tope and not q.get("dup") and len(q.get("options", [])) >= 2:
+            muestra.add(q["id"]); por_leccion[leccion] = por_leccion.get(leccion, 0) + 1
     examen_publico = [q if gratis(q["modulo"]) else {**q, "muestra": True} for q in examen if gratis(q["modulo"]) or q["id"] in muestra]
     titulo_mod = {m["id"]: m["titulo"] for m in curso["modulos"]}
     buscar_publico = [b if gratis(b["modulo"]) else {**b, "texto": titulo_mod[b["modulo"]], "premium": True} for b in buscar]
