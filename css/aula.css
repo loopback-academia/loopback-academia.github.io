@@ -1395,3 +1395,28 @@ a.goal, a.goal strong, a.goal span { text-decoration: none; }
 .admin-dificiles li { margin-bottom: 12px; }
 .admin-dificiles li p { margin: 0; }
 @media (prefers-reduced-motion: reduce) { .admin-barra::after { transition: none; } }
+
+/* ---------------------------------------------------------------- planes y precios */
+.precios-head { text-align: center; margin-inline: auto; max-width: 760px; }
+.precios-head p { margin-inline: auto; }
+.precios-fundador { max-width: 760px; margin: 0 auto 22px; text-align: center; }
+.precios-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+.plan { position: relative; display: flex; flex-direction: column; gap: 10px; }
+.plan h2 { margin: 0; font-size: 1.15rem; }
+.plan-precio { margin: 0; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.plan-precio strong { font-size: 1.9rem; letter-spacing: -.02em; }
+.plan-lista { margin: 4px 0 8px; padding-left: 1.1em; display: grid; gap: 6px; align-content: start; font-size: .92rem; flex: 1; }
+.plan .btn { justify-content: center; }
+.plan-destacado { border: 2px solid var(--accent); box-shadow: var(--shadow-lg, 0 10px 30px rgba(0,0,0,.08)); }
+.plan-etiqueta { position: absolute; top: -11px; left: 22px; }
+.pasos-pago { display: grid; gap: 12px; padding-left: 1.3em; }
+.dato-pago { margin-top: 6px; padding: 10px 12px; border: 1px dashed var(--line-2); border-radius: 8px; font-size: .9rem; }
+.tabla-planes { width: 100%; border-collapse: collapse; }
+.tabla-planes th, .tabla-planes td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; }
+.tabla-planes td { text-align: center; white-space: nowrap; }
+.tabla-planes tbody th { font-weight: 500; }
+.preguntas-frecuentes details { border-bottom: 1px solid var(--line); padding: 12px 0; }
+.preguntas-frecuentes summary { cursor: pointer; font-weight: 600; }
+.plan-cuenta .plan-estado { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center; }
+@media (max-width: 960px) { .precios-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .precios-grid { grid-template-columns: 1fr; } .plan-etiqueta { left: 16px; } }

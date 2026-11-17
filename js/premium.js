@@ -66,17 +66,18 @@ export function pantallaPremium({ titulo, motivo, estado = {} }) {
   const texto = {
     sesion: estado.abierto
       ? 'Esta parte del curso es gratis con tu cuenta. Crea tu cuenta gratuita (o entra) y sigue aprendiendo justo donde lo dejaste.'
-      : 'Esta parte del curso forma parte del plan completo de Loopback. Entra en tu cuenta o crea una para activarlo.',
-    plan: 'Esta parte del curso forma parte del plan completo de Loopback y tu cuenta todavía no lo tiene activo. Desde tu cuenta puedes ver cómo activarlo.',
+      : 'Esta lección forma parte del plan completo de Loopback. Desde RD$ 499 al mes, con un pago único y sin renovaciones automáticas.',
+    plan: 'Esta lección forma parte del plan completo de Loopback y tu cuenta todavía no lo tiene activo. Desde RD$ 499 al mes, con un pago único y sin renovaciones automáticas.',
     verificar: 'Tu cuenta tiene la verificación en dos pasos activada: vuelve a entrar e introduce el código de tu app para ver este contenido.',
     red: 'No hay conexión con el servidor y todavía no habías abierto este contenido con internet. Conéctate y vuelve a intentarlo.',
     pendiente: 'Este contenido se está preparando en el servidor. Vuelve a intentarlo en unos minutos.',
   }[motivo] || 'No se pudo cargar este contenido. Vuelve a intentarlo en unos minutos.';
-  const boton = motivo === 'sesion' ? el('a', { class: 'btn btn-primary', href: 'cuenta.html?modo=registro' }, estado.abierto ? 'Crear mi cuenta gratis' : 'Entrar o crear cuenta')
-    : motivo === 'plan' || motivo === 'verificar' ? el('a', { class: 'btn btn-primary', href: 'cuenta.html' }, 'Ir a mi cuenta')
+  const boton = motivo === 'sesion' ? el('a', { class: 'btn btn-primary', href: estado.abierto ? 'cuenta.html?modo=registro' : 'precios.html' }, estado.abierto ? 'Crear mi cuenta gratis' : 'Ver planes')
+    : motivo === 'plan' ? el('a', { class: 'btn btn-primary', href: 'precios.html' }, 'Ver planes')
+      : motivo === 'verificar' ? el('a', { class: 'btn btn-primary', href: 'cuenta.html' }, 'Ir a mi cuenta')
       : el('button', { type: 'button', class: 'btn btn-primary', onclick: () => location.reload() }, 'Reintentar');
   return el('div', { class: 'locked-screen premium-screen' }, el('div', { class: 'locked-ico', 'aria-hidden': 'true' }, motivo === 'red' ? '📡' : '⭐'),
     el('h1', {}, titulo), el('p', {}, texto),
-    motivo === 'sesion' ? el('p', { class: 'small muted' }, 'Lo gratuito sigue abierto para todos: «Empieza aquí», el primer módulo de cada área, el examen de entrada y el glosario.') : null,
+    motivo === 'sesion' || motivo === 'plan' ? el('p', { class: 'small muted' }, 'Lo gratuito sigue abierto para todos: «Empieza aquí», el primer módulo de cada área, el examen de entrada y el glosario.') : null,
     el('div', { class: 'hero-cta' }, boton, el('a', { class: 'btn btn-ghost', href: 'curso.html' }, 'Volver al curso')));
 }

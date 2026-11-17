@@ -167,6 +167,35 @@ async function seccionMfa() {
   return caja;
 }
 
+// Tu plan: estado del acceso al contenido de pago y canje del código que se recibe al pagar.
+const NOMBRE_PLAN = { mensual: 'Plan de 1 mes', trimestral: 'Plan de 3 meses', anual: 'Plan de 1 año', fundador: 'Plan de fundador (1 año)', institucion: 'Plan de tu institución', cortesia: 'Plan de cortesía' };
+async function seccionPlan() {
+  const { data: acceso, error } = await auth.supabase().rpc('mi_acceso');
+  if (error) return null; // instalación sin contenido de pago
+  if (acceso.abierto && !acceso.plan) return null; // mientras no se cobre, no hay nada que mostrar
+  const fecha = acceso.hasta ? new Date(acceso.hasta).toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+  const salida = estado();
+  const codigo = el('input', { type: 'text', name: 'codigo', maxlength: 20, placeholder: 'LB-XXXX-XXXX', autocomplete: 'off', autocapitalize: 'characters', spellcheck: 'false', 'aria-label': 'Código de acceso' });
+  const form = el('form', { class: 'inline-form', novalidate: true }, codigo, el('button', { type: 'submit', class: 'btn btn-primary' }, 'Activar'), salida);
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    enviar(form, salida, async () => {
+      const { data, error: err } = await auth.supabase().rpc('canjear_codigo', { p_codigo: codigo.value });
+      if (err) throw err;
+      fijar(salida, `Activado: ${NOMBRE_PLAN[data.plan] || 'plan completo'} hasta el ${new Date(data.hasta).toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' })}.`, 'ok');
+      setTimeout(() => location.reload(), 1500);
+    });
+  });
+  return el('section', { class: 'card plan-cuenta' }, el('h2', {}, 'Tu plan'),
+    el('div', { class: 'plan-estado' },
+      acceso.plan ? el('p', {}, el('span', { class: 'badge badge-ok' }, '✓ Activo'), ' ', el('strong', {}, NOMBRE_PLAN[acceso.plan] || 'Plan completo'), ` · hasta el ${fecha}`)
+        : el('p', {}, el('span', { class: 'badge' }, 'Gratis'), ' Tienes acceso a «Empieza aquí» y al primer módulo de cada área.'),
+      el('a', { class: 'btn btn-ghost btn-sm', href: 'precios.html' }, acceso.plan ? 'Ampliar mi plan' : 'Ver planes')),
+    el('hr'),
+    el('p', { class: 'small' }, el('strong', {}, '¿Ya pagaste? '), 'Escribe el código de acceso que te enviamos por WhatsApp:'),
+    form);
+}
+
 async function panel(u) {
   const salidaNombre = estado();
   const fNombre = el('form', { novalidate: true, class: 'inline-form' }, campo('Nombre', { name: 'nombre', type: 'text', value: u.nombre, maxlength: 60, autocomplete: 'given-name' }), el('button', { type: 'submit', class: 'btn btn-ghost' }, 'Guardar'), salidaNombre);
@@ -197,9 +226,11 @@ async function panel(u) {
 
   // Acceso al panel de administración: solo si el servidor confirma que es administrador con aal2.
   const esAdmin = await auth.supabase().rpc('es_admin').then(r => r.data === true, () => false);
+  const plan = await seccionPlan();
   raiz.replaceChildren(el('div', { class: 'narrow stack' },
     el('div', { class: 'page-head' }, el('h1', {}, 'Tu cuenta'), el('p', {}, u.email)),
     esAdmin ? el('section', { class: 'card' }, el('h2', {}, 'Administración'), el('p', { class: 'small muted' }, 'Estadísticas agregadas de toda la plataforma.'), el('a', { class: 'btn btn-primary btn-sm', href: 'admin.html' }, 'Abrir el panel de administración')) : null,
+    plan,
     el('section', { class: 'card' }, el('h2', {}, 'Perfil'), fNombre),
     el('section', { class: 'card' }, el('h2', {}, 'Seguridad'), await seccionMfa(), el('hr'), fPw, el('hr'), el('div', { class: 'hero-cta' }, salir, salirTodo)),
     el('section', { class: 'card' }, el('h2', {}, 'Tus datos'), el('p', { class: 'small muted' }, 'Descarga una copia de tu progreso o bórralo. Eliminar la cuenta borra también tus datos del servidor.'), datosLocales(), el('div', { class: 'hero-cta' }, eliminar))));
