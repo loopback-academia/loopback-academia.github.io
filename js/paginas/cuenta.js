@@ -1,6 +1,7 @@
 // Cuenta del alumno: entrar, registrarse, recuperar la contraseña, verificación en dos pasos y gestión de sus datos.
 import { iniciarPagina, el, $, toast } from '../core.js';
 import * as auth from '../auth.js';
+import { NOMBRE_PLAN } from '../planes.js';
 import { cargar, borrarTodo, exportar } from '../progreso.js';
 
 const raiz = $('#cuenta');
@@ -168,7 +169,6 @@ async function seccionMfa() {
 }
 
 // Tu plan: estado del acceso al contenido de pago y canje del código que se recibe al pagar.
-const NOMBRE_PLAN = { mensual: 'Plan de 1 mes', trimestral: 'Plan de 3 meses', anual: 'Plan de 1 año', fundador: 'Plan de fundador (1 año)', institucion: 'Plan de tu institución', cortesia: 'Plan de cortesía' };
 async function seccionPlan() {
   const { data: acceso, error } = await auth.supabase().rpc('mi_acceso');
   if (error) return null; // instalación sin contenido de pago
@@ -182,6 +182,7 @@ async function seccionPlan() {
     enviar(form, salida, async () => {
       const { data, error: err } = await auth.supabase().rpc('canjear_codigo', { p_codigo: codigo.value });
       if (err) throw err;
+      if (data.error) { fijar(salida, data.error, 'error'); return; } // código no válido o ya usado
       fijar(salida, `Activado: ${NOMBRE_PLAN[data.plan] || 'plan completo'} hasta el ${new Date(data.hasta).toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' })}.`, 'ok');
       setTimeout(() => location.reload(), 1500);
     });

@@ -4,6 +4,8 @@
 import { iniciarPagina, el, $, setMeter } from '../core.js';
 import { supabase, cuentasActivas } from '../auth.js';
 import { faltaMigracion } from '../profesor.js';
+import { CONFIG } from '../config.js';
+import { PLANES, NOMBRE_PLAN, pesos, dolares } from '../planes.js';
 
 const usuario = await iniciarPagina();
 const raiz = $('#admin');
@@ -14,7 +16,7 @@ const cabecera = (...extra) => el('div', { class: 'page-head' }, el('span', { cl
 const aviso = (clase, ...t) => el('div', { class: 'alert ' + clase }, el('p', {}, ...t));
 
 function tile(valor, etiqueta, nota) {
-  return el('div', { class: 'card stat admin-tile' }, el('strong', {}, num(valor)), el('span', {}, etiqueta), nota ? el('span', { class: 'small muted' }, nota) : null);
+  return el('div', { class: 'card stat admin-tile' }, el('strong', {}, typeof valor === 'string' ? valor : num(valor)), el('span', {}, etiqueta), nota ? el('span', { class: 'small muted' }, nota) : null);
 }
 
 // Barras verticales de una sola serie (altas por semana): un único color, sin leyenda; el valor aparece al pasar el
@@ -92,6 +94,103 @@ async function cargar() {
     return;
   }
   pintar(data);
+  const ventas = el('section', { class: 'card mt', id: 'ventas' });
+  raiz.firstChild.after(ventas); // justo debajo de la cabecera: es lo que más se usa
+  pintarVentas(ventas);
+}
+
+// ---------------------------------------------------------------- ventas y códigos de acceso
+// Se genera un código por cada pago recibido (transferencia o Hotmart) y se le envía al alumno, que lo canjea en «Tu
+// cuenta». El código solo se ve una vez: el servidor guarda su resumen, no el código.
+const METODOS = { transferencia: 'Transferencia (RD$)', hotmart: 'Hotmart (US$)', paypal: 'PayPal (US$)', cortesia: 'Cortesía (gratis)', otro: 'Otro' };
+const fechaCorta = iso => new Date(iso).toLocaleDateString('es', { day: 'numeric', month: 'short', year: 'numeric' });
+const importe = (monto, moneda) => (moneda === 'USD' ? dolares : pesos)(Number(monto));
+
+async function pintarVentas(caja) {
+  const { data, error } = await supabase().rpc('admin_ventas', { p_limite: 100 });
+  if (error) {
+    caja.replaceChildren(el('h2', {}, 'Ventas y códigos'), aviso('alert-warn', faltaMigracion(error)
+      ? ['Para vender con códigos de acceso, ejecuta ', el('code', {}, 'supabase/migrations/20261118000000_codigos.sql'), ' en Supabase → SQL Editor.']
+      : 'No se pudieron cargar las ventas. Recarga la página.'));
+    return;
+  }
+  const plan = el('select', { id: 'vPlan' }, [...Object.entries(PLANES).map(([k, p]) => el('option', { value: k }, `${p.nombre} · ${pesos(p.dop)} / ${dolares(p.usd)}`)),
+    el('option', { value: 'cortesia' }, 'Cortesía (días a elegir)')]);
+  const metodo = el('select', { id: 'vMetodo' }, Object.entries(METODOS).map(([k, t]) => el('option', { value: k }, t)));
+  const monto = el('input', { id: 'vMonto', type: 'number', min: 0, step: 1, inputmode: 'numeric' });
+  const dias = el('input', { id: 'vDias', type: 'number', min: 1, max: 400, value: 30 });
+  const nota = el('input', { id: 'vNota', type: 'text', maxlength: 120, placeholder: 'Ej.: Ana Pérez · WhatsApp 809…', autocomplete: 'off' });
+  const campoDias = el('div', { class: 'field', hidden: true }, el('label', { for: 'vDias' }, 'Días de acceso'), dias);
+  const moneda = () => (['hotmart', 'paypal'].includes(metodo.value) ? 'USD' : 'DOP');
+  const sugerir = () => {
+    const p = PLANES[plan.value];
+    if (plan.value === 'cortesia' || metodo.value === 'cortesia') { monto.value = 0; } else if (p) monto.value = moneda() === 'USD' ? p.usd : p.dop;
+    campoDias.hidden = plan.value !== 'cortesia';
+    monto.previousElementSibling.textContent = `Importe recibido (${moneda()})`;
+  };
+  plan.addEventListener('change', sugerir); metodo.addEventListener('change', sugerir);
+  const resultado = el('div', { 'aria-live': 'polite' });
+  const crear = el('button', { type: 'submit', class: 'btn btn-primary' }, 'Generar código');
+  const form = el('form', { class: 'ventas-form' },
+    el('div', { class: 'field' }, el('label', { for: 'vPlan' }, 'Plan'), plan),
+    el('div', { class: 'field' }, el('label', { for: 'vMetodo' }, 'Cómo pagó'), metodo),
+    el('div', { class: 'field' }, el('label', { for: 'vMonto' }, 'Importe recibido'), monto),
+    campoDias,
+    el('div', { class: 'field ventas-nota' }, el('label', { for: 'vNota' }, 'Nota (para reconocer la venta)'), nota),
+    el('div', { class: 'hero-cta' }, crear));
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    crear.disabled = true;
+    const r = await supabase().rpc('admin_crear_codigo', { p_plan: plan.value, p_metodo: metodo.value, p_monto: Number(monto.value) || 0,
+      p_moneda: moneda(), p_nota: nota.value, p_dias: plan.value === 'cortesia' ? Number(dias.value) : null });
+    crear.disabled = false;
+    if (r.error) { resultado.replaceChildren(aviso('alert-warn', 'No se pudo crear el código: ' + (r.error.message || 'inténtalo de nuevo'))); return; }
+    const mensaje = `¡Gracias por tu pago! Tu código de acceso a Loopback es ${r.data}. Actívalo en ${CONFIG.url}/cuenta.html (sección «Tu plan»). Cualquier duda, escríbeme por aquí.`;
+    const copiar = (texto, boton) => navigator.clipboard?.writeText(texto).then(() => { boton.textContent = '✓ Copiado'; });
+    const bCodigo = el('button', { type: 'button', class: 'btn btn-ghost btn-sm' }, 'Copiar código');
+    const bMensaje = el('button', { type: 'button', class: 'btn btn-primary btn-sm' }, 'Copiar mensaje para el alumno');
+    bCodigo.addEventListener('click', () => copiar(r.data, bCodigo));
+    bMensaje.addEventListener('click', () => copiar(mensaje, bMensaje));
+    resultado.replaceChildren(el('div', { class: 'alert alert-ok codigo-nuevo' },
+      el('p', {}, 'Código creado. ', el('strong', {}, 'Cópialo ahora: por seguridad no se puede volver a ver.')),
+      el('p', { class: 'codigo-grande' }, el('code', {}, r.data)),
+      el('p', { class: 'small' }, mensaje),
+      el('div', { class: 'hero-cta' }, bMensaje, bCodigo)));
+    nota.value = '';
+    pintarLista(); // actualiza totales y lista sin borrar el código recién creado
+  });
+  const lista = el('div');
+  async function pintarLista() {
+    const { data: d } = await supabase().rpc('admin_ventas', { p_limite: 100 });
+    if (!d) return;
+    const tot = d.totales || {};
+    lista.replaceChildren(
+      el('div', { class: 'admin-tiles mt' },
+        tile(pesos(Number(tot.DOP?.mes || 0)), 'ingresos este mes', `y ${dolares(Number(tot.USD?.mes || 0))} por Hotmart o PayPal`),
+        tile((tot.DOP?.ventas || 0) + (tot.USD?.ventas || 0), 'ventas en total', `${pesos(Number(tot.DOP?.total || 0))} · ${dolares(Number(tot.USD?.total || 0))}`),
+        tile(d.suscripciones_activas, 'planes activos'), tile(d.pendientes, 'códigos sin canjear')),
+      d.codigos.length ? el('div', { class: 'table-wrap mt' }, el('table', { class: 'admin-tabla' },
+        el('thead', {}, el('tr', {}, ['Fecha', 'Código', 'Plan', 'Pago', 'Importe', 'Nota', 'Estado', ''].map(t => el('th', { scope: 'col' }, t)))),
+        el('tbody', {}, d.codigos.map(c => {
+          const anular = !c.canjeado && !c.anulado ? el('button', { type: 'button', class: 'btn btn-quiet btn-sm' }, 'Anular') : null;
+          anular?.addEventListener('click', async () => {
+            if (!confirm(`¿Anular el código ${c.pista}…? Ya no se podrá usar.`)) return;
+            const r = await supabase().rpc('admin_anular_codigo', { p_id: c.id });
+            if (r.error) alert(r.error.message); else pintarLista();
+          });
+          return el('tr', { class: c.anulado ? 'anulado' : null }, el('td', {}, fechaCorta(c.creado)), el('td', {}, el('code', {}, c.pista + '…')),
+            el('td', {}, NOMBRE_PLAN[c.plan] || c.plan), el('td', {}, METODOS[c.metodo] || c.metodo), el('td', {}, importe(c.monto, c.moneda)),
+            el('td', { class: 'ventas-nota-celda' }, c.nota || '—'),
+            el('td', {}, c.anulado ? el('span', { class: 'badge' }, 'Anulado') : c.canjeado ? el('span', { class: 'badge badge-ok' }, '✓ Canjeado ' + fechaCorta(c.canjeado)) : el('span', { class: 'badge badge-accent' }, 'Pendiente')),
+            el('td', {}, anular));
+        }))))
+        : el('p', { class: 'muted mt' }, 'Todavía no hay ventas. Cuando recibas un pago, genera aquí su código.'));
+  }
+  caja.replaceChildren(el('h2', {}, 'Ventas y códigos de acceso'),
+    el('p', { class: 'small muted' }, 'Cuando recibas un pago, genera el código del plan y envíaselo al alumno por WhatsApp o por correo. Lo activa en «Tu cuenta».'),
+    form, resultado, lista);
+  sugerir();
+  pintarLista();
 }
 
 if (!cuentasActivas()) raiz.replaceChildren(cabecera(), aviso('alert-info', 'Las cuentas no están activadas en esta instalación.'));

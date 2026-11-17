@@ -21,6 +21,9 @@ Se hace una sola vez. Necesitas una cuenta gratuita de [Supabase](https://supaba
    - Mientras no se cobre, el interruptor `acceso_abierto` está en `true`: cualquier cuenta gratuita ve el contenido de pago.
    - Para empezar a cobrar: `update public.ajustes set valor = 'false' where clave = 'acceso_abierto';` (solo tendrán acceso quienes tengan una suscripción vigente en la tabla `suscripciones`).
    - Qué es gratis lo decide la lista `GRATIS` de `scripts/build_curso.py`.
+8. Para **vender con códigos de acceso**: pega `supabase/migrations/20261118000000_codigos.sql` y pulsa **Run**. En el panel de administración aparece «Ventas y códigos»: al recibir un pago, genera el código del plan y envíaselo al alumno; lo canjea en **Tu cuenta → Tu plan**.
+   - En `config.json → pagos` pon tu número de WhatsApp (solo dígitos, con código de país) y los enlaces de pago de Hotmart de cada plan. Vacíos, los botones de la página de precios salen como «Disponible pronto».
+   - Los precios están en `js/planes.js` y en `src/paginas/precios.html` (una prueba comprueba que coinciden).
 
 Las migraciones se prueban solas en la integración continua contra un PostgreSQL que imita Supabase (`scripts/probar-sql.sh` y `supabase/pruebas/`): permisos de cada usuario, verificación en dos pasos y que nadie lee el progreso de quien no se ha unido a su clase.
 

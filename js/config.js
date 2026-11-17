@@ -3,5 +3,14 @@ export const CONFIG = Object.freeze({
   "nombre": "Loopback",
   "url": "https://loopback-academia.github.io",
   "supabaseUrl": "https://uwwvywmsolckebbuktpy.supabase.co",
-  "supabaseKey": "sb_publishable_2iVbLuH2rw7L0_4SALyQfA_X407VYv-"
+  "supabaseKey": "sb_publishable_2iVbLuH2rw7L0_4SALyQfA_X407VYv-",
+  "pagos": {
+    "whatsapp": "",
+    "hotmart": {
+      "mensual": "",
+      "trimestral": "",
+      "anual": "",
+      "fundador": ""
+    }
+  }
 });

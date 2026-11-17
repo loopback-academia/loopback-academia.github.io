@@ -7,6 +7,19 @@ import { createHash } from 'node:crypto';
 
 const check = process.argv.includes('--check');
 const config = JSON.parse(await readFile('config.json', 'utf8'));
+// Datos de pago públicos: número de WhatsApp (solo dígitos) y enlaces de pago de Hotmart (https). Se validan al compilar.
+function pagos() {
+  const p = config.pagos || {};
+  const whatsapp = String(p.whatsapp || '');
+  if (whatsapp && !/^[1-9][0-9]{7,14}$/.test(whatsapp)) throw new Error('config.json → pagos.whatsapp: solo dígitos, con el código de país (ej. 18095551234).');
+  const hotmart = {};
+  for (const plan of ['mensual', 'trimestral', 'anual', 'fundador']) {
+    const url = String(p.hotmart?.[plan] || '');
+    if (url && !/^https:\/\/(pay|go)\.hotmart\.com\/[A-Za-z0-9?=&_.\/-]+$/.test(url)) throw new Error(`config.json → pagos.hotmart.${plan}: debe ser un enlace https://pay.hotmart.com/…`);
+    hotmart[plan] = url;
+  }
+  return { whatsapp, hotmart };
+}
 const supa = config.supabaseUrl ? new URL(config.supabaseUrl).origin : '';
 if (supa && !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(supa)) throw new Error('supabaseUrl no parece un proyecto de Supabase: ' + supa);
 if (config.supabaseKey && /service_role|sb_secret_/.test(config.supabaseKey + atobSafe(config.supabaseKey))) throw new Error('¡Esa es una clave secreta! En config.json solo va la clave publishable/anon.');
@@ -130,7 +143,7 @@ for (const name of (await readdir('src/paginas')).filter(n => n.endsWith('.html'
   outputs.set(name, page({ ...meta, file: name }, src.slice(m[0].length)));
 }
 outputs.set('js/config.js', `// Generado por scripts/paginas.mjs a partir de config.json. No editar a mano.
-export const CONFIG = Object.freeze(${JSON.stringify({ nombre: config.nombre, url: config.url, supabaseUrl: supa, supabaseKey: config.supabaseKey || '' }, null, 2)});
+export const CONFIG = Object.freeze(${JSON.stringify({ nombre: config.nombre, url: config.url, supabaseUrl: supa, supabaseKey: config.supabaseKey || '', pagos: pagos() }, null, 2)});
 `);
 
 // ---------------------------------------------------------------- funcionar sin conexión (service worker)
