@@ -1,4 +1,5 @@
-// Panel de administración: solo cifras agregadas de toda la plataforma (nunca correos ni datos de un alumno concreto).
+// Panel de administración: cifras agregadas de toda la plataforma, ventas y, solo para las cuentas con actividad rara
+// (posible copia del curso, cuenta compartida o prueba de códigos), su correo para poder bloquearlas.
 // La seguridad está en el servidor: admin_estadisticas() exige estar en la tabla administradores y una sesión con la
 // verificación en dos pasos completada (aal2). Esta página solo muestra lo que devuelve.
 import { iniciarPagina, el, $, setMeter } from '../core.js';
@@ -97,6 +98,35 @@ async function cargar() {
   const ventas = el('section', { class: 'card mt', id: 'ventas' });
   raiz.firstChild.after(ventas); // justo debajo de la cabecera: es lo que más se usa
   pintarVentas(ventas);
+  const alertas = el('section', { class: 'card mt', id: 'alertas' });
+  ventas.after(alertas);
+  pintarAlertas(alertas);
+}
+
+// ---------------------------------------------------------------- vigilancia: cuentas con actividad rara
+async function pintarAlertas(caja) {
+  const { data, error } = await supabase().rpc('admin_alertas');
+  const titulo = el('h2', {}, '🛡️ Seguridad: cuentas con actividad rara');
+  if (error) {
+    caja.replaceChildren(titulo, aviso('alert-warn', faltaMigracion(error)
+      ? ['Para activar la vigilancia y los límites, ejecuta ', el('code', {}, 'supabase/migrations/20261119000000_blindaje.sql'), ' en Supabase → SQL Editor.']
+      : 'No se pudieron cargar las alertas. Recarga la página.'));
+    return;
+  }
+  const explicacion = el('p', { class: 'small muted' }, 'Aparecen las cuentas que en las últimas 24 horas abrieron 100 lecciones o más, que leyeron desde 6 sesiones distintas o más en una semana (cuenta compartida) o que fallaron 10 códigos o más; y las que tienes bloqueadas. Bloquear quita el acceso al momento; se puede deshacer.');
+  if (!data.length) { caja.replaceChildren(titulo, explicacion, el('p', { class: 'muted' }, '✓ Ninguna cuenta con actividad rara.')); return; }
+  caja.replaceChildren(titulo, explicacion, el('div', { class: 'table-wrap mt' }, el('table', { class: 'admin-tabla' },
+    el('thead', {}, el('tr', {}, ['Correo', 'Motivo', 'Lecturas 24 h', 'Sesiones 7 días', 'Fallos de código', ''].map(t => el('th', { scope: 'col' }, t)))),
+    el('tbody', {}, data.map(a => {
+      const boton = el('button', { type: 'button', class: 'btn btn-sm ' + (a.bloqueada ? 'btn-ghost' : 'btn-primary') }, a.bloqueada ? 'Desbloquear' : 'Bloquear');
+      boton.addEventListener('click', async () => {
+        if (!a.bloqueada && !confirm(`¿Bloquear la cuenta ${a.correo}? Perderá el acceso al curso al momento.`)) return;
+        const r = a.bloqueada ? await supabase().rpc('admin_desbloquear', { p_user: a.user_id }) : await supabase().rpc('admin_bloquear', { p_user: a.user_id, p_motivo: a.motivo });
+        if (r.error) alert(r.error.message); else pintarAlertas(caja);
+      });
+      return el('tr', {}, el('td', {}, a.correo), el('td', {}, a.bloqueada ? el('span', { class: 'badge' }, 'Bloqueada') : a.motivo),
+        el('td', {}, num(a.lecturas_24h)), el('td', {}, num(a.sesiones_7d)), el('td', {}, num(a.fallos_canje_24h)), el('td', {}, boton));
+    })))));
 }
 
 // ---------------------------------------------------------------- ventas y códigos de acceso
@@ -120,6 +150,7 @@ async function pintarVentas(caja) {
   const monto = el('input', { id: 'vMonto', type: 'number', min: 0, step: 1, inputmode: 'numeric' });
   const dias = el('input', { id: 'vDias', type: 'number', min: 1, max: 400, value: 30 });
   const nota = el('input', { id: 'vNota', type: 'text', maxlength: 120, placeholder: 'Ej.: Ana Pérez · WhatsApp 809…', autocomplete: 'off' });
+  const correo = el('input', { id: 'vCorreo', type: 'email', maxlength: 254, placeholder: 'correo@delalumno.com', autocomplete: 'off' });
   const campoDias = el('div', { class: 'field', hidden: true }, el('label', { for: 'vDias' }, 'Días de acceso'), dias);
   const moneda = () => (metodo.value === 'paypal' ? 'USD' : 'DOP');
   const sugerir = () => {
@@ -136,16 +167,21 @@ async function pintarVentas(caja) {
     el('div', { class: 'field' }, el('label', { for: 'vMetodo' }, 'Cómo pagó'), metodo),
     el('div', { class: 'field' }, el('label', { for: 'vMonto' }, 'Importe recibido'), monto),
     campoDias,
+    el('div', { class: 'field ventas-nota' }, el('label', { for: 'vCorreo' }, 'Correo de la cuenta del alumno (recomendado: el código solo le servirá a esa cuenta)'), correo),
     el('div', { class: 'field ventas-nota' }, el('label', { for: 'vNota' }, 'Nota (para reconocer la venta)'), nota),
     el('div', { class: 'hero-cta' }, crear));
   form.addEventListener('submit', async e => {
     e.preventDefault();
     crear.disabled = true;
-    const r = await supabase().rpc('admin_crear_codigo', { p_plan: plan.value, p_metodo: metodo.value, p_monto: Number(monto.value) || 0,
-      p_moneda: moneda(), p_nota: nota.value, p_dias: plan.value === 'cortesia' ? Number(dias.value) : null });
+    const datos = { p_plan: plan.value, p_metodo: metodo.value, p_monto: Number(monto.value) || 0,
+      p_moneda: moneda(), p_nota: nota.value, p_dias: plan.value === 'cortesia' ? Number(dias.value) : null };
+    let r = await supabase().rpc('admin_crear_codigo', { ...datos, p_correo: correo.value.trim() || null });
+    // Sin la migración del blindaje, la función aún no acepta el correo: se crea sin él.
+    if (r.error && faltaMigracion(r.error) && !correo.value.trim()) r = await supabase().rpc('admin_crear_codigo', datos);
     crear.disabled = false;
     if (r.error) { resultado.replaceChildren(aviso('alert-warn', 'No se pudo crear el código: ' + (r.error.message || 'inténtalo de nuevo'))); return; }
-    const mensaje = `¡Gracias por tu pago! Tu código de acceso a Loopback es ${r.data}. Actívalo en ${CONFIG.url}/cuenta.html (sección «Tu plan»). Cualquier duda, escríbeme por aquí.`;
+    const conCorreo = correo.value.trim() ? ` con la cuenta de ${correo.value.trim().toLowerCase()}` : '';
+    const mensaje = `¡Gracias por tu pago! Tu código de acceso a Loopback es ${r.data}. Actívalo${conCorreo} en ${CONFIG.url}/cuenta.html (sección «Tu plan») antes de 30 días. Cualquier duda, escríbeme por aquí.`;
     const copiar = (texto, boton) => navigator.clipboard?.writeText(texto).then(() => { boton.textContent = '✓ Copiado'; });
     const bCodigo = el('button', { type: 'button', class: 'btn btn-ghost btn-sm' }, 'Copiar código');
     const bMensaje = el('button', { type: 'button', class: 'btn btn-primary btn-sm' }, 'Copiar mensaje para el alumno');
@@ -156,7 +192,7 @@ async function pintarVentas(caja) {
       el('p', { class: 'codigo-grande' }, el('code', {}, r.data)),
       el('p', { class: 'small' }, mensaje),
       el('div', { class: 'hero-cta' }, bMensaje, bCodigo)));
-    nota.value = '';
+    nota.value = ''; correo.value = '';
     pintarLista(); // actualiza totales y lista sin borrar el código recién creado
   });
   const lista = el('div');
@@ -172,7 +208,7 @@ async function pintarVentas(caja) {
       d.codigos.length ? el('div', { class: 'table-wrap mt' }, el('table', { class: 'admin-tabla' },
         el('thead', {}, el('tr', {}, ['Fecha', 'Código', 'Plan', 'Pago', 'Importe', 'Nota', 'Estado', ''].map(t => el('th', { scope: 'col' }, t)))),
         el('tbody', {}, d.codigos.map(c => {
-          const anular = !c.canjeado && !c.anulado ? el('button', { type: 'button', class: 'btn btn-quiet btn-sm' }, 'Anular') : null;
+          const anular = !c.canjeado && !c.anulado && !(c.caduca && new Date(c.caduca) <= new Date()) ? el('button', { type: 'button', class: 'btn btn-quiet btn-sm' }, 'Anular') : null;
           anular?.addEventListener('click', async () => {
             if (!confirm(`¿Anular el código ${c.pista}…? Ya no se podrá usar.`)) return;
             const r = await supabase().rpc('admin_anular_codigo', { p_id: c.id });
@@ -180,8 +216,9 @@ async function pintarVentas(caja) {
           });
           return el('tr', { class: c.anulado ? 'anulado' : null }, el('td', {}, fechaCorta(c.creado)), el('td', {}, el('code', {}, c.pista + '…')),
             el('td', {}, NOMBRE_PLAN[c.plan] || c.plan), el('td', {}, METODOS[c.metodo] || c.metodo), el('td', {}, importe(c.monto, c.moneda)),
-            el('td', { class: 'ventas-nota-celda' }, c.nota || '—'),
-            el('td', {}, c.anulado ? el('span', { class: 'badge' }, 'Anulado') : c.canjeado ? el('span', { class: 'badge badge-ok' }, '✓ Canjeado ' + fechaCorta(c.canjeado)) : el('span', { class: 'badge badge-accent' }, 'Pendiente')),
+            el('td', { class: 'ventas-nota-celda' }, c.nota || '—', c.para_correo ? el('div', { class: 'small muted' }, 'Para ' + c.para_correo) : null),
+            el('td', {}, c.anulado ? el('span', { class: 'badge' }, 'Anulado') : c.canjeado ? el('span', { class: 'badge badge-ok' }, '✓ Canjeado ' + fechaCorta(c.canjeado))
+              : c.caduca && new Date(c.caduca) <= new Date() ? el('span', { class: 'badge' }, 'Caducado') : el('span', { class: 'badge badge-accent' }, 'Pendiente')),
             el('td', {}, anular));
         }))))
         : el('p', { class: 'muted mt' }, 'Todavía no hay ventas. Cuando recibas un pago, genera aquí su código.'));

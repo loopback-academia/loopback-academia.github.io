@@ -24,6 +24,11 @@ Se hace una sola vez. Necesitas una cuenta gratuita de [Supabase](https://supaba
 8. Para **vender con códigos de acceso**: pega `supabase/migrations/20261118000000_codigos.sql` y pulsa **Run**. En el panel de administración aparece «Ventas y códigos»: al recibir un pago, genera el código del plan y envíaselo al alumno; lo canjea en **Tu cuenta → Tu plan**.
    - En `config.json → pagos` pon tu número de WhatsApp (solo dígitos, con código de país) y tu usuario de PayPal.me (el enlace de cada plan ya lleva su precio en dólares). Usa una cuenta PayPal **Business** para recibir pagos de ventas. Vacíos, los botones de la página de precios salen como «Disponible pronto».
    - Los precios están en `js/planes.js` y en `src/paginas/precios.html` (una prueba comprueba que coinciden).
+9. Para **blindar el contenido y los códigos**: pega `supabase/migrations/20261119000000_blindaje.sql` y pulsa **Run**.
+   - Las lecciones de pago solo se piden de una en una (`leer_leccion`, máximo 60 por hora y 150 por día) y el banco de preguntas con `banco_premium` (20 al día). Nadie, ni con plan, puede descargarse las tablas enteras.
+   - Los códigos caducan a los 30 días si no se canjean y, si escribes el correo del alumno al crearlos, solo le sirven a esa cuenta. Para canjear hace falta el correo confirmado.
+   - En el panel de administración, «Seguridad» muestra las cuentas con actividad rara (copia masiva, cuenta compartida, prueba de códigos) y permite bloquearlas.
+   - Ejecuta las migraciones **en orden**: si vuelves a ejecutar `20261118000000_codigos.sql` después de esta, ejecuta otra vez esta.
 
 Las migraciones se prueban solas en la integración continua contra un PostgreSQL que imita Supabase (`scripts/probar-sql.sh` y `supabase/pruebas/`): permisos de cada usuario, verificación en dos pasos y que nadie lee el progreso de quien no se ha unido a su clase.
 

@@ -54,3 +54,11 @@ test('todos los laboratorios de las lecciones son de pago', async () => {
   assert.ok(labs.length > 50);
   for (const lab of labs) assert.ok(labDePago(lab, c), lab.clave);
 });
+
+test('la web pide el contenido de pago de una lección en una lección, no la tabla entera', () => {
+  const js = readFileSync(new URL('../js/premium.js', import.meta.url), 'utf8');
+  assert.match(js, /rpc\('leer_leccion'/);
+  assert.match(js, /rpc\('banco_premium'\)/);
+  const sql = readFileSync(new URL('../supabase/migrations/20261119000000_blindaje.sql', import.meta.url), 'utf8');
+  assert.match(sql, /revoke all on public\.lecciones_premium, public\.preguntas_premium from anon, authenticated/);
+});

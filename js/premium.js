@@ -22,38 +22,54 @@ export function estadoAcceso() {
 }
 
 // Lección de pago: {ok: true, blocks, quiz, cache?} o {ok: false, motivo, estado}.
+// Se pide de una en una a leer_leccion() (con límite por hora y registro de lecturas). Si esa función todavía no está
+// instalada en Supabase, se usa la lectura directa de la tabla de antes.
+async function pedirLeccion(id) {
+  const { data, error } = await supabase().rpc('leer_leccion', { p_id: id });
+  if (error && faltaMigracion(error)) return supabase().from('lecciones_premium').select('blocks, quiz').eq('id', id).maybeSingle();
+  if (error) return { data: null, error };
+  if (data?.error) return { data: null, error: null, motivo: data.error };
+  return { data, error: null };
+}
 export async function leccionPremium(id) {
   const est = await estadoAcceso();
   const guardada = local.get(CLAVE_LECCION(id));
   if (est.acceso) {
-    const { data, error } = await supabase().from('lecciones_premium').select('blocks, quiz').eq('id', id).maybeSingle();
+    const { data, error, motivo } = await pedirLeccion(id);
     if (data) { local.set(CLAVE_LECCION(id), data); return { ok: true, ...data }; }
+    if (motivo === 'limite' && guardada) return { ok: true, ...guardada, cache: true };
     if (error && guardada && sinConexion(error)) return { ok: true, ...guardada, cache: true };
-    return { ok: false, motivo: error ? 'red' : 'pendiente', estado: est };
+    return { ok: false, motivo: motivo === 'limite' ? 'limite' : motivo === 'sin_acceso' ? motivoAcceso(est) : error ? 'red' : 'pendiente', estado: est };
   }
   // Sin conexión con el servidor: lo que ya se abrió antes sigue disponible en este navegador.
   if (est.error === 'red' && est.sesion && guardada) return { ok: true, ...guardada, cache: true };
   return { ok: false, motivo: motivoAcceso(est), estado: est };
 }
 
-// Sin sesión siempre se ofrece el plan (aunque no haya conexión con el servidor): sin cuenta no hay nada guardado que abrir.
 export const motivoAcceso = est => est.error === 'migracion' ? 'pendiente' : !est.sesion ? 'sesion' : est.error === 'red' ? 'red' : est.abierto ? 'verificar' : 'plan';
 
 // Banco de preguntas público + las de pago si hay acceso (o, sin conexión, las guardadas en este navegador).
 export async function bancoCompleto(publico) {
   const est = await estadoAcceso();
   let extra = null;
-  if (est.acceso) {
-    const filas = [];
-    for (let desde = 0; ; desde += 1000) {
-      const { data, error } = await supabase().from('preguntas_premium').select('datos').order('id').range(desde, desde + 999);
-      if (error) { filas.length = 0; break; }
-      filas.push(...data);
-      if (data.length < 1000) break;
+  // El banco cambia poco: si se descargó hace menos de 6 horas, se usa el guardado (el servidor limita las descargas).
+  const reciente = Date.now() - (local.get(CLAVE_PREGUNTAS + ':t', 0) || 0) < 6 * 3600e3 && local.get(CLAVE_PREGUNTAS)?.length;
+  if (est.acceso && !reciente) {
+    const { data, error } = await supabase().rpc('banco_premium');
+    if (Array.isArray(data) && data.length) extra = data;
+    else if (error && faltaMigracion(error)) { // instalación anterior: lectura directa por páginas
+      const filas = [];
+      for (let desde = 0; ; desde += 1000) {
+        const r = await supabase().from('preguntas_premium').select('datos').order('id').range(desde, desde + 999);
+        if (r.error) { filas.length = 0; break; }
+        filas.push(...r.data);
+        if (r.data.length < 1000) break;
+      }
+      if (filas.length) extra = filas.map(f => f.datos);
     }
-    if (filas.length) { extra = filas.map(f => f.datos); local.set(CLAVE_PREGUNTAS, extra); }
+    if (extra) { local.set(CLAVE_PREGUNTAS, extra); local.set(CLAVE_PREGUNTAS + ':t', Date.now()); }
   }
-  if (!extra && est.sesion && (est.acceso || est.error === 'red')) extra = local.get(CLAVE_PREGUNTAS);
+  if (!extra && est.sesion && (est.acceso || est.error === 'red')) extra = local.get(CLAVE_PREGUNTAS); // límite diario o sin conexión
   if (!extra?.length) return publico;
   const ids = new Set(extra.map(q => q.id));
   return [...publico.filter(q => !ids.has(q.id)), ...extra];
@@ -72,6 +88,7 @@ export function pantallaPremium({ titulo, motivo, estado = {} }) {
     verificar: 'Tu cuenta tiene la verificación en dos pasos activada: vuelve a entrar e introduce el código de tu app para ver este contenido.',
     red: 'No hay conexión con el servidor y todavía no habías abierto este contenido con internet. Conéctate y vuelve a intentarlo.',
     pendiente: 'Este contenido se está preparando en el servidor. Vuelve a intentarlo en unos minutos.',
+    limite: 'Has abierto muchas lecciones en poco tiempo. Para proteger el curso hay un límite por hora: descansa un rato y vuelve a intentarlo. Lo que ya abriste sigue disponible.',
   }[motivo] || 'No se pudo cargar este contenido. Vuelve a intentarlo en unos minutos.';
   const botones = motivo === 'sesion' ? [el('a', { class: 'btn btn-primary', href: 'precios.html' }, 'Ver planes y precios'), el('a', { class: 'btn btn-ghost', href: 'cuenta.html?siguiente=' + encodeURIComponent(location.pathname.split('/').pop() + location.search) }, 'Ya tengo plan: entrar')]
     : motivo === 'plan' ? [el('a', { class: 'btn btn-primary', href: 'precios.html' }, 'Ver planes y precios'), el('a', { class: 'btn btn-ghost', href: 'cuenta.html#plan' }, 'Tengo un código')]
