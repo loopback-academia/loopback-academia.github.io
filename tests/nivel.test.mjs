@@ -11,7 +11,7 @@ const banco = JSON.parse(readFileSync(new URL('../_privado/examen.json', import.
 let s = 5; const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
 
 test('un bloque por escalón, con preguntas de las lecciones de ese escalón y sin repetir', () => {
-  for (const area of ['base', 'redes', 'bd', 'prog', 'ti', 'en', 'sec']) {
+  for (const area of ['redes', 'bd', 'prog', 'ti', 'en', 'sec']) {
     const esc = construirEscalera(curso, area);
     const bl = bloquesNivel(curso, banco, area, rnd);
     assert.equal(bl.length, esc.length, area);

@@ -18,19 +18,21 @@ test('todo el temario es de pago y la estructura pública conserva todas las lec
   for (const b of buscar) assert.ok(b.premium && b.texto.length < 120, `${b.id}: el buscador no lleva el texto de pago`);
 });
 
-test('examen.json solo lleva unas pocas preguntas de muestra por lección (para el examen de entrada)', () => {
-  assert.ok(examen.every(q => q.muestra), 'solo preguntas de muestra');
-  const porLeccion = {};
-  for (const q of examen) porLeccion[q.id.split('#')[0]] = (porLeccion[q.id.split('#')[0]] || 0) + 1;
-  assert.ok(Object.values(porLeccion).every(n => n <= 3), 'como mucho 3 por lección');
-  assert.equal(new Set(examen.map(q => q.id)).size, examen.length);
-  assert.ok(examen.length < examenCompleto.length / 2, 'la mayor parte del banco sigue siendo privada');
+test('no se publica ninguna pregunta de las lecciones de pago: examen.json está vacío', () => {
+  assert.deepEqual(examen, []);
 });
 
-test('cada bloque del examen de entrada tiene sus 6 preguntas con el banco público', async () => {
+test('el examen de entrada tiene su propio banco técnico y cada bloque tiene sus 6 preguntas', async () => {
   const { bloquesNivel, POR_BLOQUE } = await import('../js/nivel.js');
+  const entrada = leer('data/entrada.json');
+  assert.ok(entrada.length >= 150, 'banco amplio');
+  const textoPago = new Set(examenCompleto.map(q => q.q.trim().toLowerCase()));
+  for (const q of entrada) {
+    assert.ok(!textoPago.has(q.q.trim().toLowerCase()), 'pregunta copiada de una lección de pago: ' + q.q);
+    assert.ok(q.options.length >= 2 && q.correct.length >= 1 && q.explain, q.id);
+  }
   for (const area of new Set(publico.modulos.map(m => m.area)))
-    for (const b of bloquesNivel(publico, examen, area)) assert.equal(b.preguntas.length, POR_BLOQUE, `${area}, bloque ${b.n}`);
+    for (const b of bloquesNivel(publico, entrada, area)) assert.equal(b.preguntas.length, POR_BLOQUE, `${area}, bloque ${b.n}`);
 });
 
 test('nada se pierde: todo el temario está entero en premium.json', () => {

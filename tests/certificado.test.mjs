@@ -9,7 +9,7 @@ const curso = JSON.parse(readFileSync(new URL('../_privado/curso.json', import.m
 curso.lecciones = curso.modulos.flatMap(m => m.lecciones.map(l => ({ ...l, modulo: m })));
 
 test('hay un certificado por área, firmado por Gabriel PD', () => {
-  assert.deepEqual(Object.keys(TITULO_AREA), ['base', 'redes', 'bd', 'prog', 'ti', 'en', 'sec']);
+  assert.deepEqual(Object.keys(TITULO_AREA), ['redes', 'bd', 'prog', 'ti', 'en', 'sec']);
   assert.equal(FIRMA, 'Gabriel PD');
 });
 
@@ -46,8 +46,8 @@ test('reto del día: estable durante el día, de los módulos empezados y con ra
   assert.equal(a, retoDelDia(banco, '2026-11-12', new Set(['b1']), 'm0'));
   assert.equal(a.modulo, 'b1');
   assert.equal(retoDelDia(banco, '2026-11-12', new Set(), 'm0').modulo, 'm0');
-  assert.equal(retoDelDia(banco, '2026-11-12', new Set(), 'i1').modulo, 'i1', 'un principiante recibe preguntas de su área, no del CCNA');
-  for (let d = 1; d <= 20; d++) assert.equal(retoDelDia(banco, `2026-11-${String(d).padStart(2, '0')}`, new Set(['i1']), 'i1', new Set(['i1-bienvenida'])).id.split('#')[0], 'i1-bienvenida', 'solo de lecciones ya estudiadas');
+  assert.equal(retoDelDia(banco, '2026-11-12', new Set(), 'c1').modulo, 'c1', 'quien empieza Ciberseguridad recibe preguntas de su área, no del CCNA');
+  for (let d = 1; d <= 20; d++) assert.equal(retoDelDia(banco, `2026-11-${String(d).padStart(2, '0')}`, new Set(['c1']), 'c1', new Set(['c1-que-es'])).id.split('#')[0], 'c1-que-es', 'solo de lecciones ya estudiadas');
   const dias = new Set(Array.from({ length: 10 }, (_, k) => retoDelDia(banco, `2026-11-${String(k + 1).padStart(2, '0')}`, new Set(['m1', 'm2']), 'm0').id));
   assert.ok(dias.size >= 6, 'cambia de un día a otro');
   const k = d => 'quiz:reto-' + d;

@@ -6,7 +6,7 @@ import * as T from './topologia.js';
 import { RETOS, revisarReto, claveDestino } from './topologia-retos.js';
 
 const W = 800, H = 460;
-const NIVEL = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
+const NIVEL = { principiante: 'Nivel 1 · Fundamentos', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
 const HERRAMIENTAS = [['mover', 'Seleccionar y mover'], ['cable', 'Cable'], ['borrar', 'Borrar']];
 
 function icono(tipo) {

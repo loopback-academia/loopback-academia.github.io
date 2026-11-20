@@ -26,7 +26,7 @@ test('los niveles suben con la experiencia y dicen cuánto falta', () => {
 test('las insignias se consiguen con el progreso y la racha', () => {
   const vacio = logrosDe(st({}), 0);
   assert.equal(vacio.filter(l => l.conseguido).length, 0);
-  const e = st({ 'leccion:m0-curso': { hecho: true }, 'leccion:b1-intro': { hecho: true }, 'leccion:i1-bienvenida': { hecho: true }, 'lab:cli-basico': { hecho: true }, 'lab:modos-ios': { hecho: true }, 'lab:ordena-vlan': { hecho: true }, 'lab:lista-pt-instalar': { hecho: true } });
+  const e = st({ 'leccion:m0-curso': { hecho: true }, 'leccion:b1-intro': { hecho: true }, 'leccion:c1-que-es': { hecho: true }, 'lab:cli-basico': { hecho: true }, 'lab:modos-ios': { hecho: true }, 'lab:ordena-vlan': { hecho: true }, 'lab:lista-pt-instalar': { hecho: true } });
   const ok = new Set(logrosDe(e, 3).filter(l => l.conseguido).map(l => l.id));
   for (const id of ['primera-leccion', 'primer-lab', 'switch', 'modos', 'ordena', 'packet-tracer', 'racha-3', 'tres-areas']) assert.ok(ok.has(id), id);
   assert.ok(!ok.has('racha-7'));

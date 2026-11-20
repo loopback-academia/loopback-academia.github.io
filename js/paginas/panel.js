@@ -17,8 +17,9 @@ const curso = await cargarCurso().catch(() => null);
 const abiertos = new Set();
 let vista = local.get('aula:panel:vista', 'niveles');
 const pedida = new URLSearchParams(location.search).get('area');
-let area = ['base', 'redes', 'bd', 'prog', 'ti', 'en', 'sec'].includes(pedida) ? pedida : local.get('aula:panel:area', 'base');
-const NIVEL_INFO = [1, 2, 3, 4].map(n => ({ n, clave: ['principiante', 'intermedio', 'avanzado', 'profesional'][n - 1], titulo: ['Nivel 1 · Principiante', 'Nivel 2 · Intermedio', 'Nivel 3 · Avanzado', 'Nivel 4 · Profesional'][n - 1] }));
+const AREAS_CURSO = ['redes', 'bd', 'prog', 'ti', 'en', 'sec'];
+let area = AREAS_CURSO.includes(pedida) ? pedida : AREAS_CURSO.includes(local.get('aula:panel:area', '')) ? local.get('aula:panel:area', '') : 'redes';
+const NIVEL_INFO = [1, 2, 3, 4].map(n => ({ n, clave: ['principiante', 'intermedio', 'avanzado', 'profesional'][n - 1], titulo: ['Nivel 1 · Fundamentos', 'Nivel 2 · Intermedio', 'Nivel 3 · Avanzado', 'Nivel 4 · Profesional'][n - 1] }));
 // Orden de la ruta: primero todo el nivel 1, luego el 2 y luego el 3 (dentro de cada nivel, en el orden del temario).
 const delArea = () => curso.lecciones.filter(l => l.modulo.area === area);
 const ruta = () => [...delArea()].sort((a, b) => a.nivel - b.nivel);
@@ -88,7 +89,7 @@ function pintarEscalera() {
     el('div', {}, el('strong', {}, 'Examen final del área'), el('p', { class: 'small muted' }, est.final === 'aprobado' ? `Aprobado con ${pct(qf.puntos, qf.total)} %. Escalera completada` : est.final === 'disponible' ? 'Último paso: demuestra todo lo aprendido (mínimo 80 %).' : 'Se abre al aprobar el examen de todos los escalones.')),
     est.final === 'bloqueado' ? null : est.final === 'aprobado' ? el('a', { class: 'btn btn-sm btn-primary', href: 'certificado.html?area=' + area }, '🎓 Mi certificado') : el('a', { class: 'btn btn-sm btn-primary', href: urlFinal(area) }, 'Hacer el examen final')));
   return el('div', {}, el('p', { class: 'small muted ladder-help' }, 'Se avanza paso a paso: cada lección se abre al aprobar la anterior con un 80 %, y cada escalón al aprobar el examen del anterior. Lo completado queda abierto para repasar.',
-    area !== 'base' ? [' ¿Ya dominas parte de esta área? ', el('a', { href: 'nivel.html?area=' + area }, 'Haz la prueba de nivel'), ' y empieza en tu escalón.'] : null),
+    [' ¿Ya dominas parte de esta área? ', el('a', { href: 'nivel.html?area=' + area }, 'Haz el examen de entrada'), ' y empieza en tu escalón.']),
     el('ol', { class: 'ladder' }, items, final));
 }
 function bloque(clave, cabecera, desc, lecciones, extra, abrirPorDefecto) {
@@ -142,9 +143,9 @@ function pintar() {
   pintarNivel();
   $('#stLabs').textContent = `${labsArea.filter(l => labHecho(l.progreso)).length}/${labsArea.length}`;
   $$('#areas button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.area === area)));
-  $('#progresoTitulo').textContent = 'TU PROGRESO EN ' + { base: 'EMPIEZA AQUÍ', redes: 'REDES', bd: 'BASES DE DATOS', prog: 'PROGRAMACIÓN', ti: 'EMPLEO TI', en: 'INGLÉS TÉCNICO', sec: 'CIBERSEGURIDAD' }[area];
+  $('#progresoTitulo').textContent = 'TU PROGRESO EN ' + { redes: 'REDES', bd: 'BASES DE DATOS', prog: 'PROGRAMACIÓN', ti: 'EMPLEO TI', en: 'INGLÉS TÉCNICO', sec: 'CIBERSEGURIDAD' }[area];
   $('#vistaModulos').textContent = area === 'redes' ? 'Por módulos del CCNA' : 'Por módulos';
-  const [href, texto] = { base: ['laboratorio.html?l=inicio:orientacion', 'Test: ¿por qué área empiezo?'], redes: ['laboratorio.html?l=lab:subnetting', 'Entrenador de subnetting'], bd: ['laboratorio.html?l=sql:select', 'Laboratorio SQL'], prog: ['laboratorio.html?l=code:python-libre', 'Zona libre de Python'], ti: ['rutas.html', 'Rutas de empleo'], en: ['laboratorio.html?l=vocab:basico', 'Vocabulario técnico'], sec: ['laboratorio.html?l=pass:fuerza', 'Analizador de contraseñas'] }[area];
+  const [href, texto] = { redes: ['laboratorio.html?l=lab:subnetting', 'Entrenador de subnetting'], bd: ['laboratorio.html?l=sql:select', 'Laboratorio SQL'], prog: ['laboratorio.html?l=code:python-libre', 'Zona libre de Python'], ti: ['rutas.html', 'Rutas de empleo'], en: ['laboratorio.html?l=vocab:basico', 'Vocabulario técnico'], sec: ['laboratorio.html?l=pass:fuerza', 'Analizador de contraseñas'] }[area];
   $('#practicaArea').setAttribute('href', href);
   $('#practicaArea').textContent = texto;
 
@@ -238,11 +239,10 @@ if (curso) montarReto($('#retoDia'), { curso, leccionHecha, area });
 // lleva directamente a donde se hace. Desaparece al completarla o si el alumno la oculta.
 function pintarGuia() {
   const OBJETIVOS = [
-    ['base', '🚀', 'Empiezo desde cero', 'Para quienes nunca han estudiado tecnología: los fundamentos, paso a paso'],
     ['redes', '🌐', 'Redes', 'Cómo funciona Internet, routers, switches, VLAN y el CCNA'],
     ['ti', '🏢', 'Conseguir empleo en TI', 'Soporte técnico, mesa de ayuda y casos reales de empresa'],
-    ['prog', '💻', 'Programación', 'Python y JavaScript desde cero, con código que se ejecuta en el navegador'],
-    ['bd', '🗄️', 'Bases de datos', 'SQL real en el navegador, desde cero hasta el nivel profesional'],
+    ['prog', '💻', 'Programación', 'Python y JavaScript con código real que se ejecuta en el navegador'],
+    ['bd', '🗄️', 'Bases de datos', 'SQL real en el navegador, del modelo relacional a la administración'],
     ['sec', '🛡️', 'Ciberseguridad', 'Contraseñas, cifrado, cortafuegos, registros y respuesta a incidentes'],
     ['en', '🇬🇧', 'Inglés técnico', 'El inglés que se exige en TI: errores, documentación, tickets y entrevistas'],
   ];

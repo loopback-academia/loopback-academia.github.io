@@ -1456,3 +1456,4 @@ a.goal, a.goal strong, a.goal span { text-decoration: none; }
 .centrado { text-align: center; }
 .home-precios a.card { text-decoration: none; color: inherit; }
 .home-precios .badge { justify-self: center; }
+.nivel-requisitos + h2 { margin-top: 28px; }

@@ -135,23 +135,80 @@ Las otras formas son plurales, siglas o variantes que también se marcan en las 
 | Ingeniería social | | sec | Engañar a las personas para que entreguen información o hagan algo que beneficia al atacante. |
 | Base64 | | sec | Codificación que convierte datos en texto. No es cifrado: cualquiera la revierte. |
 | Día cero | zero-day, vulnerabilidad de día cero | sec | Vulnerabilidad que se explota antes de que exista un parche. |
-| Hardware | | base | Las piezas físicas de un equipo, las que se pueden tocar: procesador, memoria, disco, pantalla, teclado… |
-| Software | | base | Los programas: instrucciones que le dicen al hardware qué hacer. El sistema operativo y las aplicaciones son software. |
-| Procesador | CPU, procesadores | base | La pieza que ejecuta las instrucciones de los programas: el «cerebro» de la computadora. |
-| Memoria RAM | RAM | base | Memoria rápida donde está lo que se usa en este momento. Se borra al apagar el equipo. |
-| SSD | disco SSD, disco duro, HDD | base | El disco guarda los archivos aunque se apague el equipo. Un SSD es mucho más rápido que un disco duro tradicional (HDD). |
-| Sistema operativo | sistemas operativos | base | El programa principal que hace funcionar el equipo y organiza los demás: Windows, macOS, Linux, Android o iOS. |
-| Navegador | navegadores, navegador web | base | Programa para visitar páginas web, como Chrome, Edge, Firefox o Safari. |
-| Extensión de archivo | extensiones de archivo | base | Lo que va después del último punto del nombre (.pdf, .docx, .jpg) e indica qué tipo de archivo es. |
-| Bit | bits | base | La unidad más pequeña de información: un 0 o un 1. |
-| Byte | bytes | base | Grupo de 8 bits. Los tamaños de archivo se miden en bytes: KB, MB, GB y TB. |
-| Mbps | megabits por segundo | base | Unidad de velocidad de una conexión. Para pasar a megabytes por segundo se divide entre 8. |
-| Almacenamiento en la nube | la nube, en la nube | base | Guardar archivos en servidores de internet (Google Drive, OneDrive, Dropbox) para tenerlos en cualquier dispositivo. |
-| Servidor | servidores | base | Computadora que da un servicio a otros, como una página web, el correo o los archivos compartidos. |
-| URL | dirección web, direcciones web | base | La dirección de una página web, por ejemplo https://www.ejemplo.com/contacto. |
-| Gestor de contraseñas | gestores de contraseñas | base | Programa que guarda tus contraseñas cifradas y las completa por ti; solo hay que recordar una contraseña maestra. |
+| Hardware | | ti | Las piezas físicas de un equipo, las que se pueden tocar: procesador, memoria, disco, pantalla, teclado… |
+| Software | | ti | Los programas: instrucciones que le dicen al hardware qué hacer. El sistema operativo y las aplicaciones son software. |
+| Procesador | CPU, procesadores | ti | La pieza que ejecuta las instrucciones de los programas: el «cerebro» de la computadora. |
+| Memoria RAM | RAM | ti | Memoria rápida donde está lo que se usa en este momento. Se borra al apagar el equipo. |
+| SSD | disco SSD, disco duro, HDD | ti | El disco guarda los archivos aunque se apague el equipo. Un SSD es mucho más rápido que un disco duro tradicional (HDD). |
+| Sistema operativo | sistemas operativos | ti | El programa principal que hace funcionar el equipo y organiza los demás: Windows, macOS, Linux, Android o iOS. |
+| Navegador | navegadores, navegador web | ti | Programa para visitar páginas web, como Chrome, Edge, Firefox o Safari. |
+| Extensión de archivo | extensiones de archivo | ti | Lo que va después del último punto del nombre (.pdf, .docx, .jpg) e indica qué tipo de archivo es. |
+| Bit | bits | ti | La unidad más pequeña de información: un 0 o un 1. |
+| Byte | bytes | ti | Grupo de 8 bits. Los tamaños de archivo se miden en bytes: KB, MB, GB y TB. |
+| Mbps | megabits por segundo | ti | Unidad de velocidad de una conexión. Para pasar a megabytes por segundo se divide entre 8. |
+| Almacenamiento en la nube | la nube, en la nube | ti | Guardar archivos en servidores de internet (Google Drive, OneDrive, Dropbox) para tenerlos en cualquier dispositivo. |
+| Servidor | servidores | ti | Computadora que da un servicio a otros, como una página web, el correo o los archivos compartidos. |
+| URL | dirección web, direcciones web | ti | La dirección de una página web, por ejemplo https://www.ejemplo.com/contacto. |
+| Gestor de contraseñas | gestores de contraseñas | ti | Programa que guarda tus contraseñas cifradas y las completa por ti; solo hay que recordar una contraseña maestra. |
 | FortiGate | FortiGates | redes | Firewall de nueva generación de Fortinet, uno de los más instalados en empresas. Filtra, enruta, hace NAT, VPN y aplica perfiles de seguridad. |
 | FortiOS | | redes | Sistema operativo de los FortiGate. Se administra por una web o por una línea de comandos organizada en bloques config, edit, set y end. |
 | FortiGuard | | redes | Suscripción de Fortinet que mantiene al día las firmas de antivirus e IPS y las categorías del filtro web. |
 | VIP | IP virtual, IP virtuales | redes | En FortiGate, objeto que traduce una IP pública de destino a la IP privada de un servidor interno: la NAT estática para publicarlo. |
 | SD-WAN | | redes | Técnica para usar varias conexiones a Internet como un solo grupo, eligiendo el enlace de cada tráfico según su calidad medida (latencia, jitter y pérdida). |
+| Throughput | rendimiento real | redes | Cantidad de datos que realmente atraviesa un enlace por segundo. Siempre es menor que el ancho de banda por las cabeceras, la congestión y las retransmisiones. |
+| Jitter | fluctuación | redes | Variación del retardo entre paquetes. Con mucho jitter, la voz y el video se cortan aunque la latencia media sea buena. |
+| Topología | topologías | redes | Forma en que están conectados los equipos de una red (física) o en que circulan los datos (lógica): estrella, malla, etc. |
+| Spine-leaf | | redes | Arquitectura de centro de datos en la que cada switch de servidores (leaf) se conecta a todos los switches de la capa superior (spine): cualquier servidor queda a dos saltos de otro. |
+| Distancia administrativa | | redes | Valor con el que un router elige entre rutas al mismo destino aprendidas por fuentes distintas: menor es más fiable (conectada 0, estática 1, OSPF 110). |
+| Coincidencia más larga | prefijo más largo | redes | Regla del enrutamiento: entre varias rutas que contienen el destino, se usa la de prefijo más específico (por ejemplo, /24 antes que /16). |
+| VLAN nativa | | redes | VLAN cuyas tramas viajan sin etiqueta por un enlace troncal 802.1Q. Debe coincidir en los dos extremos. |
+| 802.1Q | dot1Q | redes | Estándar que añade a las tramas Ethernet una etiqueta con el número de VLAN para que varias VLAN compartan un enlace troncal. |
+| LACP | | redes | Protocolo estándar (IEEE 802.3ad) que negocia la agrupación de varios enlaces físicos en un EtherChannel. |
+| PortFast | | redes | Función de Cisco que pasa un puerto de acceso directamente a reenviar sin esperar a Spanning Tree. Solo para equipos finales. |
+| BPDU Guard | | redes | Protección que apaga un puerto PortFast si recibe tramas de Spanning Tree, para evitar que alguien conecte un switch no autorizado. |
+| DHCP snooping | | sec | Función de los switches que solo acepta respuestas DHCP por los puertos marcados como confiables. Evita servidores DHCP falsos. |
+| TACACS+ | | redes | Protocolo AAA que cifra el paquete completo y separa autenticación, autorización y registro. Se usa para administrar equipos de red. |
+| RADIUS | | redes | Protocolo AAA muy usado para el acceso a la red (wifi empresarial, 802.1X, VPN). Solo cifra la contraseña. |
+| WPA3 | | sec | Estándar de seguridad wifi actual. En su versión personal usa SAE, que resiste los ataques de diccionario fuera de línea. |
+| BGP | | redes | Protocolo de enrutamiento entre sistemas autónomos: el que intercambia rutas entre proveedores de internet y con las empresas conectadas a ellos. |
+| ABR | router de borde de área | redes | Router OSPF con interfaces en el área 0 y en otra área; resume e intercambia rutas entre ellas. |
+| SGBD | DBMS, sistema gestor de bases de datos | bd | Programa que gestiona una base de datos: almacenamiento, consultas, permisos, concurrencia y transacciones. PostgreSQL, MySQL o SQL Server son SGBD. |
+| OLTP | | bd | Carga de trabajo transaccional: muchas operaciones cortas del día a día, como registrar ventas o actualizar inventario. |
+| OLAP | | bd | Carga de trabajo analítica: pocas consultas largas sobre muchos datos históricos para informes y tableros. |
+| Almacén de datos | data warehouse | bd | Base de datos pensada para el análisis, que recibe copias de los sistemas operativos para no frenarlos con consultas pesadas. |
+| Interbloqueo | deadlock, interbloqueos | bd | Situación en que dos transacciones esperan cada una un bloqueo que tiene la otra. El SGBD cancela una de ellas. |
+| Plan de ejecución | | bd | Forma en que el SGBD decide resolver una consulta (qué índices usa, en qué orden une las tablas). Se ve con EXPLAIN. |
+| Función de ventana | funciones de ventana | bd | Función SQL que calcula sobre un grupo de filas relacionadas (OVER) sin agruparlas: rankings, acumulados, medias móviles. |
+| Intérprete | intérpretes | prog | Programa que lee y ejecuta el código fuente sobre la marcha, sin generar antes un ejecutable. Python y Bash suelen ejecutarse así. |
+| Bytecode | | prog | Código intermedio que ejecuta una máquina virtual (la JVM de Java, .NET o el intérprete de Python) en lugar del procesador directamente. |
+| JIT | compilación en tiempo de ejecución | prog | Técnica que compila a código máquina, mientras el programa se ejecuta, las partes que más se usan. La usan la JVM, .NET y los navegadores. |
+| Stack | pila de llamadas | prog | Zona de memoria donde se guardan las variables locales y las llamadas a funciones. Se libera sola al terminar cada función. |
+| Heap | | prog | Zona de memoria para los datos que viven más tiempo (listas, objetos). La libera el recolector de basura o, en C, el programador. |
+| Recolector de basura | garbage collector | prog | Parte del entorno de ejecución que libera automáticamente la memoria que el programa ya no usa. |
+| Tipado estático | | prog | Sistema en el que el tipo de cada variable se conoce al compilar, así que muchos errores se detectan antes de ejecutar (Java, C#, Go). |
+| Tipado dinámico | | prog | Sistema en el que el tipo se comprueba al ejecutar (Python, JavaScript): más flexible, pero los errores aparecen más tarde. |
+| Notación O grande | complejidad algorítmica | prog | Forma de expresar cómo crece el tiempo de un algoritmo con el tamaño de los datos: O(1), O(log n), O(n), O(n²)… |
+| Prueba unitaria | pruebas unitarias | prog | Prueba automática que comprueba una función o pieza pequeña de código con entradas y resultados conocidos. |
+| Tríada CIA | CIA, confidencialidad, integridad y disponibilidad | sec | Las tres propiedades que protege la seguridad de la información: que solo lo vea quien debe, que nadie lo altere y que funcione cuando se necesita. |
+| Mínimo privilegio | | sec | Principio por el que cada usuario, programa o cuenta tiene solo los permisos que necesita para su trabajo. |
+| Defensa en profundidad | | sec | Diseño con varias capas de protección independientes, para que el fallo de una no deje el sistema expuesto. |
+| Zero trust | confianza cero | sec | Modelo en el que no se confía en nada por estar dentro de la red: cada acceso se verifica según la identidad, el dispositivo y el contexto. |
+| CWE | | sec | Catálogo de tipos de fallos de software que causan vulnerabilidades, por ejemplo CWE-89 (inyección SQL). |
+| MITRE ATT&CK | ATT&CK | sec | Catálogo público de tácticas y técnicas reales de los atacantes. Los SOC lo usan para diseñar detecciones. |
+| NIST CSF | | sec | Marco de ciberseguridad del NIST. Su versión 2.0 organiza la seguridad en seis funciones: Gobernar, Identificar, Proteger, Detectar, Responder y Recuperar. |
+| ISO/IEC 27001 | ISO 27001 | sec | Norma internacional certificable para gestionar la seguridad de la información en una organización. |
+| CSRF | | sec | Ataque que hace que el navegador de un usuario con sesión iniciada envíe una petición que él no quería. Se evita con tokens anti-CSRF y cookies SameSite. |
+| Falso positivo | falsos positivos | sec | Alerta que salta sin que haya un ataque real. Lo contrario, un ataque sin alerta, es un falso negativo. |
+| OLA | | ti | Acuerdo de nivel operativo: compromiso entre equipos internos para poder cumplir el SLA con el cliente. |
+| MTTR | | ti | Tiempo medio hasta restaurar un servicio o reparar una avería. Es una de las métricas clave de soporte y operaciones. |
+| FCR | resolución en el primer contacto | ti | Porcentaje de casos que la mesa de ayuda resuelve en el primer contacto, sin escalar ni volver a llamar. |
+| UEFI | | ti | Firmware moderno de arranque de las computadoras, sucesor de la BIOS. Admite discos GPT y Secure Boot. |
+| TPM | TPM 2.0 | ti | Chip criptográfico que guarda claves de forma segura (BitLocker, Windows Hello). Windows 11 exige TPM 2.0. |
+| Secure Boot | arranque seguro | ti | Función de UEFI que solo deja arrancar software firmado, para impedir que un malware se cargue antes que el sistema operativo. |
+| NVMe | | ti | Protocolo para unidades SSD que van por PCIe: mucho más rápido que SATA en velocidad y en operaciones por segundo. |
+| PCIe | PCI Express | ti | Bus de alta velocidad de la placa base, organizado en carriles (x1, x4, x16), para tarjetas gráficas, SSD NVMe y tarjetas de red. |
+| IOPS | | ti | Operaciones de entrada y salida por segundo que admite una unidad de almacenamiento. Mide su rapidez con accesos pequeños y aleatorios. |
+| Thermal throttling | | ti | Bajada automática de la potencia del procesador cuando se calienta demasiado. Un equipo sucio o mal refrigerado se vuelve lento por esto. |
+| RFC | RFCs | en | Documento que define un estándar de internet (TCP, DNS, HTTP…). Usa palabras de obligación precisas: MUST, SHOULD y MAY. |
+| Deprecated | obsoleto | en | Función o comando que todavía funciona pero dejará de existir. Hay que planificar el cambio a su sustituto. |
+| Troubleshooting | | en | Diagnóstico y resolución de averías. Una de las palabras que más aparecen en las ofertas de empleo de TI. |

@@ -5,7 +5,7 @@ import { guardarLab, labHecho, cargar } from '../progreso.js';
 import { prompt, completar, interfazUp, vlanPasa, buscarRuta } from '../labs/ios.js';
 import { PROYECTOS, crearProyecto, ejecutarEn, restaurar, evaluar, informe } from './proyectos.js';
 
-const NIVEL = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
+const NIVEL = { principiante: 'Nivel 1 · Fundamentos', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
 
 // Esquema de la oficina: ISP — R1 — SW1 — PC. Cada enlace se pinta según funcione o no.
 function topologia(eqs, pcs) {

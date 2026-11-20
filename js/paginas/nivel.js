@@ -5,25 +5,26 @@ import { cargarCurso } from '../curso.js';
 import { cargar, guardarQuiz, notaQuiz, registrarRespuestas } from '../progreso.js';
 import { prepararPregunta } from '../quiz.js';
 import { escaleraDe } from '../escalera-alumno.js';
-import { bloquesNivel, superaBloque, puntoDePartida, PERFILES, POR_BLOQUE, MINIMO_BLOQUE } from '../nivel.js';
+import { bloquesNivel, superaBloque, puntoDePartida, POR_BLOQUE, MINIMO_BLOQUE } from '../nivel.js';
 import { AREAS } from '../labs/catalogo.js';
 import { textoInvisible, protegerCopia } from '../examen/integridad.js';
 import { estadoAcceso } from '../premium.js';
 
 await iniciarPagina();
 const raiz = $('#nivel');
-const [curso, banco] = await Promise.all([cargarCurso(), fetch('data/examen.json').then(r => r.json()), cargar()]);
-const ICONO = { base: '🚀', redes: '🌐', bd: '🗄️', prog: '💻', sec: '🛡️', ti: '🏢', en: '🇬🇧' };
+// Banco propio del examen de entrada (contenido/examen-entrada.md): preguntas técnicas que no salen de las lecciones.
+const [curso, banco] = await Promise.all([cargarCurso(), fetch('data/entrada.json').then(r => r.json()), cargar()]);
+const ICONO = { redes: '🌐', bd: '🗄️', prog: '💻', sec: '🛡️', ti: '🏢', en: '🇬🇧' };
 const DESCR = {
-  redes: 'Del modelo OSI al CCNA: direcciones IP, switches, VLAN, enrutamiento, OSPF, servicios y seguridad.',
-  bd: 'Modelo relacional, SQL (de SELECT a funciones de ventana), diseño y administración.',
-  prog: 'Fundamentos, lenguajes, Git, POO, APIs, algoritmos y buenas prácticas.',
-  sec: 'Contraseñas y cifrado, cortafuegos, vulnerabilidades web, registros y respuesta a incidentes.',
-  ti: 'Soporte técnico, mesa de ayuda, Windows, Active Directory y hardware.',
-  en: 'Inglés técnico: vocabulario, lectura de errores y documentación, tickets y entrevistas.',
-  base: 'Lo básico de la computadora, internet, archivos, seguridad y unidades.',
+  redes: 'Modelo OSI, subnetting, switching y VLAN, enrutamiento, OSPF, servicios IP, seguridad, nivel profesional y Fortinet.',
+  sec: 'Tríada CIA y riesgo, hashes y cifrado, TLS, firewalls y DMZ, vulnerabilidades web, registros, SOC y respuesta a incidentes.',
+  bd: 'Modelo relacional, SQL (de SELECT a funciones de ventana), transacciones, diseño, índices, seguridad y NoSQL.',
+  prog: 'Ejecución y memoria, Python y JavaScript, colecciones, Git, POO, Linux, APIs, algoritmos y pruebas.',
+  ti: 'ITIL y tickets, diagnóstico de Windows, PowerShell, hardware, Active Directory y averías.',
+  en: 'Mensajes de error, RFC y documentación, tickets, llamadas y entrevistas en inglés.',
 };
-const NIVEL = ['', 'Principiante', 'Intermedio', 'Avanzado', 'Profesional'];
+const ORDEN = ['redes', 'sec', 'bd', 'prog', 'ti', 'en'];
+const NIVEL = ['', 'Fundamentos', 'Intermedio', 'Avanzado', 'Profesional'];
 const resumenEsc = e => `${NIVEL[Math.min(...e.niveles)] || ''} · ${e.modulos.slice(0, 2).join(', ')}${e.modulos.length > 2 ? '…' : ''}`;
 // Tras el examen de entrada (lo único gratis), quien no tiene plan ve claramente qué necesita para seguir.
 const acceso = estadoAcceso();
@@ -36,34 +37,27 @@ async function ofertaPlan(texto) {
 }
 const cabecera = (titulo, texto) => el('div', { class: 'page-head' }, el('span', { class: 'eyebrow' }, 'Examen de entrada'), el('h1', {}, titulo), texto ? el('p', {}, texto) : null);
 
-// ------------------------------------------------------------------ 1. ¿Quién eres?
+// ------------------------------------------------------------------ 1. Elegir el área
 function inicio() {
-  raiz.replaceChildren(cabecera('¿Desde dónde empiezas?', 'Responde con sinceridad: así te llevamos al punto exacto del curso, sin repetir lo que ya sabes ni saltarte lo que te falta.'),
-    el('div', { class: 'nivel-perfiles' }, PERFILES.map(p => el('button', { type: 'button', class: 'goal nivel-perfil', onclick: () => elegirPerfil(p.id) },
-      el('span', { class: 'goal-ico', 'aria-hidden': 'true' }, p.icono), el('strong', {}, p.titulo), el('span', { class: 'small muted' }, p.texto)))),
-    el('p', { class: 'small muted' }, 'La prueba no tiene tiempo límite y puedes repetirla cuando quieras. Si no sabes una respuesta, presiona «No lo sé»: adivinar solo te llevaría a un nivel que no es el tuyo.'));
-  raiz.querySelector('button')?.focus({ preventScroll: true });
-}
-function elegirPerfil(id) {
-  if (id === 'cero') {
-    raiz.replaceChildren(cabecera('Empieza por «Empieza aquí»', 'Es la puerta de entrada para quien empieza de cero: 12 lecciones cortas, en lenguaje sencillo, con prácticas.'),
-      el('div', { class: 'card' }, el('ul', { class: 'plain-list' }, ['Las partes de la computadora, el teclado y los archivos', 'Qué es internet, cómo buscar y aprender por tu cuenta', 'Seguridad básica para evitar fraudes y engaños', 'Las profesiones de la tecnología y un test para elegir tu camino'].map(t => el('li', {}, '✓ ' + t))),
-        el('div', { class: 'hero-cta' }, el('a', { class: 'btn btn-primary', href: 'curso.html?area=base' }, '🚀 Ver «Empieza aquí»'), el('button', { type: 'button', class: 'btn btn-ghost', onclick: inicio }, '‹ Volver'))));
-    ofertaPlan('«Empieza aquí» y todas las áreas forman parte del plan completo.').then(o => { if (o) raiz.append(o); });
-    return;
-  }
-  if (id === 'usuario') return explicar('base');
-  raiz.replaceChildren(cabecera('¿De qué área tienes conocimientos?', 'Haz la prueba del área que quieras estudiar. Después puedes hacer la de otra.'),
-    el('div', { class: 'goal-grid nivel-areas' }, Object.keys(AREAS).filter(a => a !== 'base').map(a => el('button', { type: 'button', class: 'goal', onclick: () => explicar(a) },
+  raiz.replaceChildren(cabecera('Examen de entrada técnico', 'Una prueba por área, por bloques de dificultad creciente: cada bloque que superas convalida un escalón del curso y te dice desde dónde empezar. Es gratis.'),
+    el('div', { class: 'card nivel-requisitos' },
+      el('p', {}, el('strong', {}, 'Para quién es Loopback: '), 'personas que ya manejan la computadora a nivel intermedio (archivos, instalar programas, navegador, correo) y quieren formarse en tecnología. Si no conoces un área, su prueba te llevará a su primer escalón: ahí empiezan los fundamentos técnicos.'),
+      el('ul', { class: 'plain-list small' },
+        el('li', {}, `✓ Bloques de ${POR_BLOQUE} preguntas; hay que acertar ${MINIMO_BLOQUE} para superar cada uno.`),
+        el('li', {}, '✓ Preguntas técnicas propias, con casos reales: salidas de consola, subredes, SQL, código y registros.'),
+        el('li', {}, '✓ Sin tiempo límite. Si no sabes algo, presiona «No lo sé»: adivinar te llevaría a un nivel que no es el tuyo.'))),
+    el('h2', {}, 'Elige el área que quieres estudiar'),
+    el('div', { class: 'goal-grid nivel-areas' }, ORDEN.filter(a => AREAS[a]).map(a => el('button', { type: 'button', class: 'goal', onclick: () => explicar(a) },
       el('span', { class: 'goal-ico', 'aria-hidden': 'true' }, ICONO[a]), el('strong', {}, AREAS[a]), el('span', { class: 'small muted' }, DESCR[a])))),
-    el('button', { type: 'button', class: 'btn btn-quiet', onclick: inicio }, '‹ Volver'));
+    el('p', { class: 'small muted' }, 'Puedes hacer la prueba de varias áreas y repetirla cuando quieras.'));
+  raiz.querySelector('.nivel-areas button')?.focus({ preventScroll: true });
 }
 
 // ------------------------------------------------------------------ 2. Explicación y prueba
 function explicar(area) {
   const esc = escaleraDe(curso, area);
   const previo = local.get('aula:nivel:' + area, null);
-  raiz.replaceChildren(cabecera(`Prueba de nivel · ${AREAS[area]}`, `${esc.length} bloques de ${POR_BLOQUE} preguntas, uno por cada escalón del área, de más fácil a más difícil.`),
+  raiz.replaceChildren(cabecera(`Examen de entrada · ${AREAS[area]}`, `${esc.length} bloques de ${POR_BLOQUE} preguntas, uno por cada escalón del área, de más fácil a más difícil.`),
     el('div', { class: 'card' },
       el('ul', { class: 'plain-list' },
         el('li', {}, `✓ Cada bloque que superes (${MINIMO_BLOQUE} de ${POR_BLOQUE}) convalida ese escalón: sus lecciones quedan abiertas para repasar y pasas directamente al siguiente.`),
@@ -99,7 +93,7 @@ function prueba(area) {
     form.addEventListener('submit', e => { e.preventDefault(); const el2 = new Set([...form.querySelectorAll('input:checked')].map(x => +x.value)); responder(q.opciones.every((o, k) => o.correcta === el2.has(k))); });
     noSe.addEventListener('click', () => responder(false));
     raiz.replaceChildren(
-      el('div', { class: 'nivel-cab' }, el('span', { class: 'eyebrow' }, `Prueba de nivel · ${AREAS[area]}`),
+      el('div', { class: 'nivel-cab' }, el('span', { class: 'eyebrow' }, `Examen de entrada · ${AREAS[area]}`),
         el('p', { class: 'small' }, el('strong', {}, `Bloque ${bl.n} de ${bloques.length}`), ` · ${resumenEsc(bl.escalon)}`),
         el('div', { class: 'meter' }, el('span', { class: 'nivel-fill' })), el('p', { class: 'small muted' }, `Pregunta ${i + 1} de ${bl.preguntas.length} de este bloque`)),
       form);
@@ -139,18 +133,15 @@ function resultado(area, bloques, superados, respuestas, fallo) {
   const acciones = p.todo
     ? [el('a', { class: 'btn btn-primary', href: 'examen.html?final=' + area }, '🎓 Hacer el examen final del área'), el('a', { class: 'btn btn-ghost', href: 'curso.html?area=' + area }, 'Ver la escalera')]
     : [el('a', { class: 'btn btn-primary', href: 'leccion.html?id=' + p.leccion.id }, pro ? '🎓 Entrar al Nivel profesional ›' : `Empezar: ${p.leccion.titulo} ›`), el('a', { class: 'btn btn-ghost', href: 'curso.html?area=' + area }, 'Ver la escalera')];
-  const texto = area === 'base' && superados >= bloques.length
-    ? 'Dominas lo básico: no necesitas el área «Empieza aquí». Haz su examen final si quieres el certificado, o elige ya tu camino.'
-    : p.todo ? `Has superado todos los bloques de ${AREAS[area]}. Si apruebas el examen final, consigues el certificado del área.`
+  const texto = p.todo ? `Has superado todos los bloques de ${AREAS[area]}. Si apruebas el examen final, consigues el certificado del área.`
       : pro ? `Dominas el temario completo del CCNA: has convalidado los escalones 1 a ${superados}. Te llevamos al Nivel profesional: el día a día del trabajo en redes, con laboratorios de varias averías a la vez, cambios en producción, OSPF multiárea, BGP y automatización.`
       : superados ? `Has convalidado ${superados === 1 ? 'el escalón 1' : `los escalones 1 a ${superados}`}. Tu punto de partida es el escalón ${p.n}.`
-        : `Te conviene empezar ${AREAS[area]} desde el principio: así no te faltará ninguna base.`;
+        : `Te conviene empezar ${AREAS[area]} por su primer escalón, el de los fundamentos técnicos: así no te faltará ninguna base.`;
   ofertaPlan(p.todo ? 'Para hacer el examen final y conseguir el certificado necesitas el plan completo.' : 'Para seguir justo desde tu punto de partida, con lecciones, laboratorios y exámenes, necesitas el plan completo.')
     .then(o => { if (o) raiz.querySelector('.card')?.before(o); });
   raiz.replaceChildren(...[cabecera(`Tu resultado en ${AREAS[area]}`, texto),
     fallo ? el('p', { class: 'small muted' }, `En el bloque ${fallo.n} acertaste ${fallo.aciertos} de ${fallo.total} (hacían falta ${MINIMO_BLOQUE}). Lo que fallaste pasa a tu repaso.`) : null,
     el('div', { class: 'card' }, lista, el('div', { class: 'hero-cta' }, ...acciones)),
-    area === 'base' && superados >= bloques.length ? el('p', {}, el('a', { href: 'laboratorio.html?l=inicio:orientacion' }, 'Test de orientación: ¿por qué área sigo? →')) : null,
     el('p', { class: 'small muted' }, 'Los escalones convalidados quedan guardados en tu progreso. Puedes repetir esta prueba más adelante para avanzar más escalones.'),
     el('button', { type: 'button', class: 'btn btn-quiet', onclick: inicio }, 'Hacer la prueba de otra área')].filter(Boolean));
   if (superados) toast(`${superados} ${superados === 1 ? 'escalón convalidado' : 'escalones convalidados'}`);

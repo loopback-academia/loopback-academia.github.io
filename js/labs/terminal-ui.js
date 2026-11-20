@@ -3,7 +3,7 @@
 import { el, toast } from '../core.js';
 import { guardarLab, labHecho, cargar } from '../progreso.js';
 
-const NIVEL = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
+const NIVEL = { principiante: 'Nivel 1 · Fundamentos', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
 
 export async function montarTerminal(holder, { lab, motor, progreso, nombre, bienvenida, clase = '', panel = null }) {
   await cargar();

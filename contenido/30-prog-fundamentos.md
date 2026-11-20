@@ -4,79 +4,96 @@ id: p1
 titulo: Fundamentos de programación
 dominio: Programación
 peso: 0
-descripcion: Programar desde cero: qué es un algoritmo, variables y tipos de datos, decisiones, bucles, funciones, colecciones y cómo pensar y depurar un programa, practicando en Python y JavaScript.
+descripcion: Fundamentos técnicos de programación: compilación e interpretación, memoria, tipos de datos y operadores, decisiones, bucles, funciones, colecciones y cómo pensar y depurar un programa, practicando en Python y JavaScript.
 ---
 
-=== p1-que-es | Qué es programar | 12 | 1
-**Programar** es escribir instrucciones precisas para que una computadora resuelva un problema. La computadora no entiende "más o menos": hace **exactamente** lo que le dices, ni más ni menos.
+=== p1-que-es | Cómo se ejecuta un programa: código, compilación y memoria | 16 | 1
+Un **programa** es una secuencia de instrucciones que una computadora ejecuta. Programar es escribir esas instrucciones en un **lenguaje de programación** y conseguir que hagan exactamente lo que necesitas, también cuando algo sale mal.
 
-::: nota
-¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico de la computadora, internet y las profesiones de la tecnología.
-:::
+## Del código fuente a la ejecución
 
-## Algoritmo y programa
+El procesador solo entiende **código máquina**. Hay tres formas de llegar a él:
 
-- Un **algoritmo** es la receta: una secuencia finita de pasos claros para resolver un problema. Existe antes de cualquier lenguaje.
-- Un **programa** es ese algoritmo escrito en un **lenguaje de programación** concreto.
+| Forma | Cómo funciona | Lenguajes | Consecuencia |
+| --- | --- | --- | --- |
+| **Compilado** | Un compilador traduce todo el programa a un ejecutable antes de usarlo | C, C++, Go, Rust | Muy rápido; hay que compilar para cada sistema |
+| **Bytecode y máquina virtual** | Se compila a un código intermedio que ejecuta una máquina virtual, que a menudo lo vuelve a compilar en tiempo de ejecución (**JIT**) | Java (JVM), C# (.NET), Kotlin | Portable y rápido |
+| **Interpretado** | Un intérprete lee y ejecuta el programa sobre la marcha | Python, JavaScript (con JIT en los navegadores), PHP, Bash | Cómodo para empezar y automatizar; normalmente más lento |
 
-Algoritmo para saber si un número es par:
-1. Divide el número entre 2.
-2. Si el resto es 0, es par; si no, es impar.
+En la práctica, la frontera es difusa: Python compila a *bytecode* (`.pyc`) y JavaScript se compila con JIT en el navegador.
+
+## Tipos de datos y tipado
+
+- **Tipado estático** (Java, C#, Go): el tipo de cada variable se conoce al compilar y muchos errores se detectan antes de ejecutar.
+- **Tipado dinámico** (Python, JavaScript): el tipo se comprueba al ejecutar; más flexible, pero los errores aparecen más tarde.
+- **Fuerte o débil**: Python no suma `"3" + 1` (error); JavaScript lo convierte sin avisar y da `"31"`.
+
+## La memoria de un programa
+
+- **Pila (stack):** variables locales y llamadas a funciones. Es rápida y se libera sola al salir de cada función.
+- **Montón (heap):** datos que viven más tiempo (listas, objetos). En Python, Java, C# o JavaScript los libera un **recolector de basura**; en C hay que liberarlos a mano, y equivocarse provoca fugas de memoria o fallos de seguridad.
+
+## Tres tipos de error
 
 ```python
-numero = 14
-if numero % 2 == 0:
-    print("Es par")
-else:
-    print("Es impar")
+precio = 100
+iva = 0.18
+total = precio * iva      # error de lógica: debía ser precio * (1 + iva)
+print("Total: " + total)  # error de ejecución: no se puede unir texto y número
 ```
 
-## Cómo entiende la computadora tu código
+| Error | Cuándo aparece | Ejemplo |
+| --- | --- | --- |
+| **Sintaxis** | Antes de ejecutar | Falta un paréntesis o dos puntos |
+| **Ejecución** | Al ejecutar esa línea | `TypeError`, dividir entre cero, archivo que no existe |
+| **Lógica** | Nunca avisa: el resultado es incorrecto | Calcular el 18 % en vez del total con impuesto |
 
-El procesador solo ejecuta **código máquina** (instrucciones binarias). Tu código hay que traducirlo:
-
-| Forma | Cómo funciona | Ejemplos |
-|---|---|---|
-| **Compilado** | Un compilador traduce todo el programa a código máquina antes de ejecutarlo | C, C++, Go, Rust |
-| **Interpretado** | Un intérprete lee y ejecuta el código línea a línea | Python, JavaScript, PHP, Bash |
-| **Máquina virtual (bytecode)** | Se compila a un código intermedio que ejecuta una máquina virtual | Java (JVM), C# (.NET), Kotlin |
-
-En la práctica la frontera se difumina: JavaScript y Python también compilan internamente para ir más rápido. Lo importante es la idea: **código fuente → traducción → ejecución**.
-
-## Lenguajes de alto y bajo nivel
-
-- **Bajo nivel** (ensamblador, C): cerca del hardware; mucho control, más trabajo.
-- **Alto nivel** (Python, JavaScript, Java): cerca del lenguaje humano; el lenguaje se ocupa de la memoria y otros detalles.
-
-## Qué necesitas para empezar
-
-1. Un **editor de código**: Visual Studio Code es gratuito y el más usado.
-2. El **intérprete o compilador** del lenguaje (Python se instala desde python.org; JavaScript ya viene en el navegador).
-3. Una **terminal** para ejecutar programas.
-4. Y aquí mismo: el **laboratorio de código** de esta web ejecuta Python y JavaScript en tu navegador sin instalar nada.
-
-::: nota
-No hace falta ser "de ciencias" para programar. Hace falta paciencia, practicar a diario y aprender a buscar soluciones cuando algo falla (que fallará a menudo: es normal).
-:::
+Los de lógica son los más caros: por eso se prueban los programas con casos conocidos.
 
 ::: quiz
-? ¿Qué es un algoritmo?
-+ Una secuencia finita de pasos claros para resolver un problema
-- Un lenguaje de programación
-- Un tipo de computadora
-= El algoritmo es la idea; el programa es el algoritmo escrito en un lenguaje.
+? ¿Qué tipo de lenguaje traduce todo el programa a un ejecutable antes de usarlo?
++ Compilado
+- Interpretado
+- De marcado
+= Por ejemplo C, Go o Rust: el ejecutable resultante corre directamente sobre el procesador.
 
-? ¿Cuál de estos lenguajes se suele compilar a código máquina antes de ejecutarse?
-+ C
-- Python
-- Bash
-= C, C++, Go y Rust se compilan; Python y Bash se interpretan.
+? ¿Qué hace la JVM con el bytecode de Java?
++ Lo ejecuta y compila en tiempo de ejecución (JIT) las partes que más se usan
+- Lo convierte en Python
+- Lo envía a un servidor para compilarlo
+= Así Java es portable (el mismo bytecode en cualquier sistema) y rápido.
 
-? ¿Qué ejecuta la máquina virtual de Java (JVM)?
-- Código fuente Java directamente
-+ Bytecode, un código intermedio
-- Solo scripts de Bash
-= javac compila a bytecode y la JVM lo ejecuta en cualquier sistema.
+? `total = precio * iva` debía calcular el total con impuesto, pero calcula solo el impuesto. ¿Qué tipo de error es?
+- De sintaxis
+- De ejecución
++ De lógica
+= El programa funciona sin avisar, pero el resultado es incorrecto.
+
+? ¿Dónde se guardan las variables locales de una función?
++ En la pila (stack)
+- En el disco duro
+- En la caché del navegador
+= La pila se libera automáticamente al terminar la función.
+:::
+
+::: banco
+? ¿Qué devuelve JavaScript al evaluar `"3" + 1`?
++ "31"
+- 4
+- Un error
+= JavaScript convierte el número a texto y los concatena: es un tipado débil.
+
+? ¿Qué componente libera la memoria que ya no se usa en Python o Java?
++ El recolector de basura
+- El compilador
+- El sistema de archivos
+= En C, en cambio, hay que liberarla a mano.
+
+? ¿Qué ventaja tiene el tipado estático?
++ Muchos errores de tipo se detectan antes de ejecutar el programa
+- Los programas no necesitan pruebas
+- No hace falta declarar funciones
+= El compilador comprueba que cada valor tenga el tipo esperado.
 :::
 
 === p1-variables | Variables, tipos de datos y operadores | 16 | 1

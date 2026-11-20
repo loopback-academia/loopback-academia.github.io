@@ -6,7 +6,7 @@ import { guardarLab, labHecho, cargar } from '../progreso.js';
 import { ejecutarCodigo } from './runner.js';
 import { PASOS, comprobarPaso } from './pasos.js';
 
-const NIVEL = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
+const NIVEL = { principiante: 'Nivel 1 · Fundamentos', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
 
 export async function trazar(codigo, alEstado) {
   const r = await ejecutarCodigo({ lang: 'python-traza', code: codigo, timeout: 8000, alEstado });

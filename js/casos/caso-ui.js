@@ -14,7 +14,7 @@ import { guardarLab, labHecho, cargar } from '../progreso.js';
 import { CASOS, TURNO, DIMENSIONES, IMPACTO, URGENCIA, SLA, prioridad, evaluarCaso, respuestaModelo, informeTurno, MIN_NOTA } from './casos.js';
 
 const PASOS = ['Ticket', 'Diagnóstico', 'Solución', 'Documentación', 'Comunicación', 'Resultado'];
-const NIVEL = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
+const NIVEL = { principiante: 'Nivel 1 · Fundamentos', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
 const ICONO = { Tienda: '🏪', Almacén: '📦', Oficina: '🏢', Sucursal: '🏬' };
 
 function fichaTicket(c) {

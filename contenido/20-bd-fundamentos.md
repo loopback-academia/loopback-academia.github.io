@@ -7,62 +7,104 @@ peso: 0
 descripcion: Qué es una base de datos, tipos (relacionales y NoSQL), el modelo relacional, claves y relaciones, tipos de datos, los gestores más usados y tus primeras consultas SQL.
 ---
 
-=== b1-intro | ¿Qué es una base de datos? | 12 | 1
-Una **base de datos** guarda información de forma organizada para consultarla y modificarla con eficacia. En redes las encontrarás en todas partes: el inventario de equipos, las direcciones IP asignadas (IPAM), los usuarios de RADIUS, los registros de un SIEM, la configuración de Catalyst Center.
+=== b1-intro | Bases de datos: SGBD, transacciones y cargas de trabajo | 16 | 1
+Una **base de datos** es un conjunto organizado de datos que se guarda de forma persistente. El programa que la gestiona es el **SGBD** (sistema gestor de bases de datos; en inglés, DBMS): PostgreSQL, MySQL, SQL Server, Oracle, MongoDB…
 
-::: nota
-¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico de la computadora, internet y las profesiones de la tecnología.
-:::
+## Por qué no basta con una hoja de cálculo
 
-## El modelo relacional
+| Necesidad | Hoja de cálculo | SGBD |
+| --- | --- | --- |
+| Muchos usuarios escribiendo a la vez | Conflictos y copias distintas | Control de concurrencia con bloqueos o versiones |
+| Integridad | Cualquiera escribe cualquier cosa | Tipos, claves y restricciones (`NOT NULL`, `UNIQUE`, `CHECK`) |
+| Volumen | Se vuelve lenta con cientos de miles de filas | Millones de filas con índices |
+| Seguridad | El archivo entero o nada | Permisos por usuario, tabla e incluso fila |
+| Recuperación | La última copia que alguien guardó | Copias de seguridad y registro de transacciones para volver a un momento exacto |
 
-La información se organiza en **tablas** (relaciones):
+## Cómo se trabaja con un SGBD
 
-- Cada **fila** (registro) es un elemento: un switch, una interfaz.
-- Cada **columna** (atributo) es un dato con un **tipo**: texto, número entero, fecha.
-- La **clave primaria (PK)** identifica cada fila de forma única (por ejemplo, `id`).
-- La **clave foránea (FK)** apunta a la clave primaria de otra tabla y así **relaciona** tablas: cada interfaz tiene un `dispositivo_id` que indica a qué equipo pertenece.
+Casi todos funcionan como **servidor**: escuchan en un puerto de red y las aplicaciones se conectan como clientes.
 
-Un **SGBD** (sistema gestor de bases de datos) es el programa que las gestiona: **PostgreSQL, MySQL/MariaDB, Microsoft SQL Server, Oracle, SQLite**. Todos usan el lenguaje **SQL**.
+| SGBD | Puerto por defecto |
+| --- | --- |
+| PostgreSQL | 5432 |
+| MySQL / MariaDB | 3306 |
+| SQL Server | 1433 |
 
-## Relacional frente a NoSQL
+```bash
+psql -h 10.0.20.15 -p 5432 -U inventario -d tienda
+```
 
-| | Relacional (SQL) | NoSQL |
-|---|---|---|
-| Estructura | Tablas con esquema fijo | Documentos (JSON), clave-valor, grafos, columnas |
-| Ejemplos | PostgreSQL, MySQL | MongoDB, Redis, Cassandra, Neo4j |
-| Puntos fuertes | Consistencia, relaciones, transacciones | Escala horizontal, datos variables, gran volumen |
-| En redes | Inventario, IPAM, RADIUS | Telemetría, series temporales (InfluxDB), cachés |
+Los datos se piden con **SQL**, un lenguaje **declarativo**: dices *qué* quieres y el SGBD decide *cómo* obtenerlo (el **plan de ejecución**).
 
-## Nuestro laboratorio
+```sql
+SELECT nombre, stock FROM productos WHERE stock < 10 ORDER BY stock;
+```
 
-En el laboratorio de este módulo trabajarás con el inventario de red de una empresa ficticia:
+## Transacciones y ACID
 
-| Tabla | Contenido |
-|---|---|
-| `sitios` | Sedes: id, nombre, ciudad |
-| `dispositivos` | Equipos: id, hostname, tipo, modelo, ip_gestion, sitio_id, version_so, alta |
-| `interfaces` | Puertos: id, dispositivo_id, nombre, estado, vlan, velocidad_mbps |
-| `vlans` | VLAN: id, nombre |
-| `incidencias` | Averías: id, dispositivo_id, fecha, gravedad, descripcion, resuelta |
+Una **transacción** agrupa varias operaciones que deben ocurrir todas o ninguna. Una transferencia bancaria resta en una cuenta y suma en otra: si falla a la mitad, no puede quedar a medias.
+
+| Propiedad | Garantiza |
+| --- | --- |
+| **A**tomicidad | Todo o nada |
+| **C**onsistencia | Se respetan siempre las reglas (claves, restricciones) |
+| a**I**slamiento | Las transacciones simultáneas no ven el trabajo a medias de las otras |
+| **D**urabilidad | Lo confirmado (`COMMIT`) sobrevive a un corte de luz |
+
+## Dos tipos de carga de trabajo
+
+| | OLTP | OLAP |
+| --- | --- | --- |
+| Para qué | Operar el negocio: ventas, inventario, usuarios | Analizar: informes, tendencias, tableros |
+| Consultas | Muchas, cortas, de pocas filas | Pocas, largas, sobre millones de filas |
+| Ejemplo | Registrar una venta en caja | Ventas por tienda y mes de los últimos tres años |
+
+Por eso las empresas copian los datos de los sistemas OLTP a un **almacén de datos** (*data warehouse*) para analizarlos sin frenar las cajas.
 
 ::: quiz
-? ¿Qué identifica de forma única cada fila de una tabla?
-+ La clave primaria
-- La clave foránea
-- El nombre de la tabla
-= La clave primaria no puede repetirse ni ser nula.
+? ¿Qué propiedad ACID garantiza que una transferencia no quede a medias si falla?
++ Atomicidad
+- Durabilidad
+- Aislamiento
+= La transacción se aplica entera o no se aplica.
 
-? La columna dispositivo_id de la tabla interfaces, que apunta a dispositivos.id, es...
-- Una clave primaria
-+ Una clave foránea
-- Un índice único
-= Una clave foránea relaciona cada interfaz con su equipo.
+? ¿En qué puerto escucha PostgreSQL por defecto?
+- 3306
++ 5432
+- 1433
+= 3306 es MySQL y 1433 es SQL Server.
 
-? ¿Qué tipo de base de datos encaja mejor con la telemetría masiva de miles de equipos cada segundo?
-- Una hoja de cálculo
-+ Una NoSQL de series temporales
-= Bases como InfluxDB están diseñadas para grandes volúmenes de datos con marca de tiempo.
+? ¿Qué significa que SQL sea declarativo?
++ Que describes el resultado que quieres y el SGBD decide cómo obtenerlo
+- Que solo sirve para declarar tablas
+- Que cada consulta se ejecuta en el orden en que se escribe
+= El optimizador del SGBD elige el plan de ejecución.
+
+? Un informe de ventas de tres años sobre millones de filas es una carga…
+- OLTP
++ OLAP
+- ACID
+= El análisis histórico es OLAP; las operaciones del día a día son OLTP.
+:::
+
+::: banco
+? ¿Qué propiedad ACID asegura que un dato confirmado sobrevive a un corte de luz?
++ Durabilidad
+- Consistencia
+- Atomicidad
+= El SGBD escribe el registro de transacciones en disco antes de confirmar.
+
+? ¿Por qué se copian los datos a un almacén de datos para analizarlos?
++ Para que las consultas pesadas no frenen el sistema que opera el negocio
+- Porque SQL no permite agrupar
+- Para borrar los datos originales
+= Separar OLTP y OLAP protege el rendimiento de las operaciones.
+
+? ¿Qué es el SGBD?
++ El programa que gestiona la base de datos: almacenamiento, consultas, permisos y transacciones
+- Un tipo de hoja de cálculo
+- El cable que une el servidor con la red
+= PostgreSQL, MySQL o SQL Server son SGBD.
 :::
 
 === b1-tipos | Tipos de bases de datos: relacionales y NoSQL | 14 | 1

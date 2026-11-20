@@ -94,7 +94,7 @@ KNOWN = {
              "python-errores", "js-errores", "python-automatizacion"},
 }
 CALLOUTS = {"nota", "examen", "cuidado", "practica", "comando", "reto", "solucion", "externo"}
-AREAS = ("base", "redes", "bd", "prog", "ti", "en", "sec")
+AREAS = ("redes", "bd", "prog", "ti", "en", "sec")
 LESSON_RE = re.compile(r"^===\s*([a-z0-9-]+)\s*\|\s*(.+?)\s*\|\s*(\d+)\s*\|\s*([1234])\s*$")
 INLINE_RE = re.compile(r"(\*\*.+?\*\*|`[^`]+`|\[[^\]]+\]\((?:https://|\./|#)[^)\s]+\)|(?<![\w*])\*[^*\s][^*]*?\*(?!\w))")
 
@@ -334,7 +334,7 @@ def parse_module(path: Path) -> dict:
 
 
 def build() -> dict[str, str]:
-    modules = [parse_module(p) for p in sorted(SRC.glob("*.md")) if not p.name.startswith("_") and p.name != "glosario.md"]
+    modules = [parse_module(p) for p in sorted(SRC.glob("*.md")) if not p.name.startswith("_") and p.name not in ("glosario.md", "examen-entrada.md")]
     ids = [l["id"] for m in modules for l in m["lecciones"]]
     dup = {i for i in ids if ids.count(i) > 1}
     if dup:
@@ -387,24 +387,57 @@ def build() -> dict[str, str]:
             lecciones.append({**{k: l[k] for k in ("id", "titulo", "minutos", "nivel")}, "blocks": embeds, "quiz": [], "preguntas": l["preguntas"], "premium": True})
         publico["modulos"].append({**mod, "lecciones": lecciones})
     premium["preguntas"] = [q for q in examen if not gratis(q["modulo"])]
-    # Unas pocas preguntas de muestra por lección de pago (las primeras con opciones y no repetidas) se publican para que
-    # el examen de entrada, que es gratis, pueda medir el nivel en todo el temario: 2 por lección, o 3 en los módulos de
-    # 6 lecciones o menos, para que cada bloque del examen de entrada tenga sus 6 preguntas.
-    lecciones_mod = {m["id"]: len(m["lecciones"]) for m in curso["modulos"]}
-    muestra, por_leccion = set(), {}
-    for q in premium["preguntas"]:
-        leccion = q["id"].split("#")[0]
-        tope = 3 if lecciones_mod[q["modulo"]] <= 6 else 2
-        if por_leccion.get(leccion, 0) < tope and not q.get("dup") and len(q.get("options", [])) >= 2:
-            muestra.add(q["id"]); por_leccion[leccion] = por_leccion.get(leccion, 0) + 1
-    examen_publico = [q if gratis(q["modulo"]) else {**q, "muestra": True} for q in examen if gratis(q["modulo"]) or q["id"] in muestra]
+    # El examen público solo lleva las preguntas de los módulos gratis (hoy, ninguno). El examen de entrada tiene su propio
+    # banco técnico (contenido/examen-entrada.md): no se publica ninguna pregunta de las lecciones de pago.
+    examen_publico = [q for q in examen if gratis(q["modulo"])]
     titulo_mod = {m["id"]: m["titulo"] for m in curso["modulos"]}
     buscar_publico = [b if gratis(b["modulo"]) else {**b, "texto": titulo_mod[b["modulo"]], "premium": True} for b in buscar]
 
-    publicos = {"curso.json": dump(publico), "buscar.json": dump(buscar_publico), "examen.json": dump(examen_publico), "glosario.json": dump(glosario())}
+    publicos = {"curso.json": dump(publico), "buscar.json": dump(buscar_publico), "examen.json": dump(examen_publico), "glosario.json": dump(glosario()),
+                "entrada.json": dump(examen_entrada(curso))}
     privados = {"curso.json": dump(curso), "buscar.json": dump(buscar), "examen.json": dump(examen), "premium.json": dump(premium),
                 "premium.sql": premium_sql(premium)}
     return publicos, privados
+
+
+def examen_entrada(curso: dict) -> list:
+    """Banco del examen de entrada (gratis y público): preguntas técnicas propias, cada una asociada a una lección.
+
+    Formato de contenido/examen-entrada.md: una línea «@ id-de-lección» y debajo las preguntas con el formato de los
+    cuestionarios (? enunciado, - incorrecta, + correcta, = explicación). Cada bloque del examen de entrada (uno por
+    escalón) usa las preguntas de las lecciones de ese escalón.
+    """
+    ruta = SRC / "examen-entrada.md"
+    lecciones = {l["id"]: m for m in curso["modulos"] for l in m["lecciones"]}
+    bloques, actual, buf = [], None, []
+    for n, raw in enumerate(ruta.read_text(encoding="utf-8").splitlines(), 1):
+        if raw.startswith("#") or (not raw.strip() and actual is None):
+            continue
+        if raw.startswith("@ "):
+            if actual:
+                bloques.append((actual, buf))
+            actual, buf = raw[2:].strip(), []
+            if actual not in lecciones:
+                raise ContentError(f"examen-entrada.md, línea {n}: la lección {actual!r} no existe")
+        elif actual is None:
+            raise ContentError(f"examen-entrada.md, línea {n}: falta «@ lección» antes de las preguntas")
+        else:
+            buf.append(raw)
+    if actual:
+        bloques.append((actual, buf))
+    preguntas, cuenta = [], {}
+    for leccion, lineas in bloques:
+        m = lecciones[leccion]
+        for q in parse_quiz(lineas, f"examen-entrada.md ({leccion})"):
+            k = cuenta[leccion] = cuenta.get(leccion, 0) + 1
+            preguntas.append({"id": f"{leccion}#e{k}", "modulo": m["id"], "area": m["area"], **q})
+    vistos = set()
+    for q in preguntas:
+        clave = re.sub(r"\s+", " ", q["q"].strip().lower())
+        if clave in vistos:
+            raise ContentError(f"examen-entrada.md: pregunta repetida: {q['q']!r}")
+        vistos.add(clave)
+    return preguntas
 
 
 def premium_sql(premium: dict) -> str:

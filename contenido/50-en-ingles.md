@@ -7,77 +7,91 @@ peso: 0
 descripcion: El inglés que se necesita para trabajar en tecnología: vocabulario de hardware, software y redes, leer mensajes de error y documentación, escribir tickets y correos, atender llamadas y chats, y pasar una entrevista en inglés.
 ---
 
-=== s11-por-que | Por qué el inglés abre puertas en TI | 10 | 1
-En tecnología casi todo está en inglés: los mensajes de error, la documentación de los fabricantes, los comandos, los foros donde se buscan soluciones y muchas certificaciones. Además, muchas empresas atienden a clientes de otros países (centros de soporte, *call centers* técnicos, empresas extranjeras) y pagan mejor a quien se comunica en inglés.
+=== s11-por-que | Inglés técnico: la lengua de la documentación | 12 | 1
+En TI, el inglés no es un extra: es el idioma de los **comandos**, los **mensajes de error**, los **registros (logs)**, la **documentación de los fabricantes** y los **estándares**. No hace falta hablarlo con fluidez para empezar, pero sí leerlo con precisión.
 
-::: nota
-¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico de la computadora, internet y las profesiones de la tecnología.
-:::
+## Dónde te lo vas a encontrar
 
-## Qué nivel hace falta
+| Fuente | Ejemplo real |
+| --- | --- |
+| Consola de red | `% Invalid input detected at '^' marker.` |
+| Sistema operativo | `Permission denied (publickey).` |
+| Conectividad | `Connection refused`, `Request timed out`, `Destination host unreachable` |
+| Base de datos | `ERROR: duplicate key value violates unique constraint` |
+| Seguridad | Los avisos CVE y los boletines de los fabricantes |
+| Estándares | Los **RFC** de internet (TCP, DNS, HTTP…) |
 
-No necesitas hablar como un nativo. Para empezar en soporte basta con:
+## Los verbos que más importan
 
-- **Leer** mensajes de error y documentación técnica (el más importante y el más fácil de mejorar).
-- **Escribir** tickets y correos cortos y claros.
-- **Entender y responder** en una llamada o un chat con frases que se repiten mucho.
+| En inglés | Qué significa en un registro |
+| --- | --- |
+| **deny / drop** | El firewall bloqueó el paquete (*drop*: sin avisar al origen) |
+| **refused** | El equipo respondió, pero nada escucha en ese puerto |
+| **timed out** | No llegó ninguna respuesta a tiempo |
+| **unreachable** | No hay ruta hacia el destino |
+| **failed / denied** | La operación o la autenticación no se permitió |
+| **deprecated** | Todavía funciona, pero dejará de existir: hay que migrar |
 
-## Cómo practicar cada día
+`Connection refused` y `Connection timed out` parecen lo mismo y no lo son: el primero dice que el servidor está vivo pero el servicio no escucha; el segundo, que algo (un firewall, una ruta) impide llegar.
 
-1. Pon el sistema operativo y tu celular **en inglés**: aprenderás el vocabulario sin darte cuenta.
-2. Cuando aparezca un error, **léelo en inglés** antes de buscarlo traducido.
-3. Busca soluciones en **inglés**: hay muchas más respuestas.
-4. Escucha videos técnicos con subtítulos en inglés.
-5. Aprende **frases completas**, no palabras sueltas: «Could you please restart your computer?».
+## Cómo leen los estándares
 
-::: nota
-En este área cada palabra y frase en inglés tiene un botón 🔊 para escucharla con la voz de tu navegador.
-:::
+Los RFC usan palabras con un significado exacto (RFC 2119):
+
+- **MUST / MUST NOT:** obligatorio.
+- **SHOULD / SHOULD NOT:** recomendado; solo se ignora con un buen motivo.
+- **MAY:** opcional.
+
+## Estrategia de lectura
+
+1. Lee el mensaje **completo**, no solo la primera palabra.
+2. Identifica el **objeto** (qué archivo, puerto, usuario o interfaz).
+3. Busca el mensaje **exacto entre comillas** en la documentación oficial antes que en foros.
 
 ::: quiz
-? ¿Qué habilidad en inglés es la más útil y fácil de mejorar al empezar en soporte?
-+ Leer mensajes de error y documentación
-- Hablar sin acento
-- Escribir novelas
-- Traducir poesía
-= La mayor parte del trabajo técnico en inglés es leer.
+? `ssh admin@10.0.0.5` responde `Connection refused`. ¿Qué indica?
++ El equipo responde, pero no hay ningún servicio escuchando en el puerto 22
+- Un firewall bloqueó el tráfico sin responder
+- No hay ruta hacia 10.0.0.5
+= Con un firewall que descarta, verías *timed out*; sin ruta, *unreachable*.
 
-? ¿Qué es mejor aprender para atender a usuarios en inglés?
-+ Frases completas que se repiten mucho
-- Listas de verbos irregulares sin contexto
-- Solo la gramática
-= Las frases hechas se usan tal cual en llamadas y tickets.
+? En un registro de firewall, ¿qué significa `drop`?
++ El paquete se descartó sin avisar al origen
+- El paquete se reenvió más rápido
+- La interfaz se apagó
+= *Deny* y *drop* indican bloqueo; *drop* no envía ninguna respuesta.
 
-? ¿Por qué conviene buscar las soluciones técnicas en inglés?
-+ Porque hay muchas más respuestas y documentación
-- Porque en español no existe nada
-- Porque es obligatorio
-= Foros, documentación oficial y artículos están sobre todo en inglés.
+? En un RFC, ¿qué significa SHOULD?
+- Obligatorio
++ Recomendado, salvo que haya un buen motivo para no hacerlo
+- Prohibido
+= MUST es obligatorio y MAY es opcional.
+
+? La documentación dice que una función está *deprecated*. ¿Qué haces?
++ Planificar el cambio a su sustituta, porque dejará de existir
+- Nada, significa que es la recomendada
+- Desinstalar el programa
+= Deprecated: funciona todavía, pero está en camino de desaparecer.
+
+? ¿Qué indica `Destination host unreachable` en un ping?
++ Que no hay camino hacia el destino (por ejemplo, falta una ruta o la puerta de enlace no responde)
+- Que el destino respondió correctamente
+- Que la contraseña es incorrecta
+= Es distinto de *Request timed out*, en el que el paquete sale pero no vuelve respuesta.
 :::
 
 ::: banco
-? ¿Qué hábito te ayuda a aprender vocabulario técnico sin esfuerzo?
-+ Poner el sistema operativo y el celular en inglés
-- Apagar la computadora
-- Usar solo traductores automáticos
-= Ves los mismos menús cada día y los aprendes sin darte cuenta.
+? ¿Qué significa MUST NOT en un RFC?
++ Que está prohibido
+- Que es opcional
+- Que es recomendable
+= Es la prohibición absoluta del estándar.
 
-? ¿Qué tipo de empresas valoran especialmente el inglés en soporte?
-+ Centros de soporte que atienden a clientes de otros países y empresas extranjeras
-- Ninguna
-- Solo las universidades
-= El inglés abre puestos mejor pagados en soporte y centros de contacto técnicos.
-? ¿Qué significa poner el celular «in English»?
-+ Configurar el idioma del celular en inglés
-- Comprar un celular en Inglaterra
-- Instalar un traductor
-= Cambiar el idioma del sistema es una forma diaria de practicar.
-
-? Al ver un error en inglés, ¿qué conviene hacer primero?
-+ Leerlo en inglés e intentar entender qué pasó
-- Cerrarlo sin leer
-- Reiniciar siempre el equipo
-= Leer el mensaje original es la mitad del diagnóstico.
+? ¿Dónde conviene buscar primero un mensaje de error exacto?
++ En la documentación oficial del fabricante, con el mensaje entre comillas
+- En el primer video que aparezca
+- En ningún sitio: se reinicia el equipo
+= La documentación oficial es la fuente más fiable y actualizada.
 :::
 
 === s11-vocabulario | Vocabulario: hardware, software y redes | 16 | 1

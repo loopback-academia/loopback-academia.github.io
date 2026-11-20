@@ -2,7 +2,7 @@
 // viven en el servidor (supabase/migrations/20261116000000_finales.sql); aquí solo se preparan los datos para mostrarlos
 // y para enviarlos.
 
-export const AREAS_FINAL = { base: 'Empieza aquí', redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico', sec: 'Ciberseguridad' };
+export const AREAS_FINAL = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico', sec: 'Ciberseguridad' };
 export const MINIMO = 80;
 export const INTENTOS_DIA = 2;
 

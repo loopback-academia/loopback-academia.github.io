@@ -34,7 +34,7 @@ export async function montarCli(holder, id) {
   const btnReset = el('button', { type: 'button', class: 'btn btn-ghost btn-sm' }, 'Reiniciar');
   const btnSol = el('button', { type: 'button', class: 'btn btn-quiet btn-sm' }, 'Ver solución');
   const solucion = el('pre', { class: 'code', hidden: true });
-  const NIVEL = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
+  const NIVEL = { principiante: 'Nivel 1 · Fundamentos', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
   const pistas = lab.pistas || [];
   let pistasVistas = 0;
   // Modo guiado: solo en laboratorios guiados (en las averías hay que pensar, no copiar).

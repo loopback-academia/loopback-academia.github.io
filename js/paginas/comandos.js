@@ -5,7 +5,7 @@ import { COMANDOS, CATEGORIAS, MODOS } from '../comandos-datos.js';
 import { LABS } from '../labs/ios-labs.js';
 
 iniciarPagina();
-const NIVEL = ['', 'Nivel 1 · Principiante', 'Nivel 2 · Intermedio', 'Nivel 3 · Avanzado'];
+const NIVEL = ['', 'Nivel 1 · Fundamentos', 'Nivel 2 · Intermedio', 'Nivel 3 · Avanzado'];
 const CLASE = ['', 'principiante', 'intermedio', 'avanzado'];
 const fold = t => t.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
 let nivel = local.get('aula:comandos:nivel', 0);

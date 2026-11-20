@@ -9,7 +9,7 @@ import { temasAReforzar, resumenRepaso, labsDeLeccion } from '../recomendaciones
 iniciarPagina();
 const raiz = $('#repaso');
 const params = new URLSearchParams(location.search);
-const NOMBRE_AREA = { base: 'Empieza aquí', redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico', sec: 'Ciberseguridad' };
+const NOMBRE_AREA = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico', sec: 'Ciberseguridad' };
 const [publico, curso] = await Promise.all([fetch('data/examen.json').then(r => r.json()), cargarCurso(), cargar()]);
 // Con acceso al contenido de pago, el repaso incluye también sus preguntas.
 const banco = await bancoCompleto(publico);

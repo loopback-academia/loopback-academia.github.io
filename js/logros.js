@@ -2,7 +2,7 @@
 // pequeña y cercana en cada sesión: subir de nivel, completar la racha, conseguir la siguiente insignia.
 const items = st => Object.entries(st.items || {});
 const hechos = (st, pref) => items(st).filter(([k, v]) => k.startsWith(pref) && v.hecho);
-const AREA_POR_LETRA = { m: 'redes', b: 'bd', p: 'prog', t: 'ti', e: 'en', c: 'sec', i: 'base' };
+const AREA_POR_LETRA = { m: 'redes', b: 'bd', p: 'prog', t: 'ti', e: 'en', c: 'sec' };
 
 export const XP = { leccion: 20, quiz: 10, lab: 30, escalon: 50, final: 150, simulacro: 25, dia: 5 };
 

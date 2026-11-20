@@ -4,56 +4,99 @@ id: s1
 titulo: Soporte técnico y mesa de ayuda
 dominio: Soporte técnico
 peso: 0
-descripcion: El trabajo de soporte desde cero: método de diagnóstico, computadoras con Windows, programas, impresoras de oficina y de etiquetas, acceso remoto, tickets, prioridades, escalamiento y atención al usuario, con casos de oficinas, tiendas y almacenes.
+descripcion: El soporte de TI como servicio (ITIL, niveles, SLA y métricas): método de diagnóstico, computadoras con Windows, programas, impresoras de oficina y de etiquetas, acceso remoto, tickets, prioridades, escalamiento y atención al usuario, con casos de oficinas, tiendas y almacenes.
 ---
 
-=== s1-ruta | Empleo en TI: cómo usar esta ruta | 10 | 1
-Esta área te prepara para **puestos de entrada en tecnología** en empresas grandes: cadenas de supermercados y tiendas, centros de distribución, bancos, aseguradoras, telecomunicaciones o cualquier empresa con oficinas y sucursales. Aquí no se estudia teoría por estudiarla: cada módulo trabaja lo que se hace en un turno real.
+=== s1-ruta | Soporte de TI como servicio: ITIL, niveles y métricas | 14 | 1
+En una empresa, el soporte técnico no es «arreglar computadoras»: es un **servicio** con procesos, acuerdos y métricas. El marco más usado para organizarlo es **ITIL 4**, y su vocabulario aparece en las ofertas de empleo, en las herramientas y en las entrevistas.
 
-::: nota
-¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico de la computadora, internet y las profesiones de la tecnología.
-:::
+## Las prácticas que vas a usar cada día
 
-## Las rutas
+| Práctica | Qué gestiona | Ejemplo |
+| --- | --- | --- |
+| **Gestión de incidentes** | Una interrupción o degradación del servicio: restaurar cuanto antes | «No puedo entrar al correo» |
+| **Solicitudes de servicio** | Peticiones estándar que no son una avería | Alta de un empleado, instalar un programa aprobado |
+| **Gestión de problemas** | La **causa raíz** de incidentes repetidos | Las impresoras de una sede pierden la IP cada lunes |
+| **Habilitación de cambios** | Cualquier modificación de la infraestructura, con riesgo evaluado | Actualizar el firmware del firewall |
+| **Gestión del conocimiento** | Artículos con soluciones reutilizables | «Cómo reconfigurar el MFA de un usuario» |
 
-Elige una ruta en la página [Rutas de empleo](./rutas.html). Cada una indica los módulos en orden, las prácticas que cuentan y un **proyecto final para tu portafolio**:
+La diferencia clave: el **incidente** se cierra cuando el usuario vuelve a trabajar; el **problema**, cuando la causa ya no existe.
 
-| Ruta | Para quién | Proyecto final |
-|---|---|---|
-| Técnico de soporte | Quien quiere resolver problemas de equipos y usuarios en sitio | Un turno en la mesa de ayuda |
-| Agente de mesa de ayuda | Quien prefiere atender, registrar y resolver por teléfono o chat | Un turno en la mesa de ayuda |
-| Técnico de redes | Quien quiere trabajar con switches, routers, Wi-Fi y sucursales | La red de la oficina central |
-| Administrador junior de sistemas | Quien quiere administrar servidores, cuentas y Microsoft 365 | En preparación |
-| Analista junior de datos | Quien prefiere los reportes, el SQL y los tableros | En preparación |
+## Niveles de soporte y escalamiento
 
-## Cómo está organizado cada módulo
+| Nivel | Quién | Qué resuelve |
+| --- | --- | --- |
+| **N0** | El propio usuario | Portal de autoservicio, restablecer su contraseña |
+| **N1** | Mesa de ayuda | Lo conocido y documentado; registra, clasifica y escala con toda la información |
+| **N2** | Técnicos especializados | Diagnóstico más profundo: redes, servidores, aplicaciones |
+| **N3** | Ingeniería o el fabricante | Cambios de diseño, errores de producto |
 
-1. **Explicación desde cero**, con ejemplos de oficinas, tiendas, almacenes y sucursales.
-2. **Ejercicio guiado**: lo haces paso a paso con indicaciones.
-3. **Reto sin ayuda**: lo resuelves tú; la solución está plegada para que la consultes después.
-4. **Cuestionario** al final de cada lección (lo que falles pasa a tu [repaso de errores](./repaso.html)).
-5. **Evaluación práctica** con casos: se valora el **diagnóstico**, la **solución**, la **documentación** y la **comunicación**, igual que en una evaluación de desempeño.
+- **Escalamiento funcional:** pasar el ticket a quien sabe más (N1 → N2).
+- **Escalamiento jerárquico:** avisar a la jefatura porque el impacto o el plazo lo exigen.
 
-## En el navegador o en un laboratorio externo
+## Acuerdos y métricas
 
-Casi todo se practica aquí mismo: casos de tickets, consola de red simulada, SQL real y Python. Algunas habilidades necesitan el sistema de verdad (por ejemplo, Active Directory o Power BI). Cada módulo lo indica con un aviso de **laboratorio externo** que explica cómo prepararlo gratis.
+- **SLA** (*Service Level Agreement*): el compromiso con el cliente o el negocio, por ejemplo «incidentes de prioridad 1: respuesta en 15 minutos y solución en 4 horas».
+- **OLA** (*Operational Level Agreement*): el compromiso entre equipos internos para poder cumplir el SLA.
 
-::: cuidado
-Los escenarios son **prácticas corporativas generales** con una empresa ficticia, *Comercial La Ceiba*. No describen la tecnología ni los procesos de ninguna empresa real, y completar una ruta **no garantiza un empleo**: te prepara para demostrar lo que sabes hacer.
-:::
+| Métrica | Qué mide |
+| --- | --- |
+| **FCR** (*First Contact Resolution*) | Porcentaje resuelto en el primer contacto |
+| **MTTA** | Tiempo medio hasta que alguien atiende el ticket |
+| **MTTR** | Tiempo medio hasta restaurar el servicio |
+| **CSAT** | Satisfacción del usuario |
+| **Backlog** | Tickets abiertos acumulados |
+
+Las herramientas más usadas son **ServiceNow**, **Jira Service Management** y, en empresas pequeñas, **GLPI** o **Freshservice**. Todas trabajan con estos conceptos.
+
+## Cómo está organizada el área Empleo TI
+
+Diagnóstico de Windows y del hardware, Active Directory y Microsoft 365, consola de PowerShell, acceso remoto, atención al usuario y casos reales de oficinas, tiendas y almacenes. Al final, un turno completo en una mesa de ayuda simulada para tu portafolio.
 
 ::: quiz
-? ¿Qué cuatro aspectos se evalúan en los casos prácticos de soporte?
-+ Diagnóstico, solución, documentación y comunicación
-- Velocidad de escritura, inglés, matemáticas y redes
-- Solo si el problema queda resuelto
-= En el trabajo no basta con arreglarlo: hay que llegar a la causa con método, documentarlo y comunicarlo bien.
+? Las impresoras de una sede pierden la configuración cada lunes y cada vez se abre un ticket. ¿Qué práctica busca la causa?
+- Gestión de incidentes
++ Gestión de problemas
+- Solicitudes de servicio
+= Cada ticket es un incidente; la causa raíz común se trata como un problema.
 
-? ¿Qué indica un aviso de «laboratorio externo»?
-+ Que esa habilidad se practica mejor con el sistema real y cómo prepararlo
-- Que la lección es opcional
-- Que hay que pagar una licencia
-= Muchas herramientas tienen versiones de evaluación o gratuitas; el aviso explica cómo montarlas.
+? ¿Qué es un OLA?
++ El compromiso entre equipos internos para cumplir el SLA
+- El contrato con el fabricante del hardware
+- Un tipo de ticket urgente
+= Por ejemplo: el equipo de redes responde en 30 minutos a los tickets escalados por la mesa.
+
+? Un técnico de N1 no puede resolver un fallo del servidor de archivos y pasa el ticket al equipo de sistemas. ¿Qué tipo de escalamiento es?
++ Funcional
+- Jerárquico
+- Automático
+= Se escala a quien tiene más conocimiento técnico.
+
+? ¿Qué mide el MTTR?
+- La satisfacción del usuario
++ El tiempo medio hasta restaurar el servicio
+- El número de tickets abiertos
+= Mean Time To Restore (o Repair): una de las métricas clave de cualquier mesa de ayuda.
+:::
+
+::: banco
+? Dar de alta a un empleado nuevo con su correo y sus accesos es…
++ Una solicitud de servicio
+- Un incidente
+- Un problema
+= No hay nada roto: es una petición estándar.
+
+? ¿Qué mide el FCR?
++ El porcentaje de casos resueltos en el primer contacto
+- El tiempo hasta la primera respuesta
+- Los tickets reabiertos
+= Un FCR alto indica una buena base de conocimiento y buena formación de N1.
+
+? ¿Cuándo se cierra un incidente?
++ Cuando el usuario vuelve a trabajar con normalidad
+- Cuando se encuentra la causa raíz
+- Al final del mes
+= La causa raíz se persigue en la gestión de problemas.
 :::
 
 === s1-rol | Qué hace soporte técnico y la mesa de ayuda | 14 | 1

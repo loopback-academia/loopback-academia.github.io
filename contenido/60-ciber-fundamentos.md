@@ -7,98 +7,117 @@ peso: 0
 descripcion: Qué protege la ciberseguridad y de quién, contraseñas y verificación en dos pasos, cómo se guardan las contraseñas con hashes, ingeniería social y phishing, tipos de malware y las buenas prácticas que evitan la mayoría de los incidentes.
 ---
 
-=== c1-que-es | Qué es la ciberseguridad | 14 | 1
-La ciberseguridad protege la **información** y los **sistemas** que la manejan frente a accesos, cambios o caídas no autorizados. No es solo cosa de expertos: la mayoría de los incidentes empieza por un descuido de alguien que no trabaja en seguridad.
+=== c1-que-es | Ciberseguridad: CIA, riesgo y marcos de trabajo | 18 | 1
+La **ciberseguridad** protege los sistemas, las redes y los datos frente a accesos, cambios o interrupciones no autorizados. No es un producto que se compra: es una forma de diseñar, operar y vigilar la tecnología.
 
-::: nota
-¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico de la computadora, internet y las profesiones de la tecnología.
-:::
+## Lo que se protege: la tríada CIA
 
-## La tríada CIA
+| Propiedad | Pregunta | Ataque típico | Control típico |
+| --- | --- | --- | --- |
+| **Confidencialidad** | ¿Solo lo ve quien debe? | Robo de credenciales, fuga de datos | Cifrado, control de acceso, MFA |
+| **Integridad** | ¿Nadie lo ha alterado? | Manipular una transferencia, alterar registros | Hashes, firmas digitales, permisos |
+| **Disponibilidad** | ¿Funciona cuando se necesita? | DDoS, ransomware | Redundancia, copias de seguridad, protección DDoS |
 
-Todo lo que se protege se resume en tres propiedades:
+A la tríada se suman la **autenticidad** (quien dice ser alguien lo es) y el **no repudio** (nadie puede negar lo que hizo, gracias a firmas y registros).
 
-| Propiedad | Significa | Ejemplo de ataque |
-|---|---|---|
-| **Confidencialidad** | Solo lo ve quien debe | Robo de una base de datos de clientes |
-| **Integridad** | Nadie lo cambia sin permiso | Alterar el número de cuenta de una factura |
-| **Disponibilidad** | Está accesible cuando hace falta | Ransomware o denegación de servicio (DoS) |
+## Riesgo: el idioma de la seguridad
 
-## Amenaza, vulnerabilidad y riesgo
+- **Activo:** lo que tiene valor (datos de clientes, el ERP, la web de ventas).
+- **Vulnerabilidad:** una debilidad (un servidor sin parches, un puerto expuesto, una contraseña por defecto).
+- **Amenaza:** quien o qué puede aprovecharla (un grupo de ransomware, un empleado descontento, un error humano).
+- **Riesgo = probabilidad × impacto.** Se **mitiga** (con controles), se **transfiere** (un seguro), se **evita** (no hacer esa actividad) o se **acepta** (documentado y aprobado).
 
-- **Activo**: lo que tiene valor (datos, equipos, la reputación).
-- **Vulnerabilidad**: una debilidad (un programa sin actualizar, una contraseña débil, un empleado sin formación).
-- **Amenaza**: lo que puede aprovecharla (un delincuente, un empleado descontento, un incendio).
-- **Riesgo**: la probabilidad de que una amenaza aproveche una vulnerabilidad multiplicada por el **impacto**.
+## Tipos de controles
 
-La seguridad no busca el riesgo cero, que no existe, sino **reducirlo** a un nivel aceptable con controles: técnicos (cortafuegos, cifrado), organizativos (políticas, formación) y físicos (cerraduras, cámaras).
+| Por su función | Ejemplo |
+| --- | --- |
+| **Preventivo** | Firewall, MFA, parches |
+| **Detectivo** | IDS, revisión de registros, alertas del SIEM |
+| **Correctivo** | Restaurar una copia, aislar un equipo infectado |
 
-## Quién ataca y por qué
+| Por su naturaleza | Ejemplo |
+| --- | --- |
+| **Técnico** | Cifrado, EDR, segmentación de red |
+| **Administrativo** | Políticas, formación, gestión de cambios |
+| **Físico** | Puertas con tarjeta, cámaras, racks cerrados |
 
-- **Ciberdelincuentes**: buscan dinero (ransomware, fraude, venta de datos). Son la mayoría.
-- **Hacktivistas**: motivos políticos o sociales.
-- **Grupos patrocinados por estados**: espionaje y sabotaje.
-- **Internos**: empleados o exempleados, por error o con mala intención.
+Tres principios de diseño: **defensa en profundidad** (varias capas, ninguna perfecta), **mínimo privilegio** (cada cuenta con lo justo) y **zero trust** (no se confía por estar «dentro» de la red: cada acceso se verifica).
 
-## Defensa en profundidad
+## Cómo se habla de vulnerabilidades
 
-Ningún control es perfecto, así que se ponen **varias capas**: si falla una, otra detiene el ataque. Por ejemplo: formación contra el phishing + filtro de correo + verificación en dos pasos + copias de seguridad.
+- **CVE**: el identificador público de una vulnerabilidad concreta, por ejemplo `CVE-2024-3400`.
+- **CVSS**: su gravedad de 0 a 10 (9,0 o más es **crítica**). Ayuda a priorizar qué parchear primero, junto con si ya se está explotando.
+- **CWE**: el tipo de fallo de programación que la causa (por ejemplo, CWE-89, inyección SQL).
 
-::: nota
-La ciberseguridad tiene límites legales y éticos claros: probar la seguridad de un sistema sin permiso por escrito de su dueño es un delito, aunque la intención sea buena. Todo lo que practiques aquí ocurre en simulaciones dentro de tu navegador.
-:::
+## Los marcos que usan las empresas
+
+| Marco | Para qué |
+| --- | --- |
+| **NIST CSF 2.0** | Organiza la seguridad en seis funciones: Gobernar, Identificar, Proteger, Detectar, Responder y Recuperar |
+| **ISO/IEC 27001** | Norma certificable de gestión de la seguridad de la información |
+| **MITRE ATT&CK** | Catálogo de tácticas y técnicas reales de los atacantes; lo usa el SOC para detectar |
+| **CIS Controls** | Lista priorizada de controles prácticos para empezar |
+
+## Los puestos
+
+**Analista SOC** (vigila y responde alertas), **pentester** (ataca con permiso para encontrar fallos), **ingeniero de seguridad** (diseña y opera los controles), **GRC** (gobierno, riesgo y cumplimiento). Casi todos empiezan con una base sólida de redes y sistemas: por eso este curso los trabaja juntos.
 
 ::: quiz
-? Un atacante cambia el importe de las facturas en la base de datos. ¿Qué propiedad ataca?
-+ Integridad
+? Un ataque de ransomware cifra los servidores y la empresa no puede facturar. ¿Qué propiedad se ha perdido sobre todo?
 - Confidencialidad
-- Disponibilidad
-= Los datos siguen visibles y accesibles, pero ya no son correctos.
+- Integridad
++ Disponibilidad
+= El servicio deja de estar disponible. Si además roban los datos antes de cifrarlos, también se pierde la confidencialidad.
 
-? ¿Qué es una vulnerabilidad?
-+ Una debilidad que una amenaza puede aprovechar
-- Un ataque que ya ha ocurrido
-- Un programa antivirus
-- El valor de los datos
-= Por ejemplo, un servidor sin parches o una contraseña débil.
+? ¿Cómo se calcula el riesgo?
++ Probabilidad × impacto
+- Número de servidores × número de usuarios
+- Precio del firewall ÷ presupuesto
+= Así se priorizan los riesgos que más merecen atención.
 
-? ¿Qué significa «defensa en profundidad»?
-+ Varias capas de protección, para que si falla una actúe otra
-- Un único cortafuegos muy potente
-- Guardar los datos en un sótano
-= Ningún control es perfecto por sí solo.
+? Una alerta del SIEM avisa de un inicio de sesión desde otro país. ¿Qué tipo de control es?
+- Preventivo
++ Detectivo
+- Correctivo
+= Detecta el incidente; no lo impide ni lo repara.
+
+? ¿Qué indica una puntuación CVSS de 9,8?
++ Que la vulnerabilidad es crítica y debe priorizarse
+- Que el sistema está seguro al 98 %
+- Que el fabricante ya publicó el parche
+= CVSS mide la gravedad de 0 a 10; de 9,0 en adelante es crítica.
+
+? ¿Qué catálogo describe las tácticas y técnicas reales de los atacantes?
+- ISO/IEC 27001
++ MITRE ATT&CK
+- CVSS
+= El SOC lo usa para saber qué detectar y cómo.
+
+? Contratar un seguro contra incidentes cibernéticos es una forma de…
++ Transferir el riesgo
+- Evitar el riesgo
+- Eliminar las vulnerabilidades
+= El impacto económico lo asume en parte la aseguradora; el riesgo técnico sigue ahí.
 :::
 
 ::: banco
-? Un ransomware deja los archivos de la empresa inaccesibles. ¿Qué propiedad de la tríada CIA se pierde sobre todo?
-+ Disponibilidad
-- Integridad
-- Confidencialidad
-= Los datos están, pero no se pueden usar.
+? ¿Qué principio dice que cada cuenta debe tener solo los permisos que necesita?
++ Mínimo privilegio
+- Defensa en profundidad
+- No repudio
+= Limita el daño si la cuenta se ve comprometida.
 
-? ¿Qué tipo de atacante es el más frecuente contra empresas pequeñas y medianas?
-+ Ciberdelincuentes que buscan dinero
-- Grupos patrocinados por estados
-- Hacktivistas
-= El fraude y el ransomware son negocios muy rentables.
+? ¿Cuáles son las seis funciones del NIST CSF 2.0?
++ Gobernar, Identificar, Proteger, Detectar, Responder y Recuperar
+- Planificar, Hacer, Verificar y Actuar
+- Confidencialidad, Integridad y Disponibilidad
+= La versión 2.0 añadió «Gobernar» a las cinco anteriores.
 
-? ¿Cómo se calcula de forma sencilla el riesgo?
-+ Probabilidad de que ocurra × impacto si ocurre
-- Número de equipos × número de usuarios
-- Precio del antivirus × años
-= Es la base para decidir qué proteger primero.
-
-? Probar la seguridad de la web de otra empresa sin su permiso porque «solo quieres ayudar»…
-+ Es ilegal: hace falta una autorización por escrito
-- Es legal si no rompes nada
-- Es legal si avisas después
-= La autorización previa y por escrito es imprescindible.
-
-? Formación, políticas y procedimientos son controles…
-+ Organizativos
-- Técnicos
-- Físicos
-= Los técnicos son, por ejemplo, el cifrado o el cortafuegos; los físicos, cerraduras o cámaras.
+? ¿Qué es un CVE?
++ El identificador público de una vulnerabilidad concreta
+- Un tipo de firewall
+- Un antivirus
+= Por ejemplo CVE-2024-3400; su gravedad se mide con CVSS.
 :::
 
 === c1-contrasenas | Contraseñas, gestores y verificación en dos pasos | 16 | 1

@@ -6,61 +6,61 @@ dominio: Introducción
 peso: 0
 descripcion: Cómo funciona el curso, qué es el CCNA y cómo montar tu laboratorio para practicar desde el primer día.
 ---
-=== m0-curso | Cómo aprovechar este curso | 8 | 1
-Bienvenido a **Loopback**. Este curso te lleva desde cero hasta el nivel que pide el examen **Cisco CCNA 200-301**, la certificación de redes más solicitada en las ofertas de empleo de Latinoamérica y España. Además de esta área de **Redes**, la plataforma tiene otras dos completas: **Bases de datos** y **Programación**, cada una con su ruta por niveles. Las tres se complementan: un buen profesional de redes hoy consulta bases de datos y automatiza con Python.
+=== m0-curso | Cómo funciona este curso y qué necesitas | 10 | 1
+Loopback es un curso **técnico**. Damos por hecho que ya manejas la computadora con soltura: archivos y carpetas, instalar programas, el navegador y el correo. A partir de ahí, cada área empieza por sus fundamentos técnicos y llega hasta el trabajo real de un profesional.
+
+## Qué vas a hacer aquí
+
+- **Leer documentación técnica**: tablas de comandos, salidas de consola, diagramas de red y fragmentos de código. Cuando aparezca un término que no conoces, pasa el mouse o toca la palabra subrayada con puntos: el **glosario** te da la definición sin salir de la lección.
+- **Trabajar en la línea de comandos**: Cisco IOS en el simulador del curso, PowerShell y el terminal de Linux.
+- **Diagnosticar averías**: los laboratorios no solo piden configurar, también encontrar qué está mal en una red que «no funciona».
+- **Demostrar lo que sabes**: cada lección termina con un cuestionario (80 % para aprobar) y cada escalón con un examen.
+
+## Cómo avanza el curso
+
+| Pieza | Para qué sirve |
+| --- | --- |
+| **Escalones** | Grupos de lecciones del mismo nivel. Se abren en orden: no se puede saltar la base |
+| **Examen de escalón** | Mínimo 80 %. Preguntas distintas en cada intento |
+| **Laboratorios** | Prácticas que se corrigen solas: consola Cisco, SQL, código, casos de soporte |
+| **Repaso de errores** | Lo que fallas vuelve con repetición espaciada (1, 3, 7, 14 y 30 días) |
+| **Examen final y certificado** | Lo corrige el servidor; el certificado se puede verificar con su código |
+
+Si ya tienes experiencia, haz el **examen de entrada**: convalida los escalones que dominas y te deja empezar en tu nivel.
+
+## Tu equipo de trabajo
+
+| Herramienta | Para qué | Dónde |
+| --- | --- | --- |
+| Cisco Packet Tracer | Simular redes completas con routers y switches Cisco | Gratis con una cuenta de Cisco Networking Academy (lección siguiente) |
+| Terminal | PowerShell en Windows; en Linux o macOS, el terminal del sistema | Ya viene instalado |
+| WSL o una máquina virtual | Practicar Linux sin cambiar tu sistema | WSL en Windows, o VirtualBox / Hyper-V |
+| Visual Studio Code | Escribir código y archivos de configuración | Gratis |
+
+Una computadora con 8 GB de RAM basta para todo el curso. Las máquinas virtuales agradecen 16 GB.
 
 ::: nota
-¿Empiezas de cero en tecnología? Antes de esta área, haz el área [🚀 Empieza aquí](./curso.html?area=base): en lenguaje sencillo, lo básico de la computadora, internet y las profesiones de la tecnología.
+La mayor parte de la documentación técnica está en **inglés**: comandos, mensajes de error, RFC y manuales de fabricantes. El área de **Inglés técnico** te prepara para leerla; no hace falta que lo hables con fluidez para empezar.
 :::
-
-## Cómo está organizado
-
-El temario sigue los seis dominios oficiales del examen, con el mismo peso que tienen en él:
-
-| Módulo | Dominio del CCNA | Peso en el examen |
-|---|---|---|
-| 1. Fundamentos de redes | Network Fundamentals | 20 % |
-| 2. Acceso a la red | Network Access | 20 % |
-| 3. Conectividad IP | IP Connectivity | 25 % |
-| 4. Servicios IP | IP Services | 10 % |
-| 5. Fundamentos de seguridad | Security Fundamentals | 15 % |
-| 6. Automatización y programabilidad | Automation and Programmability | 10 % |
-
-Cada lección tiene tres partes: la **explicación** (con animaciones paso a paso cuando el tema lo merece), un **cuestionario** corto para comprobar que lo entendiste y, cuando aplica, un **laboratorio** donde escribes comandos de verdad.
-
-## La forma correcta de estudiar redes
-
-- **Entiende antes de memorizar.** El examen no pregunta definiciones sueltas: pone escenarios. Si sabes *por qué* un switch inunda una trama, contestarás bien aunque la pregunta esté redactada de otra forma.
-- **Practica a diario la parte numérica.** El subnetting se aprende con repetición. Dedica 10 minutos al día al entrenador de subnetting hasta que lo hagas de cabeza.
-- **Escribe comandos.** Leer `switchport mode access` no es lo mismo que teclearlo. Usa el simulador de CLI y, cuando puedas, Packet Tracer.
-- **Busca tus dudas.** Desde cualquier lección, el botón "Buscar en el curso" te lleva al punto exacto donde se explica lo que no entiendes.
-
-::: examen
-El CCNA 200-301 dura **120 minutos** y tiene entre 100 y 120 preguntas: de opción múltiple, de arrastrar y soltar, de simulación y de laboratorio. No se puede volver a una pregunta ya contestada, así que hay que llegar con soltura, no solo con conocimiento.
-:::
-
-## Tu progreso
-
-Al completar una lección, aprobar su cuestionario o terminar un laboratorio, tu progreso se guarda en tu cuenta y lo ves en el panel del curso. Para presentarte al examen con garantías, apunta a terminar todo el temario y a sacar **más del 85 %** en dos simulacros de examen seguidos.
 
 ::: quiz
-? ¿Cuál es el dominio con más peso en el examen CCNA 200-301?
-- Fundamentos de redes
-+ Conectividad IP
-- Fundamentos de seguridad
-- Automatización y programabilidad
-= Conectividad IP (enrutamiento, OSPF, rutas estáticas, FHRP) pesa un 25 %, el máximo de los seis dominios.
+? Ves una palabra subrayada con puntos en una lección y no sabes qué significa. ¿Qué haces?
++ Pasar el mouse o tocarla para ver su definición del glosario
+- Saltarte la lección
+- Esperar al examen final
+= El glosario está integrado en las lecciones para que nunca te quedes atascado en un término.
 
-? ¿Cuál es la mejor forma de dominar el subnetting?
-- Memorizar una tabla de máscaras la noche antes del examen
-+ Practicar un poco cada día hasta hacerlo de cabeza
-- Usar siempre una calculadora en línea
-= En el examen no hay calculadora de subredes: hay que resolverlo mentalmente y rápido, y eso solo se consigue con práctica diaria.
+? ¿Qué nota mínima abre la lección siguiente y el escalón siguiente?
+- 50 %
+- 65 %
++ 80 %
+= Es el mismo criterio en cuestionarios y exámenes de escalón.
 
-? ¿Se puede volver a una pregunta ya respondida durante el examen CCNA?
-- Sí, al final hay una pantalla de revisión
-+ No, cada respuesta es definitiva
-= El examen de Cisco no permite volver atrás, por eso conviene llegar con práctica de tiempo en el simulador de examen.
+? Ya trabajas con switches y routers. ¿Cuál es la forma más rápida de empezar en tu nivel?
++ Hacer el examen de entrada de Redes para convalidar los escalones que dominas
+- Empezar por la primera lección y saltarte los cuestionarios
+- Ir directamente al examen final
+= El examen de entrada convalida escalones completos según tu resultado.
 :::
 
 === m0-packet-tracer | Instala Cisco Packet Tracer paso a paso | 20 | 1

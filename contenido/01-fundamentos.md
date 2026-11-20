@@ -6,69 +6,112 @@ dominio: 1.0 Network Fundamentals
 peso: 20
 descripcion: Qué es una red, qué hace cada equipo, los modelos OSI y TCP/IP, cableado, Ethernet, direccionamiento IPv4 e IPv6, subnetting, TCP/UDP, inalámbrico y virtualización.
 ---
-=== m1-redes | ¿Qué es una red? | 12 | 1
-Una **red** es un conjunto de dispositivos conectados que comparten información y recursos. Cuando abres una página web, tu celular manda datos a través de varias redes (la wifi de tu casa, la red de tu proveedor de internet, la red troncal de internet y la red del servidor) y la respuesta vuelve por el mismo tipo de camino en milisegundos.
+=== m1-redes | Qué es una red: componentes, arquitecturas y métricas | 16 | 1
+Una **red** es un conjunto de dispositivos que intercambian datos siguiendo **protocolos** comunes. Cuando abres una página web, tus datos atraviesan la red de tu casa u oficina, la de tu proveedor, la red troncal de internet y la red del centro de datos del servidor, y la respuesta vuelve en milisegundos.
 
 [[video:viaje-mensaje]]
 
-## Los elementos de cualquier red
+## Los componentes
 
-- **Dispositivos finales (endpoints):** los que originan o reciben los datos. PC, laptops, celulares, impresoras, cámaras IP, servidores.
-- **Dispositivos intermedios:** los que mueven los datos. Switches, routers, puntos de acceso inalámbricos, firewalls.
-- **Medios:** por donde viajan los datos. Cobre (cable UTP), fibra óptica o el aire (wifi).
-- **Servicios y protocolos:** las reglas que todos siguen para entenderse (Ethernet, IP, TCP, DNS, HTTP...).
+- **Dispositivos finales (endpoints):** originan o reciben los datos: PC, servidores, teléfonos IP, cámaras, impresoras.
+- **Dispositivos intermedios:** mueven los datos: switches (dentro de la LAN), routers (entre redes), puntos de acceso, firewalls.
+- **Medios:** cobre (UTP), fibra óptica o radio (wifi, 4G/5G).
+- **Protocolos:** las reglas de cada capa: Ethernet, IP, TCP, UDP, DNS, HTTP…
 
-## Tipos de red según su alcance
+## Alcance de la red
 
-| Tipo | Significado | Ejemplo |
-|---|---|---|
-| LAN | Local Area Network | La red de una oficina o de un edificio |
-| WLAN | Wireless LAN | La wifi de un hotel |
-| WAN | Wide Area Network | La que une la sede de Santo Domingo con la de Santiago |
-| MAN | Metropolitan Area Network | Red de fibra que cubre una ciudad |
-| SOHO | Small Office / Home Office | Un router doméstico que hace de switch, wifi y firewall a la vez |
+| Tipo | Alcance | Ejemplo |
+| --- | --- | --- |
+| LAN | Un edificio o campus | La red de una oficina |
+| WLAN | LAN inalámbrica | La wifi corporativa |
+| MAN | Una ciudad | Anillo de fibra metropolitano |
+| WAN | Entre ciudades o países | La conexión entre la sede de Santo Domingo y la de Santiago |
+| SOHO | Oficina pequeña o casa | Un router doméstico que es a la vez switch, punto de acceso y firewall |
 
 ## Topologías
 
-La **topología física** es cómo están conectados los cables; la **lógica**, cómo circulan los datos.
+La **topología física** es cómo van los cables; la **lógica**, cómo circulan los datos.
 
-- **Estrella:** todos los equipos conectados a un dispositivo central (un switch). Es la topología de casi todas las LAN modernas: si falla un cable, solo cae un equipo.
-- **Estrella extendida o jerárquica:** varias estrellas unidas entre sí; así crecen los campus.
-- **Malla completa (full mesh):** cada nodo conectado con todos los demás. Máxima redundancia, alto coste. Para *n* nodos hacen falta *n(n-1)/2* enlaces.
-- **Malla parcial:** solo algunos nodos tienen enlaces redundantes. Es lo habitual en las WAN.
-- **Bus y anillo:** históricas; hoy casi no se usan en LAN.
+- **Estrella (y estrella extendida):** cada equipo a un switch; los switches se unen en jerarquía. Es la base de casi todas las LAN.
+- **Malla completa:** todos con todos. Para *n* nodos hacen falta *n(n−1)/2* enlaces: máxima redundancia, alto costo.
+- **Malla parcial:** solo los nodos críticos tienen caminos redundantes. Es lo habitual en WAN.
 
-::: nota
-En los diagramas de red, Cisco usa iconos estándar: el **router** es un círculo con flechas, el **switch** un rectángulo con flechas y la **nube** representa una red que no controlas, como internet o la WAN del proveedor.
+## Arquitecturas que vas a encontrar en una empresa
+
+| Arquitectura | Cómo es | Dónde se usa |
+| --- | --- | --- |
+| **Tres capas** | Acceso (los usuarios), distribución (políticas y enrutamiento entre VLAN) y núcleo (transporte rápido entre edificios) | Campus grandes |
+| **Dos capas (núcleo colapsado)** | Distribución y núcleo en los mismos equipos | Sedes medianas: es lo más común |
+| **Spine-leaf** | Cada switch *leaf* (donde van los servidores) se conecta a todos los *spine*: cualquier servidor está a dos saltos de otro | Centros de datos |
+| **Cliente-servidor** | Los clientes piden y un servidor responde | Web, correo, bases de datos |
+| **Peer-to-peer (P2P)** | Cada equipo es cliente y servidor a la vez | Compartición de archivos, algunas llamadas |
+
+## Cómo se mide una red
+
+| Métrica | Qué es | Detalle técnico |
+| --- | --- | --- |
+| **Ancho de banda** | Capacidad máxima del enlace | En **bits** por segundo: 1 Gbps |
+| **Throughput** | Lo que realmente pasa | Siempre menor que el ancho de banda por las cabeceras, la congestión y las retransmisiones |
+| **Latencia** | Tiempo que tarda un paquete en llegar | Suma de propagación (distancia), transmisión (tamaño ÷ velocidad), cola y procesamiento |
+| **Jitter** | Variación de la latencia | Es lo que corta la voz y el video |
+| **Pérdida** | Paquetes que no llegan | Más de un 1 % ya se nota en una llamada |
+
+::: cuidado
+Los proveedores venden en **megabits** por segundo (Mbps) y los navegadores descargan en **megabytes** por segundo (MB/s). Un byte son 8 bits: una conexión de 100 Mbps descarga, como mucho, unos 12,5 MB/s.
 :::
 
 ::: quiz
 ? ¿Qué topología física usan casi todas las LAN modernas?
 - Bus
 - Anillo
-+ Estrella
++ Estrella (o estrella extendida)
 - Malla completa
-= En las LAN cada equipo se conecta con su propio cable a un switch central: es una estrella. Si un cable falla, solo se pierde ese equipo.
+= Cada equipo va con su cable a un switch; si un cable falla, solo cae ese equipo.
 
-? ¿Cuántos enlaces hacen falta para una malla completa de 5 routers?
-- 5
-- 8
-+ 10
-- 20
-= Se aplica n(n-1)/2 = 5·4/2 = 10 enlaces.
+? ¿Cuántos enlaces hacen falta para una malla completa de 6 routers?
+- 6
+- 12
++ 15
+- 30
+= n(n−1)/2 = 6·5/2 = 15 enlaces.
 
-? Una impresora de red es un ejemplo de...
-+ Dispositivo final
-- Dispositivo intermedio
-- Medio de transmisión
-= Los dispositivos finales originan o reciben datos. Los intermedios (switches, routers) solo los transportan.
+? En un centro de datos, cada switch de servidores se conecta a todos los switches de la capa superior. ¿Qué arquitectura es?
+- Tres capas
++ Spine-leaf
+- Núcleo colapsado
+= En spine-leaf cualquier servidor está a dos saltos de otro, con latencia predecible.
 
-? ¿Qué tipo de red une dos sedes de una empresa en ciudades distintas?
-- LAN
-+ WAN
-- WLAN
-- SOHO
-= Una WAN (red de área amplia) conecta redes separadas geográficamente, normalmente a través de un proveedor.
+? Un enlace de 1 Gbps transfiere en la práctica unos 940 Mbps de datos útiles. ¿Cómo se llama esa cifra?
++ Throughput
+- Ancho de banda
+- Jitter
+= El ancho de banda es la capacidad; el throughput es lo que realmente pasa.
+
+? Las llamadas por Teams se cortan aunque la latencia media es buena. ¿Qué métrica revisas?
+- El ancho de banda contratado
++ El jitter y la pérdida de paquetes
+- El número de saltos en la WAN
+= La voz y el video toleran mal la variación de la latencia y la pérdida.
+:::
+
+::: banco
+? ¿Qué capa del modelo de tres capas conecta directamente a los usuarios?
++ Acceso
+- Distribución
+- Núcleo
+= La capa de acceso tiene los puertos de los equipos de usuario y los puntos de acceso.
+
+? ¿Cuántos MB/s descarga, como máximo, una conexión de 200 Mbps?
+- 200
++ 25
+- 1.600
+= 200 Mbps ÷ 8 = 25 MB/s, antes de restar las cabeceras de los protocolos.
+
+? ¿Qué componente de la latencia depende de la distancia física?
++ La propagación
+- La transmisión
+- La cola
+= La señal viaja a una velocidad finita: a más distancia, más tiempo.
 :::
 
 === m1-dispositivos | Los dispositivos de red y su función | 14 | 1

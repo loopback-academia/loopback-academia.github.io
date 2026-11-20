@@ -64,5 +64,5 @@ test('orientación: cada pregunta suma a alguna área y el resultado ordena sin 
 test('el catálogo describe las mismas prácticas', () => {
   const n = { partes: I.POR_RONDA, atajos: I.POR_RONDA, archivos: I.POR_RONDA, unidades: 8, orientacion: I.PREGUNTAS_ORIENTACION.length };
   assert.deepEqual(Object.fromEntries(INICIO_INFO.map(x => [x[0], x[3]])), n);
-  assert.equal(CATALOGO.filter(l => l.area === 'base').length, INICIO_INFO.length);
+  assert.equal(CATALOGO.filter(l => l.clave.startsWith('inicio:')).length, 0, 'las prácticas de «Empieza aquí» ya no forman parte del curso');
 });

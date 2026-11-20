@@ -77,8 +77,8 @@ export const INICIO_INFO = [
   ['orientacion', '¿Por qué área empiezo?', 'intermedio', 8, 'Un test rápido sobre tus gustos que te recomienda por dónde seguir.'],
 ];
 
-export const NIVELES = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
-export const AREAS = { base: 'Empieza aquí', redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico', sec: 'Ciberseguridad' };
+export const NIVELES = { principiante: 'Nivel 1 · Fundamentos', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
+export const AREAS = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico', sec: 'Ciberseguridad' };
 
 export const CATALOGO = [
   ...Object.entries(VOCAB).map(([id, v]) => ({ clave: 'vocab:' + id, area: 'en', grupo: 'vocab', nivel: 'principiante', progreso: 'vocab-' + id, titulo: 'Vocabulario: ' + v.titulo.toLowerCase(), texto: `${v.palabras.length} palabras con ejemplo y pronunciación.`, tareas: v.palabras.length, unidad: 'palabras' })),
@@ -97,7 +97,6 @@ export const CATALOGO = [
   ...Object.entries(RUTAS_ENTREVISTA).map(([id, t]) => ({ clave: 'entrevista:' + id, area: 'ti', grupo: 'empleo', nivel: 'intermedio', progreso: 'entrevista-' + id, titulo: 'Entrevista: ' + t.split(' (')[0].toLowerCase().replace(/^./, c => c.toUpperCase()), texto: 'Seis preguntas de entrevista real con puntos clave y respuesta modelo.', tareas: 6, unidad: 'preguntas' })),
   ...Object.values(CASOS).map(c => ({ clave: 'caso:' + c.id, area: 'ti', grupo: 'casos', nivel: c.nivel, progreso: 'caso-' + c.id, titulo: c.titulo, texto: c.resumen, lugar: c.lugar })),
   ...Object.values(PROYECTOS).map(p => ({ clave: 'proyecto:' + p.id, area: p.area, grupo: 'proyectos', nivel: p.nivel, progreso: p.progreso, titulo: p.titulo.replace(/^Proyecto: (.)/, (_, c) => c.toUpperCase()), texto: p.resumen, tareas: p.fases.reduce((n, f) => n + f.requisitos.length, 0) })),
-  ...INICIO_INFO.map(([id, titulo, nivel, tareas, texto]) => ({ clave: 'inicio:' + id, area: 'base', grupo: 'inicio', nivel, progreso: 'inicio-' + id, titulo, texto, tareas, unidad: 'preguntas' })),
   ...SEC_INFO.map(([clave, grupo, nivel, titulo, texto, tareas, unidad]) => ({ clave, area: 'sec', grupo, nivel, progreso: clave.replace(':', '-'), titulo, texto, tareas, unidad })),
   ...PASO_INFO.map(([id, titulo, nivel]) => ({ clave: 'paso:' + id, area: 'prog', grupo: 'paso', nivel, progreso: 'paso-' + id, titulo: 'Paso a paso: ' + titulo.charAt(0).toLowerCase() + titulo.slice(1), texto: 'Ejecuta el programa línea a línea, mira las variables y responde.', tareas: 2, unidad: 'preguntas' })),
   ...TOPO_INFO.map(([id, titulo, nivel, tareas, texto]) => ({ clave: 'topo:' + id, area: 'redes', grupo: 'topologias', nivel, progreso: 'topo-' + id, titulo, texto, tareas, unidad: tareas === 1 ? 'tarea' : 'tareas' })),

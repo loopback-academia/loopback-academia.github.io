@@ -10,7 +10,7 @@ import { PLANES, NOMBRE_PLAN, pesos, dolares } from '../planes.js';
 
 const usuario = await iniciarPagina();
 const raiz = $('#admin');
-const AREAS = { base: 'Empieza aquí', redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico', sec: 'Ciberseguridad' };
+const AREAS = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico', sec: 'Ciberseguridad' };
 const num = n => (n ?? 0).toLocaleString('es');
 const pctTxt = (a, b) => (b ? Math.round((a / b) * 100) + ' %' : '—');
 const cabecera = (...extra) => el('div', { class: 'page-head' }, el('span', { class: 'eyebrow' }, 'Administración'), el('h1', {}, 'Estadísticas de Loopback'), ...extra);

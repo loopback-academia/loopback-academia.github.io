@@ -2,7 +2,6 @@
 // y no influye en conseguir un empleo; así lo dice el propio certificado.
 
 export const TITULO_AREA = {
-  base: 'Fundamentos de tecnología: empieza desde cero',
   redes: 'Redes de computadoras',
   bd: 'Bases de datos y SQL',
   prog: 'Programación',

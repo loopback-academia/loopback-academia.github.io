@@ -80,7 +80,7 @@ function mobileNav(active) {
   return `<nav class="mobile-nav" aria-label="Navegación móvil">${[...NAV.filter(([h]) => h !== 'comandos.html' && h !== 'repaso.html' && h !== 'rutas.html'), ['cuenta.html', 'Cuenta', 'cuenta']].map(([href, label, icon]) => `<a href="${href}"${active === href ? ' aria-current="page"' : ''}>${ICON[icon]}<span>${label}</span></a>`).join('')}</nav>`;
 }
 const footer = `<footer class="site-footer"><div class="container">
-  <span>Loopback · Redes, bases de datos, programación, ciberseguridad, empleo en TI e inglés técnico desde cero. El temario de redes sigue el Cisco CCNA 200-301; no es un curso oficial de Cisco.</span>
+  <span>Loopback · Formación técnica en redes, ciberseguridad, bases de datos, programación, soporte y sistemas e inglés técnico. El temario de redes sigue el Cisco CCNA 200-301; no es un curso oficial de Cisco.</span>
   <span><a href="precios.html">Planes y precios</a> · <a href="nivel.html">Examen de entrada gratis</a> · <a href="glosario.html">Glosario</a> · <a href="cv.html">Mi CV</a> · <a href="profesor.html">Clases</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a></span>
 </div></footer>`;
 
@@ -110,7 +110,7 @@ ${meta.private ? '<meta name="robots" content="noindex">' : `<link rel="canonica
 <meta property="og:image" content="${config.url}/img/compartir.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Loopback: aprende tecnología desde cero hasta tu primer empleo">
+<meta property="og:image:alt" content="Loopback: formación técnica en redes, ciberseguridad y sistemas">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0b7285">
 <link rel="icon" href="img/icono.svg" type="image/svg+xml">

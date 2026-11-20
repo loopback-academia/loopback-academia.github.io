@@ -4,7 +4,7 @@ import { guardarLab, labHecho, cargar } from '../progreso.js';
 import { EJERCICIOS } from './ejercicios.js';
 import { ejecutarCodigo } from './runner.js';
 
-const NIVEL = { principiante: 'Nivel 1 · Principiante', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
+const NIVEL = { principiante: 'Nivel 1 · Fundamentos', intermedio: 'Nivel 2 · Intermedio', avanzado: 'Nivel 3 · Avanzado' };
 const NOMBRE = { python: 'Python', javascript: 'JavaScript' };
 
 // Editor sencillo sobre un textarea: Tab inserta espacios y Enter mantiene la sangría (y la aumenta tras ":" o "{").

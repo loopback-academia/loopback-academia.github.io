@@ -3,12 +3,15 @@ import { el } from './core.js';
 import { notaQuiz, guardarQuiz, exportar } from './progreso.js';
 import { retoDelDia, claveReto, fechaLocal, rachaRetos, insigniasDe, INSIGNIAS } from './reto.js';
 
+import { bancoCompleto } from './premium.js';
+
+// Las preguntas del reto son las del curso: sin plan no hay reto (el banco público está vacío).
 let banco = null;
-const cargarBanco = () => banco || (banco = fetch('data/examen.json').then(r => r.json()));
+const cargarBanco = () => banco || (banco = fetch('data/examen.json').then(r => r.json()).then(bancoCompleto));
 
 export async function montarReto(caja, { curso, leccionHecha, area }) {
   const preguntas = await cargarBanco().catch(() => null);
-  if (!preguntas || !caja) return;
+  if (!preguntas?.length || !caja) return;
   const hoy = fechaLocal();
   const empezados = new Set(curso.modulos.filter(m => m.lecciones.some(l => leccionHecha(l.id))).map(m => m.id));
   const hechas = new Set(curso.modulos.flatMap(m => m.lecciones.filter(l => leccionHecha(l.id)).map(l => l.id)));

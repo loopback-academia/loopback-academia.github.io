@@ -210,83 +210,95 @@ Cada persona debe tener **solo los permisos que necesita** para su trabajo. Por 
 = El controlador de dominio guarda el directorio y valida los inicios de sesión.
 :::
 
-=== s2-componentes | Las piezas de una computadora | 16 | 1
-Para elegir, actualizar o reparar un equipo hay que saber qué hace cada pieza y cómo encajan entre sí.
-
-## Las piezas
-
-| Pieza | Qué hace | En qué fijarse |
-|---|---|---|
-| **Procesador (CPU)** | Ejecuta los programas | Núcleos, generación y **zócalo** (socket): LGA1700 de Intel, AM5 de AMD. Algunos traen **gráficos integrados**; los terminados en F (Intel) no |
-| **Placa base** | Conecta todas las piezas | Zócalo del procesador, **tipo de memoria** (DDR4 o DDR5), tamaño (ATX, micro-ATX, mini-ITX) y ranuras M.2 |
-| **Memoria RAM** | Guarda lo que se está usando ahora | Capacidad (8, 16, 32 GB) y tipo: DDR4 y DDR5 **no son intercambiables** |
-| **Almacenamiento** | Guarda los datos aunque se apague | **SSD NVMe** (muy rápido, ranura M.2), SSD SATA o disco duro HDD (barato y lento) |
-| **Tarjeta gráfica (GPU)** | Genera la imagen; acelera 3D y video | Solo hace falta si el procesador no tiene gráficos o para diseño y juegos |
-| **Fuente de alimentación** | Da corriente a todo | Potencia en vatios con margen (un 40 % más que el consumo) y certificación 80 PLUS |
-| **Caja** | Lo contiene y lo ventila | Que admita el tamaño de la placa |
-
-::: nota
-Para una oficina, el cambio que más se nota es pasar de disco duro a **SSD**: el equipo arranca en segundos. Lo segundo, tener al menos **16 GB de RAM** si se usan muchos programas a la vez.
-:::
-
-## Compatibilidad: las tres reglas
-
-1. El **zócalo** del procesador y de la placa deben coincidir.
-2. La **memoria** debe ser del tipo que admite la placa (DDR4 o DDR5).
-3. La **placa** debe caber en la **caja**, y la **fuente** debe tener potencia de sobra.
+=== s2-componentes | Arquitectura del PC: CPU, memoria, buses y firmware | 18 | 1
+Para diagnosticar, comprar o actualizar equipos hay que saber qué hace cada pieza y cómo se comunican entre sí.
 
 [[pc:oficina]]
 
+## Procesador (CPU)
+
+- **Núcleos e hilos:** cada núcleo ejecuta instrucciones; con *hyper-threading* (SMT), un núcleo atiende dos hilos. Muchos procesadores actuales mezclan núcleos de rendimiento (P) y de eficiencia (E): por ejemplo, 6 P + 4 E con 16 hilos.
+- **Caché L1, L2 y L3:** memoria muy rápida dentro del procesador. Cuanto más cerca del núcleo, más rápida y más pequeña.
+- **TDP:** el calor que debe disipar la refrigeración. Un portátil fino limita su potencia cuando se calienta (*thermal throttling*): por eso un equipo sucio va lento.
+
+## Memoria (RAM)
+
+- **DDR4 y DDR5** no son compatibles entre sí: la placa base admite una u otra.
+- **Doble canal:** dos módulos iguales en las ranuras correctas casi duplican el ancho de banda frente a uno solo.
+- **ECC:** corrige errores de memoria; se usa en servidores.
+- Con poca RAM, el sistema usa el disco como memoria (archivo de paginación) y todo se vuelve lento: en el Administrador de tareas se ve la memoria al 90 % o más y el disco muy ocupado.
+
+## Almacenamiento
+
+| Tipo | Interfaz | Velocidad aproximada | Nota |
+| --- | --- | --- | --- |
+| HDD | SATA | 100–200 MB/s | Barato y grande; lento en accesos aleatorios |
+| SSD SATA | SATA III | Hasta ~550 MB/s | Limitado por la interfaz SATA |
+| SSD NVMe | PCIe (formato M.2) | 3.500–7.000 MB/s o más | Muchísimas más **IOPS** (operaciones por segundo) |
+
+Cuidado: un M.2 puede ser SATA o NVMe, y no todas las ranuras M.2 admiten los dos.
+
+## Buses: PCI Express
+
+Las tarjetas gráficas, los SSD NVMe y muchas tarjetas de red usan **PCIe**, organizado en **carriles** (x1, x4, x16). Cada generación duplica la velocidad por carril: Gen3 ≈ 1 GB/s, Gen4 ≈ 2 GB/s, Gen5 ≈ 4 GB/s. Un NVMe Gen4 x4 rinde a la mitad en una ranura Gen3.
+
+## Firmware y arranque
+
+- **UEFI** sustituyó a la BIOS clásica: arranque más rápido, interfaz gráfica y discos con tabla **GPT** (la BIOS usaba **MBR**, limitada a 2 TB).
+- **POST:** la autocomprobación al encender. Si falla, el equipo avisa con pitidos o luces de diagnóstico (consulta el manual de la placa).
+- **Secure Boot:** solo arranca software firmado; dificulta los *bootkits*.
+- **TPM 2.0:** chip que guarda claves de forma segura (BitLocker, Windows Hello). Windows 11 exige TPM 2.0 y Secure Boot.
+
 ::: quiz
-? Una placa base es DDR5. ¿Qué memoria puedes ponerle?
-+ Solo módulos DDR5
-- DDR4 o DDR5, da igual
-- Cualquier memoria de 16 GB
-= DDR4 y DDR5 tienen muescas y voltajes distintos: no son intercambiables.
+? Un portátil va lento solo cuando lleva un rato encendido y el ventilador suena mucho. ¿Qué es lo más probable?
++ Thermal throttling: el procesador baja su potencia por calor
+- Le falta RAM
+- El disco es GPT
+= Limpiar el polvo y revisar la pasta térmica suele resolverlo.
 
-? ¿Qué mejora más la velocidad de un PC de oficina con disco duro?
-+ Cambiar el disco duro por un SSD
-- Cambiar la caja
-- Poner una tarjeta gráfica potente
-= El SSD reduce muchísimo los tiempos de arranque y de apertura de programas.
+? ¿Por qué conviene instalar dos módulos de RAM iguales en lugar de uno?
++ Para trabajar en doble canal y casi duplicar el ancho de banda de la memoria
+- Porque un solo módulo no arranca
+- Para activar Secure Boot
+= Con un solo módulo, la memoria trabaja en un canal.
 
-? Un procesador Intel terminado en F no tiene gráficos integrados. ¿Qué necesita el equipo?
-+ Una tarjeta gráfica dedicada
-- Más memoria RAM
-- Una fuente más pequeña
-= Sin gráficos integrados ni tarjeta gráfica, el equipo no da imagen.
+? ¿Qué interfaz limita un SSD SATA a unos 550 MB/s?
++ SATA III
+- PCIe Gen4
+- USB-C
+= Los SSD NVMe usan PCIe y superan con mucho ese límite.
 
-? ¿Qué debe coincidir entre el procesador y la placa base?
-+ El zócalo (socket)
-- El color
-- La marca de la memoria
-= Un procesador AM5 solo entra en una placa AM5, por ejemplo.
+? ¿Qué exige Windows 11 además de un procesador compatible?
+- Un disco HDD
++ TPM 2.0 y Secure Boot
+- Una tarjeta gráfica dedicada
+= Son requisitos de seguridad del arranque y del cifrado.
+
+? ¿Qué tabla de particiones usa UEFI y admite discos de más de 2 TB?
++ GPT
+- MBR
+- FAT32
+= MBR era la de la BIOS clásica y tiene el límite de 2 TB.
+
+? Un SSD NVMe Gen4 x4 se instala en una ranura PCIe Gen3 x4. ¿Qué pasa?
++ Funciona, pero a la velocidad de Gen3 (aproximadamente la mitad)
+- No arranca
+- Funciona más rápido
+= PCIe es compatible entre generaciones; la velocidad la marca la más lenta.
 :::
 
 ::: banco
-? ¿Para qué sirve la memoria RAM?
-+ Para guardar temporalmente lo que el equipo está usando ahora
-- Para guardar los archivos cuando se apaga
-- Para generar la imagen
-= La RAM se borra al apagar; los archivos se guardan en el disco o SSD.
+? ¿Qué es el POST?
++ La autocomprobación del hardware al encender el equipo
+- El sistema operativo
+- Un tipo de memoria
+= Si falla, la placa avisa con pitidos o luces de diagnóstico.
 
-? ¿Qué significa la certificación 80 PLUS de una fuente?
-+ Que aprovecha bien la energía (al menos un 80 % de eficiencia)
-- Que tiene 80 vatios
-- Que dura 80 meses
-= Una fuente certificada desperdicia menos energía en calor y suele ser más fiable.
-
-? ¿Qué tipo de almacenamiento es el más rápido?
-+ SSD NVMe M.2
-- Disco duro HDD de 7200 rpm
-- Memoria USB
-= Los NVMe usan el bus PCIe y son varias veces más rápidos que un SSD SATA.
-
-? Una placa micro-ATX, ¿cabe en una caja ATX?
-+ Sí, las cajas ATX admiten placas más pequeñas
-- No, nunca
-- Solo con un adaptador
-= Las cajas suelen admitir su tamaño y los menores.
+? ¿Para qué sirve el TPM?
++ Para guardar claves de cifrado de forma segura, por ejemplo las de BitLocker
+- Para enfriar el procesador
+- Para conectar monitores
+= Es un chip criptográfico en la placa o integrado en el procesador.
 :::
 
 === s2-armar | Armar y actualizar un equipo con seguridad | 16 | 2

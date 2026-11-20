@@ -21,8 +21,8 @@ const [bancoPublico, curso] = await Promise.all([fetch('data/examen.json').then(
 // Las preguntas de los módulos de pago se añaden solo cuando hacen falta (exámenes de escalón y simulacros).
 let banco = bancoPublico;
 const leccionDe = id => curso.lecciones.find(l => l.id === id.split('#')[0]);
-const AREAS = { base: 'Empieza aquí', redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico', sec: 'Ciberseguridad' };
-const ICONO = { base: '🚀', redes: '🌐', bd: '🗄️', prog: '💻', ti: '🏢', en: '🇬🇧', sec: '🛡️' };
+const AREAS = { redes: 'Redes', bd: 'Bases de datos', prog: 'Programación', ti: 'Empleo TI', en: 'Inglés técnico', sec: 'Ciberseguridad' };
+const ICONO = { redes: '🌐', bd: '🗄️', prog: '💻', ti: '🏢', en: '🇬🇧', sec: '🛡️' };
 const params = new URLSearchParams(location.search);
 
 // Intentos anteriores de cada examen (ids de sus preguntas), para no repetirlas en el siguiente.

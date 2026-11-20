@@ -42,7 +42,7 @@ export function datosCv({ curso, catalogo, leccionHecha, labHecho, finalAprobado
 // Resumen profesional sugerido a partir de lo completado (el alumno lo edita).
 export function resumenSugerido(d, titular = '') {
   if (!d.lecciones) return '';
-  const NOMBRE = { base: 'fundamentos de informática', redes: 'redes', bd: 'bases de datos y SQL', prog: 'programación', ti: 'soporte técnico', en: 'inglés técnico', sec: 'ciberseguridad' };
+  const NOMBRE = { redes: 'redes', bd: 'bases de datos y SQL', prog: 'programación', ti: 'soporte técnico', en: 'inglés técnico', sec: 'ciberseguridad' };
   const areas = [...new Set([...d.modulos.map(m => m.area), ...d.practicas.map(p => p.area)])].map(a => NOMBRE[a]).filter(Boolean);
   const lista = areas.length > 1 ? areas.slice(0, -1).join(', ') + ' y ' + areas[areas.length - 1] : areas[0];
   const partes = [`${titular || 'Profesional de TI en formación'} con formación práctica en ${lista || 'tecnología'}.`];

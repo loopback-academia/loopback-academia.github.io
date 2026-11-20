@@ -98,7 +98,7 @@ export function pantallaPremium({ titulo, motivo, estado = {} }) {
   return el('div', { class: 'locked-screen premium-screen' }, el('div', { class: 'locked-ico', 'aria-hidden': 'true' }, motivo === 'red' ? '📡' : '🔒'),
     venta ? el('span', { class: 'badge badge-accent' }, '⭐ Plan completo') : null,
     el('h1', {}, titulo), el('p', {}, texto),
-    venta ? el('ul', { class: 'ticks premium-incluye' }, ['Las 7 áreas, de cero a profesional', 'Laboratorios y simuladores', 'Exámenes y certificado verificable'].map(t => el('li', {}, t))) : null,
+    venta ? el('ul', { class: 'ticks premium-incluye' }, ['Las 6 áreas, hasta el nivel profesional', 'Laboratorios y simuladores', 'Exámenes y certificado verificable'].map(t => el('li', {}, t))) : null,
     el('div', { class: 'hero-cta' }, ...botones),
     venta ? el('p', { class: 'small muted' }, '¿No sabes si es para ti? El ', el('a', { href: 'nivel.html' }, 'examen de entrada'), ' es gratis y te dice por dónde empezar.') : null);
 }
